@@ -1,0 +1,35 @@
+{
+  "name": "apifrips",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server",
+    "server": "nodemon server"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@prisma/client": "^3.5.0",
+    "bcryptjs": "^2.4.3",
+    "buffer": "^6.0.3",
+    "chalk": "^5.0.0",
+    "config": "^3.3.6",
+    "connect-multiparty": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^4.17.1",
+    "express-validator": "^6.12.1",
+    "fs-extra": "^10.0.0",
+    "helmet": "^4.6.0",
+    "jsonwebtoken": "^8.5.1",
+    "luxon": "^2.0.2",
+    "multer": "^1.4.3",
+    "multipart": "^0.1.5",
+    "nanoid": "^3.1.25",
+    "prisma": "^3.0.2",
+    "sharp": "^0.29.1",
+    "socket.io": "^4.3.1",
+    "stripe": "^8.207.0",
+    "uuid": "^8.3.2"
+  }
+}

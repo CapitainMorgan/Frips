@@ -117,6 +117,8 @@ CREATE TABLE Item(
    DatePuplication DATETIME NOT NULL,
    Price DOUBLE NOT NULL,
    CurrentAuction BOOL NOT NULL,
+   Disponibility BOOL NOT NULL,
+   Verified BOOL NOT NULL,
    id_Seller INT NOT NULL,
    id_ItemCondition INT NOT NULL,
    PRIMARY KEY(id),
@@ -188,13 +190,15 @@ CREATE TABLE PricePropose(
    FOREIGN KEY(id_Item) REFERENCES Item(id)
 );
 
-CREATE TABLE Sell(
-   id_Account INT,
+CREATE TABLE Transaction(
+   id VARCHAR(50) NOT NULL,
+   id_Account INT NOT NULL,
    Price DOUBLE,
    Protection DOUBLE,
    DateSell DATETIME NOT NULL,
-   Statement VARCHAR(50),
+   Status VARCHAR(50),
    DateSend DATETIME,
+   StripeIdentifier VARCHAR(50),
    id_Item INT NOT NULL,
    PRIMARY KEY(id_Account, id_Item),
    FOREIGN KEY(id_Account) REFERENCES Account(id),

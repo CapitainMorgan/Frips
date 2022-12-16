@@ -1,22 +1,20 @@
 import React, {
   useCallback,
   useEffect,
-  useMemo,
-  useRef,
-  useState,
+  useMemo, useRef, useState
 } from "react";
 
 import { Box, CircularProgress, makeStyles } from "@material-ui/core";
 import moment from "moment";
 import "moment/locale/fr";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useInView } from "react-intersection-observer";
 import { useDispatch } from "react-redux";
-import { getMoreMessage } from "../../actions";
+import { getMoreMessage, receivedNewMessage } from "../../actions";
 import Message from "./Message";
 import RegroupByDate from "./RegroupByDate";
 
 import { connect } from "react-redux";
+import newMessage from "./newMessage";
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 65,
@@ -51,7 +49,8 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     flex: 2,
     display: "flex",
-    maxHeight: 300,
+    height: 300,
+    maxHeight:300,
     overflow: "auto",
     flexDirection: "column-reverse",
     [theme.breakpoints.down("sm")]: {
@@ -60,43 +59,30 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-let previous;
-
-const helpRegroupDateWithOutRendering = (momentHour) => {
-  previous = momentHour;
-};
 
 const locale = window.navigator.userLanguage || window.navigator.language;
 moment.locale(locale);
 
-const renderMessages = (conv, userId, scrollRef, image) => {
-  let tmp;
-  let tmp1;
-
+const renderMessages = (conv, userId, setRef, image, newMessage) => {
   return conv.map((item, index, elements) => {
-    const next = elements[index + 1 < conv.length ? index+1 : conv.length -1 ];
-    console.log(next)
-
-    if (
-      moment(item.Date_Houre).local().format("LL") !==
-      moment(next.Date_Houre).local().format("LL")
-    ) {
-      tmp = moment(next.Date_Houre).local().format("LL") ;
-    }
+    const next =
+      elements[index + 1 < conv.length ? index + 1 : conv.length - 1];
 
     return (
       <React.Fragment>
-      <RegroupByDate itemDate={tmp} />
         <Message
+          setRef={setRef}
           item={item.item}
           id_Sender={item.id_Sender}
           userId={userId}
           Text={item.Text}
+          newMessage={newMessage}
           image={image}
           index={index}
           hours={item.Date_Houre}
           own={item.id_Sender === userId}
         />
+        <RegroupByDate next={next} current={item} />
       </React.Fragment>
     );
   });
@@ -108,9 +94,10 @@ const renderMessages = (conv, userId, scrollRef, image) => {
   })
 */
 const findImage = (userId, Profile) => {
+  if (!Profile) return;
+
   const { Profile1, Profile2 } = Profile;
 
-  console.log(Profile1);
   if (userId === Profile1.ProfileNumber) {
     return Profile2;
   } else {
@@ -120,55 +107,79 @@ const findImage = (userId, Profile) => {
 const MessageComponent = ({
   pageNumber,
   loading,
-  Profile,
   newMessage,
+  Profile,
+  setReceiveNewMessage,
+  receivedMessage,
   hasmore,
   moreMessageLoading,
   message,
   userId,
+  isBottom,
+  setIsBottom,
+  isAccepted,
+  setIsAccepted
 }) => {
-  const { ref, inView, entry } = useInView({
-    /* Optional options */
-    threshold: 0,
-  });
-
   const classes = useStyles();
   const [number, setNumber] = useState(1);
-  const position = useRef(null);
+  const setRef = useRef(null)
+  const dispatch = useDispatch();
+
 
   let id_Chat;
   if (message) {
     id_Chat = message[0]?.id_Chat;
   }
-  const dispatch = useDispatch();
+
 
   const [time, settime] = useState(true);
   useEffect(() => {
     setTimeout(() => {
       settime(!time);
-    }, 6000);
-  }, [newMessage]);
+    }, 1000);
+  }, [message, time]);
 
-  console.log(Profile);
+  const position = useCallback((node) => {
+    if (node) {
+      node.scrollTop = node.scrollHeight;
+    }
+  }, []);
+  const handleScroll = (e) => {
+    console.log(e.target.scrollTop===0)
+    if (e.target.scrollTop===0) {
 
-  console.log(findImage(userId, Profile));
 
-  const setRef = useCallback(
-    (node) => {
-      if (node && newMessage) {
-        node.scrollIntoView({
-          behavior: "smooth",
-          block: "nearest",
-          // <-- only scroll this div, not the parent as well
-        });
-      }
-    },
-    [newMessage, message]
-  );
+      setIsBottom(true);
+    } else {
+      setIsBottom(false);
+
+      } 
+    };
+  useEffect(()=>{
+    if(isAccepted){
+      setRef.current?.scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        // <-- only scroll this div, not the parent as well
+      }); 
+      setIsBottom(true)
+
+      dispatch(receivedNewMessage(false))
+      setIsAccepted(false)
+    }
+  },[isAccepted,newMessage])
 
   const renderedConv = useMemo(() => {
-    return renderMessages(message, userId, setRef, findImage(userId, Profile));
-  }, [message, newMessage, userId]);
+    if (message) {
+      return renderMessages(
+        message,
+        userId,
+        setRef,
+        findImage(userId, Profile),
+        receivedMessage
+      );
+    }
+  }, [message, userId, newMessage, receivedMessage]);
 
   const fetchContacts = () => {
     setNumber((prevState) => prevState + 1);
@@ -176,12 +187,13 @@ const MessageComponent = ({
       if (hasmore > message.length) {
         dispatch(getMoreMessage(id_Chat, number));
       }
-    }, 1000);
+    }, 1500);
   };
 
   return (
-    <div className={classes.MessageBox} ref={position.current} id="scrollable">
+    <div className={classes.MessageBox} ref={position.current} id="scrollable" >
       <InfiniteScroll
+        onScroll={handleScroll}
         dataLength={message.length}
         next={fetchContacts}
         hasMore={hasmore > message.length}
@@ -211,7 +223,6 @@ const mapStateToProps = (state) => ({
   hasmore: state.messageReducer.hasmore,
   moreMessageLoading: state.messageReducer.moreMessageLoading,
   pageNumber: state.messageReducer.pageNumber,
-
   userId: state.auth.user?.id,
   Profile: state.messageReducer.Profile,
   message: state.messageReducer.message,

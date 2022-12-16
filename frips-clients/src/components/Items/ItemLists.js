@@ -1,6 +1,16 @@
 import {
-  Avatar, Box, Card, CardActionArea, CardHeader, CircularProgress, Divider, IconButton, makeStyles, Slide,
-  Snackbar, Typography
+  Avatar,
+  Box,
+  Card,
+  CardActionArea,
+  CardHeader,
+  CircularProgress,
+  Divider,
+  IconButton,
+  makeStyles,
+  Slide,
+  Snackbar,
+  Typography
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -9,9 +19,11 @@ import _ from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { connect, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import {
-  addFavorite, fetchItems, fetchMoreItems,
+  addFavorite,
+  fetchItems,
+  fetchMoreItems,
   idFavorite,
   removeFavorite
 } from "../../actions";
@@ -143,9 +155,9 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
             <IconButton
               onClick={() => {
                 if (_.some(favorite, { id_Item: item.id })) {
-                  dispatch(removeFavorite(state[index].id));
+                  dispatch(removeFavorite(state[index].id,0));
                 } else {
-                  dispatch(addFavorite(state[index].id));
+                  dispatch(addFavorite(state[index].id,0));
                 }
               }}
             >
@@ -186,23 +198,28 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
   const dispatch = useDispatch();
   const [Page, setPage] = useState(2);
   let navigate = useNavigate();
+  const location = useLocation()
+  useEffect(()=>{
+    window.scrollTo(0, 0)
+  },[location])
 
   useEffect(() => {
     dispatch(fetchItems());
     dispatch(idFavorite());
+
   }, [dispatch]);
 
-  const test = true;
+  
 
   const renderedItems = useMemo(() => {
     return renderedItem(items, classes, favorite, dispatch, navigate);
-  }, [items, favorite]);
+  }, [items, favorite, loading,dispatch]);
 
   const fetchMore = () => {
     setPage((prevState) => prevState + 1);
     setTimeout(() => {
       dispatch(fetchMoreItems(Page));
-    }, 1000);
+    }, 1500);
   };
 
   const Image = useMemo(() => {
@@ -224,7 +241,7 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
     dispatch({ type: SUCCESS_CREATION_ITEM, payload: false });
   };
 
-  if (!loaded && loading) {
+  if (loading) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -261,38 +278,35 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
             />
           </Snackbar>
         ) : null}
+        (
+        <Box className={classes.floatContentArticle}>
+          <Box height={"10vh"} />
+          {Image}
+          <DisplayNewItems classes={classes} favorite={favorite} />
 
-        {loaded && items ? (
-          <Box className={classes.floatContentArticle}>
-            <Box height={"10vh"} />
-            {Image}
-            <DisplayNewItems classes={classes} favorite={favorite} />
+          <Box height={"10vh"} width={"100%"} />
 
-            <Box height={"10vh"} width={"100%"} />
-
-            <InfiniteScroll
-              style={{ width: "100%" }}
-              dataLength={items.length}
-              next={fetchMore}
-              hasMore={true}
-              loader={
-                <Box
-                  display="flex"
-                  alignItems="center"
-                  justifyContent="center"
-                  padding={2}
-                  width={"100%"}
-                >
-                  <CircularProgress size={30}></CircularProgress>
-                </Box>
-              }
-            >
-              <Box className={classes.GridSytem}>
-                {loaded && items ? renderedItems : null}
+          <InfiniteScroll
+            style={{ width: "100%" }}
+            dataLength={items.length}
+            next={fetchMore}
+            hasMore={true}
+            loader={
+              <Box
+                display="flex"
+                alignItems="center"
+                justifyContent="center"
+                padding={2}
+                width={"100%"}
+              >
+                <CircularProgress size={30}></CircularProgress>
               </Box>
-            </InfiniteScroll>
-          </Box>
-        ) : null}
+            }
+          >
+            <Box className={classes.GridSytem}>{renderedItems}</Box>
+          </InfiniteScroll>
+        </Box>
+        )
       </Box>
     </Box>
   );

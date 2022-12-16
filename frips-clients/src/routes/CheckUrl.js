@@ -1,10 +1,9 @@
 import { Box, CircularProgress } from "@material-ui/core";
 import _ from "lodash";
-import propsTypes from "prop-types";
 import React, { useEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
-import { Navigate, Outlet, useLocation, useParams } from "react-router-dom";
-import { getItemCreationInfo } from "../actions";
+import { connect, useDispatch } from "react-redux";
+import { Navigate, Outlet, useParams } from "react-router-dom";
+import { addToFilter, getItemCreationInfo } from "../actions";
 
 const transformStringToUrl = (string) => {
   return string
@@ -15,9 +14,8 @@ const transformStringToUrl = (string) => {
 
 const checkUrl = (url, infoItem) => {
   const arrayUrl = Object.values(url);
-  console.log(arrayUrl)
-  console.log(infoItem)
-
+  
+  
   for (let index = 0; index < arrayUrl.length; index++) {
     const findCategory = _.find(infoItem, {
       Name: transformStringToUrl(arrayUrl[index]),
@@ -29,17 +27,36 @@ const checkUrl = (url, infoItem) => {
   return true;
 };
 
-const CheckUrl = ({ itemInfo }) => {
+const setLastOne = (url, infoItem) => {
+  const arrayUrl = Object.values(url);
+  const findCategory = _.find(infoItem, {
+      Name: transformStringToUrl(arrayUrl[arrayUrl.length-1]),
+    });
+    
+  return findCategory
+  
+};
+
+const CheckUrl = ({ itemInfo,loading,loadingFilter,chips }) => {
   const location = useParams();
   const dispatch = useDispatch();
-  console.log(itemInfo);
-
   useEffect(() => {
-      dispatch(getItemCreationInfo());
+      if(!itemInfo && !loading){
+
+        dispatch(getItemCreationInfo());
+
+      }
+      else if(itemInfo && !loading ){
+        dispatch({type:"RESTORE"})
+        dispatch(addToFilter(setLastOne(location,itemInfo.infoCategory),"Catalogue"))
+      }
     
-  },[]);
+  },[itemInfo,location]);
+
+ 
   
-  if (!itemInfo) {
+  
+  if (!itemInfo || loadingFilter) {
     return(
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -54,11 +71,17 @@ const CheckUrl = ({ itemInfo }) => {
     )
   }
   else{
-    return checkUrl(location, itemInfo.infoCategory) && itemInfo ? (
-    <Outlet />
-  ) : (
-    <Navigate to="/PageIntrouvable" replace />
-  );
+    return (
+      checkUrl(location, itemInfo.infoCategory) && !loadingFilter  ? 
+      <React.Fragment>
+      <Outlet />
+      
+      </React.Fragment>
+
+      : 
+        <Navigate to="/PageIntrouvable" replace />
+      
+    )
   }
 };
 
@@ -66,6 +89,10 @@ const CheckUrl = ({ itemInfo }) => {
 
 const mapStateToProps = (state) => ({
   itemInfo:state.itemInfo.itemInfo,
+  loadingFilter: state.filterCatalogue.filterLoading,
+  chips:state.filterCatalogue.Chips,
+  
+  loading:state.itemInfo.loading
 
 });
 

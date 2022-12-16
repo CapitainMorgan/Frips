@@ -1,66 +1,103 @@
-const express = require("express")
-const router = express.Router()
-const auth = require("../middleware/auth")
-const jwt = require("jsonwebtoken")
-const config = require("config")
-const {check,validationResult} = require("express-validator")
-const bcrypt = require("bcryptjs")
-const multer = require("multer")
-const upload = multer()
-const fs = require("fs");
-const {PrismaClient} =  require("@prisma/client")
+const express = require("express");
+const router = express.Router();
 
-const {item,account,image,message} = new PrismaClient()
+const { PrismaClient } = require("@prisma/client");
+const Stripe = require("stripe");
+const stripe = Stripe(
+  "sk_test_51JfniQEK6bYR8YbaJaNW71dylmEjFAiuARhTXWgLyL6CKJWvTttrt95fdt8qYVLreTQqiFafvdsohrHN5mf7kW4s00l0TIXVOy"
+);
+const { item, account, image, message } = new PrismaClient();
+const taxe = 1.07;
 
+router.post("/createCheckoutPayment", async (req, res) => {
+  const {idItem } = req.body;
+  console.log(req.body)
 
+  try {
+    const itemInfo = await item.findUnique({
+      where: {
+        id: idItem,
+      },
+      select: {
+        Price: true,
+        image: {
+          take: 1,
+        },
+        account: {
+          select: {
+            id: true,
+            address:true,
+            Firstname:true,
+            Lastname:true
+          },
 
-const stripe = require("stripe")('pk_test_51KZuuOJdwWFTddizjmbjlnq1BToKGR0IPNfZwMvh4CKjanVwHY9uVQSerbTons0G6IeB4cdX4IoPFXt8QkChRvEK00ZzjMJEsC');
-
-router.post("/create-payment-intent", async (req, res) => {
-
-    console.log("SALUT C?EST ICI")
-    const { items } = req.body;
-
-
-    try {
-        
-        const itemInfo = await item.findFirst({
-            rejectOnNotFound:true,
-            where:{
-                id:items.id
-            },
-            select:{
-                Price:true,
-                pricepropose:{
-                    select:{
-                        Approve:true,
-                        Price:true,
-                    }
-                }
+        },
+        Name:true,
+        DeliveryDetails:true,
+        item_brand:{
+          select:{
+            brand:{
+              select:{
+                Name:true
+              }
             }
-        })
+          }
+        },
+        Size:true,
+        id:true
 
-
-        console.log(itemInfo)
-            const paymentIntent = await stripe.paymentIntents.create({
-                amount: itemInfo.Price,
-                currency: "CHF",
-                automatic_payment_methods: {
-                  enabled: true,
-                },
-              });
-            
-              res.send({
-                clientSecret: paymentIntent.client_secret,
-              })
-
-    } catch (error) {
         
-    }
-  
-    // Create a PaymentIntent with the order amount and currency
-    
-  });
-  
+      },
+    });
+    const calculateOrderAmount = async (itemPrice) => {
+      console.log(itemPrice)
+      // Replace this constant with a calculation of the order's amount
+      // Calculate the order total on the server to prevent
+      // people from directly manipulating the amount on the client
+      return itemPrice * taxe;
+    };
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: await calculateOrderAmount(itemInfo.Price)*100,
+      currency: "CHF",
+      automatic_payment_methods: {
+        enabled: true,
+      },
+      
+    });
+    console.log(paymentIntent.client_secret)
+
+    res.send({client_secret:paymentIntent.client_secret,item:itemInfo});
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("Serveur error");
+  }
+});
+router.post("/info", async (req, res) => {
+  const { id } = req.body;
+  try {
+    const itemInfo = await item.findUnique({
+      where: {
+        id
+      },
+      select: {
+        image: {
+          take: 1,
+        },
+        account: {
+          select: {
+            id: true,
+            address:true
+          },
+        },
+        Price:true
+      },
+    });
+
+    res.send(null);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("Servor error");
+  }
+});
 
 module.exports = router;

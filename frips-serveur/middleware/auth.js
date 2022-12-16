@@ -5,6 +5,7 @@ const config = require("config")
 
 
 module.exports = (req,res,next) =>{
+    console.log(req.body)
     
    
     //get token from header
@@ -18,7 +19,6 @@ module.exports = (req,res,next) =>{
         const decoded = jwt.verify(token,config.get("jwtSecret"))
         req.user = decoded.user
 
-        console.log(req.user.id)
 
 
         next()

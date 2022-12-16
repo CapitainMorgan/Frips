@@ -1,4 +1,5 @@
 import { createTheme } from "@material-ui/core";
+import "typeface-lobster";
 
 export default createTheme({
   palette: {
@@ -10,6 +11,6 @@ export default createTheme({
   shadows: ["none"],
 
   typography: {
-    fontFamily: [`"Helvetica", "Arial", sans-serif`],
+    fontFamily: ["Helvetica", "Lobster","Arial", "sans-serif"].join(","),
   },
 });

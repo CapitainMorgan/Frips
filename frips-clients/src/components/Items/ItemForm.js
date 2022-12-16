@@ -1,37 +1,32 @@
 /* eslint-enable react/jsx-no-comment-textnodes */
 import React, { useEffect } from "react";
 
-import { Divider } from "@material-ui/core";
-import { Field, Form, Formik, ErrorMessage } from "formik";
-import { Button } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
-import { Typography, CircularProgress } from "@material-ui/core";
-import { useState } from "react";
-import { Box } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core";
-import BrandForm from "./formUpload/BrandForm";
-import DropDownItem from "./formUpload/dropDownItem";
-import StateForm from "./formUpload/stateForm";
-import SizeForm from "./formUpload/sizeForm";
-import ColorForm from "./formUpload/colorForm";
-import Dropzone from "react-dropzone";
+import { Box, Button, CircularProgress, Divider, makeStyles, Typography } from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
-import { createItem, editItem, editItemSend } from "../../actions";
-import { useDispatch } from "react-redux";
+import AddIcon from "@material-ui/icons/Add";
+import { ErrorMessage, Field, Form, Formik } from "formik";
+import { useState } from "react";
+import Dropzone from "react-dropzone";
+import { useDispatch, useSelector } from "react-redux";
+import { createItem, editItemSend, getItemCreationInfo } from "../../actions";
+import BrandForm from "./formUpload/BrandForm";
+import ColorForm from "./formUpload/colorForm";
+import DropDownItem from "./formUpload/dropDownItem";
+import SizeForm from "./formUpload/sizeForm";
+import StateForm from "./formUpload/stateForm";
 
 import { useTheme } from "@material-ui/core/styles";
 import * as yup from "yup";
 
+import { useNavigate } from "react-router-dom";
 import ImageBox from "./DND/SortableGrid";
 import {
   CostumPriceField,
   CostumTextField,
-  CostumTextFieldDescription,
+  CostumTextFieldDescription
 } from "./formUpload/costumTextfield";
 import TextError from "./formUpload/errorText";
-import api from "../../api/api";
-import { forEach } from "lodash";
-import { useNavigate } from "react-router-dom";
+import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   boxForm: {
@@ -116,30 +111,33 @@ const validationSchema = yup.object({
     .required("Mettez aux moins une couleur"),
 });
 
-const blobToFile = (blobs) =>{
-  const arrayFile = []
-    for (let index = 0; index < blobs.length; index++) {
-      arrayFile.push(new File())
-      
-    }
-}
 
-const ItemForm = ({ initialValues, edit,id,editItem}) => {
+const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
   const dispatch = useDispatch();
 
   const [size, setSize] = useState(null);
   const [picture, setPicture] = useState(!edit ? [] : [...editItem]);
   const history = useNavigate();
+  
 
   const onSubmit = (values) => {
-    if(!edit){
+    if (!edit) {
       dispatch(createItem(values, picture, history));
-    }
-    else{
-     dispatch(editItemSend(values,picture,history,id))
+    } else {
+      dispatch(editItemSend(values, picture, history, id));
     }
   };
 
+  useEffect(() => {
+    
+    if(!itemInfo && !loading){
+
+      dispatch(getItemCreationInfo());
+
+    }
+    
+  }, [itemInfo])
+  
 
   const classes = useStyles();
   const theme = useTheme();
@@ -155,7 +153,7 @@ const ItemForm = ({ initialValues, edit,id,editItem}) => {
     }
   };
 
-  if (!initialValues.Titre && edit) {
+  if (!initialValues.Titre && edit && loading) {
     return (
       <Box
         height="100vh"
@@ -168,7 +166,7 @@ const ItemForm = ({ initialValues, edit,id,editItem}) => {
       </Box>
     );
   }
-
+  
   return (
     <Box style={{ backgroundColor: "#F5f5f3" }}>
       <Box width={"100%"} height={30} />
@@ -179,8 +177,6 @@ const ItemForm = ({ initialValues, edit,id,editItem}) => {
         validationSchema={validationSchema}
       >
         {(formik) => {
-          console.log(formik.values)
-
           return (
             <Form>
               <Box className={classes.formContainer}>
@@ -360,7 +356,7 @@ const ItemForm = ({ initialValues, edit,id,editItem}) => {
                   </Box>
                   <Divider />
 
-                  {size ? (
+                  {formik.values.Catalogue !=="" ? (
                     <Box>
                       <Box className={classes.FormLittleBox} padding={3}>
                         <Box className={classes.SubFormLittleBox}>
@@ -462,5 +458,11 @@ const ItemForm = ({ initialValues, edit,id,editItem}) => {
     </Box>
   );
 };
+const mapStateToProps = (state) => ({
+  itemInfo:state.itemInfo.itemInfo,
+  loadingFilter: state.filterCatalogue.filterLoading,
+  
+  loading:state.itemInfo.loading
+});
 
-export default ItemForm;
+export default connect(mapStateToProps)( ItemForm);

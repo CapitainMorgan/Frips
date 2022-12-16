@@ -1,23 +1,30 @@
 import {
+  Avatar,
   Box,
-  Divider, makeStyles,
+  Button,
+  CircularProgress,
+  Divider,
+  makeStyles,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import "moment/locale/fr";
-import React, {
-  useEffect, useState
-} from "react";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
 import {
   addMessage,
   getConv,
-  getItemForPropse, readMessage, sendMessage
+  getItemForPropse,
+  readMessage,
+  receivedNewMessage,
+  sendMessage,
 } from "../../actions";
 import ListForPropose from "./CostumItem/DialogForPropose";
 import MessageComponent from "./renderMessageComponent";
-
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import SecondPageDialog from "./CostumItem/SecondPageDialog";
+import { isNumber } from "lodash";
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 65,
@@ -52,9 +59,20 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     flex: 10,
     display: "flex",
-    maxHeight: 300,
+    height: 300,
     overflow: "auto",
     flexDirection: "column",
+    [theme.breakpoints.down("sm")]: {
+      height:"100%" ,
+
+    },
+  },
+  container: {
+    flexGrow:1,
+    [theme.breakpoints.down("sm")]: {
+      height:"100%" ,
+
+    },
   },
 }));
 
@@ -77,10 +95,20 @@ const renderProfileNumber = (Profile, userId) => {
   }
 };
 
+const id_Receiver = (Profile, userId) => {
+  if (Profile.Profile1.ProfileNumber !== userId) {
+    return Profile.Profile1.ProfileNumber;
+  }
+  if (Profile.Profile2.ProfileNumber !== userId) {
+    return Profile.Profile2.ProfileNumber;
+  }
+};
+
 const Conversation = ({
-  match,
   conv,
+  loading,
   userId,
+  newMessage,
   Profile,
   socket,
   imageSender,
@@ -90,12 +118,43 @@ const Conversation = ({
   id = parseInt(id);
   const dispatch = useDispatch();
   const [Message, setMessage] = useState({ text: "", chat_id: id });
-  console.log(id);
+  const [receivedMessage, setReceivedMessage] = useState(false);
+  const [isBottom, setIsBottom] = useState(true);
+  const [isAccepted, setIsAccepted] = useState(false);
+  const history = useNavigate()
+  const fromItem = useLocation().state
+  
+  console.log(fromItem)
 
   useEffect(() => {
-    dispatch(getConv(id));
-    dispatch(readMessage(id))
-  }, [dispatch]);
+    if (socket?.connected) {
+      socket.emit("join room", id);
+
+      socket.on("message received", (text) => {
+        dispatch(receivedNewMessage(true));
+        dispatch(addMessage(text));
+      });
+
+      return () => {
+        socket.emit("unsubscribe", id);
+        socket.off("message received");
+        socket.off("new message");
+      };
+    }
+  }, [socket]);
+
+  useEffect(() => {
+    if (isNumber(id)) {
+      dispatch(getConv(id));
+      dispatch(readMessage(id));
+    }
+  }, [dispatch, id]);
+
+  useEffect(() => {
+    if (isBottom) {
+      dispatch(receivedNewMessage(false));
+    }
+  }, [newMessage]);
 
   useEffect(() => {
     if (Profile) {
@@ -103,42 +162,29 @@ const Conversation = ({
     }
   }, [dispatch, Profile]);
 
-
-  useEffect(() => {
-    if (socket?.connected) {
-      socket.emit("join room", id);
-
-      socket.on("message received", (text) => {
-        dispatch(addMessage(text));
-      });
-
-      return () => {
-        socket.emit("unsubscribe", id);
-      };
-    }
-  }, [socket]);
-
   const onChange = (e) => {
     setMessage({ ...Message, text: e.target.value });
   };
 
-  if (!conv || (conv && conv.Profile.length === 0)) {
-    return <Box minHeight={"100vh"} width={"100%"} style={{ backgroundColor: "#F5f5f3" }}></Box>;
+  if (loading || !conv) {
+    return (
+      <Box
+        style={{ backgroundColor: "#F5f5f3" }}
+        display="flex"
+        justifyContent="center"
+        width="100%"
+        height="100vh"
+        alignItems="center"
+      >
+        <CircularProgress size={100} />
+      </Box>
+    );
   }
 
-  const id_Receiver = () => {
-    if (Profile.Profile1.ProfileNumber !== userId) {
-      return Profile.Profile1.ProfileNumber;
-    }
-    if (Profile.Profile2.ProfileNumber !== userId) {
-      return Profile.Profile2.ProfileNumber;
-    }
-  };
-
   return (
-    <Box minHeight={"100vh"} style={{ backgroundColor: "#F5f5f3" }}>
+    <Box  style={{ backgroundColor: "#F5f5f3" }}>
       <Box height="10vh" />
-      <Box className={classes.formContainer}>
+      <Box className={classes.container}>
         <Box
           className={classes.boxShadow}
           minHeight="70vh"
@@ -151,19 +197,87 @@ const Conversation = ({
             className={classes.MenuSetting}
             display="flex"
             alignItems="center"
-            justifyContent="center"
           >
-            <Typography style={{ fontSize: "1.2em" }}>
+          <Avatar
+            style={{ marginRight: 10 }}
+          />
+            <Typography style={{ fontSize: "1.2em" }} >
               {renderProfileName(Profile, userId)}
             </Typography>
+            
           </Box>
           <Divider />
 
-          <MessageComponent />
+          {fromItem ? <React.Fragment>
+          <Box display={"flex"} padding={3}>
+                <Box
+                style={{height:50,width:50}}
+                  
+                  onClick={() => {
+                    history(`/items/${fromItem.id}`);
+                  }}
+                >
+                  <img
+                      alt={`/images/${fromItem.id}/${fromItem.image[0].image}`}
+                    src={`/images/${fromItem.id}/${fromItem.image[0].image}`}
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain",
+                    }}
+                  />
+                </Box>
+                <Box
+                  marginLeft={3}
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent="center"
+                >
+                  <Typography style={{ fontSize: 16 }}>{fromItem.Name}</Typography>
+                  <Typography style={{ fontSize: 16 }}>
+                    {fromItem.Size} · {fromItem.item_brand[0].brand.Name}
+                  </Typography>
+                </Box>
+              </Box>
+         
+          
+          <Divider /> 
+          </React.Fragment>
+          :null}
+
+          <Box flex={1}>
+          <MessageComponent
+            isBottom={isBottom}
+            setIsBottom={setIsBottom}
+            receivedMessage={receivedMessage}
+            setReceiveNewMessage={setReceivedMessage}
+            setIsAccepted={setIsAccepted}
+            isAccepted={isAccepted}
+          />
+          </Box>
+          {newMessage && !isBottom ? (
+            <Box
+              display={"flex"}
+              alignItems="center"
+              justifyContent={"center"}
+              height={50}
+            >
+              <Button
+                variant="outlined"
+                color="primary"
+                onClick={() => {
+                  setIsAccepted(true);
+                }}
+              >
+                <MailOutlineIcon />
+                nouveau message
+              </Button>
+            </Box>
+          ) : null}
 
           <Box
             style={{ backgroundColor: "white" }}
-            flex={0.5}
+            flex={0.25}
             display="flex"
             width="100%"
             borderTop={1}
@@ -189,7 +303,7 @@ const Conversation = ({
                         sendMessage(
                           Message.text,
                           Message.chat_id,
-                          id_Receiver(),
+                          id_Receiver(Profile, userId),
                           userId,
                           null,
                           null
@@ -200,7 +314,7 @@ const Conversation = ({
                       const data = {
                         Message,
                         id_Sender: userId,
-                        id_Receiver: id_Receiver(),
+                        id_Receiver: id_Receiver(Profile, userId),
                         id: id,
                         Profile: [
                           Profile.Profile2.ProfileNumber,
@@ -232,7 +346,7 @@ const Conversation = ({
                 justifyContent="center"
                 padding={2}
               >
-                <ListForPropose id={id} socket={socket} />
+                <SecondPageDialog id={id} socket={socket} />
               </Box>
             </Box>
           </Box>

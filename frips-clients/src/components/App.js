@@ -1,53 +1,54 @@
-import React, { useEffect, useState } from "react";
-import { Routes, Route, BrowserRouter as Router } from "react-router-dom";
-import Header from "./Header";
-import ItemList from "./Items/ItemLists";
+import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { ThemeProvider } from "@material-ui/styles";
-import ItemPreview from "./Items/itemPreview/ItemPreview";
-import UserProfile from "./Profil/Profil";
-import CheckOut from "./Checkout/CheckOutComponent";
-import ItemCreate from "./Items/ItemCreate";
-import LoginPage from "./Login/LoginPage";
-import Footer from "./Footer/Footer";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { io } from "socket.io-client";
+import PrivateRoute from "../routes/PrivateRoute";
 import Aide from "./Footer/Aide";
 import Assisstance from "./Footer/Assisstance";
 import ConditionGeneral from "./Footer/ConditionG";
-import useMediaQuery from "@material-ui/core/useMediaQuery";
-import PrivateRoute from "../routes/PrivateRoute";
+import Footer from "./Footer/Footer";
+import Header from "./Header";
+import ItemCreate from "./Items/ItemCreate";
+import ItemList from "./Items/ItemLists";
+import ItemPreview from "./Items/itemPreview/ItemPreview";
+import LoginPage from "./Login/LoginPage";
 import Theme from "./NavBar/createUITheme";
-import { io } from "socket.io-client";
+import UserProfile from "./Profil/Profil";
 
-import { useTheme } from "@material-ui/core/styles";
-import Conversation from "./Message/Conversation";
-import Sell from "./Footer/Sell";
-import Register from "./Login/UserRegister";
-import { Provider, useSelector } from "react-redux";
-import store from "../store/store";
-import MyItems from "./Profil/MyItems";
-import setAuthToken from "../utils/setAuthToken";
-import {
-  getItemCreationInfo,
-  getUnReadNotification,
-  loadUser,
-  setSocket,
-} from "../actions";
-import UserToUser from "./Message/UserToUser";
-import MyFavorite from "./Profil/MyFavorite";
-import ItemEdit from "./Items/ItemEdit";
-import NewMessage from "./Message/newMessage";
-import DisplayCatalogue from "./Items/CatalogueDisplay/DisplayCatalogue";
+
+
+
 import { Box } from "@material-ui/core";
-import NotificationComponent from "./Profil/NotificationComponent";
-import CategoryProduct from "./NavBar/CategoryProduct";
-import PageNotFound from "./NavBar/PageNotFound";
+import { useTheme } from "@material-ui/core/styles";
 import _ from "lodash";
+import { Provider } from "react-redux";
+import {
+  getAllConv, getItemCreationInfo, handleNotificaiton,
+  loadUser,
+  setSocket
+} from "../actions";
 import CheckUrl from "../routes/CheckUrl";
-
+import store from "../store/store";
+import setAuthToken from "../utils/setAuthToken";
+import Sell from "./Footer/Sell";
+import DisplayCatalogue from "./Items/CatalogueDisplay/DisplayCatalogue";
+import ItemEdit from "./Items/ItemEdit";
+import Register from "./Login/UserRegister";
+import Conversation from "./Message/Conversation";
+import NewMessage from "./Message/newMessage";
+import PageNotFound from "./NavBar/PageNotFound";
+import MyFavorite from "./Profil/MyFavorite";
+import MyFrips from "./Profil/MyFrips/MyFrips";
+import NotificationComponent from "./Profil/NotificationComponent";
+import "./App.css"
+import StripeContainer from "./Checkout/StripeContainer";
+import StatusPaymentComponent from "./Checkout/StatusPaymentComponent";
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
-const ENDPOINT = "http://localhost:5000";
+const ENDPOINT = "192.168.1.105:5000";
 const socket = io(ENDPOINT);
 
 const App = () => {
@@ -55,13 +56,16 @@ const App = () => {
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
+  
   useEffect(() => {
     socket.on("connect", () => {
       store.dispatch(setSocket(socket));
+      store.dispatch(loadUser(socket));
+      store.dispatch(getAllConv());
+      store.dispatch(getItemCreationInfo());
     });
     socket.on("message notification", (data) => {
       if (!mobile) {
-        console.log(store.getState().notification.notificationUser);
         if (
           !_.includes(
             store.getState().notification.notificationUser,
@@ -70,25 +74,28 @@ const App = () => {
         ) {
           setNotification(data);
           store.dispatch({ type: "NOTIFICATION", payload: data });
-          store.dispatch({ type: "NEW_NOTIFICATION", payload: +1 });
         }
+        store.dispatch(handleNotificaiton(data));
       }
     });
-    store.dispatch(loadUser(socket));
+
 
     return () => {
       socket.on("disconnect");
     };
   }, [
-    store.getState().notification,
+    store.getState().notification.unReadNotification,
     store.getState().auth,
     store.getState().socket,
   ]);
 
+ 
+  
+
   return (
     <Provider store={store}>
       <ThemeProvider theme={Theme}>
-        <Box display={"flex"} flexDirection="column">
+        <Box display={"flex"} flexDirection="column" height={"100vh"}>
           <Router>
             <Header />
             <NotificationComponent notification={notification} />
@@ -105,28 +112,42 @@ const App = () => {
                 element={<LoginPage />}
                 key={"login"}
               />
+              <Route path="/member" key={"member-management"}>
+                <Route path="/member/:name" element={<div style={{height:200}}>salut</div>} />
+              </Route>
 
-              <Route path="/items" key={"items-management"}>
+              
+
+              <Route path="/items" key={"items-id"}>
                 <Route path="/items/:id" element={<ItemPreview />} />
                 <Route
                   path="/items/allNewItems"
                   element={<DisplayCatalogue />}
                 />
-                <Route path="/items/edit/:id" element={<ItemEdit />} />
+
               </Route>
 
               <Route element={<PrivateRoute />} key={"private-route"}>
-                <Route path="/items/new" element={<ItemCreate />} />
+                <Route path="/items/new" caseSensitive={false} element={<ItemCreate />} />
                 <Route path="/settings/profile" element={<UserProfile />} />
-                <Route path="/members/myFrips" element={<MyItems />} />
+                <Route path="/members/myFrips" element={<MyFrips />} />
                 <Route path="/member/conversation" element={<Conversation />} />
                 <Route path="/member/myFavorite" element={<MyFavorite />} />
                 <Route path="/member/message/:id" element={<NewMessage />} />
+                <Route path="/items/edit/:id" element={<ItemEdit />} />
+                <Route path="/items/offer/:id" element={<div style={{height:200}}>salut</div>} />
+                <Route path="/payment/:id" element={<StripeContainer />} />
+                <Route path="/payment/:id/paymentStatus" element={<StatusPaymentComponent />} />
+
               </Route>
+              <Route path="/filter" element={<DisplayCatalogue />}/>
+                
 
               <Route path="/" key={"root-filter"}>
                 <Route index element={<ItemList />} />
-                <Route element={<CheckUrl/>}>
+
+
+                <Route element={<CheckUrl />}>
                   <Route path=":upCategory" element={<DisplayCatalogue />}>
                     <Route path=":category" element={<DisplayCatalogue />}>
                       <Route

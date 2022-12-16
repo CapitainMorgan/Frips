@@ -29,8 +29,8 @@ const DialogPreviewProduct = ({
   if (!images[0].image) {
     return null;
   }
-  console.log(index)
-  console.log(open)
+  console.log(index);
+  console.log(open);
   return (
     <div>
       <Dialog open={open}>
@@ -79,7 +79,7 @@ const DialogPreviewProduct = ({
               style={{ backgroundColor: "transparent", color: "white" }}
               onClick={() => {
                 if (index === 0) {
-                  console.log(index)
+                  console.log(index);
                   setIndex(images.length - 1);
                 } else {
                   setIndex(index - 1);

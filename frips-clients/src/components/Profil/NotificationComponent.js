@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
 
-import { Avatar, Box, Button, makeStyles, Typography } from "@material-ui/core";
-import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
-import { ToastContainer, toast } from "react-toastify";
+import { Avatar, Box, makeStyles, Typography } from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const useStyles = makeStyles((theme) => ({
   progressBarStyle: {
@@ -19,6 +18,7 @@ const clearWaitingQueue = () => {
 };
 
 const notify = (notification) => {
+  console.log(notification);
   toast.info(
     <Box fontSize={16} display="flex" alignItems={"center"}>
       <Box
@@ -28,7 +28,8 @@ const notify = (notification) => {
         justifyContent={"center"}
       >
         <Avatar
-          src={`/imageProfile/${notification.id_Sender}/${notification.imageSender}`}
+          alt={`${notification.Pseudo}`}
+          src={`/imageProfile/${notification.id_Sender}/${notification.imageSender?.image}`}
         />
       </Box>
 

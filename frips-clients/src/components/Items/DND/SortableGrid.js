@@ -142,8 +142,8 @@ const ImageBox = ({
   const theme = useTheme();
 
   const desktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const tablet = useMediaQuery(theme.breakpoints.up("sm"));
-  const mobile = useMediaQuery(theme.breakpoints.up("xs"));
+  const mobile = useMediaQuery(theme.breakpoints.up("sm"));
+  const tablet = useMediaQuery(theme.breakpoints.up("md"));
 
   const pressDelay = () => {
     if (desktop || tablet) {

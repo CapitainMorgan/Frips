@@ -1,5 +1,6 @@
 generator client {
-  provider = "prisma-client-js"
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearch", "fullTextIndex"]
 }
 
 datasource db {
@@ -12,11 +13,11 @@ model account {
   Email                                String            @unique(map: "Email") @db.VarChar(255)
   Password                             String            @db.VarChar(60)
   Pseudo                               String            @unique(map: "Pseudo") @db.VarChar(50)
-  Lastname                             String?           @db.VarChar(255)
+  Lastname                             String            @db.VarChar(255)
   PaymentMethod                        String?           @db.VarChar(50)
   IBAN                                 String?           @db.VarChar(35)
   Description                          String?           @db.VarChar(255)
-  Firstname                            String?           @db.VarChar(255)
+  Firstname                            String            @db.VarChar(255)
   TelNumber                            String?           @unique(map: "TelNumber") @db.VarChar(50)
   id_Address                           Int?
   address                              address?          @relation(fields: [id_Address], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "account_ibfk_1")
@@ -28,6 +29,7 @@ model account {
   item                                 item[]
   message_accountTomessage_id_Receiver message[]         @relation("accountTomessage_id_Receiver")
   message_accountTomessage_id_Sender   message[]         @relation("accountTomessage_id_Sender")
+  nbview                               nbview[]
   pricepropose                         pricepropose[]
   review                               review[]
   sell                                 sell[]
@@ -168,7 +170,7 @@ model item {
   Description      String?         @db.VarChar(255)
   Name             String?         @db.VarChar(50)
   Size             String?         @db.VarChar(50)
-  NbView           Int?
+  DeliveryDetails  String?         @db.VarChar(255)
   DatePuplication  DateTime        @db.DateTime(0)
   Price            Float
   CurrentAuction   Boolean
@@ -183,6 +185,7 @@ model item {
   item_color       item_color[]
   item_fees        item_fees[]
   message          message[]
+  nbview           nbview[]
   pricepropose     pricepropose[]
   report           report[]
   sell             sell[]
@@ -235,6 +238,7 @@ model message {
   id                                   Int      @id @default(autoincrement())
   Text                                 String?  @db.VarChar(255)
   Date_Houre                           DateTime @db.DateTime(0)
+  Unread                               Boolean
   id_Sender                            Int
   id_Receiver                          Int
   id_Chat                              Int
@@ -283,6 +287,16 @@ model pricepropose {
   dateApprove DateTime? @db.DateTime(0)
   account     account   @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "pricepropose_ibfk_1")
   item        item      @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "pricepropose_ibfk_2")
+
+  @@id([id_Account, id_Item])
+  @@index([id_Item], map: "id_Item")
+}
+
+model nbview {
+  id_Account Int
+  id_Item    Int
+  account    account @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nbview_ibfk_1")
+  item       item    @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nbview_ibfk_2")
 
   @@id([id_Account, id_Item])
   @@index([id_Item], map: "id_Item")

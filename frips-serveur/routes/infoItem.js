@@ -1,97 +1,121 @@
-const express = require("express")
-const router = express.Router()
-const { nanoid } = require('nanoid')
+const express = require("express");
+const router = express.Router();
 
-const path = require('path'); // path for cut the file extension
-let fs = require('fs-extra');
+const { PrismaClient } = require("@prisma/client");
 
-const auth = require("../middleware/auth")
-const jwt = require("jsonwebtoken")
-const config = require("config")
-const {check,validationResult} = require("express-validator")
-const bcrypt = require("bcryptjs")
-const {PrismaClient} =  require("@prisma/client")
+const {
+  item,
+  account,
 
-const {item,account,image,message,brand,color,category,itemcondition,category_category} = new PrismaClient()
-
-
-
+  image,
+  message,
+  brand,
+  color,
+  category,
+  itemcondition,
+  category_category,
+} = new PrismaClient();
 
 // @route   GET api/members/myFrips
 // @desc    get all your post
 // @acces    Private
 
+router.get("/search", async (req, res) => {
+  try {
+    const infoBrand = await brand.findMany({
+      select:{
+        Name:true,
+        id:true
+      },
+      orderBy:{
+        id:"asc"
+      }
+      
+    });
 
-
-
-
-router.get("/info",async(req,res)=>{
-
-    console.log("launch")
-
-    
-
-    try {
-        
-        const infoBrand = await brand.findMany({
-            select:{
-               Name:true,
-               id:true,
+    const infoCategory = await category.findMany({
+      where: {
+        category_category_categoryTocategory_category_id_Child: {
+          some: {
+            category_categoryTocategory_category_id_Parent: {
+              category_category_categoryTocategory_category_id_Child: {
+                some: {
+                  id_Parent: {
+                    in: [2, 73, 81, 89],
+                  },
+                },
+              },
             },
-            orderBy:{
-                id:"asc"
-            }
-        })
-        const infoColor = await color.findMany({
-            select:{
-               Code:true,
-               Name:true,
-               id:true,
+          },
+        },
+      },
+      select: {
+        id: true,
+        Name: true,
+      },
+    });
 
-            },
-            orderBy:{
-                id:"asc"
-            }
-        })
-        const infoItemCondition = await itemcondition.findMany({
-            select:{
-               Description:true,
-               Name:true,
-               id:true
+    const infoObject = [infoBrand, infoCategory];
 
-            },
-            orderBy:{
-                id:"asc"
-            }
-        })
+    res.status(200).json(infoObject);
+  } catch (error) {
+    res.status(500).json("Server error");
+  }
+});
 
-        const infoCategory = await category.findMany({
-            select:{
-                Name:true,
-                id:true,
-                
-            }
-        })
+router.get("/info", async (req, res) => {
+  try {
+    const infoBrand = await brand.findMany({
+      select: {
+        Name: true,
+        id: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+    const infoColor = await color.findMany({
+      select: {
+        Code: true,
+        Name: true,
+        id: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
+    const infoItemCondition = await itemcondition.findMany({
+      select: {
+        Description: true,
+        Name: true,
+        id: true,
+      },
+      orderBy: {
+        id: "asc",
+      },
+    });
 
-        console.log(infoCategory[0])
+    const infoCategory = await category.findMany({
+      select: {
+        id: true,
 
-        const infoObject = {
-            brandInfo:infoBrand,
-            itemconditionInfo:infoItemCondition,
-            itemColorInfo:infoColor,
-            infoCategory
+        Name: true,
+        _count: true,
+      },
+    });
 
-        }
+    const infoObject = {
+      brandInfo: infoBrand,
+      itemconditionInfo: infoItemCondition,
+      itemColorInfo: infoColor,
+      infoCategory,
+    };
 
+    res.status(200).json(infoObject);
+  } catch (error) {
+    console.log(error)
+    res.status(500).json("Server error");
+  }
+});
 
-        res.status(200).json(infoObject)
-        
-    } catch (error) {
-        res.status(500).json("Server error")
-
-    }
-})
-
-
-
-module.exports = router
+module.exports = router;

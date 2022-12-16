@@ -1,260 +1,194 @@
+import React, { useState } from "react";
 
-
-import React , {useState}from "react"
- 
-
-import { Box } from "@material-ui/core";
-import { TextField,InputAdornment } from "@material-ui/core";
+import { Box, InputAdornment, Popper, TextField } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import { Popper } from "@material-ui/core";
 
-import { ClickAwayListener, makeStyles ,IconButton,Dialog} from '@material-ui/core';
-import _ from "lodash"
-import { MenuItem } from "@material-ui/core";
-import { arrayColor } from "../staticItems/staticItemName";
-import { Typography } from "@material-ui/core";
-import { alpha} from '@material-ui/core/styles/colorManipulator';
-import FiberManualRecordSharpIcon from '@material-ui/icons/FiberManualRecordSharp';
+import {
+    ClickAwayListener, Dialog, IconButton, makeStyles, MenuItem, Typography
+} from "@material-ui/core";
+import { alpha } from "@material-ui/core/styles/colorManipulator";
+import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
+import _ from "lodash";
 
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from "@material-ui/icons/Close";
 import { useSelector } from "react-redux";
-import { array } from "yup/lib/locale";
-
-
 
 const useStyles = makeStyles({
-    pointer:{
-        cursor:"pointer"
+  pointer: {
+    cursor: "pointer",
+  },
+  BoxItem: (props) => ({
+    "&:hover": {
+      background: props.hoverColor,
     },
-    BoxItem:(props)=>({
-        '&:hover': {
-            background: props.hoverColor,
-        },
-        
+  }),
+  Typography: {
+    fontWeight: 500,
+    fontSize: 18,
+  },
+  IconColor: {
+    position: "absolute",
+    right: 10,
+  },
+  Dialog: {
+    width: 300,
+    height: 500,
+  },
+});
 
-    }),
-    Typography:{
-        fontWeight:500,
-        fontSize:18,
-        
+const CostumBox = ({ item, setvalue, value }) => {
+  const props = { hoverColor: alpha(item.Code, 0.6) };
 
-    },
-    IconColor: {  
-        position:"absolute", 
-        right:10
-    },
-    Dialog: {
-        width:300,
-        height:500,
+  const classes = useStyles(props);
+
+  return (
+    <Box style={{ position: "relative" }}>
+      <MenuItem
+        className={classes.BoxItem}
+        key={item.Name}
+        onClick={() => {
+          console.log(_.includes(value, item));
+          if (!_.find(value, item)) {
+            if (value.length !== 2) {
+              setvalue.setFieldValue("Color", [...value, item]);
+            } else {
+              setvalue.setFieldValue("Color", [value[1], (value[0] = item)]);
+            }
+          } else {
+            setvalue.setFieldValue(
+              "Color",
+              value.filter((value) => {
+                return value.id !== item.id;
+              })
+            );
+          }
+        }}
+      >
+        <Typography className={classes.Typography}>{item.Name}</Typography>
+        <FiberManualRecordSharpIcon
+          className={classes.IconColor}
+          style={{
+            color: `${item.Code}`,
+            fontSize: 30,
+            stroke: "black",
+            strokeWidth: 1,
+          }}
+        />
+      </MenuItem>
+    </Box>
+  );
+};
+
+const extractName = (field) => {
+  let new_array = [];
+
+  field.map((item) => {
+    if (item.Name) {
+      new_array.push(item.Name);
     }
-
   });
 
+  return new_array;
+};
 
+const ColorForm = ({ form, mobile, field, ...props }) => {
+  const classes = useStyles();
+  const ColorInfo = useSelector(
+    (state) => state.itemInfo.itemInfo.itemColorInfo
+  );
+  const [anchorEl, setAnchorEl] = useState(null);
 
-  const CostumBox = ({item,setvalue,value}) =>{
-  
-    const props = { hoverColor: alpha(item.Code,0.6) }
-
-
-    const classes = useStyles(props)
-
+  const renderedColorForm = ColorInfo.map((item, index) => {
     return (
-        <Box style={{position:"relative"}}>
-            <MenuItem className={classes.BoxItem} key={item.Name} onClick={()=>{
-                
-                console.log(_.includes(value,item))
-                if(!_.find(value,item)){
+      <CostumBox value={field.value} setvalue={form} item={item}></CostumBox>
+    );
+  });
 
-                    if(value.length!==2){
+  const handleClick = (e) => {
+    setAnchorEl(e.currentTarget);
+  };
 
-                        setvalue.setFieldValue("Color",[...value,item])
+  console.log(field.value);
 
-                    }
-                    else{
-                        setvalue.setFieldValue("Color",[value[1],value[0]=item])
-                    }
-                }
+  const handleClickAway = () => {
+    setAnchorEl(null);
+  };
 
-                else{
-                    setvalue.setFieldValue("Color",value.filter(value => {
-                        return value.id !==item.id
-                    }))
-                }
+  return (
+    <ClickAwayListener onClickAway={handleClickAway}>
+      <Box>
+        <TextField
+          onClick={handleClick}
+          autoComplete="off"
+          placeholder="Selectionne une Couleur"
+          value={extractName(field.value)}
+          onChange={(e) => form.setFieldValue(field.name, e.target.value)}
+          fullWidth
+          InputProps={{
+            readOnly: true,
+            style: { fontSize: 16 },
+            classes: { input: classes.pointer },
 
-                
-                
+            endAdornment: (
+              <InputAdornment position="end" className={classes.pointer}>
+                {Boolean(anchorEl) ? <ExpandLess /> : <ExpandMore />}
+              </InputAdornment>
+            ),
+          }}
+        />
+        {!mobile ? (
+          <Popper
+            disablePortal={false}
+            style={{ width: "35%" }}
+            anchorEl={anchorEl}
+            placement="bottom"
+            open={Boolean(anchorEl)}
+          >
+            <Box
+              style={{ backgroundColor: "white", position: "absolute" }}
+              width={"100%"}
+            >
+              <Box maxHeight={250} overflow="auto">
+                {renderedColorForm}
+              </Box>
+            </Box>
+          </Popper>
+        ) : (
+          <Dialog open={Boolean(anchorEl)}>
+            <Box
+              className={classes.Dialog}
+              display="flex"
+              flexDirection="column"
+            >
+              <Box
+                minHeight={80}
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+                position="relative"
+              >
+                <Typography>Taille</Typography>
+                <Box padding={3} position="absolute" right={0}>
+                  <IconButton onClick={handleClickAway}>
+                    <CloseIcon />
+                  </IconButton>
+                </Box>
+              </Box>
 
-              
+              <Box padding={3} display="flex" justifyContent="center">
+                {field.value.length === 1 ? field.value : `${field.value}`}
+              </Box>
 
-                
-
-
-              
-                               
-            }}>
-                <Typography className={classes.Typography}>
-                    {item.Name}
-                </Typography>
-                <FiberManualRecordSharpIcon  className={classes.IconColor} style={{color:`${item.Code}`,fontSize:30,stroke:"black", strokeWidth:1}}/>
-            </MenuItem>
-        </Box>
-    )
-}
-
-
-const extractName = (field) =>{
-    let  new_array = []
-    
-    field.map(item=>{
-        if(item.Name){
-            new_array.push(item.Name)
-        }
-    })
-
-
-    return new_array
-}
-
-
-
-const ColorForm = ({form,mobile ,field,...props}) =>{
-    const classes = useStyles()
-    const ColorInfo = useSelector(state => state.itemInfo.itemInfo.itemColorInfo)
-    const [anchorEl, setAnchorEl] = useState(null);
-    
-
-    
-
-    const renderedColorForm = ColorInfo.map((item,index) =>{
-
-        return (
-            
-            <CostumBox  value={field.value} setvalue={form} item={item}>
-
- 
-            </CostumBox>
-                   
-                   
-                   
-        )
-    })
-    
-
-
-    const handleClick = (e) =>{
-        setAnchorEl(e.currentTarget)
-    }
-
-    console.log(field.value)
-
-    
-
-      
-      
-    
-    const handleClickAway = () => {
-
-        
-        
-       setAnchorEl(null)
-      }
-
-
-    return(
-        <ClickAwayListener onClickAway={handleClickAway}>
-
-        <Box >
-           <TextField
-                        onClick={handleClick}
-                        autoComplete="off"
-                        
-                        placeholder="Selectionne une Couleur"
-                        value={extractName(field.value)}
-                    
-                        onChange={e=>form.setFieldValue(field.name,e.target.value)}
-                        
-                        fullWidth
-                       InputProps={{
-                        readOnly:true,
-                        style:{fontSize:16},
-                        classes: { input: classes.pointer },
-
-                           
-                           endAdornment:(
-                               
-                            <InputAdornment position="end" className={classes.pointer}>
-                            {Boolean(anchorEl) ? <ExpandLess/>: <ExpandMore/>}
-                            </InputAdornment>
-                        )
-                        }}
-                      
-                        
-                        />
-                         {!mobile ?
-                            <Popper
-                            
-                            disablePortal={false}
-                        style={{width:"35%"}}
-
-                        anchorEl={anchorEl}
-                        placement="bottom"
-                        
-                        
-        
-                        open={Boolean(anchorEl)}>
-                            <Box style={{backgroundColor:"white",position:"absolute"}} width={"100%"}  >
-                                    <Box maxHeight={250} overflow="auto">
-                                    {renderedColorForm}
-
-                                    </Box>
-
-                                    </Box>
-                            </Popper>
-                        :
-                        
-                        <Dialog open={Boolean(anchorEl)}>
-                            <Box className={classes.Dialog} display="flex" flexDirection="column" >
-                                <Box minHeight={80} display="flex" justifyContent="center" alignItems="center" position="relative">
-                                    <Typography>
-                                        Taille
-                                    </Typography>
-                                    <Box padding={3} position="absolute"  right={0}>
-                                        <IconButton onClick={handleClickAway} ><CloseIcon/></IconButton>
-                                    </Box>
-                                </Box>
-
-                                <Box padding={3} display="flex" justifyContent="center">
-                                    
-                                    {field.value.length ===1 ? field.value : `${field.value}`}
-
-                                    
-                                </Box>
-
-                                <Box  style={{backgroundColor:"white"}} width={"100%"}>
-
-                                {renderedColorForm}
-
-                                </Box>
-
-                                
-
-                            </Box>
-
-
-
-                        </Dialog>
-                        
-                        
-                        }  
-                        
-
-
-        </Box>
-
-        </ClickAwayListener>
-    )
-}
+              <Box style={{ backgroundColor: "white" }} width={"100%"}>
+                {renderedColorForm}
+              </Box>
+            </Box>
+          </Dialog>
+        )}
+      </Box>
+    </ClickAwayListener>
+  );
+};
 
 export default ColorForm;

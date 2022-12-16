@@ -1,63 +1,62 @@
-import { AUTH_ERROR, REGISTER_FAILURE, REGISTER_SUCCESS, USER_LOADED ,LOGIN_FAIL,LOGIN_SUCCES, LOGOUT} from "../actions/type";
-
+import {
+    AUTH_ERROR, LOGIN_FAIL,
+    LOGIN_SUCCES,
+    LOGOUT, REGISTER_FAILURE,
+    REGISTER_SUCCESS,
+    USER_LOADED
+} from "../actions/type";
 
 const initialState = {
-    loading:true,
-    error:null,
-    loaded:false,
-}
+  loading: true,
+  error: null,
+  loaded: false,
+};
 
+export default (state = initialState, action) => {
+  const { type, payload } = action;
 
-export default (state=initialState,action) =>{
-    const {type,payload} = action;
+  switch (type) {
+    case USER_LOADED:
+      return {
+        ...state,
+        isAuthenticated: true,
+        loading: false,
+        error: null,
+        user: payload,
+      };
+    case REGISTER_SUCCESS:
+    case LOGIN_SUCCES:
+      localStorage.setItem("token", payload.token);
+      return {
+        ...state,
+        ...payload,
+        error: null,
+        isAuthenticated: true,
+        loading: false,
+      };
 
+    case REGISTER_FAILURE:
+    case AUTH_ERROR:
+    case LOGIN_FAIL:
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
+        error: payload,
 
-    switch(type){
-        case USER_LOADED:
-            return{
-                ...state,
-                isAuthenticated:true,
-                loading:false,
-                error:null,
-                user:payload,
-            }
-        case REGISTER_SUCCESS:
-        case LOGIN_SUCCES:
-            localStorage.setItem("token",payload.token)
-            return {
-                ...state,
-                ...payload,
-                error:null,
-                isAuthenticated:true,
-                loading:false,
-                
-            }
+        loading: false,
+      };
+    case LOGOUT:
+      localStorage.removeItem("token");
+      return {
+        ...state,
+        token: null,
+        isAuthenticated: false,
 
-        case REGISTER_FAILURE:
-        case AUTH_ERROR:
-        case LOGIN_FAIL:
-            return{
-                ...state,
-                token:null,
-                isAuthenticated:false,
-                error:payload,
+        loading: false,
+      };
 
-                loading:false
-            }
-        case LOGOUT:
-
-            localStorage.removeItem("token")
-            return{
-                ...state,
-                token:null,
-                isAuthenticated:false,
-
-                loading:false
-            }
-
-
-        default:
-            return state
-    }
-
-}
+    default:
+      return state;
+  }
+};

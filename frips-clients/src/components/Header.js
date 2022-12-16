@@ -1,29 +1,20 @@
-import React, { useRef, useState } from "react";
-import { alpha, makeStyles } from "@material-ui/core/styles";
+import { Avatar, Box, Divider, Slide } from "@material-ui/core";
 import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
-import Typography from "@material-ui/core/Typography";
-import InputBase from "@material-ui/core/InputBase";
 import Badge from "@material-ui/core/Badge";
-import MenuItem from "@material-ui/core/MenuItem";
+import IconButton from "@material-ui/core/IconButton";
 import Menu from "@material-ui/core/Menu";
-import SearchIcon from "@material-ui/icons/Search";
-import AccountCircle from "@material-ui/icons/AccountCircle";
-import MailIcon from "@material-ui/icons/Mail";
-import MoreIcon from "@material-ui/icons/MoreVert";
-import {
-  Avatar,
-  Divider,
-  InputAdornment,
-  useScrollTrigger,
-} from "@material-ui/core";
-import { Box, Slide } from "@material-ui/core";
-import FavoriteIcon from "@material-ui/icons/Favorite";
+import MenuItem from "@material-ui/core/MenuItem";
+import { alpha, makeStyles } from "@material-ui/core/styles";
+import Toolbar from "@material-ui/core/Toolbar";
+import Typography from "@material-ui/core/Typography";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import CopyrightIcon from "@material-ui/icons/Copyright";
-import { useSelector, useDispatch } from "react-redux";
+import FavoriteIcon from "@material-ui/icons/Favorite";
+import MailIcon from "@material-ui/icons/Mail";
+import MoreIcon from "@material-ui/icons/MoreVert";
+import React, { useRef } from "react";
 import Div100vh from "react-div-100vh";
+import { useDispatch, useSelector } from "react-redux";
 
 import { useTheme } from "@material-ui/core/styles";
 
@@ -34,8 +25,9 @@ import { logout } from "../actions";
 
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import SubHeaderManager from "./NavBar/SubHeaderManager";
 import { useNavigate } from "react-router-dom";
+import Search from "./NavBar/Search";
+import SubHeaderManager from "./NavBar/SubHeaderManager";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -104,17 +96,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
   },
-  inputRoot: {
-    color: "inherit",
-  },
-  inputInput: {
-    fontSize: 16,
 
-    padding: theme.spacing(1, 1, 1, 0),
-    // vertical padding + font size from searchIcon
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
-    transition: theme.transitions.create("width"),
-  },
   sectionDesktop: {
     display: "none",
     [theme.breakpoints.up("md")]: {
@@ -156,7 +138,6 @@ const Header = ({ onSearchSubmit }) => {
   const classes = useStyles();
   const history = useNavigate();
 
-  const [term, setTerm] = useState("");
   const state = useSelector((state) => state.auth);
   const avatarRef = useRef(null);
   const theme = useTheme();
@@ -215,15 +196,6 @@ const Header = ({ onSearchSubmit }) => {
 
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(true);
-  };
-
-  const onInputChange = (e) => {
-    setTerm(e.target.value);
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    onSearchSubmit(term);
   };
 
   const menuId = "primary-search-account-menu";
@@ -530,24 +502,7 @@ const Header = ({ onSearchSubmit }) => {
             </Box>
             {!mobile ? (
               <Box width={500}>
-                <div className={classes.search}>
-                  <div className={classes.searchIcon}>
-                    <SearchIcon />
-                  </div>
-                  <form onSubmit={onSubmit}>
-                    <InputBase
-                      fullWidth
-                      placeholder="Rechercher des items"
-                      classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                      }}
-                      inputProps={{ "aria-label": "search" }}
-                      value={term}
-                      onChange={onInputChange}
-                    />
-                  </form>
-                </div>
+                <Search />
               </Box>
             ) : null}
 
@@ -591,7 +546,7 @@ const Header = ({ onSearchSubmit }) => {
                         }}
                       >
                         <Badge
-                          badgeContent={unReadNotification}
+                          badgeContent={unReadNotification?.length}
                           color="secondary"
                         >
                           <MailIcon />
@@ -621,8 +576,8 @@ const Header = ({ onSearchSubmit }) => {
                             zIndex: 1500,
                           }}
                           onClick={handleMenuDesktop}
-                          alt={`${state.user.Pseudo}`}
-                          src={`/imageProfile/${state.user.id}/${state.user.image?.image}`}
+                          alt={`${state.user?.Pseudo}`}
+                          src={`/imageProfile/${state.user?.id}/${state.user?.image?.image}`}
                         />
 
                         <Box
@@ -649,7 +604,10 @@ const Header = ({ onSearchSubmit }) => {
                       history("/member/conversation");
                     }}
                   >
-                    <Badge badgeContent={unReadNotification} color="secondary">
+                    <Badge
+                      badgeContent={unReadNotification?.length}
+                      color="secondary"
+                    >
                       <MailIcon />
                     </Badge>
                   </IconButton>
@@ -686,27 +644,9 @@ const Header = ({ onSearchSubmit }) => {
               margin="auto"
               alignItems="center"
               display="flex"
-              margin="auto"
             >
               <Box width={"100%"} className={classes.SearchBar}>
-                <div className={classes.search}>
-                  <div className={classes.searchIcon}>
-                    <SearchIcon />
-                  </div>
-                  <form onSubmit={onSubmit}>
-                    <InputBase
-                      fullWidth
-                      placeholder="Rechercher des items"
-                      classes={{
-                        root: classes.inputRoot,
-                        input: classes.inputInput,
-                      }}
-                      inputProps={{ "aria-label": "search" }}
-                      value={term}
-                      onChange={onInputChange}
-                    />
-                  </form>
-                </div>
+                <Search />
               </Box>
             </Box>
           ) : (

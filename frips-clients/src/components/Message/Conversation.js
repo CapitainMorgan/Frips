@@ -1,12 +1,12 @@
 import {
-    Avatar,
-    Box,
-    Button,
-    CircularProgress,
-    Icon,
-    makeStyles,
-    MenuItem,
-    Typography
+  Avatar,
+  Box,
+  Button,
+  CircularProgress,
+  Icon,
+  makeStyles,
+  MenuItem,
+  Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import AdjustOutlinedIcon from "@material-ui/icons/AdjustOutlined";
@@ -68,24 +68,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     flexDirection: "column",
   },
-  Header: {
-    fontSize: 16,
-    fontWeight: 500,
-    [theme.breakpoints.down("sm")]: {
-      fontSize: 20,
-    },
-  },
-  Dialog: {
-    width: 400,
-    height: 600,
-    [theme.breakpoints.down("sm")]: {
-      height: 500,
-      width: "auto",
-    },
-  },
+ 
+  
   formContainer: {
     boxSizing: "border-box",
     width: 1000,
+    height:"100vh",
     margin: "auto",
     [theme.breakpoints.down("sm")]: {
       width: "auto",
@@ -95,48 +83,16 @@ const useStyles = makeStyles((theme) => ({
     },
   },
 }));
-/* 
 
-return  messages.map((item,index) =>{
-         
-          
-          return (
-            <Box display="flex" width="100%" marginTop={1}>
-            <MenuItem className={classes.MenuSetting} onClick={()=>{
-            history.push(`/member/message/${index}`)
 
-            }}>
-                <Avatar/>
-              <Box display="flex" flexDirection="column" paddingLeft={2}>
-            <Box>
-                {item.pseudo}
-            </Box>
-            <Box display="flex" flexWrap="wrap" width={500}>
-                <Typography style={{textOverflow:"ellipsis",whiteSpace:"nowrap",width:"100%",overflow:"hidden"}}>
-                    {item.message}
-                </Typography>
-            </Box>
-            <Box position="absolute" top={0} right={0} padding={1}>
-                <Typography style={{fontSize:13}}>
-                il y a x minute
-                </Typography>
-            </Box>
-            <Box position="absolute" bottom={0} right={0} padding={1}>
-            </Box>
-        </Box>
 
-              </MenuItem>
-              </Box>
-            
-          )
-      })*/
 
-const UserMessage = (messages, classes, history,idUser) => {
-  return messages.map((item,index) => {
+const UserMessage = (messages, classes, history, idUser) => {
+  return messages.map((item, index) => {
     return (
-      <Box display="flex" width="100%" marginTop={1}>
+      <Box display="flex" width="100%" marginTop={1} key={index} >
         <MenuItem
-        key={index}
+          key={index}
           className={classes.MenuSetting}
           onClick={() => {
             history(`/member/message/${item.id}`);
@@ -175,7 +131,8 @@ const UserMessage = (messages, classes, history,idUser) => {
                   <Typography style={{ fontSize: 13 }}>
                     {moment(item.Date_Hour).local().format("LL")}
                   </Typography>
-                  {item.message[0].Unread && idUser.id !== item.message[0].id_Sender ? (
+                  {item.message[0].Unread &&
+                  idUser.id !== item.message[0].id_Sender ? (
                     <Icon>
                       <AdjustOutlinedIcon color="primary" />
                     </Icon>
@@ -192,42 +149,52 @@ const UserMessage = (messages, classes, history,idUser) => {
 
 const AllConversations = () => {
   const dispatch = useDispatch();
-  const conversations = useSelector((state) => state.messageReducer);
-  const idUser = useSelector(state => state.auth.user)
+  const conversations = useSelector((state) => state.messageReducer.conversations);
+  const loading = useSelector((state)=>state.messageReducer.loading)
+  const idUser = useSelector((state) => state.auth.user);
   const history = useNavigate();
-    console.log(idUser)
+
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+
+  },[])
   useEffect(() => {
-    dispatch(getAllConv());
-  }, [dispatch]);
+    if(conversations.length === 0 && !loading){
+      dispatch(getAllConv());
+
+    }    
+  }, [dispatch,loading]);
 
   const classes = useStyles();
+  console.log(conversations.length)
 
-  if (!conversations && conversations && conversations.conversations) {
+  if (conversations.length === 0 && loading) {
     return (
       <Box
-        height="100vh"
-        width="100%"
+        style={{ backgroundColor: "#F5f5f3" }}
         display="flex"
         justifyContent="center"
+        width="100%"
+        height="100vh"
         alignItems="center"
       >
         <CircularProgress size={100} />
       </Box>
-    );
+    )
   }
 
   return (
-    <Box style={{ backgroundColor: "#F5f5f3" }} height="100vh">
+    <Box style={{ backgroundColor: "#F5f5f3" }}>
       <Box height={100}></Box>
       <Box className={classes.formContainer}>
-        <Box className={classes.boxShadow} maxHeight={600}>
+        <Box className={classes.boxShadow} maxHeight={400}>
           <Box>
             <Button variant="contained" color="primary" startIcon={<AddIcon />}>
               Envoyer un nouveau message
             </Button>
           </Box>
-          {conversations.conversations.length !== 0
-            ? UserMessage(conversations.conversations, classes, history,idUser)
+          {!loading 
+            ? UserMessage(conversations, classes, history, idUser)
             : null}
         </Box>
       </Box>

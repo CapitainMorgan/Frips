@@ -1,6 +1,6 @@
 import _ from "lodash";
 import {
-    ADD_FILTER, CHANGE_PAGINATION, FETCH_FILTER, FETCH_ITEM_FILTER_SUCCESS, FETCH_ITEM_TYPE, FETCH_NEW_ITEM_TYPE, REMOVE_FILTER
+    ADD_FILTER, CHANGE_PAGINATION, FETCH_FILTER, FETCH_ITEM_FILTER_SUCCESS, FETCH_ITEM_TYPE, FETCH_NEW_ITEM_TYPE, FILTER, REMOVE_FILTER
 } from "../actions/type.js";
 
 const initialValues = {
@@ -13,6 +13,7 @@ const initialValues = {
     Marque: [],
     Price: [0, Number.POSITIVE_INFINITY],
     Etat: [],
+    Search:[],
     sortedBy: null,
   },
   Chips: [],
@@ -102,6 +103,7 @@ export default (state = initialValues, action) => {
         AllFilter: {
           ...setfilter,
         },
+        filterLoading:false,
         Chips: setChips,
         pagination: 1,
       };
@@ -114,7 +116,7 @@ export default (state = initialValues, action) => {
         for (const [key, value] of Object.entries(copyObjectAllFilter)) {
           if (_.find(value, payload)) {
             _.remove(value, (item) => {
-              return item.id == payload.id;
+              return item.id === payload.id;
             });
           }
         }
@@ -151,9 +153,9 @@ export default (state = initialValues, action) => {
 
       return {
         ...state,
-
         AllFilter: { ...copyObjectAllFilter },
         Chips: [...arrayChip],
+        filterLoading:false,
         pagination: 1,
       };
 
@@ -171,6 +173,7 @@ export default (state = initialValues, action) => {
         ...state,
         loaded: true,
         loading: false,
+
       };
 
     case FETCH_FILTER:
@@ -179,6 +182,14 @@ export default (state = initialValues, action) => {
         loaded: false,
         loading: true,
       };
+    case FILTER:
+      return {
+        ...state,
+        filterLoading:true,
+      }
+
+    case "RESTORE":
+      return initialValues
 
     default:
       return state;

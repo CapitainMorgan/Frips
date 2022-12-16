@@ -1,8 +1,17 @@
 import React, { useEffect, useMemo, useState } from "react";
 
 import {
-  Avatar, Box,
-  Card, CardActionArea, CardHeader, CircularProgress, Divider, IconButton, makeStyles, Typography, useMediaQuery,
+  Avatar,
+  Box,
+  Card,
+  CardActionArea,
+  CardHeader,
+  CircularProgress,
+  Divider,
+  IconButton,
+  makeStyles,
+  Typography,
+  useMediaQuery,
   useTheme
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -10,17 +19,18 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import _ from "lodash";
-import ReactPaginate from "react-paginate";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
-import styled from "styled-components";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  addFavorite, changePagination, getItemCreationInfo,
-  paginationForFilter
+  addFavorite,
+  changePagination,
+  getItemCreationInfo,
+  idFavorite,
+  paginationForFilter,
+  removeFavorite
 } from "../../../actions";
-import {
-  Catalogue
-} from "../staticItems/staticItemName";
+import MyPaginate from "../../Footer/PaginationComponent";
+import { Catalogue } from "../staticItems/staticItemName";
 import CostumChips from "./CostumChips";
 import RenderChipsComponents from "./renderChipsComponents";
 
@@ -60,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     minHeight: 400,
     opacity: (props) => {
       if (props) {
-        return 0.3;
+        return 0.5;
       } else {
         return null;
       }
@@ -69,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
       if (props) {
         return "opacity .25s ease-out";
       } else {
+        alert("here")
         return null;
       }
     },
@@ -104,72 +115,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MyPaginate = styled(ReactPaginate).attrs({
-  // You can redifine classes here, if you want.
-  activeClassName: "active", // default to "disabled"
-})`
-  margin: 0;
-  display: flex;
-  padding: 0;
-  flex-wrap: wrap;
-  list-style: none;
-  align-items: center;
-  margin-block-start: 1em;
-  margin-block-end: 1em;
-  margin-inline-start: 0px;
-  margin-inline-end: 0px;
-  padding-inline-start: 40px;
-  li a {
-    height: 40px;
-    padding: 0 10px;
-    font-size: 0.9375rem;
-    min-width: 40px;
-    border-radius: 20px;
-    border: 1px solid rgba(0, 0, 0, 0.23);
 
-    color: rgba(0, 0, 0, 0.87);
-    margin: 0 3px;
-    box-sizing: border-box;
-    text-align: center;
-    font-family: "Helvetica", "Arial", sans-serif;
-    font-weight: 400;
-    line-height: 1.43;
-    cursor: pointer;
-    display: inline-flex;
-    outline: 0;
-    position: relative;
-    align-items: center;
-    user-select: none;
-    vertical-align: middle;
-    justify-content: center;
-    text-decoration: none;
-    background-color: transparent;
-    -webkit-tap-highlight-color: transparent;
-  }
-  li.previous a,
-  li.next a,
-  li.break a {
-    border-color: transparent;
-  }
-  li.active a {
-    background-color: rgba(130, 160, 194, 0.3);
-    border-color: 1px solid rgba(130, 160, 194, 0.5);
-    color: #82a0c2;
-  }
-  li.disabled a {
-    color: grey;
-  }
-  li.disable,
-  li.disabled a {
-    cursor: default;
-  }
-`;
 
 const renderedItem = (state, classes, favorite, dispatch, history) => {
-
   return state.map((item, index) => {
-    let category = item.item_category[0].category.Name
-    let brand = item.item_brand[0].brand.Name
+    let category = item.item_category[0].category.Name;
+    let brand = item.item_brand[0].brand.Name;
     return (
       <Box width={"100%"} height={"100%"} padding={1} id={item}>
         <Card className={classes.BoxOneItem}>
@@ -207,16 +158,19 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
             <Typography>{item.Size}</Typography>
             <Typography>{brand}</Typography>
             <Typography>{category}</Typography>
-
           </Box>
           <Divider />
           <Box height={44} display="flex" alignItems="center">
-            <IconButton
+          <IconButton
               onClick={() => {
-                dispatch(addFavorite(state[index].id));
+                if (_.some(favorite, { id_Item: item.id })) {
+                  dispatch(removeFavorite(state[index].id,5));
+                } else {
+                  dispatch(addFavorite(state[index].id,5));
+                }
               }}
             >
-              {item.id === true ? (
+              {_.some(favorite, { id_Item: item.id }) ? (
                 <FavoriteIcon style={{ color: "red" }}></FavoriteIcon>
               ) : (
                 <FavoriteBorderIcon
@@ -240,26 +194,26 @@ const filterBy = [
   { Name: "Prix croissant", id: 1, label: "sortedBy" },
 ];
 
-
-
 const DisplayCatalogue = ({
   items,
   loaded,
   loading,
   itemInfo,
   pagination,
+  filterLoading,
+  infoLoading,
   count,
 }) => {
   const dispatch = useDispatch();
   const classes = useStyles(loading);
+
   const theme = useTheme();
   const history = useNavigate();
-  const location = useLocation()
-  const params = useParams()
- 
- 
+
+
   useEffect(() => {
-    if (itemInfo) {
+    dispatch(idFavorite())
+    if (itemInfo && !infoLoading) {
       setTypeOfFilter([
         { label: "Catalogue", array: Catalogue },
         { label: "Couleur", array: itemInfo.itemColorInfo },
@@ -268,16 +222,15 @@ const DisplayCatalogue = ({
         { label: "Etat", array: itemInfo.itemconditionInfo },
         { label: "sortedBy", array: filterBy },
       ]);
-      
     } else {
       dispatch(getItemCreationInfo());
     }
-  }, [dispatch, itemInfo]);
-  
-
     
+  }, [itemInfo]);
+
+
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const favorite = useSelector((state) => state.favoriteReducers.favorit);
+  const favorite = useSelector((state) => state.favoriteReducers.favoritIds);
   const handleChange = ({ selected }) => {
     dispatch(changePagination(selected + 1));
   };
@@ -286,7 +239,6 @@ const DisplayCatalogue = ({
   const allFilterProps = useSelector(
     (state) => state.filterCatalogue.AllFilter
   );
-  const stateToFilter = useSelector((state) => state.filterCatalogue.Chips);
 
   const [typeOfFilter, setTypeOfFilter] = useState([]);
 
@@ -295,55 +247,25 @@ const DisplayCatalogue = ({
   }, [pagination]);
 
   useEffect(() => {
-    if (items.length !== 0 && !loading && loaded) {
+    if (items.length !== 0 && !loading) {
       setFilterItem(items);
     }
-  }, [items, dispatch]);
-
-  
-
-  
+    
+  }, [items, dispatch,loading]);
 
   
 
   useEffect(() => {
-    if (stateToFilter.length !== 0) {
-      const firstPrice = _.find(stateToFilter, { De: true })
-        ? _.find(stateToFilter, { De: true })
-        : 0;
-      const secondPrice = _.find(stateToFilter, { A: true })
-        ? _.find(stateToFilter, { A: true })
-        : 1000;
-
-      const filterArray = items.filter(
-        ({ Price, itemcondition, item_color, item_brand }) => {
-          let [firstColor, SecondColor] = item_color;
-          const [brand] = item_brand;
-
-          return (
-            _.some(stateToFilter, firstColor.color) ||
-            (SecondColor ? _.some(stateToFilter, SecondColor.color) : null) ||
-            _.some(stateToFilter, brand.brand) ||
-            _.some(stateToFilter, itemcondition) ||
-            parseInt(firstPrice.value) <= Price ||
-            Price <= parseInt(secondPrice.value)
-          );
-        }
-      );
-
-      dispatch(paginationForFilter(allFilterProps, filterArray));
-    } else {
-      dispatch(paginationForFilter(allFilterProps, []));
-    }
-  }, [stateToFilter, allFilterProps, pagination]);
+      dispatch(paginationForFilter());
+    
+    
+  }, [dispatch, allFilterProps, pagination,filterLoading]);
 
   const renderedItems = useMemo(() => {
     return renderedItem(filterItem, classes, favorite, dispatch, history);
-  }, [filterItem, items, allFilterProps, loaded]);
-
-
-
-  if (filterItem.length === 0) {
+  }, [filterItem, items, allFilterProps]);
+  
+  if (loading && itemInfo?.length===0) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -357,6 +279,7 @@ const DisplayCatalogue = ({
       </Box>
     );
   }
+
   return (
     <Box
       style={{ backgroundColor: "#F5f5f3" }}
@@ -376,6 +299,22 @@ const DisplayCatalogue = ({
         >
           {typeOfFilter ? <CostumChips TypeCatalogue={typeOfFilter} /> : null}
           <RenderChipsComponents />
+        </Box>
+        <Box
+          display="flex"
+          justifyContent="center"
+          width="100%"
+          alignItems="center"
+        >
+          <Typography
+            style={{
+              fontSize: "1.3rem",
+              color: "#82A0C2",
+              paddingLeft: "1.3rem",
+            }}
+          >
+            {count ===0 &&!loading ? `Oups il semblerait qu'il n'y ait aucun résultat correspondant à votre recherche`: null}
+          </Typography>
         </Box>
 
         <Box height={"10vh"} />
@@ -419,6 +358,7 @@ const mapStateToProps = (state) => ({
   loading: state.filterCatalogue.loading,
   loaded: state.filterCatalogue.loaded,
   count: state.filterCatalogue.count,
+  infoLoading: state.itemInfo.loading,
 
   itemInfo: state.itemInfo.itemInfo,
   pagination: state.filterCatalogue.pagination,

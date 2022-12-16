@@ -61,6 +61,13 @@ const SecondPageDialog = ({
   const dispatch = useDispatch();
   const history = useNavigate();
 
+
+  <Button type="outlined" color="primary" onClick={()=>{
+    alert("Here")
+  }}>
+          faire une offre
+        </Button>
+
   if (!item) {
     return null;
   }

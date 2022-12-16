@@ -1,21 +1,10 @@
 import {
-  Box,
-  MenuItem,
-  Typography,
-  makeStyles,
-  Avatar,
-  Button,
-  Divider,
-  Dialog,
-  Select,
-  Input,
-  Slider,
+  Avatar, Box, Button, Dialog, Divider, Input, makeStyles, MenuItem, Select, Slider, Typography
 } from "@material-ui/core";
-import React, { useState, useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { useSelector } from "react-redux";
 import AddIcon from "@material-ui/icons/Add";
+import React, { useEffect, useRef, useState } from "react";
 import ReactAvatarEditor from "react-avatar-editor";
+import { useDispatch, useSelector } from "react-redux";
 import { changeImageProfile } from "../../actions";
 
 const useStyles = makeStyles((theme) => ({

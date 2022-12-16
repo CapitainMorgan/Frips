@@ -28,7 +28,7 @@ const SubHeaderManager = () => {
   return (
     <Box
       width={"100%"}
-      style={{ backgroundColor: "white" }}
+      style={{ backgroundColor:"rgba(205, 217, 231,0.8)" }}
       height={50}
       margin="auto"
       display="flex"
@@ -36,6 +36,10 @@ const SubHeaderManager = () => {
       paddingLeft={"10%"}
       paddingRight={"10%"}
     >
+      <SubHeaderNavigation
+        category={1}
+        transformStringToUrl={transformStringToUrl}
+      />
       <SubHeaderNavigation
         category={1}
         transformStringToUrl={transformStringToUrl}

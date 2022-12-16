@@ -1,16 +1,11 @@
-import React, { useState } from "react";
 import {
-  MenuItem,
   Box,
-  ClickAwayListener,
-  Popper,
-  makeStyles,
-  Typography,
+  ClickAwayListener, makeStyles, MenuItem, Popper, Typography
 } from "@material-ui/core";
-import { Catalogue } from "../Items/staticItems/staticItemName";
-import _ from "lodash";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { setIn } from "formik";
+import { Catalogue } from "../Items/staticItems/staticItemName";
 const useStyles = makeStyles((theme) => ({
   fakeBox: {
     cursor: "pointer",
@@ -32,6 +27,7 @@ let thirdQuery;
 
 const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
   const history = useNavigate();
+  const dispatch = useDispatch()
 
   const classes = useStyles();
   const [anchor, setAnchor] = useState(null);
@@ -82,7 +78,7 @@ const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
                 {Catalogue[0].subitems.map((item, index) => {
                   return (
                     <MenuItem
-                    key={index}
+                      key={index}
                       style={{ height: 50, fontSize: 16 }}
                       onClick={() => {
                         secondQuery = "/" + item.label;
@@ -96,23 +92,25 @@ const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
               </Box>
               <Box width={"70%"}>
                 <Box display="grid" gridTemplateColumns="repeat(2,50%)">
-                  {Catalogue[0].subitems[indexItem].subitems.map((item,index) => {
-                    return (
-                      <MenuItem
-                      key={index}
-                        disableTouchRipple
-                        disableGutters
-                        style={{ height: 50, fontSize: 16 }}
-                        onClick={(e) => {
-                          thirdQuery = "/" + transformStringToUrl(item.Name);
-                          handleClickAway(e);
-                          history("/Femme" + secondQuery + thirdQuery);
-                        }}
-                      >
-                        {item.Name}
-                      </MenuItem>
-                    );
-                  })}
+                  {Catalogue[0].subitems[indexItem].subitems.map(
+                    (item, index) => {
+                      return (
+                        <MenuItem
+                          key={index}
+                          disableTouchRipple
+                          disableGutters
+                          style={{ height: 50, fontSize: 16 }}
+                          onClick={(e) => {
+                            thirdQuery = "/" + transformStringToUrl(item.Name);
+                            handleClickAway(e);
+                            history("/Femme" + secondQuery + thirdQuery);
+                          }}
+                        >
+                          {item.Name}
+                        </MenuItem>
+                      );
+                    }
+                  )}
                 </Box>
               </Box>
             </Box>

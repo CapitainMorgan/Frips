@@ -29,12 +29,13 @@ const ItemEdit = ({ loading, loaded, editItemPage }) => {
       </Box>
     );
   }
-
-  const newArray = Array.from(editItemPage?.image).map((file) =>
+  let initialValues
+  if(editItemPage){
+    const newArray = Array.from(editItemPage?.image).map((file) =>
     URL.createObjectURL(file)
   );
 
-  let initialValues = {
+   initialValues = {
     Titre: editItemPage?.Name,
     Description: editItemPage?.Description,
     image: newArray,
@@ -45,6 +46,7 @@ const ItemEdit = ({ loading, loaded, editItemPage }) => {
     Price: editItemPage?.Price,
     State: editItemPage?.itemcondition,
   };
+  }
 
   return (
     <Box>

@@ -157,6 +157,7 @@ CREATE TABLE Report(
 CREATE TABLE Image(
    id INT AUTO_INCREMENT,
    image VARCHAR(255) NOT NULL,
+   confidencial BOOL NOT NULL,
    id_Item INT,
    id_Account INT,
    PRIMARY KEY(id),

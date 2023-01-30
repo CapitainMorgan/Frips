@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "@dnd-kit/core": "^3.1.1",
-    "@hookform/resolvers": "^2.8.3",
+    "@hookform/resolvers": "^2.9.10",
     "@material-ui/core": "^4.12.1",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
@@ -31,6 +31,7 @@
     "react-dom": "^17.0.2",
     "react-dropzone": "^11.3.4",
     "react-grid-dnd": "^2.1.2",
+    "react-hook-form": "^7.41.0",
     "react-icons": "^4.7.1",
     "react-infinite-scroll-component": "^5.1.0",
     "react-intersection-observer": "^8.32.3",

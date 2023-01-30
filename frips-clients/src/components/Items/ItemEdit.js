@@ -12,11 +12,14 @@ const ItemEdit = ({ loading, loaded, editItemPage }) => {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(editItem(id));
-    dispatch(getItemCreationInfo());
-  }, [dispatch]);
+    if(loading && !Boolean(editItemPage)){
+      dispatch(editItem(id));
 
-  if (loading && !loaded) {
+    }
+    dispatch(getItemCreationInfo());
+  }, [dispatch,id]);
+
+  if (loading && !Boolean(editItemPage)) {
     return (
       <Box
         height="100vh"
@@ -29,35 +32,38 @@ const ItemEdit = ({ loading, loaded, editItemPage }) => {
       </Box>
     );
   }
-  let initialValues
-  if(editItemPage){
-    const newArray = Array.from(editItemPage?.image).map((file) =>
-    URL.createObjectURL(file)
-  );
-
-   initialValues = {
-    Titre: editItemPage?.Name,
-    Description: editItemPage?.Description,
-    image: newArray,
-    Catalogue: editItemPage?.item_category,
-    Brand: editItemPage?.item_brand,
-    Size: editItemPage?.Price,
-    Color: editItemPage?.item_color,
-    Price: editItemPage?.Price,
-    State: editItemPage?.itemcondition,
-  };
+ 
+  else{
+    let initialValues
+    if(editItemPage){
+      const newArray = Array.from(editItemPage?.image).map((file) =>
+      URL.createObjectURL(file)
+    );
+  
+     initialValues = {
+      Titre: editItemPage?.Name,
+      Description: editItemPage?.Description,
+      image: newArray,
+      Catalogue: editItemPage?.item_category,
+      Brand: editItemPage?.item_brand,
+      Size: editItemPage?.Price,
+      Color: editItemPage?.item_color,
+      Price: editItemPage?.Price,
+      State: editItemPage?.itemcondition,
+    };
+    }
+  
+    return (
+      <Box>
+        <ItemForm
+          id={id}
+          edit={true}
+          editItem={editItemPage?.image}
+          initialValues={initialValues}
+        />
+      </Box>
+    );
   }
-
-  return (
-    <Box>
-      <ItemForm
-        id={id}
-        edit={true}
-        editItem={editItemPage.image}
-        initialValues={initialValues}
-      />
-    </Box>
-  );
 };
 const mapStateToProps = (state) => ({
   loading: state.items.loading,

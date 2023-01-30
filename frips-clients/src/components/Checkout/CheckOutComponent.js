@@ -6,7 +6,7 @@ import {
   makeStyles, Popper, Typography
 } from "@material-ui/core";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import { PAYMENT_FAILED, PAYMENT_SUCCESS } from "../../actions/type";
@@ -15,6 +15,8 @@ import ModalCostum from "./ModalCostum";
 import PaymentForm from "./PaymentForm";
 import SecurityBadge from "./SecurityBadge";
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import axios from "axios";
+import { succeedPayment } from "../../actions";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -114,6 +116,18 @@ const CheckOut = ({ loading, cs, item }) => {
   const navigate = useNavigate();
   const { account } = item;
 
+
+  useEffect( ()=>{
+    async function fetchData(isRerseved){await axios.post("/api/paymentIntent/reserved", {idItem:id,isRerseved:isRerseved });
+
+  }
+  fetchData(true)
+
+  return () =>{
+    fetchData(false)
+  }
+  },[])
+
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
     // which would refresh the page.
@@ -140,8 +154,7 @@ const CheckOut = ({ loading, cs, item }) => {
       navigate(`/payment/${id}/paymentStatus`, { replace: true });
     } else {
       
-      dispatch({ type: PAYMENT_SUCCESS });
-      navigate(`/payment/${id}/paymentStatus`, { replace: true });
+      dispatch(succeedPayment(id,cs,account.id,navigate))
     }
   };
 

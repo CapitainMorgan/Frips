@@ -56,9 +56,7 @@ export default (state = initialValues, action) => {
 
       return {
         ...state,
-        loaded: true,
         editItemPage: action.payload,
-        loading: false,
       };
     case FETCH_ITEMS:
       return {

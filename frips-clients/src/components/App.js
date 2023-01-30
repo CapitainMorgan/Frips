@@ -95,7 +95,7 @@ const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={Theme}>
-        <Box display={"flex"} flexDirection="column" height={"100vh"}>
+        <Box display={"flex"} flexDirection="column" height={"100vh"} style={{backgroundColor:"#F5f5f3"}}>
           <Router>
             <Header />
             <NotificationComponent notification={notification} />

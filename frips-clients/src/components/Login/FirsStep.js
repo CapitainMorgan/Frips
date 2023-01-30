@@ -1,26 +1,27 @@
 import { Box, Typography } from "@material-ui/core";
-import { ErrorMessage, Field } from "formik";
 import React from "react";
+import { Controller } from "react-hook-form";
+import StepTextError from "../Items/formUpload/errorText";
 import TextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "./TextFieldLogin";
 
-const FirsStep = ({ formik }) => {
+const FirsStep = ({ control, onSubmit, errors, getValues }) => {
+
   return (
     <React.Fragment>
-     
-
       <Box marginTop={3}>
-        <Field
-          name="Pseudo"
-          id="Pseudo"
-          component={TextFieldLogin}
-          placeholder={"Nom d'utilisateur"}
+        <Controller
+          name="step1.Pseudo"
+          control={control}
+          render={({ field }) => {
+            return <TextFieldLogin {...{ ...field, placeholder: "Pseudo" }} />;
+          }}
         />
 
         <Box>
-          <ErrorMessage name="Pseudo" component={TextError} />
+          <StepTextError text={errors?.step1?.Pseudo?.message} />
 
-          {formik.values.Pseudo !== "" ? (
+          {getValues().step1.Pseudo !== "" ? (
             <Typography>
               Attention ton nom pseudo sera unique et ne pourra plus être
               changé.
@@ -28,25 +29,28 @@ const FirsStep = ({ formik }) => {
           ) : null}
         </Box>
       </Box>
-
       <Box marginTop={3}>
-        <Field
-          name="Email"
-          id="Email"
-          component={TextFieldLogin}
-          placeholder={"Adresse Email"}
+        <Controller
+          name="step1.Email"
+          control={control}
+          render={({ field }) => {
+            return <TextFieldLogin {...{ ...field, placeholder: "Email" }} />;
+          }}
         />
-        <ErrorMessage name="Email" component={TextError} />
+
+        <StepTextError text={errors?.step1?.Email?.message} />
       </Box>
-
       <Box marginTop={3}>
-        <Field
-          name="Password"
-          id="Password"
-          component={TextFieldLogin}
-          placeholder={"Mot de passe"}
+        <Controller
+          name="step1.Password"
+          control={control}
+          render={({ field }) => {
+            return (
+              <TextFieldLogin {...{ ...field, placeholder: "Mot de passe" }} />
+            );
+          }}
         />
-        <ErrorMessage name="Password" component={TextError} />
+        <StepTextError text={errors?.step1?.Password?.message} />
       </Box>
     </React.Fragment>
   );

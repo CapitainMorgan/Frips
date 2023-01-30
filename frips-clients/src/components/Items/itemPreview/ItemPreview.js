@@ -3,7 +3,7 @@ import {
   Button,
   CircularProgress,
   makeStyles,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
     boxSizing: "border-box",
     paddingRight: 10,
     height: 565,
-    minHeight:565,
+    minHeight: 565,
     minWidth: "75%",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -114,24 +114,20 @@ const ItemPreview = (props) => {
   let singleItem = useSelector((state) => state.items.UniqueItem);
   let loading = useSelector((state) => state.items.loading);
   let favorite = useSelector((state) => state.favoriteReducers.favoritIds);
-  const [anchorEl,setAnchorEl] = useState(false)
-  const location = useLocation()
+  const [anchorEl, setAnchorEl] = useState(false);
+  const location = useLocation();
   const [flag, setFlag] = useState(false);
 
   useEffect(() => {
-      dispatch(fetchItem(id));
+    dispatch(fetchItem(id));
     dispatch(idFavorite());
-    dispatch(itemViewed(id))
-    
+    dispatch(itemViewed(id));
 
     window.scrollTo(0, 0);
-    return ()=>{
-      dispatch({type:RESET_ITEM})
-    }
-  }, [dispatch,location,id]);
-
-
- 
+    return () => {
+      dispatch({ type: RESET_ITEM });
+    };
+  }, [dispatch, location, id]);
 
   if (!singleItem && loading) {
     return (
@@ -145,59 +141,61 @@ const ItemPreview = (props) => {
         <CircularProgress size={100} />
       </Box>
     );
-  }
-
-  else{
+  } else {
     return (
       <Box
-        style={{ backgroundColor: "#F5f5f3"}}
+        style={{ backgroundColor: "#F5f5f3" }}
         display="flex"
         justifyContent="center"
       >
         <Box className={classes.Container}>
           <Box height={"10vh"} width={"100%"}></Box>
-          
-            <Box className={classes.floatContentArticle}>
-              <Box
-                display="flex"
-                className={classes.floatContentImage}
-                marginBottom={5}
-              >
-                <ImageGalleryPreview images={singleItem.image}></ImageGalleryPreview>
-              </Box>
-  
-              <Box paddingLeft={2} className={classes.floatContentInfomrationdiv}>
-                <ItemInformation
-                  state={singleItem}
-                  classes={classes}
-                  flag={flag}
-                  setFlag={setFlag}
-                ></ItemInformation>
-              </Box>
-              <Box height={5} width={"100%"}></Box>
-  
-          
-              <Box className={classes.ArticleProfil}>
-                <ItemProfil items={singleItem.userItem} favorite={favorite} number={2} />
-              </Box>
-              <Box height={50} width={"100%"} />
-              <Box
-                display="flex"
-                width={"100%"}
-                height={40}
-              >
-                <Typography style={{ fontSize: 20,color:"#757575" }}>
-                   Offres similaire
-                </Typography>
-              </Box>
-  
-              <Box height={2} width={"100%"} />
-  
-              <Box className={classes.ArticleProfil}>
-                <ItemProfil favorite={favorite} items={singleItem.findedSimilarProduct} number={3}></ItemProfil>
-              </Box>
+
+          <Box className={classes.floatContentArticle}>
+            <Box
+              display="flex"
+              className={classes.floatContentImage}
+              marginBottom={5}
+            >
+              <ImageGalleryPreview
+                images={singleItem.image}
+              ></ImageGalleryPreview>
             </Box>
-          
+
+            <Box paddingLeft={2} className={classes.floatContentInfomrationdiv}>
+              <ItemInformation
+                state={singleItem}
+                classes={classes}
+                flag={flag}
+                setFlag={setFlag}
+              ></ItemInformation>
+            </Box>
+            <Box height={5} width={"100%"}></Box>
+
+            <Box className={classes.ArticleProfil}>
+              <ItemProfil
+                items={singleItem.userItem}
+                favorite={favorite}
+                number={2}
+              />
+            </Box>
+            <Box height={50} width={"100%"} />
+            <Box display="flex" width={"100%"} height={40}>
+              <Typography style={{ fontSize: 20, color: "#757575" }}>
+                Offres similaire
+              </Typography>
+            </Box>
+
+            <Box height={2} width={"100%"} />
+
+            <Box className={classes.ArticleProfil}>
+              <ItemProfil
+                favorite={favorite}
+                items={singleItem.findedSimilarProduct}
+                number={3}
+              ></ItemProfil>
+            </Box>
+          </Box>
         </Box>
       </Box>
     );

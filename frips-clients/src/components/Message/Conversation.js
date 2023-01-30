@@ -98,7 +98,7 @@ const UserMessage = (messages, classes, history, idUser) => {
             history(`/member/message/${item.id}`);
           }}
         >
-          <Avatar />
+          <Avatar  />
           <Box display="flex" paddingLeft={2} flexGrow={1} width="100%">
             <Box>{item.pseudo}</Box>
             <Box display="flex" flexGrow={1} width="100%">
@@ -150,6 +150,8 @@ const UserMessage = (messages, classes, history, idUser) => {
 const AllConversations = () => {
   const dispatch = useDispatch();
   const conversations = useSelector((state) => state.messageReducer.conversations);
+  const count = useSelector((state) => state.messageReducer.count);
+
   const loading = useSelector((state)=>state.messageReducer.loading)
   const idUser = useSelector((state) => state.auth.user);
   const history = useNavigate();
@@ -159,7 +161,7 @@ const AllConversations = () => {
 
   },[])
   useEffect(() => {
-    if(conversations.length === 0 && !loading){
+    if(conversations.length === 0 && !loading && count!==0){
       dispatch(getAllConv());
 
     }    

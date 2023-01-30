@@ -67,8 +67,7 @@ try {
       socket.join(room);
     });
     socket.on("new message", (newMessage) => {
-      const { id, id_Receiver, chat_id } = newMessage;
-  
+      const { id, id_Receiver, chat_id,item ,Price} = newMessage;
       const user = getUser(id_Receiver);
       try {
         if (io.sockets.adapter.rooms.get(id)?.has(user?.socketId)) {
@@ -78,8 +77,14 @@ try {
             id_Chat: newMessage.id,
             Date_Houre: newMessage.date,
             Text: newMessage.Message.text,
-            id_Item: newMessage?.id_Item ? newMessage?.id_Item : null,
-            item: newMessage?.item ? item : null,
+            id_Item: Boolean(item?.id )? item?.id: null,
+            item: Boolean(item) ?
+             {
+              Price: item.Price,
+              id: item.id,
+              pricepropose: [{ Price:parseFloat(Price) }],
+              image: [{ image: item.image[0].image }],
+            } : null,
             newMessage: true,
           });
         } else {

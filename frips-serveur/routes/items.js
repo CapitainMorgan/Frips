@@ -5,7 +5,7 @@ const multer = require("multer");
 const { nanoid } = require("nanoid");
 let fs = require("fs-extra");
 const path = require("path"); // path for cut the file extension
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require("@prisma/client");
 const { similarProduct } = require("./logicFunction/logicSimilarProduct");
 
 const {
@@ -13,16 +13,14 @@ const {
   account,
   image,
   nbview,
-  pricepropose,
-  
 
   favorit,
-  
+
   color,
   brand,
-  
-  
-  
+  pricepropose,
+
+  category_category,
   item_color,
   item_category,
   category,
@@ -77,7 +75,7 @@ router.post("/", auth, upload, async (req, res) => {
         Name: Brand,
       },
       create: {
-        Name: Brand
+        Name: Brand,
       },
       update: {},
     });
@@ -89,7 +87,9 @@ router.post("/", auth, upload, async (req, res) => {
         Size,
         Price,
         DatePuplication,
-        
+        Disponibility: true,
+        Verified: true,
+
         id_Seller: id,
         CurrentAuction,
         item_category: {
@@ -97,6 +97,7 @@ router.post("/", auth, upload, async (req, res) => {
             id_Category: parseInt(Catalogue),
           },
         },
+
         item_color: colorLengthFunction(req.body.Color),
 
         id_ItemCondition: State,
@@ -126,6 +127,9 @@ router.post("/", auth, upload, async (req, res) => {
       await image.create({
         data: {
           id_Item: Item.id,
+
+          confidencial: false,
+
           image: `${id}` + path.extname(req.files[index].originalname),
         },
       });
@@ -150,7 +154,14 @@ router.post("/", auth, upload, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const Item = await item.findMany({
+      where: {
+        transaction: {
+          none: {},
+        },
+      },
       include: {
+        transaction: true,
+
         image: {
           take: 1,
         },
@@ -188,6 +199,34 @@ router.get("/", async (req, res) => {
     });
 
     res.status(200).json(Item);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("Server error");
+  }
+});
+
+router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_Item } = req.params;
+  try {
+    const findUser = await item.findUnique({
+      where: {
+        id: parseInt(id_Item),
+      },
+    });
+
+    console.log(findUser);
+
+    if (findUser?.id_Seller === id) {
+      const deleted = await item.delete({
+        where: {
+          id: parseFloat(id_Item),
+        },
+      });
+      res.sendStatus(200);
+    } else {
+      res.status(401).send({ msg: "Action non-autorisée" });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json("Server error");
@@ -457,20 +496,29 @@ const filterCatalogue = (Catalogue) => {
   };
 };
 const isFilter = (filter) => {
-  const { newCatalogue, newCouleur, newEtat, newMarque, Price, itemsId } =
-    filter;
+  const {
+    newCatalogue,
+    newCouleur,
+    newEtat,
+    newMarque,
+    Price,
+    itemsId,
+    newTaille,
+  } = filter;
 
   if (
     newCatalogue.length !== 0 ||
     newCouleur.length !== 0 ||
     newEtat.length !== 0 ||
     newMarque.length !== 0 ||
+    newTaille.length !== 0 ||
     Price[0] !== 0 ||
     Price[1] !== null
   ) {
     return {
       OR: [
         { id_ItemCondition: { in: newEtat } },
+        { Size: { in: newTaille } },
         { item_color: { some: { id_Color: { in: newCouleur } } } },
         {
           item_brand: {
@@ -700,17 +748,18 @@ router.get("/Id_of_MyFavorite", auth, async (req, res) => {
 });
 
 router.post("/proposition", auth, async (req, res) => {
-  const {Price,idItem} = req.body
+  const { Price, idItem } = req.body;
+  const { id } = req.user;
+
   try {
     await pricepropose.create({
-      
-      data:{
-        Price:parseFloat(Price),
-        id_Item:idItem,
-        id_Account:req.user.id,
-        Approve:false,
-      }
-    })
+      data: {
+        id_Account: id,
+        Price: parseFloat(Price),
+        id_Item: parseInt(idItem),
+        SendDate: new Date(),
+      },
+    });
 
     res.sendStatus(200);
   } catch (error) {
@@ -744,7 +793,7 @@ router.get("/:id", async (req, res) => {
 
       select: {
         image: true,
-        Name:true,
+        Name: true,
         account: {
           select: {
             Pseudo: true,
@@ -817,7 +866,7 @@ router.get("/:id", async (req, res) => {
         },
       },
     });
- 
+
     const userItem = await item.findMany({
       where: {
         id_Seller: Item.account.id,
@@ -865,8 +914,7 @@ router.get("/:id", async (req, res) => {
       },
       take: 6,
     });
-    
-    console.log(Item.item_category[0].category.Name);
+
     const findedSimilarProduct = await similarProduct(
       Item.item_brand[0].brand.id,
       Item.item_category[0].category.id
@@ -923,31 +971,29 @@ router.post("/favorit", auth, async (req, res) => {
   }
 });
 
-router.post("/view",auth,async (req,res)=>{
-  const idUser = req.user.id
-  const {id} = req.body
-  console.log("here")
-  console.log(req.body)
+router.post("/view", auth, async (req, res) => {
+  const idUser = req.user.id;
+  const { id } = req.body;
   try {
     await nbview.upsert({
-      where:{
-        id_Account_id_Item:{
-          id_Account:idUser,
-          id_Item:id
-        }
+      where: {
+        id_Account_id_Item: {
+          id_Account: idUser,
+          id_Item: id,
+        },
       },
-      create:{
-        id_Account:idUser,
-        id_Item:id
+      create: {
+        id_Account: idUser,
+        id_Item: id,
       },
-      update:{}
-    })
-    res.status(200).json("viewed")
+      update: {},
+    });
+    res.status(200).json("viewed");
   } catch (error) {
-    console.log("view")
-    console.log(error)
+    console.log(error);
+    res.status(500).json("Serveur error");
   }
-})
+});
 
 router.delete("/favorit", auth, async (req, res) => {
   try {
@@ -1184,6 +1230,5 @@ router.post("/search", auth, async (req, res) => {
     res.status(500).json("Server error");
   }
 });
-
 
 module.exports = router;

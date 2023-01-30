@@ -1,11 +1,22 @@
 import {
-  Avatar, Box, Button, Dialog, Divider, Input, makeStyles, MenuItem, Select, Slider, Typography
+  Avatar,
+  Box,
+  Button,
+  Dialog,
+  Divider,
+  Input,
+  makeStyles,
+  MenuItem,
+  Select,
+  Slider,
+  Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useEffect, useRef, useState } from "react";
 import ReactAvatarEditor from "react-avatar-editor";
 import { useDispatch, useSelector } from "react-redux";
 import { changeImageProfile } from "../../actions";
+import ModalAdress from "./ModalAdress";
 
 const useStyles = makeStyles((theme) => ({
   FormLittleBox: {
@@ -55,10 +66,10 @@ const useStyles = makeStyles((theme) => ({
   },
   Dialog: {
     width: 350,
-    height: 600,
     overflow: "hidden",
     display: "flex",
     flexDirection: "column",
+    padding: 5,
 
     [theme.breakpoints.down("sm")]: {
       height: "80vh",
@@ -79,46 +90,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Canton = [
-  "Argovie",
-  "Appenzell Rhodes-Intérieures",
-  "Appenzell Rhodes-Extérieures",
-  "Berne",
-  "Bâle-Compagne",
-  "Bâle-Ville",
-  "Fribourg",
-  "Genève",
-  "Glaris",
-  "Grisons",
-  "Jura",
-  "Lucerne",
-  "Neuchâtel",
-  "Nidwal",
-  "Saint-Gall",
-  "Schaffhouse",
-  "Soleure",
-  "Schwytz",
-  "Thurgovie",
-  "Tessin",
-  "Uri",
-  "Vaud",
-  "Valais",
-  "Zoug",
-  "Zurich",
-];
-const Reduction = [
-  "-",
-  "5%",
-  "10%",
-  "15%",
-  "20%",
-  "25%",
-  "30%",
-  "35%",
-  "40%",
-  "45%",
-  "50%",
-];
+const transformIBAN = (string) => {
+  if(!string)return ""
+  let spacedString = "";
+  for (let i = 0; i < string.length; i += 4) {
+    spacedString += string.substr(i, 4) + " ";
+  }
+  return spacedString;
+};
 
 const UserProfile = () => {
   const editor = useRef(null);
@@ -376,10 +355,12 @@ const UserProfile = () => {
           <Box className={classes.FormLittleBox} padding={2}>
             <Box className={classes.SubFormLittleBox}>
               <Box padding={3}>
-                <Typography>Numéro de téléphone</Typography>
+                <Typography>IBAN</Typography>
               </Box>
               <Box padding={3} display="flex">
-                <Typography>XHXXXXXXXXXXXXXXXXXXXXXXXX</Typography>
+                <Typography>
+                  {transformIBAN(state?.IBAN)}
+                </Typography>
               </Box>
             </Box>
 
@@ -400,7 +381,9 @@ const UserProfile = () => {
             alignItems="center"
             className={classes.MenuSetting}
           >
-            <Typography className={classes.Header}>Envoi</Typography>
+            <Typography className={classes.Header}>
+              Adresse de livraison
+            </Typography>
           </Box>
 
           <Box className={classes.FormLittleBox} padding={2}>
@@ -408,8 +391,13 @@ const UserProfile = () => {
               <Box padding={3} display="flex">
                 <Typography style={{ paddingRight: 5 }}>Adresse</Typography>
               </Box>
-              <Box padding={3}>
-                <Typography>chemin des couilles 3901,1058</Typography>
+              <Box display={"flex"} flexDirection="column" flexGrow={1}>
+                <Typography
+                  style={{ fontSize: 16 }}
+                >{`${state?.address?.Street} ${state?.address?.NumStreet}`}</Typography>
+                <Typography
+                  style={{ fontSize: 16 }}
+                >{`${state?.address?.NPA} ${state?.address?.City}`}</Typography>
               </Box>
             </Box>
 
@@ -423,119 +411,12 @@ const UserProfile = () => {
               </Button>
             </Box>
           </Box>
-          <Dialog open={open}>
-            <Box className={classes.Dialog}>
-              <Box
-                justifyContent="center"
-                display="flex"
-                alignItems="center"
-                className={classes.MenuSetting}
-              >
-                <Typography className={classes.Header}>
-                  Ajouter une Adresse
-                </Typography>
-              </Box>
-
-              <Box padding={5}>
-                <Box display="block" width={"100%"}>
-                  <Box>
-                    <Typography>Canton</Typography>
-                  </Box>
-                  <Select
-                    value={canton}
-                    style={{ width: "100%" }}
-                    onChange={(e) => {
-                      setCanton(e.target.value || "");
-                    }}
-                    MenuProps={{
-                      anchorOrigin: { vertical: "bottom", horizontal: "left" },
-                      transformOrigin: { vertical: "top", horizontal: "left" },
-                      MenuListProps: {
-                        variant: "menu",
-                        style: {
-                          maxHeight: 150,
-                        },
-                      },
-                    }}
-                  >
-                    {Canton.map((item) => {
-                      return (
-                        <MenuItem
-                          key={item}
-                          value={item}
-                          className={classes.MenuSetting}
-                          display="flex"
-                          alignItems="center"
-                        >
-                          <Typography className={classes.Header}>
-                            {item}
-                          </Typography>
-                        </MenuItem>
-                      );
-                    })}
-                  </Select>
-                </Box>
-
-                <Box width={"100%"} height={25} />
-
-                <Box width={"100%"} display="block">
-                  <Box>
-                    <Typography>Canton</Typography>
-                  </Box>
-                  <Input placeholder="Saisis ton nom et prénom" fullWidth />
-                </Box>
-
-                <Box width={"100%"} height={25} />
-
-                <Box width={"100%"} display="block">
-                  <Box>
-                    <Typography>Localité</Typography>
-                  </Box>
-                  <Input placeholder="Saisis une localité" fullWidth />
-                </Box>
-
-                <Box width={"100%"} height={25} />
-
-                <Box width={"100%"} display="block">
-                  <Box>
-                    <Typography>NPA</Typography>
-                  </Box>
-                  <Input placeholder="Saisis un code postal" fullWidth />
-                </Box>
-
-                <Box width={"100%"} height={25} />
-
-                <Box width={"100%"} display="block">
-                  <Box>
-                    <Typography>Nom de rue/chemin et numéro</Typography>
-                  </Box>
-                  <Input placeholder="Saisis une rue" fullWidth />
-                </Box>
-
-                <Box width={"100%"} height={25} />
-
-                <Box width={"100%"} display="block">
-                  <Button
-                    color="primary"
-                    variant="contained"
-                    style={{ width: "100%" }}
-                  >
-                    <Typography>Enrgistrer</Typography>
-                  </Button>
-                  <Box width={"100%"} height={5} />
-
-                  <Button
-                    color="primary"
-                    variant="outlined"
-                    style={{ width: "100%" }}
-                    onClick={handleClose}
-                  >
-                    <Typography>Annuler</Typography>
-                  </Button>
-                </Box>
-              </Box>
-            </Box>
-          </Dialog>
+          <ModalAdress
+            open={open}
+            classes={classes}
+            address={state?.address}
+            handleClose={handleClose}
+          />
         </Box>
 
         <Box className={classes.Spacer} />

@@ -10,6 +10,7 @@ import { addToFilter, removeToFilter } from "../../../actions";
 import _ from "lodash";
 import CostumCatalogueComponent from "./CostumCatalogueComponent";
 import CostumPriceComponent from "./CostumPriceComponent";
+import SizeFilter from "./SizeFilter";
 
 const useStyles = makeStyles((theme) => ({
   BoxShadow: {
@@ -50,6 +51,9 @@ const renderCatalogueCategorie = (
 
   if (label === "Catalogue") {
     return <CostumCatalogueComponent label={label} filter={filter} />;
+  }
+  if (label === "Taille") {
+    return <SizeFilter filter={filter} label={label}/>;
   }
 
   if (label === "sortedBy") {

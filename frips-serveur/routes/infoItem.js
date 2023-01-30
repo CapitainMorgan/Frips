@@ -4,9 +4,6 @@ const router = express.Router();
 const { PrismaClient } = require("@prisma/client");
 
 const {
-  item,
-  account,
-
   image,
   message,
   brand,
@@ -14,7 +11,7 @@ const {
   category,
   itemcondition,
   category_category,
-} = new PrismaClient();
+} = new PrismaClient()
 
 // @route   GET api/members/myFrips
 // @desc    get all your post
@@ -64,6 +61,7 @@ router.get("/search", async (req, res) => {
 });
 
 router.get("/info", async (req, res) => {
+  
   try {
     const infoBrand = await brand.findMany({
       select: {

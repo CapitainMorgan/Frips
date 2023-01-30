@@ -1,5 +1,6 @@
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Card,
@@ -11,12 +12,16 @@ import {
   MenuItem,
   Typography,
   useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
-import { fetchMyfrips } from "../../../actions/index";
+import {
+  changeMyFripsPagination,
+  getNotificationsMyFrips,
+} from "../../../actions/index";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -26,13 +31,13 @@ import { GiClothes } from "react-icons/gi";
 import { ImPower } from "react-icons/im";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import MySell from "./MySell";
 import MyItems from "./MyItems";
 import Filter from "./Filter";
 import MyPaginate from "../../Footer/PaginationComponent";
-import { useTheme } from "styled-components";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import MyProposition from "./MyProposition";
+import MySell from "./MySell/MySell";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -52,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   Grid: {
     display: "grid",
     padding: 10,
-    gridTemplateColumns: "repeat(5,20%)",
+    gridTemplateColumns: "repeat(6,16.66%)",
     width: "100%",
     position: "relative",
     [theme.breakpoints.down("sm")]: {
@@ -83,173 +88,99 @@ const useStyles = makeStyles((theme) => ({
     right: 0,
   },
   hover: {
+    width:"13%",
+    display:"flex",
+    alignItems:"center",
+    justifyContent:"center",
     "&:hover": {
       backgroundColor: "rgba(205, 217, 231,1)",
     },
-    cursor:"pointer",
-    
+    cursor: "pointer",
   },
 }));
 
-const renderedItem = (classes, state, history) => {
-  return state.map((item, index) => {
-    return (
-      <Box
-        width={"100%"}
-        height={"100%"}
-        padding={1}
-        position="relative"
-        key={item.id}
-        id={item.id}
-      >
-        <Card className={classes.boxShadow}>
-          <Box className={classes.Grid}>
-            <Box display={"flex"} justifyContent="center" alignItems={"center"}>
-              <CardActionArea
-                style={{ width: 180, height: 180 }}
-                onClick={() => {
-                  history(`/items/${state[index].id}`);
-                }}
-              >
-                <img
-                  alt={state[index].image[0].id_Item}
-                  src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    objectFit: "contain",
-                  }}
-                />
-              </CardActionArea>
-            </Box>
-            <Box
-              padding={2}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
-              <Typography style={{ wordBreak: "break-word" }} color="primary">
-                {item.Name}
-              </Typography>
-              <Box
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  paddingTop: 5,
-                }}
-              >
-                <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                  {item.Price} CHF
-                </Typography>
-                <Typography>{item.Size}</Typography>
-                <Typography>{item.item_brand[0]?.brand.Name}</Typography>
-              </Box>
-            </Box>
-            <Box justifyContent={"center"} display="flex" alignItems="center">
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => {
-                  history(`/items/edit/${item.id}`);
-                }}
-              >
-                modifier
-                <EditIcon />
-              </Button>
-            </Box>
-
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
-              <Box>Nombre de vue</Box>
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
-                <Typography>{item?._count.nbview}</Typography>
-              </Box>
-            </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
-              <Box>Nombre de j'aime</Box>
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
-                <Typography>{item?._count.favorit}</Typography>
-              </Box>
-            </Box>
-          </Box>
-          <Accordion>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              aria-controls="panel1a-content"
-              id="panel1a-header"
-            >
-              <Typography className={classes.heading}>
-                Meilleure offre
-              </Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Box>voir toutes les offres</Box>
-            </AccordionDetails>
-          </Accordion>
-        </Card>
-      </Box>
-    );
-  });
-};
-
-const handleNavigation = (key,classes) => {
-
+const handleNavigation = (key, classes, setNavigation) => {
   switch (key) {
     case 0:
-      return <MyItems classes={classes} /> 
+      return <MyItems classes={classes} setNavigation={setNavigation} />;
     case 1:
-      return <MySell />
-      
-  
+      return <MySell classes={classes} />;
+    case 2:
+      return <MySell classes={classes} />;
+    case 3:
+      return <MyProposition classes={classes} />;
+
     default:
-      return <MyItems classes={classes} /> 
+      return <MyItems classes={classes} />;
   }
 };
 
 const navigationArray = [
   { Name: "Mes Items" },
+  { Name: "Promotion" },
   { Name: "Mes ventes" },
-  { Name: "Mes Items" },
-  { Name: "Mes propositions" },
-  {Name:"Mes achats"},
-  {Name:"Promotion"}
+  { Name: "Mes propositions"},
+  { Name: "Mes achats" },
 ];
 
-const renderNavigationArray = (navigationArray,setNavigation) =>{
-  return navigationArray.map((navigationItem,index)=>{
-    return(
-      <Button key={navigationItem.Name} style={{marginLeft:5}} variant="outlined" color="primary" onClick={()=>{
-        setNavigation(index)
-      }}>
+const renderNavigationArray = (
+  navigationArray,
+  setNavigation,
+  propositionNotif,
+  sellNotif
+) => {
+  return navigationArray.map((navigationItem, index) => {
+    console.log(propositionNotif);
+    if (navigationItem.Name ==="Mes ventes") {
+      return (
+        <Badge color="primary" badgeContent={sellNotif?.length}>
+          <Button
+            key={navigationItem.Name}
+            style={{ marginLeft: 10 }}
+            variant="outlined"
+            color="primary"
+            onClick={() => {
+              setNavigation(index);
+            }}
+          >
             {navigationItem.Name}
-      </Button>
-    )
-  })
-}
-
-
+          </Button>
+        </Badge>
+      );
+    }
+    if (navigationItem.Name ==="Mes propositions") {
+      return (
+        <Badge color="primary" badgeContent={propositionNotif?.length}>
+          <Button
+            key={navigationItem.Name}
+            style={{ marginLeft: 10 }}
+            variant="outlined"
+            color="primary"
+            onClick={() => {
+              setNavigation(index);
+            }}
+          >
+            {navigationItem.Name}
+          </Button>
+        </Badge>
+      );
+    } else {
+      return (
+        <Button
+          key={navigationItem.Name}
+          style={{ marginLeft: 10 }}
+          variant="outlined"
+          color="primary"
+          onClick={() => {
+            setNavigation(index);
+          }}
+        >
+          {navigationItem.Name}
+        </Button>
+      );
+    }
+  });
+};
 
 const notify = (accountName) => {
   toast.info(
@@ -263,47 +194,56 @@ const notify = (accountName) => {
     </Box>
   );
 };
-const MyFrips = ({ items, loading,filterMyFrips ,count,pagination}) => {
+const MyFrips = ({
+  items,
+  loading,
+  filterMyFrips,
+  sell,
+  purchase,
+  propositionNotif,
+  sellNotif,
+  proposition,
+}) => {
   const history = useNavigate();
   const dispatch = useDispatch();
-  const classes = useStyles()
-  const [navigationId,setNavigation] = useState(0)
+  const classes = useStyles();
+  const [navigationId, setNavigation] = useState(0);
   const theme = useTheme();
 
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
-  const handleChange = ({ selected }) => {
-  };
-  
-  useEffect(()=>{
-    return ()=>{
-      dispatch({type:"RESET_FILTER_MYFRIPS"})
-    }
-  },[navigationId,dispatch])
+  useEffect(() => {
+    dispatch(getNotificationsMyFrips());
+  }, []);
 
-  if (loading) {
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  if (
+    loading &&
+    items.length === 0 &&
+    sell.length === 0 &&
+    purchase.length === 0 &&
+    proposition.length === 0
+  ) {
     return (
       <Box
-      style={{ backgroundColor: "#F5f5f3" }}
-      display="flex"
-      justifyContent="center"
-      width="100%"
-      height={"100%"}
-      alignItems="center"
-    >
-      <CircularProgress size={100} />
-    </Box>
+        style={{ backgroundColor: "#F5f5f3" }}
+        display="flex"
+        justifyContent="center"
+        width="100%"
+        height={"100%"}
+        alignItems="center"
+      >
+        <CircularProgress size={100} />
+      </Box>
     );
-  }
-
-  else{
+  } else {
     return (
       <Box
         width={"100%"}
         style={{ backgroundColor: "#F5f5f3" }}
         position="relative"
       >
-        <Box height={"15vh"} />
-  
+        <Box height={"10vh"} />
+
         <Box className={classes.floatContentArticle}>
           <Box margin="auto" padding={3} display="flex" alignItems={"center"}>
             <GiClothes size={20} />
@@ -311,16 +251,24 @@ const MyFrips = ({ items, loading,filterMyFrips ,count,pagination}) => {
               MyFrips
             </Typography>
           </Box>
-        <Box display={"flex"}>
-        {renderNavigationArray(navigationArray,setNavigation)}
-        </Box>
           <Box display={"flex"}>
+            {renderNavigationArray(
+              navigationArray,
+              setNavigation,
+              propositionNotif,sellNotif
+            )}
+          </Box>
+          <Box>
             <Box display={"flex"} alignItems="center" padding={3}>
               <Typography style={{ fontSize: 16 }}>
                 Envie de Booster un petit peu ton profil ?
               </Typography>
               <AiOutlineStock color="primary" size={"2em"} />
-              <Filter id={navigationId} classes={classes} filterMyFrips={filterMyFrips} />
+              <Filter
+                filterMyFrips={filterMyFrips}
+                id={navigationId}
+                classes={classes}
+              />
               <Button
                 style={{ marginLeft: 20 }}
                 color="primary"
@@ -333,36 +281,11 @@ const MyFrips = ({ items, loading,filterMyFrips ,count,pagination}) => {
               </Button>
             </Box>
           </Box>
-  
+
           <Box padding={3} className={classes.columnGrid}>
-          {handleNavigation(navigationId,classes)}
+            {handleNavigation(navigationId, classes, setNavigation)}
           </Box>
         </Box>
-        <MyPaginate
-            pageCount={Math.ceil(count / 5)}
-            onPageChange={handleChange}
-            pageRangeDisplayed={!mobile ? 2 : 1}
-            forcePage={pagination - 1}
-            marginPagesDisplayed={!mobile ? 2 : 1}
-            nextLabel={
-              <ArrowForwardIosIcon
-                style={{
-                  color:
-                    pagination !== Math.ceil(count / 5)
-                      ? "rgba(130, 160, 194, 1)"
-                      : "grey",
-                }}
-              />
-            }
-            nextClassName={classes.arrow}
-            previousLabel={
-              <ArrowBackIosIcon
-                style={{
-                  color: pagination !== 1 ? "rgba(130, 160, 194, 1)" : "grey",
-                }}
-              />
-            }
-          />
       </Box>
     );
   }
@@ -371,9 +294,14 @@ const MyFrips = ({ items, loading,filterMyFrips ,count,pagination}) => {
 const mapStateToProps = (state) => ({
   loading: state.myFrips.loading,
   items: state.myFrips.items,
-  filterMyFrips:state.myFrips.filter,
-  pagination:state.myFrips.pagination,
-  count:state.myFrips.count
+  sell: state.myFrips.sell,
+  purchase: state.myFrips.purchase,
+  proposition: state.myFrips.proposition,
+  propositionNotif: state.myFrips.propositionNotification,
+  sellNotif: state.myFrips.sellNotification,
+
+
+  filterMyFrips: state.myFrips.filter,
 });
 
 export default connect(mapStateToProps)(MyFrips);

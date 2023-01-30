@@ -28,24 +28,28 @@ const useStyle = makeStyles((theme) => ({
 const SizeForm = ({ form, field, mobile, size, ...props }) => {
   const classes = useStyle();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [id,subId]= size
+  console.log(field)
 
-  const renderedStateClothes = renderArraySize(arraySize, size).map(
+  
+  const renderedStateClothes = arraySize[id].subitems[subId].subitems.map(
     (item, index) => {
+      console.log(item)
       return (
         <Box style={{ position: "relative" }}>
           {index !== 0 ? <Divider></Divider> : null}
           <MenuItem
             className={classes.BoxItem}
             onClick={() => {
-              form.setFieldValue("Size", item.size);
+              form.setFieldValue("Size", item.id);
               setAnchorEl();
             }}
           >
-            {item.size}
+            {item.id}
             <Checkbox
               className={classes.checkBox}
               style={{ backgroundColor: "transparent" }}
-              checked={item.size === field.value}
+              checked={item.id === field.value}
               color="primary"
               disableFocusRipple
               disableRipple
@@ -96,7 +100,9 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
               style={{ backgroundColor: "white", position: "absolute" }}
               width={"100%"}
             >
-              {renderedStateClothes}
+              <Box maxHeight={250} overflow="auto">
+                {renderedStateClothes}
+              </Box>
             </Box>
           </Popper>
         ) : (
@@ -122,6 +128,7 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
               </Box>
 
               <Box style={{ backgroundColor: "white" }} width={"100%"}>
+              
                 {renderedStateClothes}
               </Box>
             </Box>

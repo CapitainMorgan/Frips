@@ -1,7 +1,14 @@
 /* eslint-enable react/jsx-no-comment-textnodes */
 import React, { useEffect } from "react";
 
-import { Box, Button, CircularProgress, Divider, makeStyles, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -23,9 +30,8 @@ import ImageBox from "./DND/SortableGrid";
 import {
   CostumPriceField,
   CostumTextField,
-  CostumTextFieldDescription
+  CostumTextFieldDescription,
 } from "./formUpload/costumTextfield";
-import TextError from "./formUpload/errorText";
 import { connect } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
@@ -74,6 +80,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const TextError = (props) => {
+  console.log(props)
+  if (props.error) {
+    return (
+      <Typography style={{ color: "red", fontSize: "1.0em" }}>
+        {props.error.msg} !
+      </Typography>
+    );
+  } else {
+    return (
+      <Typography style={{ color: "red", fontSize: "0.8em" }}>
+        {props.children}
+      </Typography>
+    );
+  }
+};
+
 const validationSchema = yup.object({
   image: yup
     .array()
@@ -111,17 +134,16 @@ const validationSchema = yup.object({
     .required("Mettez aux moins une couleur"),
 });
 
-
-const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
+const ItemForm = ({ initialValues, edit, id, editItem, itemInfo, loading }) => {
   const dispatch = useDispatch();
 
-  const [size, setSize] = useState(null);
+  const [size, setSize] = useState([]);
   const [picture, setPicture] = useState(!edit ? [] : [...editItem]);
   const history = useNavigate();
-  
 
   const onSubmit = (values) => {
     if (!edit) {
+      alert("here")
       dispatch(createItem(values, picture, history));
     } else {
       dispatch(editItemSend(values, picture, history, id));
@@ -129,15 +151,10 @@ const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
   };
 
   useEffect(() => {
-    
-    if(!itemInfo && !loading){
-
+    if (!itemInfo && !loading) {
       dispatch(getItemCreationInfo());
-
     }
-    
-  }, [itemInfo])
-  
+  }, [itemInfo]);
 
   const classes = useStyles();
   const theme = useTheme();
@@ -152,6 +169,7 @@ const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
       return true;
     }
   };
+  console.log(size)
 
   if (!initialValues.Titre && edit && loading) {
     return (
@@ -166,7 +184,7 @@ const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
       </Box>
     );
   }
-  
+
   return (
     <Box style={{ backgroundColor: "#F5f5f3" }}>
       <Box width={"100%"} height={30} />
@@ -356,7 +374,7 @@ const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
                   </Box>
                   <Divider />
 
-                  {formik.values.Catalogue !=="" ? (
+                  {size.length===2? (
                     <Box>
                       <Box className={classes.FormLittleBox} padding={3}>
                         <Box className={classes.SubFormLittleBox}>
@@ -459,10 +477,10 @@ const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
   );
 };
 const mapStateToProps = (state) => ({
-  itemInfo:state.itemInfo.itemInfo,
+  itemInfo: state.itemInfo.itemInfo,
   loadingFilter: state.filterCatalogue.filterLoading,
-  
-  loading:state.itemInfo.loading
+
+  loading: state.itemInfo.loading,
 });
 
-export default connect(mapStateToProps)( ItemForm);
+export default connect(mapStateToProps)(ItemForm);

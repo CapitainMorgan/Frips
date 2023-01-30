@@ -28,6 +28,8 @@ router.get("/", auth, async (req, res) => {
             image: true,
           },
         },
+        IBAN:true,
+        address:true
       },
     });
 

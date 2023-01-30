@@ -30,7 +30,7 @@ import {
   removeFavorite
 } from "../../../actions";
 import MyPaginate from "../../Footer/PaginationComponent";
-import { Catalogue } from "../staticItems/staticItemName";
+import { arraySize, Catalogue } from "../staticItems/staticItemName";
 import CostumChips from "./CostumChips";
 import RenderChipsComponents from "./renderChipsComponents";
 
@@ -79,7 +79,6 @@ const useStyles = makeStyles((theme) => ({
       if (props) {
         return "opacity .25s ease-out";
       } else {
-        alert("here")
         return null;
       }
     },
@@ -194,6 +193,8 @@ const filterBy = [
   { Name: "Prix croissant", id: 1, label: "sortedBy" },
 ];
 
+
+
 const DisplayCatalogue = ({
   items,
   loaded,
@@ -212,21 +213,28 @@ const DisplayCatalogue = ({
 
 
   useEffect(() => {
-    dispatch(idFavorite())
     if (itemInfo && !infoLoading) {
       setTypeOfFilter([
         { label: "Catalogue", array: Catalogue },
+        { label: "Taille", array: arraySize },
         { label: "Couleur", array: itemInfo.itemColorInfo },
         { label: "Marque", array: itemInfo.brandInfo },
         { label: "Price", array: null },
         { label: "Etat", array: itemInfo.itemconditionInfo },
         { label: "sortedBy", array: filterBy },
       ]);
-    } else {
-      dispatch(getItemCreationInfo());
+    }
+    if(!itemInfo && !infoLoading){
+        dispatch(getItemCreationInfo());
+      
     }
     
-  }, [itemInfo]);
+  }, [dispatch,itemInfo,infoLoading]);
+
+  useEffect(()=>{
+    dispatch(idFavorite())
+
+  },[dispatch])
 
 
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
@@ -260,6 +268,7 @@ const DisplayCatalogue = ({
     
     
   }, [dispatch, allFilterProps, pagination,filterLoading]);
+  
 
   const renderedItems = useMemo(() => {
     return renderedItem(filterItem, classes, favorite, dispatch, history);
@@ -300,6 +309,7 @@ const DisplayCatalogue = ({
           {typeOfFilter ? <CostumChips TypeCatalogue={typeOfFilter} /> : null}
           <RenderChipsComponents />
         </Box>
+        {count ===0 &&!loading ?
         <Box
           display="flex"
           justifyContent="center"
@@ -313,9 +323,9 @@ const DisplayCatalogue = ({
               paddingLeft: "1.3rem",
             }}
           >
-            {count ===0 &&!loading ? `Oups il semblerait qu'il n'y ait aucun résultat correspondant à votre recherche`: null}
+           Oups il semblerait qu'il n'y ait aucun résultat correspondant à votre recherche
           </Typography>
-        </Box>
+        </Box>:null}
 
         <Box height={"10vh"} />
 

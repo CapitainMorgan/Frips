@@ -65,6 +65,7 @@ router.get("/:idItem", auth, async (req, res) => {
         },
       },
     });
+    console.log(item)
 
     res.status(200).json(item[0]);
   } catch (error) {

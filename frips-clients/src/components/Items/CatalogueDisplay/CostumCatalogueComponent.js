@@ -1,6 +1,10 @@
 import {
-    Box, Checkbox,
-    IconButton, makeStyles, MenuItem, Typography
+  Box,
+  Checkbox,
+  IconButton,
+  makeStyles,
+  MenuItem,
+  Typography,
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
@@ -77,7 +81,6 @@ const CostumCatalogueComponent = ({ label, filter }) => {
   const [depth, setDepth] = useState(0);
   const dispatch = useDispatch();
 
-
   return (
     <Box className={classes.BoxShadow}>
       {depth !== 0 || navigationValue.length !== 1 ? (
@@ -99,19 +102,46 @@ const CostumCatalogueComponent = ({ label, filter }) => {
           </Typography>
         </Box>
       ) : null}
-      <MenuItem className={classes.ItemBox} onClick={()=>{
-          if (Boolean(_.find(filter["Catalogue"], {id:navigationValue[depth].id,Name:navigationValue[depth].Name}))) {
-                  dispatch(removeToFilter({id:navigationValue[depth].id,Name:navigationValue[depth].Name}));
-            } else {
-                  dispatch(addToFilter({id:navigationValue[depth].id,Name:navigationValue[depth].Name}, "Catalogue"));
+      <MenuItem
+        className={classes.ItemBox}
+        onClick={() => {
+          if (
+            Boolean(
+              _.find(filter["Catalogue"], {
+                id: navigationValue[depth].id,
+                Name: navigationValue[depth].Name,
+              })
+            )
+          ) {
+            dispatch(
+              removeToFilter({
+                id: navigationValue[depth].id,
+                Name: navigationValue[depth].Name,
+              })
+            );
+          } else {
+            dispatch(
+              addToFilter(
+                {
+                  id: navigationValue[depth].id,
+                  Name: navigationValue[depth].Name,
+                },
+                "Catalogue"
+              )
+            );
           }
-        }}>
-        <Typography style={{ fontSize: 18 }} >Tous</Typography>
+        }}
+      >
+        <Typography style={{ fontSize: 18 }}>Tous</Typography>
         <Checkbox
           className={classes.checkBox}
           style={{ backgroundColor: "transparent" }}
-          
-          checked={Boolean(_.find(filter[label], {id:navigationValue[depth].id,Name:navigationValue[depth].Name}))}
+          checked={Boolean(
+            _.find(filter[label], {
+              id: navigationValue[depth].id,
+              Name: navigationValue[depth].Name,
+            })
+          )}
           color="primary"
           disableFocusRipple
           disableRipple

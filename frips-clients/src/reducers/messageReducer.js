@@ -12,6 +12,7 @@ const initialState = {
   lastMessage: [],
   moreMessageLoading: false,
   pageNumber: 1,
+  countConversations:null,
   id_Chat: null,
   sendPropose: false,
   ProfileNumber: {},
@@ -35,7 +36,8 @@ export default (state = initialState, action) => {
     case GET_ALL_CONV:
       return {
         ...state,
-        conversations: payload,
+        conversations: payload.myConversation,
+        count:payload.count,
         hasmore: true,
       };
 

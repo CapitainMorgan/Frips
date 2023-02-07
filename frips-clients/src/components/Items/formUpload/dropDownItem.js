@@ -60,7 +60,6 @@ const useStyle = makeStyles((theme) => ({
 
 const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
   const [navigationValue, setNavigationValue] = useState([]);
-  const [catalogue, setCatalogue] = useState(null);
   const Catalogue = useSelector(
     (state) => state?.itemInfo?.itemInfo?.infoCategory
   );

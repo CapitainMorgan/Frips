@@ -14,12 +14,14 @@ import {
 } from "../actions/type.js";
 
 const initialValues = {
-  loading: true,
+  loading: false,
   items: [],
   UniqueItem: [],
   loaded: false,
   favorites: [],
   newItem: [],
+  initialValues:{},
+  imageBlob:[],
   editItemPage: null,
   successCreationItem: null,
 };
@@ -45,19 +47,13 @@ export default (state = initialValues, action) => {
       };
     }
     case EDIT_ITEM:
-      action.payload.item_brand = action.payload.item_brand[0].brand.Name;
-      action.payload.item_category =
-        action.payload.item_category[0].id_Category;
-      const newArray = [];
-      action.payload.item_color.forEach((element) => {
-        newArray.push(element.color);
-      });
-      action.payload.item_color = newArray;
-
+      
       return {
         ...state,
-        editItemPage: action.payload,
+        initialValues:action.payload.initialValues,
+        imageBlob:action.payload.imageBlob,
       };
+      
     case FETCH_ITEMS:
       return {
         ...state,

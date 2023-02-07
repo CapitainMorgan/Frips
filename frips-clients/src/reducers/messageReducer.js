@@ -1,8 +1,8 @@
 import _ from "lodash";
 import {
-  ADD_MESSAGE_IMAGE, ADD_MORE_MESSAGE, GENERATE_CONV,
+  ADD_MESSAGE_IMAGE, ADD_MORE_MESSAGE, ERROR_MESSAGE, GENERATE_CONV,
   GET_ALL_CONV,
-  GET_CONV, GET_MORE_MESSAGE, GET_MORE_MESSAGE_LOADING, MESSAGE_FETCH_SUCCESS, MESSAGE_LOADING, NEW_MESSAGE, NO_MORE, Page_NUMBER, UPDATE_MESSAGE
+  GET_CONV, GET_MORE_MESSAGE, GET_MORE_MESSAGE_LOADING, MESSAGE_FETCH_SUCCESS, MESSAGE_LOADING, NEW_MESSAGE, NO_MORE, Page_NUMBER, SEND_DATE, UPDATE_MESSAGE
 } from "../actions/type";
 
 const initialState = {
@@ -14,6 +14,7 @@ const initialState = {
   pageNumber: 1,
   countConversations:null,
   id_Chat: null,
+  error:null,
   sendPropose: false,
   ProfileNumber: {},
   numberLoadingMessage: null,
@@ -113,6 +114,21 @@ export default (state = initialState, action) => {
         message: [payload, ...state.message],
         sendPropose: false,
       };
+
+      case ERROR_MESSAGE:
+        return {
+          
+            ...state,
+            error:payload
+          
+        }
+
+      case SEND_DATE:
+        return {
+          ...state,
+          message:[...payload]
+        }
+      
       
 
     case ADD_MESSAGE_IMAGE:

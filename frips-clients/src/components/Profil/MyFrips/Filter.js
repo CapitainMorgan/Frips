@@ -32,14 +32,19 @@ const filterArrayItems = [
     { Name: "vendu", id: 11},
     {Name:"vendu par ordre décroissant",id:8},
     {Name:"vendu par ordre croissant",id:9}
-
-
   ],
   [
     { Name: "Offre acceptée", id: 5},
     { Name: "Offre en attente ", id: 6},
     { Name: "Offre refusée ", id: 7}
-  ]
+  ],
+  [
+    { Name: "à recevoir", id: 12},
+    { Name: "reçu", id: 13},
+    {Name:"acheté par ordre décroissant",id:14},
+    {Name:"acheté par ordre croissant",id:15}
+  ],
+  
 ];
 
 const renderFilter = (id, classes, dispatch, filterMyFrips) => {

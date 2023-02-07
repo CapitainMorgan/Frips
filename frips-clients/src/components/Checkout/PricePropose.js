@@ -15,6 +15,7 @@ import axios from "axios";
 import DoneIcon from "@material-ui/icons/Done";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { sendMessage } from "../../actions";
+import { connect } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   pointer: {
     cursor: "pointer",
@@ -106,6 +107,7 @@ const PricePropose = ({
   userId,
   id_Receiver,
   chat_id,
+  error,
   itemId,
   handleClickAway,
   itemPrice,
@@ -125,12 +127,11 @@ const PricePropose = ({
   };
 
   const sendProposition = async (Price, idItem) => {
-    alert(Price)
     try {
       setLoading(true);
-      const succeed = await axios.post(`/api/items/proposition`, {
-        Price,
-        idItem,
+      const succeed = await axios.post("/api/items/proposition", {
+        Price:Price,
+        idItem:idItem,
       });
       if (succeed) {
         SetSucceed(1);
@@ -207,21 +208,11 @@ const PricePropose = ({
               backgroundColor: displayColor(succeed),
             }}
             variant="contained"
-            disabled={loading || succeed === 2}
+            disabled={loading || succeed === 2 || error}
             onClick={async () => {
               if (item) {
                 if (socket?.connected) {
-                  dispatch(
-                    sendMessage(
-                      "",
-                      chat_id,
-                      id_Receiver(Profile, userId),
-                      userId,
-                      item,
-                      Price
-                    )
-                  );
-
+                  setLoading(true)
                   const data = {
                     Message: "",
                     id_Sender: userId,
@@ -236,8 +227,21 @@ const PricePropose = ({
                     Price,
                     imageSender: imageSender?.image ? imageSender : null,
                   };
+                  dispatch(
+                    sendMessage(
+                      "",
+                      chat_id,
+                      id_Receiver(Profile, userId),
+                      userId,
+                      item,
+                      Price,
+                      data,
+                      socket
+                    )
+                  );
+                      
+                 
 
-                  socket.emit("new message", data);
                 }
               } else {
                 sendProposition(Price, itemId);
@@ -245,11 +249,18 @@ const PricePropose = ({
             }}
           >
             {loadingSendProposition(succeed, loading)}
+            {error ? <Typography style={{fontSize:16}}>{error}</Typography>:null}
+
           </Button>
+
         </Box>
       </Box>
     </Modal>
   );
 };
 
-export default PricePropose;
+const mapStateToProps = (state) => ({
+  error: state.messageReducer.error,
+});
+
+export default connect(mapStateToProps)(PricePropose);

@@ -204,10 +204,12 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
   },[location])
 
   useEffect(() => {
-    dispatch(fetchItems());
+    if(!loading && items.length===0){
+      dispatch(fetchItems());
     dispatch(idFavorite());
+    }
 
-  }, [dispatch]);
+  }, [dispatch,loading,location]);
 
   
 

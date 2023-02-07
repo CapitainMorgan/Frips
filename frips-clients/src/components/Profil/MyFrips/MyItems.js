@@ -15,9 +15,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { changeMyFripsPagination, fetchMyfrips } from "../../../actions";
+import { changeMyFripsPagination, fetchMyfrips, sendStatusProposition } from "../../../actions";
 import MyPaginate from "../../Footer/PaginationComponent";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -31,206 +31,556 @@ const renderedItem = (
   handleClick,
   setNavigation,
   expand,
-  toggleAcordion
+  toggleAcordion,
+  dispatch,
 ) => {
   return state.map((item, index) => {
     if (
-      !Boolean(item?.pricepropose[0]?.Approve) &&
-      !Boolean(item?.pricepropose[0]?.dateApprove)
+      item?.pricepropose.length !==0
     ) {
-      return (
-        <Box
-          width={"100%"}
-          height={"100%"}
-          padding={1}
-          position="relative"
-          key={item.id}
-          id={item.id}
-        >
-          <Card className={classes.boxShadow}>
-            <Box className={classes.Grid}>
-              <Box
-                display={"flex"}
-                justifyContent="center"
-                alignItems={"center"}
-              >
-                <CardActionArea
-                  style={{ width: 180, height: 180 }}
-                  onClick={() => {
-                    history(`/items/${state[index].id}`);
-                  }}
-                >
-                  <img
-                    alt={state[index].image[0].id_Item}
-                    src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      objectFit: "contain",
-                    }}
-                  />
-                </CardActionArea>
-              </Box>
-              <Box
-                padding={2}
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <Typography style={{ wordBreak: "break-word" }} color="primary">
-                  {item.Name}
-                </Typography>
+      if(item?.pricepropose[0].Approve===null && item?.pricepropose[0].dateApprove ===null ){
+        return (
+          <Box
+            width={"100%"}
+            height={"100%"}
+            padding={1}
+            position="relative"
+            key={item.id}
+            id={item.id}
+          >
+            <Card className={classes.boxShadow}>
+              <Box className={classes.Grid}>
                 <Box
+                  display={"flex"}
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <CardActionArea
+                    style={{ width: 180, height: 180 }}
+                    onClick={() => {
+                      history(`/items/${state[index].id}`);
+                    }}
+                  >
+                    <img
+                      alt={state[index].image[0].id_Item}
+                      src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </CardActionArea>
+                </Box>
+                <Box
+                  padding={2}
                   style={{
                     display: "flex",
                     flexDirection: "column",
-                    paddingTop: 5,
+                    justifyContent: "center",
+                    alignItems: "center",
                   }}
                 >
-                  <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                    {item.Price} CHF
+                  <Typography style={{ wordBreak: "break-word" }} color="primary">
+                    {item.Name}
                   </Typography>
-                  <Typography>{item.Size}</Typography>
-                  <Typography>{item.item_brand[0]?.brand.Name}</Typography>
-                </Box>
-              </Box>
-              <Box justifyContent={"center"} display="flex" alignItems="center">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => {
-                    history(`/items/edit/${item.id}`);
-                  }}
-                >
-                  modifier
-                  <EditIcon />
-                </Button>
-              </Box>
-
-              <Box
-                display={"flex"}
-                flexDirection={"column"}
-                justifyContent="center"
-                alignItems={"center"}
-              >
-                <Box>Nombre de vue</Box>
-                <Box
-                  flexGrow={1}
-                  display="flex"
-                  justifyContent={"center"}
-                  alignItems="center"
-                >
-                  <Typography>{item?._count.nbview}</Typography>
-                </Box>
-              </Box>
-              <Box
-                display={"flex"}
-                flexDirection={"column"}
-                justifyContent="center"
-                alignItems={"center"}
-              >
-                <Box>Nombre de j'aime</Box>
-                <Box
-                  flexGrow={1}
-                  display="flex"
-                  justifyContent={"center"}
-                  alignItems="center"
-                >
-                  <Typography>{item?._count.favorit}</Typography>
-                </Box>
-              </Box>
-              <Box justifyContent={"center"} display="flex" alignItems="center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    handleClick(item.id);
-                  }}
-                >
-                  supprimer
-                  <DeleteForeverIcon />
-                </Button>
-              </Box>
-            </Box>
-
-            {Boolean(item?.pricepropose[0]?.Price) ? (
-              <Accordion expanded={expand}>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  onClick={toggleAcordion}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-
-                  <Badge
-                    anchorOrigin={{
-                      vertical: "bottom",
-                      horizontal: "right",
-                    }}
-                                        
-                    variant={"dot"}
-                    color={"primary"}
-                    invisible={expand}
-                  >
-                    <Typography style={{fontSize:16}}>
-                    Vous avez une offre
-                    </Typography>
-                  </Badge>
-                
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box display={"flex"} alignItems="center" width={"100%"}>
-                    <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                      {item?.pricepropose[0]?.Price} CHF
-                    </Typography>
-                    <Box
-                      display={"flex"}
-                      justifyContent="flex-end"
-                      flexGrow={1}
-                    >
-                      <Button
-                        style={{ marginLeft: 5 }}
-                        variant="outlined"
-                        color="primary"
-                        onClick={handleClick}
-                      >
-                        Accepter
-                      </Button>
-
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ marginLeft: 5 }}
-                      >
-                        Refuser
-                      </Button>
-                    </Box>
-                  </Box>
-                </AccordionDetails>
-                <AccordionDetails>
-                  <Typography
-                    onClick={() => {
-                      setNavigation(3);
-                    }}
+                  <Box
                     style={{
-                      cursor: "pointer",
-                      fontSize: 16,
-                      color: "#82A0C2",
-                      borderBottom: "1px solid",
-                      borderColor: "#82A0C2",
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingTop: 5,
                     }}
                   >
-                    Envie de voir plus d'offres ?
+                    <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                      {item.Price} CHF
+                    </Typography>
+                    <Typography>{item.Size}</Typography>
+                    <Typography>{item.item_brand[0]?.brand.Name}</Typography>
+                  </Box>
+                </Box>
+                <Box justifyContent={"center"} display="flex" alignItems="center">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      history(`/items/edit/${item.id}`);
+                    }}
+                  >
+                    modifier
+                    <EditIcon />
+                  </Button>
+                </Box>
+  
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <Box>Nombre de vue</Box>
+                  <Box
+                    flexGrow={1}
+                    display="flex"
+                    justifyContent={"center"}
+                    alignItems="center"
+                  >
+                    <Typography>{item?._count.nbview}</Typography>
+                  </Box>
+                </Box>
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <Box>Nombre de j'aime</Box>
+                  <Box
+                    flexGrow={1}
+                    display="flex"
+                    justifyContent={"center"}
+                    alignItems="center"
+                  >
+                    <Typography>{item?._count.favorit}</Typography>
+                  </Box>
+                </Box>
+                <Box justifyContent={"center"} display="flex" alignItems="center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      handleClick(item.id);
+                    }}
+                  >
+                    supprimer
+                    <DeleteForeverIcon />
+                  </Button>
+                </Box>
+              </Box>
+  
+              {Boolean(item?.pricepropose[0]?.Price) ? (
+                <Accordion expanded={expand}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    onClick={toggleAcordion}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Badge
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      variant={"dot"}
+                      color={"primary"}
+                      invisible={expand}
+                    >
+                      <Typography style={{ fontSize: 16 }}>
+                        Vous avez une offre
+                      </Typography>
+                    </Badge>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box display={"flex"} alignItems="center" width={"100%"}>
+                      <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                        {item?.pricepropose[0]?.Price} CHF
+                      </Typography>
+                      <Box
+                        display={"flex"}
+                        justifyContent="flex-end"
+                        flexGrow={1}
+                      >
+                        <Button
+                          style={{ marginLeft: 5 }}
+                          variant="outlined"
+                          color="primary"
+                          onClick={()=>{
+                            dispatch(sendStatusProposition(item.id,new Date(),true))
+                          }}
+                        >
+                          Accepter
+                        </Button>
+  
+                        <Button
+                        onClick={()=>{
+                          dispatch(sendStatusProposition(item.id,null,false))
+  
+                        }}
+                          variant="contained"
+                          color="primary"
+                          style={{ marginLeft: 5 }}
+                        >
+                          Refuser
+                        </Button>
+                      </Box>
+                    </Box>
+                  </AccordionDetails>
+                  <AccordionDetails>
+                    <Typography
+                      onClick={() => {
+                        setNavigation(3);
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        fontSize: 16,
+                        color: "#82A0C2",
+                        borderBottom: "1px solid",
+                        borderColor: "#82A0C2",
+                      }}
+                    >
+                      Envie de voir plus d'offres ?
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+              ) : null}
+            </Card>
+          </Box>
+        );
+      }
+
+      if(Boolean(item?.pricepropose[0].Approve) && Boolean(item?.pricepropose[0].SendDate)){
+        return (
+          <Box
+            width={"100%"}
+            height={"100%"}
+            padding={1}
+            position="relative"
+            key={item.id}
+            id={item.id}
+          >
+            <Card className={classes.boxShadow}>
+              <Box className={classes.Grid}>
+                <Box
+                  display={"flex"}
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <CardActionArea
+                    style={{ width: 180, height: 180 }}
+                    onClick={() => {
+                      history(`/items/${state[index].id}`);
+                    }}
+                  >
+                    <img
+                      alt={state[index].image[0].id_Item}
+                      src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </CardActionArea>
+                </Box>
+                <Box
+                  padding={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography style={{ wordBreak: "break-word" }} color="primary">
+                    {item.Name}
                   </Typography>
-                </AccordionDetails>
-              </Accordion>
-            ) : null}
-          </Card>
-        </Box>
-      );
+                  <Box
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingTop: 5,
+                    }}
+                  >
+                    <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                      {item.Price} CHF
+                    </Typography>
+                    <Typography>{item.Size}</Typography>
+                    <Typography>{item.item_brand[0]?.brand.Name}</Typography>
+                  </Box>
+                </Box>
+                <Box justifyContent={"center"} display="flex" alignItems="center">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      history(`/items/edit/${item.id}`);
+                    }}
+                  >
+                    modifier
+                    <EditIcon />
+                  </Button>
+                </Box>
+  
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <Box>Nombre de vue</Box>
+                  <Box
+                    flexGrow={1}
+                    display="flex"
+                    justifyContent={"center"}
+                    alignItems="center"
+                  >
+                    <Typography>{item?._count.nbview}</Typography>
+                  </Box>
+                </Box>
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <Box>Nombre de j'aime</Box>
+                  <Box
+                    flexGrow={1}
+                    display="flex"
+                    justifyContent={"center"}
+                    alignItems="center"
+                  >
+                    <Typography>{item?._count.favorit}</Typography>
+                  </Box>
+                </Box>
+                <Box justifyContent={"center"} display="flex" alignItems="center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      handleClick(item.id);
+                    }}
+                  >
+                    supprimer
+                    <DeleteForeverIcon />
+                  </Button>
+                </Box>
+              </Box>
+  
+              {Boolean(item?.pricepropose[0]?.Price) ? (
+                <Accordion expanded={expand}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    onClick={toggleAcordion}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Badge
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      variant={"dot"}
+                      color={"primary"}
+                      invisible={expand}
+                    >
+                      <Typography style={{ fontSize: 16 }}>
+                        Vous avez une offre
+                      </Typography>
+                    </Badge>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box display={"flex"} alignItems="center" width={"100%"}>
+                      <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                        {item?.pricepropose[0]?.Price} CHF
+                      </Typography>
+                      <Typography>Offre Acceptée</Typography>
+
+                    </Box>
+                  </AccordionDetails>
+                  <AccordionDetails>
+                    <Typography
+                      onClick={() => {
+                        setNavigation(3);
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        fontSize: 16,
+                        color: "#82A0C2",
+                        borderBottom: "1px solid",
+                        borderColor: "#82A0C2",
+                      }}
+                    >
+                      Envie de voir plus d'offres ?
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+              ) : null}
+            </Card>
+          </Box>
+        );
+      }
+      if(Boolean(!item?.pricepropose[0].Approve) && Boolean(item?.pricepropose[0].SendDate)){
+        return (
+          <Box
+            width={"100%"}
+            height={"100%"}
+            padding={1}
+            position="relative"
+            key={item.id}
+            id={item.id}
+          >
+            <Card className={classes.boxShadow}>
+              <Box className={classes.Grid}>
+                <Box
+                  display={"flex"}
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <CardActionArea
+                    style={{ width: 180, height: 180 }}
+                    onClick={() => {
+                      history(`/items/${state[index].id}`);
+                    }}
+                  >
+                    <img
+                      alt={state[index].image[0].id_Item}
+                      src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "contain",
+                      }}
+                    />
+                  </CardActionArea>
+                </Box>
+                <Box
+                  padding={2}
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <Typography style={{ wordBreak: "break-word" }} color="primary">
+                    {item.Name}
+                  </Typography>
+                  <Box
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      paddingTop: 5,
+                    }}
+                  >
+                    <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                      {item.Price} CHF
+                    </Typography>
+                    <Typography>{item.Size}</Typography>
+                    <Typography>{item.item_brand[0]?.brand.Name}</Typography>
+                  </Box>
+                </Box>
+                <Box justifyContent={"center"} display="flex" alignItems="center">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      history(`/items/edit/${item.id}`);
+                    }}
+                  >
+                    modifier
+                    <EditIcon />
+                  </Button>
+                </Box>
+  
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <Box>Nombre de vue</Box>
+                  <Box
+                    flexGrow={1}
+                    display="flex"
+                    justifyContent={"center"}
+                    alignItems="center"
+                  >
+                    <Typography>{item?._count.nbview}</Typography>
+                  </Box>
+                </Box>
+                <Box
+                  display={"flex"}
+                  flexDirection={"column"}
+                  justifyContent="center"
+                  alignItems={"center"}
+                >
+                  <Box>Nombre de j'aime</Box>
+                  <Box
+                    flexGrow={1}
+                    display="flex"
+                    justifyContent={"center"}
+                    alignItems="center"
+                  >
+                    <Typography>{item?._count.favorit}</Typography>
+                  </Box>
+                </Box>
+                <Box justifyContent={"center"} display="flex" alignItems="center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      handleClick(item.id);
+                    }}
+                  >
+                    supprimer
+                    <DeleteForeverIcon />
+                  </Button>
+                </Box>
+              </Box>
+  
+              {Boolean(item?.pricepropose[0]?.Price) ? (
+                <Accordion expanded={expand}>
+                  <AccordionSummary
+                    expandIcon={<ExpandMoreIcon />}
+                    onClick={toggleAcordion}
+                    aria-controls="panel1a-content"
+                    id="panel1a-header"
+                  >
+                    <Badge
+                      anchorOrigin={{
+                        vertical: "bottom",
+                        horizontal: "right",
+                      }}
+                      variant={"dot"}
+                      color={"primary"}
+                      invisible={expand}
+                    >
+                      <Typography style={{ fontSize: 16 }}>
+                        Vous avez une offre
+                      </Typography>
+                    </Badge>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Box display={"flex"} alignItems="center" width={"100%"}>
+                      <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                        {item?.pricepropose[0]?.Price} CHF
+                      </Typography>
+                      <Typography>Offre </Typography>
+
+                    </Box>
+                  </AccordionDetails>
+                  <AccordionDetails>
+                    <Typography
+                      onClick={() => {
+                        setNavigation(3);
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        fontSize: 16,
+                        color: "#82A0C2",
+                        borderBottom: "1px solid",
+                        borderColor: "#82A0C2",
+                      }}
+                    >
+                      Envie de voir plus d'offres ?
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+              ) : null}
+            </Card>
+          </Box>
+        );
+      }
     } else {
       return (
         <Box
@@ -420,6 +770,7 @@ const MyItems = ({
   items,
   loading,
   setNavigation,
+  msg,
   pagination,
   filterMyFrips,
   mobile,
@@ -427,6 +778,7 @@ const MyItems = ({
 }) => {
   const dispatch = useDispatch();
   const history = useNavigate();
+
   const [expand, setExpand] = useState(true);
   const toggleAcordion = () => {
     setExpand((prev) => !prev);
@@ -454,9 +806,43 @@ const MyItems = ({
     };
   }, [dispatch]);
   useEffect(() => {
-    dispatch(fetchMyfrips(`/api/members/myFrips`, FETCH_MYFRIPS));
-  }, [dispatch, filterMyFrips, pagination]);
+    if (!loading && items.length === 0 && Boolean(count)) {
+      dispatch(fetchMyfrips(`/api/members/myFrips`, FETCH_MYFRIPS));
+    }
+  }, [dispatch, loading]);
 
+  useEffect(() => {
+    dispatch(fetchMyfrips(`/api/members/myFrips`, FETCH_MYFRIPS));
+  }, [filterMyFrips, pagination]);
+
+  if (loading && items.length === 0 && !Boolean(count)) {
+    return (
+      <Box
+        style={{ backgroundColor: "#F5f5f3" }}
+        display="flex"
+        justifyContent="center"
+        width="100%"
+        height={"100%"}
+        alignItems="center"
+      >
+        <CircularProgress size={100} />
+      </Box>
+    );
+  }
+
+  if (!loading && items.length === 0 && count === 0) {
+    return (
+      <Box
+        minHeight={200}
+        display="flex"
+        flexDirection={"column"}
+        justifyContent={"center"}
+        alignItems="center"
+      >
+        <Typography style={{ fontSize: 16 }}>{msg}</Typography>
+      </Box>
+    );
+  }
   return (
     <Box>
       <DeleteModal anchorEl={anchorEl} handleClickAway={handleClickAway} />
@@ -467,7 +853,8 @@ const MyItems = ({
         handleClick,
         setNavigation,
         expand,
-        toggleAcordion
+        toggleAcordion,
+        dispatch
       )}
       <Box className={classes.PaginationBox}>
         <MyPaginate
@@ -506,6 +893,7 @@ const mapStateToProps = (state) => ({
   pagination: state.myFrips.pagination,
   filterMyFrips: state.myFrips.filter,
   count: state.myFrips.count,
+  msg: state.myFrips.msg,
 });
 
 export default connect(mapStateToProps)(MyItems);

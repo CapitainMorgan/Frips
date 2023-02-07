@@ -10,6 +10,7 @@ const {
   color,
   category,
   itemcondition,
+  fees,
   category_category,
 } = new PrismaClient()
 
@@ -93,6 +94,8 @@ router.get("/info", async (req, res) => {
       },
     });
 
+    const infoDelivery = await fees.findMany()
+
     const infoCategory = await category.findMany({
       select: {
         id: true,
@@ -107,6 +110,7 @@ router.get("/info", async (req, res) => {
       itemconditionInfo: infoItemCondition,
       itemColorInfo: infoColor,
       infoCategory,
+      infoDelivery
     };
 
     res.status(200).json(infoObject);

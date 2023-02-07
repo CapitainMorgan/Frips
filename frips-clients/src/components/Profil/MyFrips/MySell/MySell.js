@@ -1,32 +1,52 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Badge,
   Box,
   Button,
   Card,
   CardActionArea,
+  CircularProgress,
   Typography,
 } from "@material-ui/core";
-import React, { useEffect } from "react";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import { FETCH_MYSELL, FETCH_PROPOSITION } from "../../../../actions/type";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { changeMyFripsPagination, fetchMyfrips } from "../../../../actions";
-import MyPaginate from "../../../Footer/PaginationComponent";
 import { useNavigate } from "react-router-dom";
+import { changeMyFripsPagination, fetchMyfrips } from "../../../../actions";
+import { FETCH_MYSELL } from "../../../../actions/type";
+import MyPaginate from "../../../Footer/PaginationComponent";
+import DeliveryStep from "./DeliveryStep";
+import { TiWarning } from "react-icons/ti";
 
-const renderedItem = (
-  classes,
-  state,
-  history,
-  
-) => {
+
+
+const renderDeliveryStep = ({ DateSend }) => {
+  if (!DateSend) {
+    return (
+      <Badge overlap="circle">
+        <Box display={"flex"} alignItems="center">
+          <Typography style={{ fontSize: 16 }} component="span" color="inherit">
+            <TiWarning color="#dc3545 " size={"1.7em"} />A livrer
+          </Typography>
+        </Box>
+      </Badge>
+    );
+  } else {
+    return (
+      <Badge
+        badgeContent={
+          <Typography component="span" color="inherit">
+            Laisser une Review
+          </Typography>
+        }
+      ></Badge>
+    );
+  }
+};
+
+const renderedItem = (classes, state, history) => {
   return state.map((item, index) => {
+    const { account } = item;
     return (
       <Box
         width={"100%"}
@@ -72,26 +92,33 @@ const renderedItem = (
                 style={{
                   display: "flex",
                   flexDirection: "column",
-                  paddingTop: 5,
+                  marginTop: 1,
                 }}
               >
                 <Typography style={{ fontSize: 16, fontWeight: 600 }}>
                   {item.Price} CHF
                 </Typography>
                 <Typography>{item.Size}</Typography>
-                <Typography>sdds</Typography>
               </Box>
             </Box>
-            <Box justifyContent={"center"} display="flex" alignItems="center">
-              <Button
-                variant="outlined"
-                color="primary"
-                onClick={() => {
-                  history(`/items/edit/${item.id}`);
-                }}
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              justifyContent="center"
+              alignItems={"center"}
+            >
+              <Typography style={{ fontSize: 15 }}>Vendu à </Typography>
+
+              <Box
+                flexGrow={1}
+                display="flex"
+                justifyContent={"center"}
+                alignItems="center"
               >
-                modifier
-              </Button>
+                <Typography style={{ fontSize: 15 }}>
+                  {account.Pseudo}
+                </Typography>
+              </Box>
             </Box>
 
             <Box
@@ -100,7 +127,10 @@ const renderedItem = (
               justifyContent="center"
               alignItems={"center"}
             >
-              <Box>Nombre de vue</Box>
+              <Typography style={{ fontSize: 15 }}>
+                Type de Livraison
+              </Typography>
+
               <Box
                 flexGrow={1}
                 display="flex"
@@ -116,78 +146,39 @@ const renderedItem = (
               justifyContent="center"
               alignItems={"center"}
             >
-              <Box>Nombre de j'aime</Box>
+              <Typography style={{ fontSize: 15 }}>Prix</Typography>
+
               <Box
                 flexGrow={1}
                 display="flex"
                 justifyContent={"center"}
                 alignItems="center"
               >
-                <Typography>{"dsadas"}</Typography>
+                <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                  {item.Price}
+                </Typography>
               </Box>
             </Box>
-            <Box justifyContent={"center"} display="flex" alignItems="center">
-              <Button
-                variant="contained"
-                color="primary"
-                
+            <Box
+              display={"flex"}
+              flexDirection={"column"}
+              justifyContent="center"
+              alignItems={"center"}
+            >
+              <Typography style={{ fontSize: 15 }}>Status</Typography>
+              <Box
+                flexGrow={1}
+                display="flex"
+                justifyContent={"center"}
+                alignItems="center"
               >
-                supprimer
-                <DeleteForeverIcon />
-              </Button>
+                <Typography style={{ fontSize: 15 }}>
+                  {renderDeliveryStep(item)}
+                </Typography>
+              </Box>
             </Box>
           </Box>
-
-          
-            <Accordion >
-              <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
-                aria-controls="panel1a-content"
-                id="panel1a-header"
-              >
-                <Badge
-                  anchorOrigin={{
-                    vertical: "bottom",
-                    horizontal: "right",
-                  }}
-                  variant={"dot"}
-                  color={"primary"}
-                  invisible={true}
-                >
-                  <Typography style={{ fontSize: 16 }}>
-                    Vous avez une offre
-                  </Typography>
-                </Badge>
-              </AccordionSummary>
-              <AccordionDetails>
-                <Box display={"flex"} alignItems="center" width={"100%"}>
-                  <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                    {321} CHF
-                  </Typography>
-                  <Box display={"flex"} justifyContent="flex-end" flexGrow={1}>
-                    <Button
-                      style={{ marginLeft: 5 }}
-                      variant="outlined"
-                      color="primary"
-                    >
-                      Accepter
-                    </Button>
-
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      style={{ marginLeft: 5 }}
-                    >
-                      Refuser
-                    </Button>
-                  </Box>
-                </Box>
-              </AccordionDetails>
-              <AccordionDetails>
-              
-              </AccordionDetails>
-            </Accordion>
-          
+          <DeliveryStep item={item} id={item.id} account={account} />
         </Card>
       </Box>
     );
@@ -195,20 +186,23 @@ const renderedItem = (
 };
 
 const MySell = ({
-  
   mobile,
   classes,
   pagination,
   filterMyFrips,
   loading,
   items,
+  msg,
   count,
 }) => {
-  const history = useNavigate()
+  const history = useNavigate();
   const dispatch = useDispatch();
   const handleChange = ({ selected }) => {
     dispatch(changeMyFripsPagination(selected + 1));
   };
+
+  
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pagination]);
@@ -219,28 +213,57 @@ const MySell = ({
     };
   }, [dispatch]);
   useEffect(() => {
+    if(!loading && items.length===0 && Boolean(count)){
+      dispatch(fetchMyfrips(`/api/members/mySell`, FETCH_MYSELL));
+    }
+  }, [dispatch,loading]);
+
+  useEffect(()=>{
     dispatch(fetchMyfrips(`/api/members/mySell`, FETCH_MYSELL));
-  }, [dispatch, filterMyFrips, pagination]);
+
+  },[filterMyFrips,pagination])
+
+  if (
+    loading &&
+    items.length === 0 && !Boolean(count)
+  ) {
+    return (
+      <Box
+        style={{ backgroundColor: "#F5f5f3" }}
+        display="flex"
+        justifyContent="center"
+        width="100%"
+        height={"100%"}
+        alignItems="center"
+      >
+        <CircularProgress size={100} />
+      </Box>
+    );
+  }
 
   if (!loading && items.length === 0 && count === 0) {
     return (
       <Box
         minHeight={200}
         display="flex"
+        flexDirection={"column"}
         justifyContent={"center"}
         alignItems="center"
       >
         <Typography style={{ fontSize: 16 }}>
-          Vous avez actuellement aucune ventes
+          {msg}
         </Typography>
+        
+
       </Box>
     );
   }
 
   return (
-      <Box minHeight={200} className={classes.PaginationBox}>
-      {renderedItem(classes,items,history)}
-        {count!==0 ? <MyPaginate
+    <Box minHeight={200} className={classes.PaginationBox}>
+      {renderedItem(classes, items, history)}
+      {Boolean(count) ? (
+        <MyPaginate
           pageCount={Math.ceil(count / 5)}
           onPageChange={handleChange}
           pageRangeDisplayed={!mobile ? 2 : 1}
@@ -264,8 +287,9 @@ const MySell = ({
               }}
             />
           }
-        />:null}
-      </Box>
+        />
+      ) : null}
+    </Box>
   );
 };
 
@@ -275,6 +299,7 @@ const mapStateToProps = (state) => ({
   pagination: state.myFrips.pagination,
   filterMyFrips: state.myFrips.filter,
   count: state.myFrips.count,
+  msg:state.myFrips.msg
 });
 
 export default connect(mapStateToProps)(MySell);

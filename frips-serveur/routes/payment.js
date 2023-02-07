@@ -10,6 +10,11 @@ const stripe = Stripe(
 const { item, account, image, message, transaction } = new PrismaClient();
 const taxe = 1.07;
 
+const customRound = (price) => {
+  let decimal = price - Math.floor(price);
+  return decimal >= 0.25 && decimal <= 0.75 ? Math.floor(price) + 0.5 : Math.round(price);
+};
+
 router.post("/createCheckoutPayment", auth, async (req, res) => {
   const { idItem } = req.body;
 
@@ -52,7 +57,9 @@ router.post("/createCheckoutPayment", auth, async (req, res) => {
       // Replace this constant with a calculation of the order's amount
       // Calculate the order total on the server to prevent
       // people from directly manipulating the amount on the client
-      return itemPrice * taxe;
+      console.log(customRound(itemPrice*taxe))
+      console.log("ici")
+      return customRound(itemPrice * taxe);
     };
     const paymentIntent = await stripe.paymentIntents.create({
       amount: Math.round(((await calculateOrderAmount(itemInfo.Price)) * 100)),
@@ -116,6 +123,8 @@ router.post("/info", async (req, res) => {
 });
 router.post("/succeed", auth, async (req, res) => {
   const { StripeIdentifier, idItem, id_Account } = req.body;
+
+
   try {
     const { Price } = await item.findUnique({
       where: {
@@ -131,7 +140,7 @@ router.post("/succeed", auth, async (req, res) => {
         DateSell: new Date(),
         id_Item: idItem,
         id_Account,
-        Price: (Price * 1.07.toFixed(2)),
+        Price: customRound(itemPrice * taxe),
       },
     });
 

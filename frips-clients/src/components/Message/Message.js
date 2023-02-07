@@ -5,6 +5,8 @@ import moment from "moment";
 import "moment/locale/de";
 import "moment/locale/fr";
 import ProposeMessage from "./ProposeMessage";
+import { useDispatch } from "react-redux";
+import { sendDateProposition } from "../../actions";
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 30,
@@ -51,6 +53,88 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const offerReceiver = (item, dispatch) => {
+  console.log(item.pricepropose);
+  if (
+    item?.pricepropose[0].SendDate &&
+    item?.pricepropose[0].Approve === null && 
+    !item?.pricepropose[0]?.dateApprove
+  ) {
+    return (
+      <Box padding={2} width="100%" display={"flex"}>
+        <div style={{ flexGrow: 1, padding: 5 }}>
+          <Button
+            onClick={() => {
+              dispatch(sendDateProposition(item.id, new Date(),true))
+            }}
+            style={{ backgroundColor: "white", width: "100%" }}
+          >
+            Accepter
+          </Button>
+        </div>
+        <div style={{ flexGrow: 1, padding: 5 }}>
+          <Button
+            onClick={() => {
+              console.log(item.id);
+              dispatch(sendDateProposition(item.id, null,false));
+            }}
+            style={{ backgroundColor: "white", width: "100%" }}
+          >
+            Refuser
+          </Button>
+        </div>
+      </Box>
+    );
+  }
+  if (item?.pricepropose[0]?.SendDate && item?.pricepropose[0]?.Approve) {
+    return (
+      <Box padding={2} width="100%" display={"flex"} justifyContent="center" alignItems={"center"}>
+        <Typography style={{ fontSize: 16 }}> Offre acceptée </Typography>
+      </Box>
+    );
+  }
+  if (item?.pricepropose[0]?.SendDate && !item?.pricepropose[0]?.Approve) {
+    return (
+      <Box padding={2} width="100%" display={"flex"} justifyContent="center" alignItems={"center"}>
+        <Typography style={{ fontSize: 16 }}> Offre refusée </Typography>
+      </Box>
+    );
+  }
+};
+
+const offerSender = (item, dispatch) => {
+  if (
+    item?.pricepropose[0].SendDate  &&
+    item?.pricepropose[0].Approve === null && 
+    !item?.pricepropose[0]?.dateApprove
+  ) {
+    return (
+      <Box padding={2} width="100%" display={"flex"} justifyContent="center" alignItems={"center"}>
+        <Typography style={{ fontSize: 16 }}>...Offre en attente </Typography>
+      </Box>
+    );
+  }
+  if (item?.pricepropose[0]?.SendDate && item?.pricepropose[0]?.Approve &&
+    item?.pricepropose[0]?.dateApprove) {
+    return (
+      <Box padding={2} width="100%" display={"flex"}>
+        <Typography style={{ fontSize: 16 }} justifyContent="center" alignItems={"center"}> Offre acceptée </Typography>
+      </Box>
+    );
+  }
+  if (
+    item?.pricepropose[0]?.SendDate &&
+    !item?.pricepropose[0]?.Approve &&
+    item?.pricepropose[0]?.dateApprove
+  ) {
+    return (
+      <Box padding={2} width="100%" display={"flex"}>
+        <Typography style={{ fontSize: 16 }} justifyContent="center" alignItems={"center"}> Offre refusée </Typography>
+      </Box>
+    );
+  }
+};
+
 const Message = ({
   own,
   Text,
@@ -64,6 +148,7 @@ const Message = ({
   newMessage,
 }) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   if (own) {
     if (Boolean(item)) {
       return (
@@ -123,26 +208,7 @@ const Message = ({
                   </Box>
                 </Box>
               </Box>
-              {userId !== id_Sender ? (
-                <Box padding={2} width="100%" display={"flex"}>
-                  <div style={{ flexGrow: 1, padding: 5 }}>
-                    <Button style={{ backgroundColor: "white", width: "100%" }}>
-                      Accepter
-                    </Button>
-                  </div>
-                  <div style={{ flexGrow: 1, padding: 5 }}>
-                    <Button style={{ backgroundColor: "white", width: "100%" }}>
-                      Refuser
-                    </Button>
-                  </div>
-                </Box>
-              ) : (
-                <div style={{ flexGrow: 1, padding: 5 }}>
-                  <Typography style={{ fontSize: 16 }}>
-                    Votre offre est en Attente
-                  </Typography>
-                </div>
-              )}
+              {offerSender(item, dispatch)}
 
               <Box
                 className={classes.MessageBoxLeft}
@@ -257,19 +323,8 @@ const Message = ({
                   </Box>
                 </Box>
               </Box>
+              {offerReceiver(item, dispatch)}
 
-              <Box padding={2} width="100%" display={"flex"}>
-                <div style={{ flexGrow: 1, padding: 5 }}>
-                  <Button style={{ backgroundColor: "white", width: "100%" }}>
-                    Accepter
-                  </Button>
-                </div>
-                <div style={{ flexGrow: 1, padding: 5 }}>
-                  <Button style={{ backgroundColor: "white", width: "100%" }}>
-                    Refuser
-                  </Button>
-                </div>
-              </Box>
               <Box
                 className={classes.MessageBoxRight}
                 width="100%"

@@ -38,6 +38,7 @@ import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import MyProposition from "./MyProposition";
 import MySell from "./MySell/MySell";
+import MyPurchase from "./MyPurchase/MyPurchase";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -109,6 +110,8 @@ const handleNavigation = (key, classes, setNavigation) => {
       return <MySell classes={classes} />;
     case 3:
       return <MyProposition classes={classes} />;
+    case 4:
+      return <MyPurchase classes={classes} />;
 
     default:
       return <MyItems classes={classes} />;
@@ -199,6 +202,7 @@ const MyFrips = ({
   loading,
   filterMyFrips,
   sell,
+  count,
   purchase,
   propositionNotif,
   sellNotif,
@@ -212,30 +216,13 @@ const MyFrips = ({
 
   useEffect(() => {
     dispatch(getNotificationsMyFrips());
+    window.scrollTo(0,0)
   }, []);
 
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if (
-    loading &&
-    items.length === 0 &&
-    sell.length === 0 &&
-    purchase.length === 0 &&
-    proposition.length === 0
-  ) {
-    return (
-      <Box
-        style={{ backgroundColor: "#F5f5f3" }}
-        display="flex"
-        justifyContent="center"
-        width="100%"
-        height={"100%"}
-        alignItems="center"
-      >
-        <CircularProgress size={100} />
-      </Box>
-    );
-  } else {
+
+  
     return (
       <Box
         width={"100%"}
@@ -288,7 +275,7 @@ const MyFrips = ({
         </Box>
       </Box>
     );
-  }
+  
 };
 
 const mapStateToProps = (state) => ({
@@ -299,6 +286,7 @@ const mapStateToProps = (state) => ({
   proposition: state.myFrips.proposition,
   propositionNotif: state.myFrips.propositionNotification,
   sellNotif: state.myFrips.sellNotification,
+  count:state.myFrips.count,
 
 
   filterMyFrips: state.myFrips.filter,

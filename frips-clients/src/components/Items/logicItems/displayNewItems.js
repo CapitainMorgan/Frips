@@ -137,7 +137,7 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
   });
 };
 
-const DisplayNewItems = ({ classes, favorite }) => {
+const DisplayNewItems = ({ classes, favorite ,loading}) => {
   const history = useNavigate();
 
   const dispatch = useDispatch();
@@ -147,12 +147,16 @@ const DisplayNewItems = ({ classes, favorite }) => {
   const renderedItems = useMemo(() => {
     return renderedItem(items, classes, favorite, dispatch, history);
   }, [items, favorite]);
+  if(!loading){
+    return <Box className={classes.GridSytem}>{renderedItems}</Box>;
 
-  return <Box className={classes.GridSytem}>{renderedItems}</Box>;
+  }
+
 };
 
 const mapStateToProps = (state) => ({
   items: state.items.newItem,
+  loading:state.items.loading
 });
 
 export default connect(mapStateToProps)(DisplayNewItems);

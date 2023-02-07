@@ -58,12 +58,8 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column-reverse",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      height: "100%",
     },
-    [theme.breakpoints.down("")]: {
-      width: "100%",
-      height: "100%",
-    },
+    
   },
 }));
 
@@ -143,6 +139,10 @@ const MessageComponent = ({
       settime(!time);
     }, 1000);
   }, [message, time]);
+
+  useEffect(() => {
+    setRef.current?.scrollTo(0,0)
+  }, []);
 
   const position = useCallback((node) => {
     if (node) {

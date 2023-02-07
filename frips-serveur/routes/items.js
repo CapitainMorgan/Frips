@@ -8,23 +8,8 @@ const path = require("path"); // path for cut the file extension
 const { PrismaClient } = require("@prisma/client");
 const { similarProduct } = require("./logicFunction/logicSimilarProduct");
 
-const {
-  item,
-  account,
-  image,
-  nbview,
-
-  favorit,
-
-  color,
-  brand,
-  pricepropose,
-
-  category_category,
-  item_color,
-  item_category,
-  category,
-} = new PrismaClient();
+const { item, image, nbview, favorit, brand, pricepropose } =
+  new PrismaClient();
 
 // @route   Post api/items
 // @desc    post one item
@@ -57,6 +42,27 @@ const colorLengthFunction = (Color) => {
   }
 };
 
+const createManyDeliveryMethods = (arrayDelivery) => {
+  if (arrayDelivery.length > 1) {
+    const ArrayOfIds = arrayDelivery.map((item) => {
+      return { id_Fees: item };
+    });
+    return {
+      createMany: {
+        data: ArrayOfIds,
+      },
+    };
+  } else {
+    return {
+      create: {
+        data: {
+          id_Fees: arrayDelivery[0],
+        },
+      },
+    };
+  }
+};
+
 router.post("/", auth, upload, async (req, res) => {
   const { id } = req.user;
   const Name = req.body.Titre;
@@ -68,6 +74,7 @@ router.post("/", auth, upload, async (req, res) => {
   const CurrentAuction = true;
   const State = parseInt(req.body.State);
   const Brand = req.body.Brand;
+  const Delivery = req.body.Delivery;
 
   try {
     const exist = await brand.upsert({
@@ -79,6 +86,7 @@ router.post("/", auth, upload, async (req, res) => {
       },
       update: {},
     });
+    const numberArray = Delivery.split(",").map(Number);
 
     const Item = await item.create({
       data: {
@@ -89,7 +97,6 @@ router.post("/", auth, upload, async (req, res) => {
         DatePuplication,
         Disponibility: true,
         Verified: true,
-
         id_Seller: id,
         CurrentAuction,
         item_category: {
@@ -97,6 +104,7 @@ router.post("/", auth, upload, async (req, res) => {
             id_Category: parseInt(Catalogue),
           },
         },
+        item_fees: createManyDeliveryMethods(numberArray),
 
         item_color: colorLengthFunction(req.body.Color),
 
@@ -215,7 +223,6 @@ router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
       },
     });
 
-    console.log(findUser);
 
     if (findUser?.id_Seller === id) {
       const deleted = await item.delete({
@@ -751,6 +758,8 @@ router.post("/proposition", auth, async (req, res) => {
   const { Price, idItem } = req.body;
   const { id } = req.user;
 
+  console.log(id)
+
   try {
     await pricepropose.create({
       data: {
@@ -789,9 +798,11 @@ router.get("/:id", async (req, res) => {
     let Item = await item.findUnique({
       where: {
         id: parseInt(id),
+        
       },
 
       select: {
+        
         image: true,
         Name: true,
         account: {
@@ -865,11 +876,18 @@ router.get("/:id", async (req, res) => {
           },
         },
       },
+      
     });
 
     const userItem = await item.findMany({
       where: {
-        id_Seller: Item.account.id,
+        AND:[
+          {id_Seller: Item.account.id,},
+          {transaction: {
+            none: {},
+          }}
+            
+        ]
       },
       orderBy: {
         DatePuplication: "desc",
@@ -940,6 +958,7 @@ router.post("/favorit", auth, async (req, res) => {
           id_Item: req.body.id,
           id_Account: req.user.id,
         },
+        
       },
       select: {
         item: true,

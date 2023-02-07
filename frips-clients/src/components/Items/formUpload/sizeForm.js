@@ -29,12 +29,10 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
   const classes = useStyle();
   const [anchorEl, setAnchorEl] = useState(null);
   const [id,subId]= size
-  console.log(field)
 
   
-  const renderedStateClothes = arraySize[id].subitems[subId].subitems.map(
+  const renderedStateClothes = arraySize[id]?.subitems[subId]?.subitems.map(
     (item, index) => {
-      console.log(item)
       return (
         <Box style={{ position: "relative" }}>
           {index !== 0 ? <Divider></Divider> : null}

@@ -15,6 +15,7 @@ const initialValues = {
   Color: [],
   Price: "",
   State: "",
+  Delivery:[]
 };
 
 const ItemCreate = () => {

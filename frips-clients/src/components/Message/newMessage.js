@@ -7,6 +7,8 @@ import {
   makeStyles,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import "moment/locale/fr";
 import React, { useEffect, useState } from "react";
@@ -31,6 +33,7 @@ import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import SecondPageDialog from "./CostumItem/SecondPageDialog";
 import { isNumber } from "lodash";
 import PricePropose from "../Checkout/PricePropose";
+import { ERROR_MESSAGE } from "../../actions/type";
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 65,
@@ -63,21 +66,32 @@ const useStyles = makeStyles((theme) => ({
 
   MessageBox: {
     position: "relative",
-    flex: 10,
+    flexGrow: 3,
     display: "flex",
     height: 300,
     overflow: "auto",
     flexDirection: "column",
     [theme.breakpoints.down("sm")]: {
-      height: "100%",
+      height: "90vh",
     },
   },
   container: {
     flexGrow: 1,
     [theme.breakpoints.down("sm")]: {
-      height: "100%",
+      flexGrow: 1,
+      height:"80vh",
+      marginTop:10
+
     },
   },
+  Divider:{
+    height:"10vh",
+    [theme.breakpoints.down("sm")]: {
+      height:"1vh",
+
+    },
+  },
+  
 }));
 
 const renderProfileName = (Profile, userId) => {
@@ -137,16 +151,23 @@ const Conversation = ({
   const [anchorEl, setAnchorEl] = useState(false);
   const history = useNavigate();
   const fromItem = useLocation().state;
+  const theme = useTheme();
+
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+  
 
   const handleClick = () => {
     setAnchorEl(true);
   };
 
   const handleClickAway = () => {
+    dispatch({type:ERROR_MESSAGE,payload:null})
     setAnchorEl(false);
   };
 
-  console.log(fromItem);
+  
+
 
   useEffect(() => {
     if (socket?.connected) {
@@ -171,6 +192,8 @@ const Conversation = ({
       dispatch(readMessage(id));
     }
   }, [dispatch, id]);
+
+  
 
   useEffect(() => {
     if (isBottom) {
@@ -206,7 +229,7 @@ const Conversation = ({
 
   return (
     <Box style={{ backgroundColor: "#F5f5f3" }}>
-      <Box height="10vh" />
+      <Box className={classes.Divider} />
       <Box className={classes.container}>
         {anchorEl ? (
           <PricePropose
@@ -303,7 +326,7 @@ const Conversation = ({
             </React.Fragment>
           ) : null}
 
-          <Box flex={1}>
+          {!mobile ? <Box display={"flex"} flexGrow={2}>
             <MessageComponent
               isBottom={isBottom}
               setIsBottom={setIsBottom}
@@ -312,7 +335,16 @@ const Conversation = ({
               setIsAccepted={setIsAccepted}
               isAccepted={isAccepted}
             />
-          </Box>
+          </Box>: 
+            <MessageComponent
+              isBottom={isBottom}
+              setIsBottom={setIsBottom}
+              receivedMessage={receivedMessage}
+              setReceiveNewMessage={setReceivedMessage}
+              setIsAccepted={setIsAccepted}
+              isAccepted={isAccepted}
+            />
+         }
           {newMessage && !isBottom ? (
             <Box
               display={"flex"}

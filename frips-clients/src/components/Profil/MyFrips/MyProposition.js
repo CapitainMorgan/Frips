@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardActionArea,
+  CircularProgress,
   makeStyles,
   Typography,
 } from "@material-ui/core";
@@ -279,6 +280,40 @@ const MyProposition = ({
   useEffect(() => {
     dispatch(fetchMyfrips(`/api/members/MyProposition`, FETCH_PROPOSITION));
   }, [dispatch, filterMyFrips, pagination]);
+
+
+  if (
+    loading &&
+    items.length === 0 
+  ) {
+    return (
+      <Box
+        style={{ backgroundColor: "#F5f5f3" }}
+        display="flex"
+        justifyContent="center"
+        width="100%"
+        height={"100%"}
+        alignItems="center"
+      >
+        <CircularProgress size={100} />
+      </Box>
+    );
+  }
+
+  if (!loading && items.length === 0 && count === 0) {
+    return (
+      <Box
+        minHeight={200}
+        display="flex"
+        justifyContent={"center"}
+        alignItems="center"
+      >
+        <Typography style={{ fontSize: 16 }}>
+          Il n'y malheureusement aucune correspondance 
+        </Typography>
+      </Box>
+    );
+  }
 
   return (
     <Box>

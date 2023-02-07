@@ -12,8 +12,17 @@ const { nanoid } = require("nanoid");
 let fs = require("fs-extra");
 const path = require("path"); // path for cut the file extension
 
-const { item, account, image, message, sell, pricepropose, transaction } =
-  new PrismaClient();
+const {
+  item,
+  account,
+  image,
+  message,
+  sell,
+
+  pricepropose,
+  transaction,
+  review,
+} = new PrismaClient();
 // @route   GET api/members/myFrips
 // @desc    get all your post
 // @acces    Private
@@ -42,7 +51,7 @@ const filterArrayItems = [
       equals: true,
     },
   },
-  { Approve: {} },
+  { Approve: { equals: null } },
   {
     Approve: {
       equals: false,
@@ -52,17 +61,13 @@ const filterArrayItems = [
   { DateSell: "asc" },
 ];
 
-const constructFilter = (filterArray, useful) => {
+const constructFilter = (filterArray, type) => {
   const array = [];
-  if (filterArray.length === 0 && useful) {
-    return [
-      { DatePuplication: "desc" },
-      {
-        pricepropose: {
-          _count: "desc",
-        },
-      },
-    ];
+  if (filterArray.length === 0 && type === "myFrips") {
+    return [{ pricepropose: { _count: "desc" } }, { DatePuplication: "desc" }];
+  }
+  if (filterArray.length === 0 && type === "myProposition") {
+    return [{ Approve: { equals: null } }];
   }
   filterArrayItems.forEach((element, index) => {
     if (_.includes(filterArray, index)) {
@@ -162,17 +167,35 @@ router.post("/updateAddress", auth, async (req, res) => {
 // @desc    get all your post
 // @acces    Private
 
-const constructWhere = (whereFilter) => {
-  if (whereFilter.length === 0) {
-    return [{ DateSend: { equals: null } }];
-  }
+const constructQueryMySell = (whereFilter) => {
   const arrayWhere = [];
+
+  if (whereFilter.length === 0) {
+    arrayWhere.push({ DateSend: { equals: null } });
+  }
   whereFilter.map((item) => {
     if (item === 10) {
       arrayWhere.push({ DateSend: { equals: null } });
     }
     if (item === 11) {
-      arrayWhere.push({ DateSend:{not:{equals:null}} });
+      arrayWhere.push({ DateSend: { not: { equals: null } } });
+    }
+  });
+  return arrayWhere;
+};
+
+const constructQueryOrderByMySell = (whereFilter) => {
+  const arrayWhere = [];
+
+  if (whereFilter.length === 0) {
+    return arrayWhere;
+  }
+  whereFilter.map((item) => {
+    if (item === 8) {
+      arrayWhere.push({ DateSell: "desc" });
+    }
+    if (item === 9) {
+      arrayWhere.push({ DateSell: "asc" });
     }
   });
   return arrayWhere;
@@ -181,18 +204,17 @@ const constructWhere = (whereFilter) => {
 router.post("/mySell", auth, async (req, res) => {
   const { id } = req.user;
   const { filter, number } = req.body;
-  console.log("here");
   console.log(filter);
-
+  console.log(constructQueryOrderByMySell(filter));
   try {
     const countMySell = await transaction.count({
       where: {
-        OR:constructWhere(filter)
+        OR: constructQueryMySell(filter),
       },
-          });
+    });
     const mySell = await transaction.findMany({
       where: {
-        OR:constructWhere(filter)
+        OR: constructQueryMySell(filter),
       },
       select: {
         item: {
@@ -202,29 +224,63 @@ router.post("/mySell", auth, async (req, res) => {
             },
             id: true,
             Name: true,
+            Price: true,
+            item_fees: {
+              select: {
+                fees: {
+                  select: {
+                    Name: true,
+                    Description: true,
+                    Price: true,
+                  },
+                },
+              },
+            },
 
             DeliveryDetails: true,
           },
         },
-        DateSell:true,
-        DateSend:true,
-        account:{select:{
-          Pseudo:true,
-          id:true
-        }},
-        Price:true,
-        Status:true
-      },
 
-      orderBy: constructFilter(filter),
+        DateSell: true,
+        DateSend: true,
+        account: {
+          select: {
+            Pseudo: true,
+            id: true,
+            address: true,
+            Firstname: true,
+            Lastname: true,
+            Email: true,
+          },
+        },
+        id: true,
+
+        Price: true,
+        Status: true,
+      },
+      orderBy: constructQueryOrderByMySell(filter),
       take: 5,
       skip: 5 * (number - 1),
     });
 
-    res.status(200).json({items:mySell,count:countMySell});
-    console.log(mySell);
+    if (countMySell === 0 && filter.length !== 0) {
+      res.status(200).json({
+        items: mySell,
+        count: countMySell,
+        msg: "Il n'y a aucune correspondance à votre recherche",
+      });
+    }
+    if (countMySell === 0 && filter.length === 0) {
+      res.status(200).json({
+        items: mySell,
+        count: countMySell,
+        msg: "Vous avez envoyé toutes vos commandes",
+      });
+    } else {
+      res.status(200).json({ items: mySell, count: countMySell, msg: "" });
+    }
   } catch (error) {
-    res.status(500).json("Servor Error")
+    res.status(500).json("Servor Error");
     console.log(error);
   }
 });
@@ -270,6 +326,7 @@ router.post("/myFrips", auth, async (req, res) => {
             },
             Approve: true,
             dateApprove: true,
+            SendDate:true,
           },
           orderBy: { Price: "desc" },
           take: 1,
@@ -293,7 +350,7 @@ router.post("/myFrips", auth, async (req, res) => {
       },
       take: 5,
       skip: 5 * (number - 1),
-      orderBy: constructFilter(filter, true),
+      orderBy: constructFilter(filter, "myFrips"),
     });
     console.log(MyFrips);
 
@@ -330,7 +387,9 @@ router.get("/myFripsNotifications", auth, async (req, res) => {
         },
         transaction: {
           some: {
-            Status: {},
+            DateSend: {
+              equals: null,
+            },
           },
         },
       },
@@ -362,17 +421,58 @@ router.get("/myFripsNotifications", auth, async (req, res) => {
   }
 });
 
+const constructQueryMyProposition = (whereFilter) => {
+  const arrayWhere = [];
+
+  if (whereFilter.length === 0) {
+    arrayWhere.push({
+      Approve: {
+        equals: null,
+      },
+    });
+  }
+
+  whereFilter.map((item) => {
+    if (item === 5) {
+      arrayWhere.push({
+        Approve: {
+          equals: true,
+        },
+      });
+    }
+    if (item === 6) {
+      arrayWhere.push({ Approve: { equals: null } });
+    }
+    if (item === 7) {
+      arrayWhere.push({ Approve: { equals: false } });
+    }
+  });
+  return arrayWhere;
+};
 router.post("/MyProposition", auth, async (req, res) => {
   const { id } = req.user;
   const { filter, number } = req.body;
-  console.log(constructFilter(filter));
 
+  console.log(constructQueryMyProposition(filter, "myProposition"));
+  console.log(filter);
   try {
     const count = await item.count({
       where: {
         pricepropose: {
           some: {
-            AND: [{ id_Account: id }, { OR: constructFilter(filter) }],
+            AND: [
+              {
+                account: {
+                  id,
+                },
+              },
+              { OR: constructQueryMyProposition(filter) },
+              {
+                SendDate: {
+                  gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+                },
+              },
+            ],
           },
         },
       },
@@ -382,11 +482,20 @@ router.post("/MyProposition", auth, async (req, res) => {
       where: {
         pricepropose: {
           some: {
-            AND: [{ id_Account: id }, { OR: constructFilter(filter) }],
+            AND: [
+              {
+                account: {
+                  id,
+                },
+              },
+              { OR: constructQueryMyProposition(filter) },
+              {
+                SendDate: {
+                  gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+                },
+              },
+            ],
           },
-        },
-        transaction: {
-          some: {},
         },
       },
       select: {
@@ -423,6 +532,223 @@ router.post("/MyProposition", auth, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json("Serveur error");
+  }
+});
+
+router.post("/Delivery", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_transaction } = req.body;
+
+  try {
+    await transaction.update({
+      where: {
+        id: id_transaction,
+      },
+
+      data: {
+        DateSend: new Date(),
+      },
+    });
+
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).json("Servor Error");
+    console.log(error);
+  }
+});
+
+router.post("/Rewiew", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_transaction } = req.body;
+
+  try {
+    res.sendStatus(200);
+    console.log(mySell);
+  } catch (error) {
+    res.status(500).json("Servor Error");
+    console.log(error);
+  }
+});
+
+router.post("/Received", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_transaction } = req.body;
+
+  try {
+    await transaction.update({
+      where: {
+        id: id_transaction,
+      },
+      data: {
+        Status: "send",
+      },
+    });
+
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).json("Servor Error");
+    console.log(error);
+  }
+});
+
+const constructQueryMyPurchase = (whereFilter) => {
+  const arrayWhere = [];
+
+  if (whereFilter.length === 0) {
+    arrayWhere.push({
+      Status: {
+        equals: null,
+      },
+    });
+  }
+  whereFilter.map((item) => {
+    if (item === 12) {
+      arrayWhere.push({ Status: { equals: null } });
+    }
+    if (item === 13) {
+      arrayWhere.push({ Status: { not: { equals: null } } });
+    }
+  });
+  return arrayWhere;
+};
+
+const constructQueryOrderByMyPurchase = (whereFilter) => {
+  const arrayWhere = [];
+
+  if (whereFilter.length === 0) {
+    return arrayWhere;
+  }
+  whereFilter.map((item) => {
+    if (item === 14) {
+      arrayWhere.push({ DateSell: "desc" });
+    }
+    if (item === 15) {
+      arrayWhere.push({ DateSell: "asc" });
+    }
+  });
+  return arrayWhere;
+};
+
+router.post("/MyPurchase", auth, async (req, res) => {
+  const { id } = req.user;
+  const { filter, number } = req.body;
+
+  try {
+    const countMyPurchase = await transaction.count({
+      where: {
+        AND: [
+          {
+            account: {
+              id,
+            },
+          },
+          { OR: constructQueryMyPurchase(filter) },
+        ],
+      },
+    });
+    const MyPurchase = await transaction.findMany({
+      where: {
+        AND: [
+          {
+            account: {
+              id,
+            },
+          },
+          { OR: constructQueryMyPurchase(filter) },
+        ],
+      },
+      select: {
+        item: {
+          select: {
+            image: {
+              take: 1,
+            },
+            id: true,
+            Name: true,
+            account: {
+              select: {
+                Pseudo: true,
+                id: true,
+                address: true,
+                Firstname: true,
+                Lastname: true,
+                Email: true,
+              },
+            },
+
+            DeliveryDetails: true,
+          },
+        },
+        DateSell: true,
+        DateSend: true,
+        account: {
+          select: {
+            Pseudo: true,
+            id: true,
+            address: true,
+            Firstname: true,
+            Lastname: true,
+            Email: true,
+          },
+        },
+        id: true,
+
+        Price: true,
+        Status: true,
+      },
+      take: 5,
+      skip: 5 * (number - 1),
+      orderBy: constructQueryOrderByMyPurchase(filter),
+    });
+
+    if (countMyPurchase === 0 && filter.length === 0) {
+      res.status(200).json({
+        items: MyPurchase,
+        count: countMyPurchase,
+        msg: "Vous avez marquer reçu sur toutes vos commandes",
+      });
+    }
+    if (countMyPurchase === 0 && filter.length !== 0) {
+      res.status(200).json({
+        items: MyPurchase,
+        count: countMyPurchase,
+        msg: "Il n'y a aucune correspondance à votre recherche",
+      });
+    } else {
+      res
+        .status(200)
+        .json({ items: MyPurchase, count: countMyPurchase, msg: "" });
+    }
+  } catch (error) {
+    res.status(500).json("Servor Error");
+    console.log(error);
+  }
+});
+
+router.post("/StatusProposition", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_Item, dateApprove } = req.body;
+
+  console.log("here");
+  try {
+    const propose = await pricepropose.update({
+      where: {
+        id_Account_id_Item: {
+          id_Account: id,
+          id_Item,
+        },
+      },
+      data: {
+        dateApprove: Boolean(dateApprove) ? new Date() : false,
+      },
+    });
+
+    console.log(propose);
+
+    res.sendStatus(200);
+  } catch (error) {
+    res.status(500).json("Servor Error");
+    console.log(error);
   }
 });
 

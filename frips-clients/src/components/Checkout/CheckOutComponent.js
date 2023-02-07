@@ -3,7 +3,9 @@ import {
   Button,
   CircularProgress,
   Divider,
-  makeStyles, Popper, Typography
+  makeStyles,
+  Popper,
+  Typography,
 } from "@material-ui/core";
 import { useElements, useStripe } from "@stripe/react-stripe-js";
 import React, { useEffect, useState } from "react";
@@ -14,7 +16,7 @@ import Adress from "./Adress";
 import ModalCostum from "./ModalCostum";
 import PaymentForm from "./PaymentForm";
 import SecurityBadge from "./SecurityBadge";
-import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
+import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import axios from "axios";
 import { succeedPayment } from "../../actions";
 
@@ -105,7 +107,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const CheckOut = ({ loading, cs, item }) => {
+
+const customRound = (price) => {
+  let decimal = price - Math.floor(price);
+  return decimal >= 0.25 && decimal <= 0.75 ? Math.floor(price) + 0.5 : Math.round(price);
+};
+
+const CheckOut = ({ loading, cs, item, idAccount }) => {
   const classes = useStyles();
   const [loadingPayment, setloadinPayment] = useState(false);
   let { id } = useParams();
@@ -116,17 +124,19 @@ const CheckOut = ({ loading, cs, item }) => {
   const navigate = useNavigate();
   const { account } = item;
 
+  useEffect(() => {
+    async function fetchData(isRerseved) {
+      await axios.post("/api/paymentIntent/reserved", {
+        idItem: id,
+        isRerseved: isRerseved,
+      });
+    }
+    fetchData(true);
 
-  useEffect( ()=>{
-    async function fetchData(isRerseved){await axios.post("/api/paymentIntent/reserved", {idItem:id,isRerseved:isRerseved });
-
-  }
-  fetchData(true)
-
-  return () =>{
-    fetchData(false)
-  }
-  },[])
+    return () => {
+      fetchData(false);
+    };
+  }, []);
 
   const handleSubmit = async (event) => {
     // We don't want to let default form submission happen here,
@@ -153,8 +163,7 @@ const CheckOut = ({ loading, cs, item }) => {
       dispatch({ type: PAYMENT_FAILED });
       navigate(`/payment/${id}/paymentStatus`, { replace: true });
     } else {
-      
-      dispatch(succeedPayment(id,cs,account.id,navigate))
+      dispatch(succeedPayment(id, cs, idAccount, navigate));
     }
   };
 
@@ -307,15 +316,23 @@ const CheckOut = ({ loading, cs, item }) => {
             </Box>
 
             <Box marginTop={2} marginBottom={2} display="flex" flexWrap="wrap">
-              <Box className={classes.ContentInformationItem} display="flex" alignItems={"center"}>
+              <Box
+                className={classes.ContentInformationItem}
+                display="flex"
+                alignItems={"center"}
+              >
                 <Typography className={classes.TypographyText}>
                   Frais
                 </Typography>
-                <HelpOutlineIcon style={{height:"0.85em",width:"0.85em"}}/>
-                <div className={classes.paper}>Frais de transaction + commission.</div>
+                <HelpOutlineIcon
+                  style={{ height: "0.85em", width: "0.85em" }}
+                />
+                <div className={classes.paper}>
+                  Frais de transaction + commission.
+                </div>
               </Box>
               <Box className={classes.ContentInformationItem}>
-                {(item.Price * 0.07).toFixed(2)} CHF
+                { customRound(item.Price * 0.07)} CHF
               </Box>
             </Box>
 
@@ -338,6 +355,7 @@ const CheckOut = ({ loading, cs, item }) => {
 const mapStateToProps = (state) => ({
   cs: state.payment.clientSecret,
   loading: state.payment.loading,
+  idAccount: state.auth.user.id,
   item: state.payment.item,
 });
 

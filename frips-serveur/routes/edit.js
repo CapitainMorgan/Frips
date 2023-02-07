@@ -13,6 +13,7 @@ const {
   item_brand,
   item_category,
   item_color,
+  item_fees,
   itemcondition,
   brand,
 } = new PrismaClient();
@@ -53,7 +54,7 @@ router.get("/:idItem", auth, async (req, res) => {
             },
             item_color: {
               select: {
-                color: true,
+                color:true
               },
             },
             item_category: {
@@ -61,11 +62,17 @@ router.get("/:idItem", auth, async (req, res) => {
                 id_Category: true,
               },
             },
+            item_fees: {
+              select: {
+                id_Fees: true,
+              },
+            },
           },
         },
       },
     });
-    console.log(item)
+
+    console.log(item[0].item_color[0])
 
     res.status(200).json(item[0]);
   } catch (error) {
@@ -94,8 +101,6 @@ const colorLengthFunction = (Color) => {
   }
 };
 
-
-
 const upload = multer().any();
 
 router.post("/", auth, upload, async (req, res) => {
@@ -104,13 +109,19 @@ router.post("/", auth, upload, async (req, res) => {
   const Name = req.body.Titre;
   const Size = req.body.Size;
   const DatePuplication = await new Date();
-  const Color = await req.body.Color;
+  let Color = await req.body.Color;
   const Description = req.body.Description;
   const Price = parseFloat(req.body.Price);
   const Catalogue = req.body.Catalogue;
   const CurrentAuction = true;
   const State = parseInt(req.body.State);
   const Brand = req.body.Brand;
+  const Delivery = req.body.Delivery.split(",").map(Number);
+
+  if (!Array.isArray(Color)) {
+    Color = Array.of(Color);
+  }
+
 
   try {
     const ancientItem = await item.findUnique({
@@ -133,8 +144,15 @@ router.post("/", auth, upload, async (req, res) => {
             id_Color: true,
           },
         },
+        item_fees: {
+          select: {
+            id_Fees: true,
+          },
+        },
       },
     });
+
+    console.log(    ancientItem.item_fees)
     const exist = await brand.upsert({
       where: {
         Name: Brand,
@@ -144,6 +162,7 @@ router.post("/", auth, upload, async (req, res) => {
       },
       update: {},
     });
+
     const Item = await item.update({
       where: {
         id: parseInt(id_Item),
@@ -182,10 +201,43 @@ router.post("/", auth, upload, async (req, res) => {
             },
           },
         },
+        item_color: {
+          deleteMany: {},
+          create: Color.map((color) => {
+            return {
+              color: {
+                connect: {
+                  id: parseInt(color),
+                },
+              },
+            };
+          }),
+        },
+      item_fees:{
+        deleteMany:{},
+        create:Delivery.map((id_Fees) => {
+          return {
+            fees: {
+              connect: {
+                id: parseInt(id_Fees),
+              },
+            },
+          };
+        }),
       },
-    });
+      image:{
+        deleteMany:{},
+        create:req.files.map(()=>{
+          
+        })
+      }
+      
 
-    
+        
+      },
+
+    });
+   
     let pathDir = `public/images/${Item.id}`;
 
     fs.readdir(pathDir, (err, files) => {
@@ -216,6 +268,7 @@ router.post("/", auth, upload, async (req, res) => {
       await image.create({
         data: {
           id_Item: Item.id,
+          confidencial: false,
           image: `${id}` + path.extname(req.files[index].originalname),
         },
       });

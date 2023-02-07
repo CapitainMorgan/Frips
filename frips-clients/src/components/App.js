@@ -48,7 +48,7 @@ if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
-const ENDPOINT = "192.168.1.105:5000";
+const ENDPOINT = "http://localhost:5000/";
 const socket = io(ENDPOINT);
 
 const App = () => {

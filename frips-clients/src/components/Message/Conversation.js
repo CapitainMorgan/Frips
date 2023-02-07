@@ -129,7 +129,7 @@ const UserMessage = (messages, classes, history, idUser) => {
                   alignItems={"center"}
                 >
                   <Typography style={{ fontSize: 13 }}>
-                    {moment(item.Date_Hour).local().format("LL")}
+                    {moment(item.DateHoure).fromNow()}
                   </Typography>
                   {item.message[0].Unread &&
                   idUser.id !== item.message[0].id_Sender ? (

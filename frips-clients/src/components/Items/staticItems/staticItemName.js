@@ -411,26 +411,36 @@ export const Catalogue = [
                 upId: 62,
                 Name: "Shorts taille haute",
                 id: 63,
+                sizeType: 0,
+
               },
               {
                 upId: 63,
                 Name: "Shorts taille basse",
                 id: 64,
+                sizeType: 0,
+
               },
               {
                 upId: 63,
                 Name: "Shorts en jeans",
                 id: 65,
+                sizeType: 0,
+
               },
               {
                 upId: 63,
                 Name: "Shorts en cuir",
                 id: 66,
+                sizeType: 0,
+
               },
               {
                 upId: 63,
                 Name: "Shorts cargo",
                 id: 67,
+                sizeType: 0,
+
               },
             ],
           },
@@ -444,10 +454,14 @@ export const Catalogue = [
                 upId: 68,
                 Name: "Une pièce",
                 id: 69,
+                sizeType: 0,
+
               },
               {
                 upId: 68,
                 Name: "Deux pièces",
+                sizeType: 0,
+
                 id: 70,
               },
             ],
@@ -456,6 +470,8 @@ export const Catalogue = [
           {
             Upid: 2,
             Name: "Autres vêtements",
+            sizeType: 0,
+
             id: 72,
           },
         ],
@@ -524,43 +540,43 @@ export const Catalogue = [
             Name: "Sacs à main",
             id: 82,
             upId: 81,
-            siteType: 3,
+            siteType:2,
           },
           {
             Name: "Sacs en bandoulière",
             id: 83,
             upId: 81,
-            siteType: 3,
+            siteType: 2,
           },
           {
             Name: "Sacs à dos",
             id: 84,
             upId: 81,
-            siteType: 3,
+            siteType: 2,
           },
           {
             Name: "Pochette",
             id: 85,
             upId: 81,
-            siteType: 3,
+            siteType: 2,
           },
           {
             Name: "Sacs banane",
             id: 86,
             upId: 81,
-            siteType: 3,
+            siteType: 2,
           },
           {
             Name: "Sacs de sport",
             id: 87,
             upId: 81,
-            siteType: 3,
+            siteType: 2,
           },
           {
             Name: "Autres sacs",
             id: 88,
             upId: 81,
-            siteType: 3,
+            siteType: 2,
           },
         ],
       },
@@ -864,7 +880,6 @@ export const listCategorie = (
                 if (item.id === 104) {
                   setSize([1]);
                 }
-                console.log(item.Name);
 
                 setNavigationValue([
                   ...rank,

@@ -16,6 +16,11 @@ import useMediaQuery from "@material-ui/core/useMediaQuery";
 import PrivateRoute from "../routes/PrivateRoute";
 import Theme from "./NavBar/createUITheme";
 import { io } from "socket.io-client";
+import UserProfile from "./Profil/Profil";
+import ModeratorLoginPage from "./Login/ModeratorLoginPage";
+
+
+
 
 import { useTheme } from "@material-ui/core/styles";
 import Conversation from "./Message/Conversation";
@@ -105,6 +110,15 @@ const App = () => {
                 element={<LoginPage />}
                 key={"login"}
               />
+              <Route
+                path="/moderator/login"
+                exact
+                element={<ModeratorLoginPage />}
+                key={"moderator-login"}
+              />
+              <Route path="/member" key={"member-management"}>
+                <Route path="/member/:name" element={<div style={{height:200}}>salut</div>} />
+              </Route>
 
               <Route path="/items" key={"items-management"}>
                 <Route path="/items/:id" element={<ItemPreview />} />

@@ -24,6 +24,16 @@ export default (state=initialState,action) =>{
                 error:null,
                 user:payload,
             }
+        case MODERATOR_LOGIN_SUCCESS:
+            localStorage.setItem("token", payload.token);
+            return {
+              ...state,
+              ...payload,
+              error: null,
+              isAuthenticated: true,
+              isModerator: true,
+              loading: false,
+            };
         case REGISTER_SUCCESS:
         case LOGIN_SUCCES:
             localStorage.setItem("token",payload.token)

@@ -1,9 +1,68 @@
-
-import axios from "axios"
-import _, { get } from "lodash"
-import { useNavigate } from "react-router-dom"
-import setAuthToken from "../utils/setAuthToken"
-import { ADD_FAVORITE, ADD_FILTER, ADD_MESSAGE_IMAGE, ADD_MORE_MESSAGE, AUTH_ERROR, CHANGE_PAGINATION, CREATE_ITEM, DISPATCH_HANDLECLICK, EDIT_ITEM, ERROR, FETCH_FILTER, FETCH_ITEM, FETCH_ITEMS, FETCH_ITEM_FILTER_SUCCESS, FETCH_ITEM_TYPE, FETCH_MYFAVORITE, FETCH_MYFAVORITEIDs, FETCH_MYFRIPS, FETCH_NEW_ITEMS, FETCH_NEW_ITEM_TYPE, GENERATE_CONV, GET_ALL_CONV, GET_CONV, GET_ITEM_PROPOSE, GET_ITEM_PROPOSE_FROMID, GET_MORE_ITEMS, GET_MORE_MESSAGE, GET_MORE_MESSAGE_LOADING, HANDLEAWAY_CLICK_FORPROPOSE, HANDLE_AWAYSECOND_PAGE, HANDLE_CLICK_FORPROPOSE, HANDLE_SECOND_PAGE, INFO_ITEM, LOADING_ITEM, LOGIN_FAIL, LOGIN_SUCCES, LOGOUT, MESSAGE_ERROR, MSG_ERROR, NO_MORE, REGISTER_FAILURE, REGISTER_SUCCESS, REMOVE_FAVORITE, REMOVE_FILTER, SOCKET, SUCCESS_CREATION_ITEM, USER_LOADED } from "./type"
+import axios from "axios";
+import _ from "lodash";
+import setAuthToken from "../utils/setAuthToken";
+import {
+  ADD_FAVORITE,
+  ADD_FILTER,
+  ADD_MESSAGE_IMAGE,
+  ADD_MORE_MESSAGE,
+  AUTH_ERROR,
+  CHANGE_PAGINATION,
+  CREATE_ITEM,
+  DISPATCH_HANDLECLICK,
+  EDIT_ITEM,
+  ERROR,
+  FETCH_FILTER,
+  FETCH_INFO_ITEM,
+  FETCH_ITEM,
+  FETCH_ITEMS,
+  FETCH_ITEM_FILTER_SUCCESS,
+  FETCH_ITEM_TYPE,
+  FETCH_MYFAVORITE,
+  FETCH_MYFAVORITEIDs,
+  FETCH_MYFRIPS,
+  FETCH_NEW_ITEMS,
+  FETCH_NEW_ITEM_TYPE,
+  GENERATE_CONV,
+  GET_ALL_CONV,
+  GET_CONV,
+  GET_ITEM_PROPOSE,
+  GET_ITEM_PROPOSE_FROMID,
+  GET_MORE_ITEMS,
+  GET_MORE_MESSAGE,
+  GET_MORE_MESSAGE_LOADING,
+  HANDLEAWAY_CLICK_FORPROPOSE,
+  HANDLE_AWAYSECOND_PAGE,
+  HANDLE_CLICK_FORPROPOSE,
+  HANDLE_SECOND_PAGE,
+  INFO_ITEM,
+  LOADING_FETCH_ITEM,
+  LOADING_ITEM,
+  LOADING_PAYMENT,
+  LOGIN_FAIL,
+  LOGIN_SUCCES,
+  MODERATOR_LOGIN_SUCCESS,
+  LOGOUT,
+  MESSAGE_ERROR,
+  MESSAGE_LOADING,
+  MSG_ERROR,
+  NEW_MESSAGE,
+  NO_MORE,
+  NUMBER_COUNT,
+  PAYMENT_FAILED,
+  PAYMENT_INFO,
+  PAYMENT_INFO_SUCCESS_FETCH,
+  PAYMENT_SUCCESS,
+  REGISTER_FAILURE,
+  REGISTER_SUCCESS,
+  REMOVE_FAVORITE,
+  REMOVE_FILTER,
+  SEARCH,
+  SOCKET,
+  SUCCESS_CREATION_ITEM,
+  SUCCESS_FETCH_ITEM,
+  USER_LOADED,
+} from "./type";
 ////LOGIN/////
 const config = {
     headers:{
@@ -33,20 +92,41 @@ export const loadUser = (socket) => async dispatch =>{
     }
 }
 
-export const setSocket = (socket) => async (dispatch,getState) =>{
-
-
-    try {
-        dispatch({
-            type:SOCKET,
-            payload:socket
-        })
-    } catch (error) {
-        dispatch({
-            type:AUTH_ERROR
-        })
+export const loadModerator = (socket) => async (dispatch) => {
+  if (localStorage.token) {
+    setAuthToken(localStorage.token);
+  }
+  
+  try {
+    const res = await axios.get("/api/auth/moderator");
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    });
+    dispatch(getUnReadNotification());
+    if (socket?.connected) {
+      socket.emit("join", { userId: res.data.id, socketId: socket.id });
     }
-}
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: AUTH_ERROR,
+    });
+  }
+};
+
+export const setSocket = (socket) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: SOCKET,
+      payload: socket,
+    });
+  } catch (error) {
+    dispatch({
+      type: AUTH_ERROR,
+    });
+  }
+};
 
 
 export const register = (values,from,history) => async dispatch =>{
@@ -73,8 +153,31 @@ export const register = (values,from,history) => async dispatch =>{
             payload:error.response.data
         })
     }
+};
 
-} 
+
+export const moderatorLogin = (values, from, history) => async (dispatch) => {
+  try {
+    const res = await axios.post("/api/auth/moderator", values, config);
+    console.log(res);
+    dispatch({
+      type: MODERATOR_LOGIN_SUCCESS,
+      payload: res.data,
+    });
+    dispatch(loadModerator());
+    history(from, { replace: true });
+  } catch (error) {
+    console.log(error);
+    //todos error handling
+    const displayError = error.response?.data?.errors;
+    if (displayError) {
+      dispatch({
+        type: LOGIN_FAIL,
+        payload: displayError[0],
+      });
+    }
+  }
+};
 
 
 export const login = (values,from,history) => async dispatch =>{

@@ -8,7 +8,7 @@ const path = require("path"); // path for cut the file extension
 const { PrismaClient } = require("@prisma/client");
 const { similarProduct } = require("./logicFunction/logicSimilarProduct");
 
-const { item, image, nbview, favorit, brand, pricepropose } =
+const { item, image, nbview, favorit, brand, pricepropose ,review} =
   new PrismaClient();
 
 // @route   Post api/items
@@ -19,6 +19,7 @@ const upload = multer().any();
 
 const colorLengthFunction = (Color) => {
   const [firstColor, SecondColor] = Color;
+  console.log(Color);
 
   if (Color.length == 2) {
     return {
@@ -31,11 +32,12 @@ const colorLengthFunction = (Color) => {
       },
     };
   } else {
+    console.log("ici");
+
     return {
       create: {
         data: {
-          id_Color: parseInt(firstColor),
-          id_Item: Item.id,
+          id_Color: parseInt(Color),
         },
       },
     };
@@ -72,9 +74,24 @@ router.post("/", auth, upload, async (req, res) => {
   const Price = parseFloat(req.body.Price);
   const Catalogue = req.body.Catalogue;
   const CurrentAuction = true;
+  let Color = req.body.Color;
   const State = parseInt(req.body.State);
   const Brand = req.body.Brand;
-  const Delivery = req.body.Delivery;
+  let Delivery = req.body.Delivery;
+
+  if (!Array.isArray(Color)) {
+    Color = Array.of(Color);
+  }
+
+  if (!Array.isArray(Delivery)) {
+    Delivery = Delivery.split(",").map(Number);
+  }
+
+  console.log(Color);
+
+  console.log(Delivery)
+
+  
 
   try {
     const exist = await brand.upsert({
@@ -86,7 +103,6 @@ router.post("/", auth, upload, async (req, res) => {
       },
       update: {},
     });
-    const numberArray = Delivery.split(",").map(Number);
 
     const Item = await item.create({
       data: {
@@ -104,9 +120,29 @@ router.post("/", auth, upload, async (req, res) => {
             id_Category: parseInt(Catalogue),
           },
         },
-        item_fees: createManyDeliveryMethods(numberArray),
-
-        item_color: colorLengthFunction(req.body.Color),
+        item_color: {
+          create: Color.map((color) => {
+            return {
+              color: {
+                connect: {
+                  id: parseInt(color),
+                },
+              },
+            };
+          }),
+        },
+        item_fees: {
+          create: Delivery.map((id_Fees) => {
+            return {
+              fees: {
+                connect: {
+                  id: parseInt(id_Fees),
+                },
+              },
+            };
+          }),
+        },
+       
 
         id_ItemCondition: State,
         item_brand: {
@@ -222,7 +258,6 @@ router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
         id: parseInt(id_Item),
       },
     });
-
 
     if (findUser?.id_Seller === id) {
       const deleted = await item.delete({
@@ -689,6 +724,11 @@ router.post("/more", async (req, res) => {
 router.get("/new", async (req, res) => {
   try {
     const Item = await item.findMany({
+      where: {
+        transaction: {
+          none: {},
+        },
+      },
       include: {
         image: {
           take: 1,
@@ -721,6 +761,8 @@ router.get("/new", async (req, res) => {
         account: {
           select: {
             Pseudo: true,
+            id: true,
+
             image: true,
           },
         },
@@ -758,7 +800,7 @@ router.post("/proposition", auth, async (req, res) => {
   const { Price, idItem } = req.body;
   const { id } = req.user;
 
-  console.log(id)
+  console.log(id);
 
   try {
     await pricepropose.create({
@@ -798,11 +840,9 @@ router.get("/:id", async (req, res) => {
     let Item = await item.findUnique({
       where: {
         id: parseInt(id),
-        
       },
 
       select: {
-        
         image: true,
         Name: true,
         account: {
@@ -833,6 +873,11 @@ router.get("/:id", async (req, res) => {
                     },
                   },
                 },
+              },
+            },
+            image: {
+              select: {
+                image: true,
               },
             },
           },
@@ -876,18 +921,28 @@ router.get("/:id", async (req, res) => {
           },
         },
       },
-      
+
     });
+   const {_avg} =  await review.aggregate({
+      where:{
+        id_Account:Item.account.id
+      },
+      _avg:{
+        Note:true
+      }
+    })
+
 
     const userItem = await item.findMany({
       where: {
-        AND:[
-          {id_Seller: Item.account.id,},
-          {transaction: {
-            none: {},
-          }}
-            
-        ]
+        AND: [
+          { id_Seller: Item.account.id },
+          {
+            transaction: {
+              none: {},
+            },
+          },
+        ],
       },
       orderBy: {
         DatePuplication: "desc",
@@ -938,10 +993,12 @@ router.get("/:id", async (req, res) => {
       Item.item_category[0].category.id
     );
 
+
     Item = {
       ...Item,
       userItem,
       findedSimilarProduct,
+      review:_avg?.Note
     };
     res.status(200).json(Item);
   } catch (error) {
@@ -958,7 +1015,6 @@ router.post("/favorit", auth, async (req, res) => {
           id_Item: req.body.id,
           id_Account: req.user.id,
         },
-        
       },
       select: {
         item: true,

@@ -225,16 +225,9 @@ router.post("/", auth, upload, async (req, res) => {
           };
         }),
       },
-      image:{
-        deleteMany:{},
-        create:req.files.map(()=>{
-          
-        })
-      }
+     
       
-
-        
-      },
+    }
 
     });
    

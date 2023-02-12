@@ -65,7 +65,7 @@ const offerReceiver = (item, dispatch) => {
         <div style={{ flexGrow: 1, padding: 5 }}>
           <Button
             onClick={() => {
-              dispatch(sendDateProposition(item.id, new Date(),true))
+              dispatch(sendDateProposition(item.id, new Date(),true,!item?.pricepropose[0].id_Account))
             }}
             style={{ backgroundColor: "white", width: "100%" }}
           >
@@ -75,8 +75,7 @@ const offerReceiver = (item, dispatch) => {
         <div style={{ flexGrow: 1, padding: 5 }}>
           <Button
             onClick={() => {
-              console.log(item.id);
-              dispatch(sendDateProposition(item.id, null,false));
+              dispatch(sendDateProposition(item.id, null,false,!item?.pricepropose[0].id_Account));
             }}
             style={{ backgroundColor: "white", width: "100%" }}
           >

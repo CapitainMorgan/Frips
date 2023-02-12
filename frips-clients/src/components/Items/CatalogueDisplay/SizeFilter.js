@@ -80,7 +80,6 @@ const renderArraySize = (
         onClick={() => {
           if((item.type && index===0 )|| (item.type && index===1)){
             setNavigation(index)
-            alert("here")
           }
           else{
             if (_.includes(filter[label], item)) {

@@ -64,23 +64,37 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
   },
-  checkBox: {
-    position: "absolute",
-    "&:hover": {
-      background: "transparent",
+
+  PaginationBox: {
+    height: 100,
+    width: "100%",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      backgroundColor: "#F5f5f3",
     },
-    right: 0,
   },
-  hover: {
-    "&:hover": {
-      backgroundColor: "rgba(205, 217, 231,1)",
+  Description: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "inherit",
+      justifyContent: "flex-end",
+      marginTop: 8,
     },
-    cursor: "pointer",
   },
 }));
 
-const renderStatus = (id, Approve, dateApprove,history) => {
-  if ((Boolean(Approve) && Boolean(dateApprove))) {
+const renderStatus = (id, Approve, dateApprove, history,id_proposition) => {
+  if (Boolean(Approve) && Boolean(dateApprove)) {
     return (
       <Box display={"flex"} flexDirection="column">
         <Typography
@@ -92,15 +106,24 @@ const renderStatus = (id, Approve, dateApprove,history) => {
             backgroundColor: "rgba(80, 220, 100,0.2)",
           }}
         >
-          Offre acceptée 
+          Offre acceptée
         </Typography>
         <Typography>
-        vous avez 24 heures pour faire le paiement autrement
-          l'offre sera annulée
+          vous avez 24 heures pour faire le paiement autrement l'offre sera
+          annulée
         </Typography>
-        <Button onClick={()=>{
-          history(`/payment/${id}`)
-        }} style={{ marginTop: 5,fontSize:13.5 }} variant="contained" color="primary">
+        <Button
+          onClick={() => {
+            history(`/payment/${id}`, {
+              state: {
+                isFrom: true,
+              },
+            });
+          }}
+          style={{ marginTop: 5, fontSize: 13.5 }}
+          variant="contained"
+          color="primary"
+        >
           Procéder au paiement
         </Button>
       </Box>
@@ -160,22 +183,19 @@ const renderedItem = (classes, items, history, handleClick, setNavigation) => {
             </Box>
             <Box
               padding={2}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
+              display="flex"
+              justifyContent={"center"}
+              flexDirection="column"
+              alignItems={"center"}
             >
               <Typography style={{ wordBreak: "break-word" }} color="primary">
                 {item.Name}
               </Typography>
               <Box
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  paddingTop: 5,
-                }}
+                display="flex"
+                justifyContent={"center"}
+                flexDirection="column"
+                alignItems={"center"}
               >
                 <Typography style={{ fontSize: 16, fontWeight: 400 }}>
                   {item.Price} CHF
@@ -185,56 +205,19 @@ const renderedItem = (classes, items, history, handleClick, setNavigation) => {
               </Box>
             </Box>
 
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.Description}>
               <Typography style={{ fontSize: 16 }}>Prix Proposé</Typography>
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.Description}>
                 <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                  {item?.pricepropose[0]?.Price} CHF
+                  {item?.pricepropose} CHF
                 </Typography>
               </Box>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.Description}>
               <Typography style={{ fontSize: 16 }}>Status</Typography>
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
-                {renderStatus(
-                  item.id,
-                  item?.pricepropose[0]?.Approve,
-                  item?.pricepropose[0]?.dateApprove,
-                  history
-                )}
+              <Box flexGrow={1} className={classes.Description}>
+                {renderStatus(item.id, item.Approve, item.dateApprove, history)}
               </Box>
-            </Box>
-            <Box justifyContent={"center"} display="flex" alignItems="center">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => {
-                  handleClick(item.id);
-                }}
-              >
-                supprimer
-                <DeleteForeverIcon />
-              </Button>
             </Box>
           </Box>
         </Card>
@@ -277,15 +260,12 @@ const MyProposition = ({
       dispatch({ type: "RESET_FILTER_MYFRIPS" });
     };
   }, [dispatch]);
+
   useEffect(() => {
     dispatch(fetchMyfrips(`/api/members/MyProposition`, FETCH_PROPOSITION));
   }, [dispatch, filterMyFrips, pagination]);
 
-
-  if (
-    loading &&
-    items.length === 0 
-  ) {
+  if (loading && items.length === 0) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -309,15 +289,14 @@ const MyProposition = ({
         alignItems="center"
       >
         <Typography style={{ fontSize: 16 }}>
-          Il n'y malheureusement aucune correspondance 
+          Il n'y malheureusement aucune correspondance
         </Typography>
       </Box>
     );
   }
 
   return (
-    <Box>
-      
+    <Box className={classes.items}>
       <DeleteModal anchorEl={anchorEl} handleClickAway={handleClickAway} />
       {renderedItem(classes, items, history, handleClick, setNavigation)}
       <Box className={classes.PaginationBox}>

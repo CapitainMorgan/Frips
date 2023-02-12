@@ -77,21 +77,6 @@ const constructFilter = (filterArray, type) => {
   return array;
 };
 
-router.get("/members", auth, async (req, res) => {
-  const { id } = req.user;
-
-  const MyFrips = await item.findMany({
-    where: {
-      id_Seller: id,
-    },
-    include: {
-      account_item: true,
-    },
-  });
-
-  res.status(200).json(MyFrips);
-});
-
 const upload = multer().single("singleImage");
 
 router.post("/myProfile", auth, upload, async (req, res) => {
@@ -172,6 +157,7 @@ const constructQueryMySell = (whereFilter) => {
 
   if (whereFilter.length === 0) {
     arrayWhere.push({ DateSend: { equals: null } });
+    arrayWhere.push({ DateSend: { not: { equals: null } } });
   }
   whereFilter.map((item) => {
     if (item === 10) {
@@ -204,8 +190,7 @@ const constructQueryOrderByMySell = (whereFilter) => {
 router.post("/mySell", auth, async (req, res) => {
   const { id } = req.user;
   const { filter, number } = req.body;
-  console.log(filter);
-  console.log(constructQueryOrderByMySell(filter));
+
   try {
     const countMySell = await transaction.count({
       where: {
@@ -253,6 +238,11 @@ router.post("/mySell", auth, async (req, res) => {
             Email: true,
           },
         },
+        review:{
+          select:{
+            Note:true
+          }
+        },
         id: true,
 
         Price: true,
@@ -262,6 +252,8 @@ router.post("/mySell", auth, async (req, res) => {
       take: 5,
       skip: 5 * (number - 1),
     });
+
+    console.log(mySell)
 
     if (countMySell === 0 && filter.length !== 0) {
       res.status(200).json({
@@ -324,9 +316,10 @@ router.post("/myFrips", auth, async (req, res) => {
                 image: true,
               },
             },
+            id_Account: true,
             Approve: true,
             dateApprove: true,
-            SendDate:true,
+            SendDate: true,
           },
           orderBy: { Price: "desc" },
           take: 1,
@@ -430,6 +423,11 @@ const constructQueryMyProposition = (whereFilter) => {
         equals: null,
       },
     });
+    arrayWhere.push({
+      Approve: {
+        equals: true,
+      },
+    });
   }
 
   whereFilter.map((item) => {
@@ -453,8 +451,6 @@ router.post("/MyProposition", auth, async (req, res) => {
   const { id } = req.user;
   const { filter, number } = req.body;
 
-  console.log(constructQueryMyProposition(filter, "myProposition"));
-  console.log(filter);
   try {
     const count = await item.count({
       where: {
@@ -462,9 +458,7 @@ router.post("/MyProposition", auth, async (req, res) => {
           some: {
             AND: [
               {
-                account: {
-                  id,
-                },
+                id_Account: id,
               },
               { OR: constructQueryMyProposition(filter) },
               {
@@ -478,54 +472,41 @@ router.post("/MyProposition", auth, async (req, res) => {
       },
     });
 
-    const MyProposition = await item.findMany({
+    const MyProposition = await pricepropose.findMany({
       where: {
-        pricepropose: {
-          some: {
-            AND: [
-              {
-                account: {
-                  id,
-                },
-              },
-              { OR: constructQueryMyProposition(filter) },
-              {
-                SendDate: {
-                  gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-                },
-              },
-            ],
-          },
+        id_Account: id,
+        SendDate: {
+          gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
         },
+        OR: constructQueryMyProposition(filter),
       },
       select: {
-        image: {
-          take: 1,
-        },
-        Price: true,
-        id: true,
-        Size: true,
-        Name: true,
-        pricepropose: {
+        item: {
           select: {
-            Approve: true,
+            image: {
+              take: 1,
+            },
             Price: true,
-            dateApprove: true,
-          },
-        },
-
-        item_brand: {
-          select: {
-            brand: {
+            id: true,
+            Size: true,
+            Name: true,
+            item_brand: {
               select: {
-                Name: true,
+                brand: {
+                  select: {
+                    Name: true,
+                  },
+                },
               },
             },
           },
         },
+        dateApprove: true,
+        Approve: true,
+        SendDate: true,
+        Price: true,
+        id_Account: true,
       },
-      take: 5,
-      skip: 5 * (number - 1),
     });
 
     res.status(200).json({ items: MyProposition, count });
@@ -559,11 +540,20 @@ router.post("/Delivery", auth, async (req, res) => {
 
 router.post("/Rewiew", auth, async (req, res) => {
   const { id } = req.user;
-  const { id_transaction } = req.body;
+  const { id_transaction,note } = req.body;
+
 
   try {
-    res.sendStatus(200);
-    console.log(mySell);
+   await review.create({
+      data:{
+        id_Transaction:id_transaction,
+        id_Account:id,
+        Note:note,
+        Date_Houre:new Date(),
+        Text:null,
+      }
+    })
+    res.sendStatus(200)
   } catch (error) {
     res.status(500).json("Servor Error");
     console.log(error);
@@ -675,6 +665,17 @@ router.post("/MyPurchase", auth, async (req, res) => {
                 Email: true,
               },
             },
+            item_fees: {
+              select: {
+                fees: {
+                  select: {
+                    Name: true,
+                    Description: true,
+                    Price: true,
+                  },
+                },
+              },
+            },
 
             DeliveryDetails: true,
           },
@@ -690,6 +691,11 @@ router.post("/MyPurchase", auth, async (req, res) => {
             Lastname: true,
             Email: true,
           },
+        },
+        review:{
+          select:{
+            Note:true
+          }
         },
         id: true,
 
@@ -727,19 +733,20 @@ router.post("/MyPurchase", auth, async (req, res) => {
 
 router.post("/StatusProposition", auth, async (req, res) => {
   const { id } = req.user;
-  const { id_Item, dateApprove } = req.body;
+  const { id_Item, approved, id_Account } = req.body;
 
   console.log("here");
   try {
     const propose = await pricepropose.update({
       where: {
         id_Account_id_Item: {
-          id_Account: id,
+          id_Account,
           id_Item,
         },
       },
       data: {
-        dateApprove: Boolean(dateApprove) ? new Date() : false,
+        dateApprove: new Date(),
+        Approve: approved,
       },
     });
 
@@ -749,6 +756,102 @@ router.post("/StatusProposition", auth, async (req, res) => {
   } catch (error) {
     res.status(500).json("Servor Error");
     console.log(error);
+  }
+});
+
+router.post("/:name",auth, async (req, res) => {
+  const { filter, number } = req.body;
+  const {name} = req.params
+  
+
+  try {
+    const userAccount = await account.findUnique({
+      where:{
+        Pseudo:name
+      },
+      select:{
+        id:true,
+        Pseudo:true,
+        image:{
+          select:{
+            image:true
+          }
+        }
+
+      }
+    })
+    const {id} = userAccount
+
+    if(!id){
+      res.sendStatus(400);
+    }
+
+    const {_avg} =  await review.aggregate({
+      where:{
+        id_Account:id
+      },
+      _avg:{
+        Note:true
+      }
+    })
+
+    const count = await item.count({
+      where: {
+        id_Seller: id,
+        transaction: {
+          none: {},
+        },
+      },
+    });
+    const itemUser = await item.findMany({
+      where: {
+        id_Seller: id,
+        transaction: {
+          none: {},
+        },
+      },
+      
+      select: {
+        image: {
+          take: 1,
+        },
+        Price: true,
+        id: true,
+        Size: true,
+        Name: true,
+        account: {
+              select: {
+                Pseudo: true,
+                id: true,
+                image: true,
+              },
+            },
+        _count: {
+          select: {
+            favorit: true,
+            nbview: true,
+          },
+        },
+
+        item_brand: {
+          select: {
+            brand: {
+              select: {
+                Name: true,
+              },
+            },
+          },
+        },
+      },
+      take: 10,
+      skip: 10 * (number - 1),
+
+    });
+
+    res.status(200).json({ items: itemUser, count,userAccount:{...userAccount,review:_avg?.Note} });
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("Serveur error");
   }
 });
 

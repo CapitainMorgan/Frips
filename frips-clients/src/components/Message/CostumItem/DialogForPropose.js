@@ -1,19 +1,26 @@
 import {
-    Box, Button, Card,
-    CardActionArea, ClickAwayListener,
-    Dialog, Divider, IconButton, makeStyles, Typography
+  Box,
+  Button,
+  Card,
+  CardActionArea,
+  Dialog,
+  Divider,
+  IconButton,
+  makeStyles,
+  Typography
 } from "@material-ui/core";
 import ArrowBackIcon from "@material-ui/icons/ArrowBack";
 import CloseIcon from "@material-ui/icons/Close";
 import React, { useState } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import {
-    addFavorite,
-    handleClickAwayPropose,
-    handleClickAwaySecondPage,
-    handleClickPropose,
-    handleClickSecondPage
+  addFavorite,
+  handleClickAwayPropose,
+  handleClickAwaySecondPage,
+  handleClickPropose,
+  handleClickSecondPage
 } from "../../../actions";
+import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 import SecondPageDialog from "./SecondPageDialog";
 
 const useStyles = makeStyles((theme) => ({

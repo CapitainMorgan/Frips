@@ -63,7 +63,6 @@ const SecondPageDialog = ({
 
 
   <Button type="outlined" color="primary" onClick={()=>{
-    alert("Here")
   }}>
           faire une offre
         </Button>

@@ -4,6 +4,7 @@ import {
   Card,
   CardActionArea,
   CircularProgress,
+  makeStyles,
   Typography,
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -17,6 +18,84 @@ import { TiWarning } from "react-icons/ti";
 import DeliveryStep from "../MySell/DeliveryStep";
 import MyPaginate from "../../../Footer/PaginationComponent";
 import PurchaseStep from "./PurchaseStep";
+
+
+const useStyles = makeStyles((theme) => ({
+  boxShadow: {
+    boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
+    backgroundColor: "white",
+  },
+  Grid: {
+    display: "grid",
+    padding: 10,
+    gridTemplateColumns: "repeat(6,16.66%)",
+    width: "100%",
+    position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      display: "grid",
+      padding: 20,
+      gridTemplateColumns: "repeat(1,100%)",
+    },
+  },
+  menus: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "inherit",
+      flexGrow: 1,
+      justifyContent: "flex-end",
+      marginTop: 8,
+    },
+  },
+  items: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    width: "100%",
+
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
+  details: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 8,
+    },
+  },
+  delivery: {
+    display: "flex",
+
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
+  send: {
+    display: "flex",
+    alignItems: "center",
+    padding: 20,
+    justifyContent: "space-between",
+    height: 100,
+
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
+}));
 
 const renderDeliveryStep = ({ DateSend }) => {
   if (!DateSend) {
@@ -176,7 +255,7 @@ const renderedItem = (classes, state, history) => {
               </Box>
             </Box>
           </Box>
-          <PurchaseStep item={item} id={item.id} account={account} />
+          <PurchaseStep classesSell={classes} item={item} id={item.id} account={account} />
         </Card>
       </Box>
     );
@@ -185,7 +264,6 @@ const renderedItem = (classes, state, history) => {
 
 const MyPurchase = ({
   mobile,
-  classes,
   pagination,
   filterMyFrips,
   loading,
@@ -195,6 +273,7 @@ const MyPurchase = ({
 }) => {
   const history = useNavigate();
   const dispatch = useDispatch();
+  const classes = useStyles()
   const handleChange = ({ selected }) => {
     dispatch(changeMyFripsPagination(selected + 1));
   };
@@ -253,9 +332,9 @@ const MyPurchase = ({
   }
 
   return (
-    <Box minHeight={200} className={classes.PaginationBox}>
+    <Box minHeight={300} className={classes.items}>
       {renderedItem(classes, items, history)}
-      {Boolean(count)  ? (
+      {Boolean(count) ? (
         <MyPaginate
           pageCount={Math.ceil(count / 5)}
           onPageChange={handleChange}

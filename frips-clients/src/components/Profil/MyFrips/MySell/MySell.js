@@ -1,29 +1,104 @@
 import {
   Badge,
   Box,
-  Button,
   Card,
   CardActionArea,
   CircularProgress,
+  makeStyles,
   Typography,
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { TiWarning } from "react-icons/ti";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { changeMyFripsPagination, fetchMyfrips } from "../../../../actions";
 import { FETCH_MYSELL } from "../../../../actions/type";
 import MyPaginate from "../../../Footer/PaginationComponent";
 import DeliveryStep from "./DeliveryStep";
-import { TiWarning } from "react-icons/ti";
 
+const useStyles = makeStyles((theme) => ({
+  boxShadow: {
+    boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
+    backgroundColor: "white",
+  },
+  Grid: {
+    display: "grid",
+    padding: 10,
+    gridTemplateColumns: "repeat(6,16.66%)",
+    width: "100%",
+    position: "relative",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      display: "grid",
+      padding: 20,
+      gridTemplateColumns: "repeat(1,100%)",
+    },
+  },
+  menus: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
 
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "inherit",
+      flexGrow: 1,
+      justifyContent: "flex-end",
+      marginTop: 8,
+    },
+  },
+  items: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+    width: "100%",
 
-const renderDeliveryStep = ({ DateSend }) => {
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
+  details: {
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    flexDirection: "column",
+
+    [theme.breakpoints.down("sm")]: {
+      marginTop: 8,
+    },
+  },
+  delivery: {
+    display: "flex",
+
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
+  send: {
+    display: "flex",
+    alignItems: "center",
+    padding: 20,
+    justifyContent: "space-between",
+    height: 100,
+
+    [theme.breakpoints.down("sm")]: {
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
+}));
+
+const renderDeliveryStep = ({ DateSend }, classes) => {
   if (!DateSend) {
     return (
-      <Badge overlap="circle">
+      <Badge className={classes.menus} overlap="circle">
         <Box display={"flex"} alignItems="center">
           <Typography style={{ fontSize: 16 }} component="span" color="inherit">
             <TiWarning color="#dc3545 " size={"1.7em"} />A livrer
@@ -33,13 +108,9 @@ const renderDeliveryStep = ({ DateSend }) => {
     );
   } else {
     return (
-      <Badge
-        badgeContent={
-          <Typography component="span" color="inherit">
-            Laisser une Review
-          </Typography>
-        }
-      ></Badge>
+      <Typography component="span" color="inherit">
+        Laisser une Review
+      </Typography>
     );
   }
 };
@@ -76,109 +147,59 @@ const renderedItem = (classes, state, history) => {
                 />
               </CardActionArea>
             </Box>
-            <Box
-              padding={2}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+
+            <Box padding={2} className={classes.details}>
               <Typography style={{ wordBreak: "break-word" }} color="primary">
                 {item.Name}
               </Typography>
-              <Box
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: 1,
-                }}
-              >
-                <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                  {item.Price} CHF
-                </Typography>
-                <Typography>{item.Size}</Typography>
-              </Box>
+              <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                {item.Price} CHF
+              </Typography>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>Vendu à </Typography>
 
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 15 }}>
                   {account.Pseudo}
                 </Typography>
               </Box>
             </Box>
 
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>
                 Type de Livraison
               </Typography>
 
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.menus}>
                 <Typography>{"dsa"}</Typography>
               </Box>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>Prix</Typography>
 
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 16, fontWeight: 600 }}>
                   {item.Price}
                 </Typography>
               </Box>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>Status</Typography>
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 15 }}>
-                  {renderDeliveryStep(item)}
+                  {renderDeliveryStep(item, classes)}
                 </Typography>
               </Box>
             </Box>
           </Box>
-          <DeliveryStep item={item} id={item.id} account={account} />
+          <DeliveryStep
+            classesSell={classes}
+            item={item}
+            id={item.id}
+            account={account}
+          />
         </Card>
       </Box>
     );
@@ -187,7 +208,6 @@ const renderedItem = (classes, state, history) => {
 
 const MySell = ({
   mobile,
-  classes,
   pagination,
   filterMyFrips,
   loading,
@@ -200,8 +220,7 @@ const MySell = ({
   const handleChange = ({ selected }) => {
     dispatch(changeMyFripsPagination(selected + 1));
   };
-
-  
+  const classes = useStyles();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -213,20 +232,16 @@ const MySell = ({
     };
   }, [dispatch]);
   useEffect(() => {
-    if(!loading && items.length===0 && Boolean(count)){
+    if (!loading && items.length === 0 && Boolean(count)) {
       dispatch(fetchMyfrips(`/api/members/mySell`, FETCH_MYSELL));
     }
-  }, [dispatch,loading]);
+  }, [dispatch, loading]);
 
-  useEffect(()=>{
+  useEffect(() => {
     dispatch(fetchMyfrips(`/api/members/mySell`, FETCH_MYSELL));
+  }, [filterMyFrips, pagination]);
 
-  },[filterMyFrips,pagination])
-
-  if (
-    loading &&
-    items.length === 0 && !Boolean(count)
-  ) {
+  if (loading && items.length === 0 && !Boolean(count)) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -244,23 +259,19 @@ const MySell = ({
   if (!loading && items.length === 0 && count === 0) {
     return (
       <Box
-        minHeight={200}
+        minHeight={300}
         display="flex"
         flexDirection={"column"}
         justifyContent={"center"}
         alignItems="center"
       >
-        <Typography style={{ fontSize: 16 }}>
-          {msg}
-        </Typography>
-        
-
+        <Typography style={{ fontSize: 16 }}>{msg}</Typography>
       </Box>
     );
   }
 
   return (
-    <Box minHeight={200} className={classes.PaginationBox}>
+    <Box minHeight={300} className={classes.items}>
       {renderedItem(classes, items, history)}
       {Boolean(count) ? (
         <MyPaginate
@@ -299,7 +310,7 @@ const mapStateToProps = (state) => ({
   pagination: state.myFrips.pagination,
   filterMyFrips: state.myFrips.filter,
   count: state.myFrips.count,
-  msg:state.myFrips.msg
+  msg: state.myFrips.msg,
 });
 
 export default connect(mapStateToProps)(MySell);

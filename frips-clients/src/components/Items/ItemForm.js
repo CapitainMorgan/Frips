@@ -184,10 +184,8 @@ const ItemForm = ({
 
   const onSubmit = (values) => {
     if (!edit) {
-      alert("here");
       dispatch(createItem(values, picture, history));
     } else {
-      alert("here");
 
       dispatch(editItemSend(values, picture, history, id));
     }

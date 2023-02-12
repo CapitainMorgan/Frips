@@ -73,14 +73,17 @@ model moderator {
 }
 
 model review {
-  id         Int      @id @default(autoincrement())
-  Date_Houre DateTime @db.DateTime(0)
-  Note       Int
-  Text       String?  @db.VarChar(255)
-  id_Account Int
-  account    account  @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_1")
+  id             Int         @id @default(autoincrement())
+  Date_Houre     DateTime    @db.DateTime(0)
+  Note           Int
+  Text           String?     @db.VarChar(255)
+  id_Account     Int
+  id_Transaction Int
+  account        account     @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_1")
+  transaction    transaction @relation(fields: [id_Transaction], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_2")
 
   @@index([id_Account], map: "id_Account")
+  @@index([id_Transaction], map: "id_Transaction")
 }
 
 model category {
@@ -272,13 +275,13 @@ model pricepropose {
   id_Account  Int
   id_Item     Int
   Price       Float
-  Approve     Boolean?
-  SendDate    DateTime? @db.Date
+  Approve     Boolean
+  SendDate    DateTime  @db.Date
   dateApprove DateTime? @db.DateTime(0)
   account     account   @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "pricepropose_ibfk_1")
   item        item      @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "pricepropose_ibfk_2")
 
-  @@id([id_Account, id_Item])
+  @@id([id_Account, id_Item, SendDate])
   @@index([id_Item], map: "id_Item")
 }
 
@@ -304,6 +307,7 @@ model transaction {
   id_Item          Int
   account          account   @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_ibfk_1")
   item             item      @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "transaction_ibfk_2")
+  review           review[]
 
   @@index([id_Item], map: "id_Item")
   @@index([id_Account], map: "id_Account")

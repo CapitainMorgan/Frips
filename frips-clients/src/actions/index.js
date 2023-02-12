@@ -48,6 +48,9 @@ import {
   LOGIN_FAIL,
   LOGIN_SUCCES,
   LOGOUT,
+  MEMBERS_FETCH_SUCCESS,
+  MEMBERS_ITEMS,
+  MEMBERS_LOADING,
   MESSAGE_ERROR,
   MESSAGE_LOADING,
   MSG_ERROR,
@@ -57,12 +60,14 @@ import {
   PAYMENT_FAILED,
   PAYMENT_INFO,
   PAYMENT_INFO_SUCCESS_FETCH,
+  PAYMENT_INTENT,
   PAYMENT_SUCCESS,
   REGISTER_FAILURE,
   REGISTER_SUCCESS,
   REMOVE_FAVORITE,
   REMOVE_FILTER,
   RESET_ERROR,
+  REVIEW,
   SEARCH,
   SEND_DATE,
   SOCKET,
@@ -286,7 +291,7 @@ export const fetchMyfrips = (url, type) => async (dispatch, getState) => {
 
     dispatch({
       type,
-      payload: { items: newItemsDisplay, count: numberCount ,msg:data.msg},
+      payload: { items: newItemsDisplay, count: numberCount, msg: data.msg },
     });
     dispatch({ type: "SUCCESS_FETCH_MYFRIPS" });
   } catch (error) {
@@ -645,6 +650,8 @@ const updateItemsList = (key, getState) => {
       return getState().items.newItem;
     case 5:
       return getState().filterCatalogue.items;
+    case 6:
+      return getState().members.items;
 
     default:
       return getState().items.items;
@@ -821,8 +828,6 @@ export const addFilterFromSearch =
   (string, findElement, history) => async (dispatch, getState) => {
     const splitArray = string.split(/\b(?:a|the|was|\s)+\b/i);
     const array = getState().itemInfo.Search;
-    const combineArray = [...array[0], ...array[1]];
-    const fakeNumber = 1001;
 
     try {
       dispatch({ type: "RESTORE" });
@@ -854,13 +859,14 @@ export const changePagination = (number) => async (dispatch, getState) => {
 };
 
 export const succeedPayment =
-  (idItem, StripeIdentifier, id_Account, navigate) =>
+  (idItem, StripeIdentifier, id_Account, navigate, id_Fees) =>
   async (dispatch, getState) => {
     try {
       const { data } = await axios.post("/api/paymentIntent/succeed", {
         idItem,
         StripeIdentifier,
         id_Account,
+        id_Fees,
       });
       navigate(data, { replace: true });
       dispatch({ type: "PAYMENT_SUCCESS" });
@@ -912,20 +918,36 @@ export const addMessageImage = (item) => async (dispatch, getState) => {
   } catch (error) {}
 };
 
-export const fetchPaymentInfo = (idItem) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: LOADING_PAYMENT });
-    const { data } = await axios.post(
-      "/api/paymentIntent/createCheckoutPayment",
-      { idItem },
-      config
-    );
-    dispatch({ type: PAYMENT_INFO, payload: data });
-    dispatch({ type: PAYMENT_INFO_SUCCESS_FETCH });
-  } catch (error) {
-    dispatch({ type: PAYMENT_FAILED });
-  }
-};
+export const fetchPaymentInfo =
+  (idItem, isFromProposition) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: LOADING_PAYMENT });
+      const { data } = await axios.post(
+        "/api/paymentIntent/info",
+        { idItem, isFromProposition },
+        config
+      );
+      dispatch({ type: PAYMENT_INFO, payload: data });
+      dispatch({ type: PAYMENT_INFO_SUCCESS_FETCH });
+    } catch (error) {
+      dispatch({ type: PAYMENT_FAILED });
+    }
+  };
+export const fetchPaymentIntent =
+  (idItem, id_Fees, isFromProposition) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: LOADING_PAYMENT });
+      const { data } = await axios.post(
+        "/api/paymentIntent/createCheckoutPayment",
+        { idItem, id_Fees, isFromProposition },
+        config
+      );
+      dispatch({ type: PAYMENT_INTENT, payload: data });
+      dispatch({ type: PAYMENT_INFO_SUCCESS_FETCH });
+    } catch (error) {
+      dispatch({ type: PAYMENT_FAILED });
+    }
+  };
 
 export const addFilterFrips = (id) => async (dispatch, getState) => {
   try {
@@ -1009,10 +1031,9 @@ export const changeStep =
   };
 
 export const sendDateProposition =
-  (id_Item, dateApprove, approved) => async (dispatch, getState) => {
+  (id_Item, dateApprove, approved, id_Account) =>
+  async (dispatch, getState) => {
     const message = getState().messageReducer.message;
-
-    alert(id_Item);
 
     const updateConv = _.find(message, { id_Item: id_Item });
 
@@ -1020,30 +1041,67 @@ export const sendDateProposition =
     updateConv.item.pricepropose[0].dateApprove = dateApprove;
 
     try {
-      //await axios.post(`/api/members/StatusProposition`, { id_Item,dateApprove }, config);
+      await axios.post(
+        `/api/members/StatusProposition`,
+        { id_Item, approved, id_Account },
+        config
+      );
 
       dispatch({ type: SEND_DATE, payload: message });
     } catch (error) {
-      console.log(error)
-
+      console.log(error);
     }
   };
 
-  export const sendStatusProposition =
-  (id, dateApprove, approved) => async (dispatch, getState) => {
+export const sendStatusProposition =
+  (id, dateApprove, approved, id_Account) => async (dispatch, getState) => {
     const items = getState().myFrips.items;
-
 
     const updateItems = _.find(items, { id });
     updateItems.pricepropose[0].Approve = approved;
     updateItems.pricepropose[0].dateApprove = dateApprove;
 
     try {
-      //await axios.post(`/api/members/StatusProposition`, { id,dateApprove }, config);
+      await axios.post(
+        `/api/members/StatusProposition`,
+        { id_Item: id, approved, id_Account },
+        config
+      );
 
       dispatch({ type: STATUS_PROPOSITION, payload: items });
     } catch (error) {
-
-      console.log(error)
+      console.log(error);
     }
   };
+
+export const fetchMembersInfo =
+  (name, pagination) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: MEMBERS_LOADING });
+      const { data } = await axios.post(
+        `/api/members/${name}`,
+        { number: pagination },
+        config
+      );
+      dispatch({ type: MEMBERS_ITEMS, payload: data });
+      dispatch({ type: MEMBERS_FETCH_SUCCESS });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  
+export const setReview =
+(note, id_transaction) => async (dispatch, getState) => {
+  try {
+    const { data } = await axios.post(
+      `/api/members/Rewiew`,
+      { note, id_transaction},
+      config
+    );
+    dispatch({ type: REVIEW, payload: data });
+  } catch (error) {
+    console.log(error);
+  }
+};
+

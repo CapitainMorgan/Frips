@@ -1,20 +1,16 @@
 import {
-  Box,
-  Button,
-  CircularProgress,
+  Box, CircularProgress,
   makeStyles,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { fetchItem, idFavorite, itemViewed } from "../../../actions";
+import { RESET_ITEM } from "../../../actions/type";
 import ImageGalleryPreview from "./ImageGalleryPreview";
 import ItemProfil from "./ItemFromProfil";
 import ItemInformation from "./itemInformation";
-import FavoriteIcon from "@material-ui/icons/Favorite";
-import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import { RESET_ITEM } from "../../../actions/type";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -166,9 +162,8 @@ const ItemPreview = (props) => {
               <ItemInformation
                 state={singleItem}
                 classes={classes}
-                flag={flag}
-                setFlag={setFlag}
-              ></ItemInformation>
+                review={singleItem.review}
+              />
             </Box>
             <Box height={5} width={"100%"}></Box>
 

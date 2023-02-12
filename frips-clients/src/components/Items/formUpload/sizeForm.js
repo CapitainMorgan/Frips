@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
-import { Box, Checkbox, ClickAwayListener, Dialog, Divider, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
+import { Box, Checkbox, Dialog, Divider, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import { arraySize, renderArraySize } from "../staticItems/staticItemName";
 
 import CloseIcon from "@material-ui/icons/Close";
+import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyle = makeStyles((theme) => ({
   checkBox: {

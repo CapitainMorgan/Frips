@@ -1,8 +1,8 @@
-import { Box, Icon, Link, MenuItem, Typography } from "@material-ui/core";
-import React from "react";
+import { Box, Icon, Link, Typography } from "@material-ui/core";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
-import { BsFillPersonFill } from "react-icons/bs";
+import React from "react";
 import { BiPackage } from "react-icons/bi";
+import { BsFillPersonFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
 
 const customRound = (price) => {
@@ -10,7 +10,7 @@ const customRound = (price) => {
     return decimal >= 0.25 && decimal <= 0.75 ? Math.floor(price) + 0.5 : Math.round(price);
 };
 
-const DetailsDelivery = ({item, Price, DeliveryType, Fees, account }) => {
+const DetailsDelivery = ({item, Price, DeliveryType, Fees, account ,classes}) => {
   const { Firstname, Lastname } = account;
   const { City, NPA, Street, NumStreet } = account?.address;
   return (
@@ -19,7 +19,7 @@ const DetailsDelivery = ({item, Price, DeliveryType, Fees, account }) => {
         Résumé de la vente
       </Typography>
 
-      <Box display={"flex"}>
+      <Box className={classes.delivery}>
         <Box
           display={"flex"}
           flexDirection="column"

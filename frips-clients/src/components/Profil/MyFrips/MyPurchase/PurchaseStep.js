@@ -129,21 +129,21 @@ function getStepContent(step) {
   }
 }
 
-const handleNumberStep = ({ Status, DateSend }) => {
+const handleNumberStep = ({ Status, DateSend,review }) => {
   if (!DateSend) {
     return 0;
   }
-  if (!Boolean(Status) && DateSend) {
+  if (!Boolean(review[0]) && DateSend) {
     return 1;
   }
-  if (Boolean(Status) && DateSend) {
+  if (Boolean(review[0]) && DateSend) {
     return 2;
   } else {
     return 0;
   }
 };
 
-const PurchaseStep = ({ item, account, id }) => {
+const PurchaseStep = ({ item, account, id,classesSell }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [index, setindex] = useState(0);
@@ -168,20 +168,23 @@ const PurchaseStep = ({ item, account, id }) => {
     setindex(handleNumberStep(item));
   }, [item]);
 
-  const handleIndex = ({ Status, DateSend }) => {
+  const handleIndex = ({ Status, DateSend, id_transaction,review }) => {
     if (index === 0) {
-      return <DetailsDelivery account={account} />;
+      return <DetailsDelivery classes={classesSell} account={account} />;
     }
     if (index === 1 && Boolean(DateSend)) {
-      return <RatingComponent Pseudo={account.Pseudo} />;
-    }
-    
-    if(index===2 && Boolean(Status)){
-        return <RatingComponent Pseudo={account.Pseudo} />;
-
-    }
-    
-    else return <DetailsDelivery account={account} />;
+      return (
+        <RatingComponent
+          review={review[0]?.Note ? review[0]?.Note : null}
+          id={id_transaction}
+          classes={classesSell}
+          Pseudo={account.Pseudo}
+        />
+      );
+    } else
+      return (
+        <DetailsDelivery classes={classesSell} item={item} account={account} />
+      );
   };
 
   return (

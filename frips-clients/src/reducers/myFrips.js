@@ -1,6 +1,5 @@
 import _ from "lodash";
 import {
-  ADD_FILTER,
   ADD_FILTER_MYFRIPS,
   CHANGE_PAGINATION_MYFRIPS,
   DELIVERY,
@@ -29,7 +28,7 @@ const initialValues = {
   sellNotification: [],
   propositionNotification: [],
   pagination: 1,
-  msg:"",
+  msg: "",
   count: null,
 };
 
@@ -46,14 +45,16 @@ export default (state = initialValues, action) => {
 
     case FETCH_MYSELL:
       const sellArray = payload.items.map(
-        ({ item, DateSell, DateSend, account, Price, Status, id }) => ({
+        ({ item, DateSell, DateSend, account, Price, Status, id, review }) => ({
           id_transaction: id,
           ...item,
           DateSell: new Date(DateSell),
           DateSend: DateSend,
           account,
-          Price:item.Price,
-          Price_Fees:Price-item.Price,
+          Price: item.Price,
+          Price_Fees: Price - item.Price,
+          review,
+
           Status,
         })
       );
@@ -61,18 +62,20 @@ export default (state = initialValues, action) => {
         ...state,
         sell: sellArray,
         count: payload.count,
-        msg:payload.msg
+        msg: payload.msg,
       };
     case FETCH_MYPURCHASE:
       const purchaseArray = payload.items.map(
-        ({ item, DateSell, DateSend, account, Price, Status, id }) => ({
+        ({ item, DateSell, DateSend, account, Price, Status, id, review }) => ({
           id_transaction: id,
           ...item,
           DateSell: new Date(DateSell),
           DateSend: DateSend,
+          review,
+
           account,
-          Price:item.Price,
-          Price_Fees:Price-item.Price,
+          Price: item.Price,
+          Price_Fees: Price - item.Price,
           Status,
         })
       );
@@ -80,13 +83,32 @@ export default (state = initialValues, action) => {
         ...state,
         purchase: purchaseArray,
         count: payload.count,
-        msg:payload.msg
+        msg: payload.msg,
       };
 
     case FETCH_PROPOSITION:
+      const propositionArray = payload.items.map(
+        ({
+          item,
+          dateApprove,
+          SendDate,
+          id_Account,
+          Price,
+          Approve,
+          review,
+        }) => ({
+          ...item,
+          pricepropose: Price,
+          dateApprove,
+          SendDate,
+          id_Account,
+          review,
+          Approve,
+        })
+      );
       return {
         ...state,
-        proposition: payload.items,
+        proposition: [...propositionArray],
         count: payload.count,
       };
     case CHANGE_PAGINATION_MYFRIPS:
@@ -136,18 +158,18 @@ export default (state = initialValues, action) => {
         propositionNotification: [...payload.resultsProposition],
         sellNotification: [...payload.resultsSell],
       };
-      case STATUS_PROPOSITION:
-        return {
-          ...state,
-          items:[...payload]
-        }
+    case STATUS_PROPOSITION:
+      return {
+        ...state,
+        items: [...payload],
+      };
 
     case RESET_FILTER_MYFRIPS:
       return {
         ...state,
         filter: [],
-        msg:"",
-        count:null
+        msg: "",
+        count: null,
       };
 
     case DELIVERY:
@@ -163,7 +185,7 @@ export default (state = initialValues, action) => {
         sell: [...updatedData],
       };
 
-      case RECEIVED:
+    case RECEIVED:
       const updatedDataReceived = state.sell.map((item) => {
         if (item.id === payload) {
           return { ...item, Status: "envoyé" };

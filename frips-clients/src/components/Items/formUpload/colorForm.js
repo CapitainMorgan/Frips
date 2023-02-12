@@ -4,8 +4,7 @@ import { Box, InputAdornment, Popper, TextField } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
-import {
-    ClickAwayListener, Dialog, IconButton, makeStyles, MenuItem, Typography
+import { Dialog, IconButton, makeStyles, MenuItem, Typography
 } from "@material-ui/core";
 import { alpha } from "@material-ui/core/styles/colorManipulator";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
@@ -13,6 +12,7 @@ import _ from "lodash";
 
 import CloseIcon from "@material-ui/icons/Close";
 import { useSelector } from "react-redux";
+import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyles = makeStyles({
   pointer: {

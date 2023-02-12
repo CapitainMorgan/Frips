@@ -7,6 +7,8 @@ import {
   CircularProgress,
   IconButton,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
@@ -17,7 +19,11 @@ import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { changeMyFripsPagination, fetchMyfrips, sendStatusProposition } from "../../../actions";
+import {
+  changeMyFripsPagination,
+  fetchMyfrips,
+  sendStatusProposition,
+} from "../../../actions";
 import MyPaginate from "../../Footer/PaginationComponent";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
@@ -33,12 +39,14 @@ const renderedItem = (
   expand,
   toggleAcordion,
   dispatch,
+  mobile
 ) => {
   return state.map((item, index) => {
-    if (
-      item?.pricepropose.length !==0
-    ) {
-      if(item?.pricepropose[0].Approve===null && item?.pricepropose[0].dateApprove ===null ){
+    if (item?.pricepropose.length !== 0) {
+      if (
+        item?.pricepropose[0].Approve === null &&
+        item?.pricepropose[0].dateApprove === null
+      ) {
         return (
           <Box
             width={"100%"}
@@ -75,13 +83,14 @@ const renderedItem = (
                 <Box
                   padding={2}
                   style={{
-                    display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
                   }}
+                  className={classes.Description}
                 >
-                  <Typography style={{ wordBreak: "break-word" }} color="primary">
+                  <Typography
+                    style={{ wordBreak: "break-word" }}
+                    color="primary"
+                  >
                     {item.Name}
                   </Typography>
                   <Box
@@ -98,65 +107,75 @@ const renderedItem = (
                     <Typography>{item.item_brand[0]?.brand.Name}</Typography>
                   </Box>
                 </Box>
-                <Box justifyContent={"center"} display="flex" alignItems="center">
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => {
-                      history(`/items/edit/${item.id}`);
-                    }}
-                  >
-                    modifier
-                    <EditIcon />
-                  </Button>
-                </Box>
-  
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent="center"
-                  alignItems={"center"}
-                >
+
+                {!mobile ? (
+                  <Box className={classes.Description}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        history(`/items/edit/${item.id}`);
+                      }}
+                    >
+                      modifier
+                      <EditIcon />
+                    </Button>
+                  </Box>
+                ) : (
+                  <Box display={"flex"} justifyContent="space-between">
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        history(`/items/edit/${item.id}`);
+                      }}
+                    >
+                      modifier
+                      <EditIcon />
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleClick(item.id);
+                      }}
+                    >
+                      supprimer
+                      <DeleteForeverIcon />
+                    </Button>
+                  </Box>
+                )}
+
+                <Box className={classes.Description}>
                   <Box>Nombre de vue</Box>
-                  <Box
-                    flexGrow={1}
-                    display="flex"
-                    justifyContent={"center"}
-                    alignItems="center"
-                  >
+                  <Box flexGrow={1} className={classes.Description}>
                     <Typography>{item?._count.nbview}</Typography>
                   </Box>
                 </Box>
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent="center"
-                  alignItems={"center"}
-                >
-                  <Box>Nombre de j'aime</Box>
-                  <Box
-                    flexGrow={1}
-                    display="flex"
-                    justifyContent={"center"}
-                    alignItems="center"
-                  >
+                <Box className={classes.Description}>
+                  <Typography>Nombre de j'aime</Typography>
+                  <Box flexGrow={1} className={classes.Description}>
                     <Typography>{item?._count.favorit}</Typography>
                   </Box>
                 </Box>
-                <Box justifyContent={"center"} display="flex" alignItems="center">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      handleClick(item.id);
-                    }}
-                  >
-                    supprimer
-                    <DeleteForeverIcon />
-                  </Button>
-                </Box>
+
+                {!mobile ? (
+                  <Box className={classes.Description}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleClick(item.id);
+                      }}
+                    >
+                      supprimer
+                      <DeleteForeverIcon />
+                    </Button>
+                  </Box>
+                ) : null}
               </Box>
-  
+
               {Boolean(item?.pricepropose[0]?.Price) ? (
                 <Accordion expanded={expand}>
                   <AccordionSummary
@@ -193,18 +212,31 @@ const renderedItem = (
                           style={{ marginLeft: 5 }}
                           variant="outlined"
                           color="primary"
-                          onClick={()=>{
-                            dispatch(sendStatusProposition(item.id,new Date(),true))
+                          onClick={() => {
+                            dispatch(
+                              sendStatusProposition(
+                                item.id,
+                                new Date(),
+                                true,
+                                item?.pricepropose[0].id_Account
+                              )
+                            );
                           }}
                         >
                           Accepter
                         </Button>
-  
+
                         <Button
-                        onClick={()=>{
-                          dispatch(sendStatusProposition(item.id,null,false))
-  
-                        }}
+                          onClick={() => {
+                            dispatch(
+                              sendStatusProposition(
+                                item.id,
+                                null,
+                                false,
+                                item?.pricepropose[0].id_Account
+                              )
+                            );
+                          }}
                           variant="contained"
                           color="primary"
                           style={{ marginLeft: 5 }}
@@ -237,7 +269,10 @@ const renderedItem = (
         );
       }
 
-      if(Boolean(item?.pricepropose[0].Approve) && Boolean(item?.pricepropose[0].SendDate)){
+      if (
+        Boolean(item?.pricepropose[0].Approve) &&
+        Boolean(item?.pricepropose[0].SendDate)
+      ) {
         return (
           <Box
             width={"100%"}
@@ -274,13 +309,14 @@ const renderedItem = (
                 <Box
                   padding={2}
                   style={{
-                    display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
                   }}
+                  className={classes.Description}
                 >
-                  <Typography style={{ wordBreak: "break-word" }} color="primary">
+                  <Typography
+                    style={{ wordBreak: "break-word" }}
+                    color="primary"
+                  >
                     {item.Name}
                   </Typography>
                   <Box
@@ -297,65 +333,75 @@ const renderedItem = (
                     <Typography>{item.item_brand[0]?.brand.Name}</Typography>
                   </Box>
                 </Box>
-                <Box justifyContent={"center"} display="flex" alignItems="center">
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => {
-                      history(`/items/edit/${item.id}`);
-                    }}
-                  >
-                    modifier
-                    <EditIcon />
-                  </Button>
-                </Box>
-  
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent="center"
-                  alignItems={"center"}
-                >
+
+                {!mobile ? (
+                  <Box className={classes.Description}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        history(`/items/edit/${item.id}`);
+                      }}
+                    >
+                      modifier
+                      <EditIcon />
+                    </Button>
+                  </Box>
+                ) : (
+                  <Box display={"flex"} justifyContent="space-between">
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        history(`/items/edit/${item.id}`);
+                      }}
+                    >
+                      modifier
+                      <EditIcon />
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleClick(item.id);
+                      }}
+                    >
+                      supprimer
+                      <DeleteForeverIcon />
+                    </Button>
+                  </Box>
+                )}
+
+                <Box className={classes.Description}>
                   <Box>Nombre de vue</Box>
-                  <Box
-                    flexGrow={1}
-                    display="flex"
-                    justifyContent={"center"}
-                    alignItems="center"
-                  >
+                  <Box flexGrow={1} className={classes.Description}>
                     <Typography>{item?._count.nbview}</Typography>
                   </Box>
                 </Box>
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent="center"
-                  alignItems={"center"}
-                >
-                  <Box>Nombre de j'aime</Box>
-                  <Box
-                    flexGrow={1}
-                    display="flex"
-                    justifyContent={"center"}
-                    alignItems="center"
-                  >
+                <Box className={classes.Description}>
+                  <Typography>Nombre de j'aime</Typography>
+                  <Box flexGrow={1} className={classes.Description}>
                     <Typography>{item?._count.favorit}</Typography>
                   </Box>
                 </Box>
-                <Box justifyContent={"center"} display="flex" alignItems="center">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      handleClick(item.id);
-                    }}
-                  >
-                    supprimer
-                    <DeleteForeverIcon />
-                  </Button>
-                </Box>
+
+                {!mobile ? (
+                  <Box className={classes.Description}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleClick(item.id);
+                      }}
+                    >
+                      supprimer
+                      <DeleteForeverIcon />
+                    </Button>
+                  </Box>
+                ) : null}
               </Box>
-  
+
               {Boolean(item?.pricepropose[0]?.Price) ? (
                 <Accordion expanded={expand}>
                   <AccordionSummary
@@ -383,8 +429,17 @@ const renderedItem = (
                       <Typography style={{ fontSize: 16, fontWeight: 600 }}>
                         {item?.pricepropose[0]?.Price} CHF
                       </Typography>
-                      <Typography>Offre Acceptée</Typography>
 
+                      <Box
+                        display={"flex"}
+                        justifyContent="flex-end"
+                        flexGrow={1}
+                      >
+                        <Typography style={{ fontSize: 16 }}>
+                          {" "}
+                          Offre acceptée
+                        </Typography>
+                      </Box>
                     </Box>
                   </AccordionDetails>
                   <AccordionDetails>
@@ -409,7 +464,10 @@ const renderedItem = (
           </Box>
         );
       }
-      if(Boolean(!item?.pricepropose[0].Approve) && Boolean(item?.pricepropose[0].SendDate)){
+      if (
+        Boolean(!item?.pricepropose[0].Approve) &&
+        Boolean(item?.pricepropose[0].SendDate)
+      ) {
         return (
           <Box
             width={"100%"}
@@ -446,13 +504,14 @@ const renderedItem = (
                 <Box
                   padding={2}
                   style={{
-                    display: "flex",
                     flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
                   }}
+                  className={classes.Description}
                 >
-                  <Typography style={{ wordBreak: "break-word" }} color="primary">
+                  <Typography
+                    style={{ wordBreak: "break-word" }}
+                    color="primary"
+                  >
                     {item.Name}
                   </Typography>
                   <Box
@@ -469,65 +528,75 @@ const renderedItem = (
                     <Typography>{item.item_brand[0]?.brand.Name}</Typography>
                   </Box>
                 </Box>
-                <Box justifyContent={"center"} display="flex" alignItems="center">
-                  <Button
-                    variant="outlined"
-                    color="primary"
-                    onClick={() => {
-                      history(`/items/edit/${item.id}`);
-                    }}
-                  >
-                    modifier
-                    <EditIcon />
-                  </Button>
-                </Box>
-  
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent="center"
-                  alignItems={"center"}
-                >
+
+                {!mobile ? (
+                  <Box className={classes.Description}>
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        history(`/items/edit/${item.id}`);
+                      }}
+                    >
+                      modifier
+                      <EditIcon />
+                    </Button>
+                  </Box>
+                ) : (
+                  <Box display={"flex"} justifyContent="space-between">
+                    <Button
+                      variant="outlined"
+                      color="primary"
+                      onClick={() => {
+                        history(`/items/edit/${item.id}`);
+                      }}
+                    >
+                      modifier
+                      <EditIcon />
+                    </Button>
+
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleClick(item.id);
+                      }}
+                    >
+                      supprimer
+                      <DeleteForeverIcon />
+                    </Button>
+                  </Box>
+                )}
+
+                <Box className={classes.Description}>
                   <Box>Nombre de vue</Box>
-                  <Box
-                    flexGrow={1}
-                    display="flex"
-                    justifyContent={"center"}
-                    alignItems="center"
-                  >
+                  <Box flexGrow={1} className={classes.Description}>
                     <Typography>{item?._count.nbview}</Typography>
                   </Box>
                 </Box>
-                <Box
-                  display={"flex"}
-                  flexDirection={"column"}
-                  justifyContent="center"
-                  alignItems={"center"}
-                >
-                  <Box>Nombre de j'aime</Box>
-                  <Box
-                    flexGrow={1}
-                    display="flex"
-                    justifyContent={"center"}
-                    alignItems="center"
-                  >
+                <Box className={classes.Description}>
+                  <Typography>Nombre de j'aime</Typography>
+                  <Box flexGrow={1} className={classes.Description}>
                     <Typography>{item?._count.favorit}</Typography>
                   </Box>
                 </Box>
-                <Box justifyContent={"center"} display="flex" alignItems="center">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      handleClick(item.id);
-                    }}
-                  >
-                    supprimer
-                    <DeleteForeverIcon />
-                  </Button>
-                </Box>
+
+                {!mobile ? (
+                  <Box className={classes.Description}>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      onClick={() => {
+                        handleClick(item.id);
+                      }}
+                    >
+                      supprimer
+                      <DeleteForeverIcon />
+                    </Button>
+                  </Box>
+                ) : null}
               </Box>
-  
+
               {Boolean(item?.pricepropose[0]?.Price) ? (
                 <Accordion expanded={expand}>
                   <AccordionSummary
@@ -555,8 +624,15 @@ const renderedItem = (
                       <Typography style={{ fontSize: 16, fontWeight: 600 }}>
                         {item?.pricepropose[0]?.Price} CHF
                       </Typography>
-                      <Typography>Offre </Typography>
-
+                      <Box
+                        display={"flex"}
+                        justifyContent="flex-end"
+                        flexGrow={1}
+                      >
+                        <Typography style={{ fontSize: 16 }}>
+                          Offre refusée
+                        </Typography>
+                      </Box>
                     </Box>
                   </AccordionDetails>
                   <AccordionDetails>
@@ -618,11 +694,9 @@ const renderedItem = (
               <Box
                 padding={2}
                 style={{
-                  display: "flex",
                   flexDirection: "column",
-                  justifyContent: "center",
-                  alignItems: "center",
                 }}
+                className={classes.Description}
               >
                 <Typography style={{ wordBreak: "break-word" }} color="primary">
                   {item.Name}
@@ -641,123 +715,74 @@ const renderedItem = (
                   <Typography>{item.item_brand[0]?.brand.Name}</Typography>
                 </Box>
               </Box>
-              <Box justifyContent={"center"} display="flex" alignItems="center">
-                <Button
-                  variant="outlined"
-                  color="primary"
-                  onClick={() => {
-                    history(`/items/edit/${item.id}`);
-                  }}
-                >
-                  modifier
-                  <EditIcon />
-                </Button>
-              </Box>
 
-              <Box
-                display={"flex"}
-                flexDirection={"column"}
-                justifyContent="center"
-                alignItems={"center"}
-              >
+              {!mobile ? (
+                <Box className={classes.Description}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      history(`/items/edit/${item.id}`);
+                    }}
+                  >
+                    modifier
+                    <EditIcon />
+                  </Button>
+                </Box>
+              ) : (
+                <Box display={"flex"} justifyContent="space-between">
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={() => {
+                      history(`/items/edit/${item.id}`);
+                    }}
+                  >
+                    modifier
+                    <EditIcon />
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      handleClick(item.id);
+                    }}
+                  >
+                    supprimer
+                    <DeleteForeverIcon />
+                  </Button>
+                </Box>
+              )}
+
+              <Box className={classes.Description}>
                 <Box>Nombre de vue</Box>
-                <Box
-                  flexGrow={1}
-                  display="flex"
-                  justifyContent={"center"}
-                  alignItems="center"
-                >
+                <Box flexGrow={1} className={classes.Description}>
                   <Typography>{item?._count.nbview}</Typography>
                 </Box>
               </Box>
-              <Box
-                display={"flex"}
-                flexDirection={"column"}
-                justifyContent="center"
-                alignItems={"center"}
-              >
-                <Box>Nombre de j'aime</Box>
-                <Box
-                  flexGrow={1}
-                  display="flex"
-                  justifyContent={"center"}
-                  alignItems="center"
-                >
+              <Box className={classes.Description}>
+                <Typography>Nombre de j'aime</Typography>
+                <Box flexGrow={1} className={classes.Description}>
                   <Typography>{item?._count.favorit}</Typography>
                 </Box>
               </Box>
-              <Box justifyContent={"center"} display="flex" alignItems="center">
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => {
-                    handleClick(item.id);
-                  }}
-                >
-                  supprimer
-                  <DeleteForeverIcon />
-                </Button>
-              </Box>
-            </Box>
 
-            {Boolean(item?.pricepropose[0]?.Price) ? (
-              <Accordion>
-                <AccordionSummary
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1a-content"
-                  id="panel1a-header"
-                >
-                  <Typography className={classes.heading}>
-                    Voir les offres
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Box display={"flex"} alignItems="center" width={"100%"}>
-                    <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                      {item?.pricepropose[0]?.Price} CHF
-                    </Typography>
-                    <Box
-                      display={"flex"}
-                      justifyContent="flex-end"
-                      flexGrow={1}
-                    >
-                      <Button
-                        style={{ marginLeft: 5 }}
-                        variant="outlined"
-                        color="primary"
-                        onClick={handleClick}
-                      >
-                        Accepter
-                      </Button>
-
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        style={{ marginLeft: 5 }}
-                      >
-                        Refuser
-                      </Button>
-                    </Box>
-                  </Box>
-                </AccordionDetails>
-                <AccordionDetails>
-                  <Typography
+              {!mobile ? (
+                <Box className={classes.Description}>
+                  <Button
+                    variant="contained"
+                    color="primary"
                     onClick={() => {
-                      setNavigation(3);
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontSize: 16,
-                      color: "#82A0C2",
-                      borderBottom: "1px solid",
-                      borderColor: "#82A0C2",
+                      handleClick(item.id);
                     }}
                   >
-                    Envie de voir plus d'offres ?
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
-            ) : null}
+                    supprimer
+                    <DeleteForeverIcon />
+                  </Button>
+                </Box>
+              ) : null}
+            </Box>
           </Card>
         </Box>
       );
@@ -773,11 +798,12 @@ const MyItems = ({
   msg,
   pagination,
   filterMyFrips,
-  mobile,
   count,
 }) => {
   const dispatch = useDispatch();
   const history = useNavigate();
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const [expand, setExpand] = useState(true);
   const toggleAcordion = () => {
@@ -805,6 +831,7 @@ const MyItems = ({
       dispatch({ type: "RESET_FILTER_MYFRIPS" });
     };
   }, [dispatch]);
+
   useEffect(() => {
     if (!loading && items.length === 0 && Boolean(count)) {
       dispatch(fetchMyfrips(`/api/members/myFrips`, FETCH_MYFRIPS));
@@ -844,7 +871,7 @@ const MyItems = ({
     );
   }
   return (
-    <Box>
+    <Box className={classes.items}>
       <DeleteModal anchorEl={anchorEl} handleClickAway={handleClickAway} />
       {renderedItem(
         classes,
@@ -854,7 +881,8 @@ const MyItems = ({
         setNavigation,
         expand,
         toggleAcordion,
-        dispatch
+        dispatch,
+        mobile
       )}
       <Box className={classes.PaginationBox}>
         <MyPaginate

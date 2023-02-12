@@ -9,6 +9,7 @@ import messageReducer from "./messageReducer";
 import myFrips from "./myFrips";
 import notification from "./notification";
 import payment from "./payment";
+import members from "./members";
 export default combineReducers({
   items: itemReducer,
   auth,
@@ -19,5 +20,6 @@ export default combineReducers({
   itemForPropose,
   itemInfo: creationItem,
   notification,
-  payment
+  payment,
+  members
 });

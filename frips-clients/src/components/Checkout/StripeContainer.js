@@ -7,18 +7,21 @@ import { connect, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { fetchPaymentInfo } from "../../actions";
 import CheckOutComponent from "./CheckOutComponent";
+import PaymentForm from "./PaymentForm";
 
 const PUBLIC_KEY =
   "pk_test_51JfniQEK6bYR8YbaaWm4fKWZR0O6qG62d0wBMIC4tvaRlK5IqDJXTPwbwwkxi65mGp8MyYjF5e9hOd52KMWmy9EL0012kg008l";
 const stripePromise = loadStripe(PUBLIC_KEY);
 
-const StripeContainer = ({ cs, loading }) => {
-  let { id } = useParams();
-  id = parseInt(id);
-
-
-  const dispatch = useDispatch();
-
+const StripeContainer = ({
+  cs,
+  loading,
+  id_Item,
+  loadingPayment,
+  setloadinPayment,
+  classes,
+  selectedId,
+}) => {
   const appearance = {
     theme: "stripe",
     variables: {
@@ -26,33 +29,17 @@ const StripeContainer = ({ cs, loading }) => {
       fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
     },
   };
-  useEffect(() => {}, [cs, loading]);
-
-  useEffect(() => {
-    if (!isNaN(id)) {
-      dispatch(fetchPaymentInfo(id));
-    }
-  }, [id, dispatch]);
-  console.log(loading);
-  console.log(cs);
-
-  if (!cs && loading) {
-    return (
-      <Box
-        height="100vh"
-        width="100%"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <CircularProgress size={100} />
-      </Box>
-    );
-  }
 
   return (
     <Elements stripe={stripePromise} options={{ clientSecret: cs, appearance }}>
-      <CheckOutComponent />
+      <PaymentForm
+        classes={classes}
+        loadingPayment={loadingPayment}
+        setloadinPayment={setloadinPayment}
+        idItem={id_Item}
+        selectedId={selectedId}
+        key="payment-form"
+      />
     </Elements>
   );
 };

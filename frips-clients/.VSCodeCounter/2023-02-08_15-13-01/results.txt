@@ -1,0 +1,192 @@
+Date : 2023-02-08 15:13:01
+Directory : c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients
+Total : 126 files,  33612 codes, 618 comments, 1818 blanks, all 36048 lines
+
+Languages
++------------+------------+------------+------------+------------+------------+
+| language   | files      | code       | comment    | blank      | total      |
++------------+------------+------------+------------+------------+------------+
+| JavaScript |        118 |     17,169 |        594 |      1,777 |     19,540 |
+| JSON       |          3 |     16,364 |          0 |          3 |     16,367 |
+| Markdown   |          1 |         38 |          0 |         33 |         71 |
+| HTML       |          1 |         27 |         23 |          2 |         52 |
+| CSS        |          2 |         14 |          0 |          2 |         16 |
+| TypeScript |          1 |          0 |          1 |          1 |          2 |
++------------+------------+------------+------------+------------+------------+
+
+Directories
++---------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| path                                                                                                                | files      | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| .                                                                                                                   |        126 |     33,612 |        618 |      1,818 |     36,048 |
+| . (Files)                                                                                                           |          3 |     16,387 |          0 |         35 |     16,422 |
+| public                                                                                                              |          2 |         42 |         23 |          3 |         68 |
+| src                                                                                                                 |        121 |     17,183 |        595 |      1,780 |     19,558 |
+| src (Files)                                                                                                         |          3 |         12 |          1 |          2 |         15 |
+| src\actions                                                                                                         |          2 |      1,013 |         27 |        174 |      1,214 |
+| src\api                                                                                                             |          1 |          4 |          3 |          2 |          9 |
+| src\components                                                                                                      |         95 |     14,943 |        557 |      1,398 |     16,898 |
+| src\components (Files)                                                                                              |          3 |        780 |          0 |         76 |        856 |
+| src\components\Checkout                                                                                             |          8 |        822 |          6 |         83 |        911 |
+| src\components\Favorite                                                                                             |          1 |        105 |          0 |          6 |        111 |
+| src\components\Footer                                                                                               |          6 |        788 |          1 |        120 |        909 |
+| src\components\Items                                                                                                |         31 |      5,308 |        322 |        468 |      6,098 |
+| src\components\Items (Files)                                                                                        |          4 |        639 |        298 |         70 |      1,007 |
+| src\components\Items\CatalogueDisplay                                                                               |          7 |      1,051 |          1 |        100 |      1,152 |
+| src\components\Items\DND                                                                                            |          1 |        183 |          0 |         16 |        199 |
+| src\components\Items\Proposition                                                                                    |          1 |        173 |          0 |         17 |        190 |
+| src\components\Items\formUpload                                                                                     |          9 |      1,047 |         22 |        119 |      1,188 |
+| src\components\Items\itemPreview                                                                                    |          5 |        976 |          0 |         72 |      1,048 |
+| src\components\Items\logicItems                                                                                     |          2 |        206 |          0 |         15 |        221 |
+| src\components\Items\staticItems                                                                                    |          2 |      1,033 |          1 |         59 |      1,093 |
+| src\components\Login                                                                                                |          6 |        907 |         18 |        105 |      1,030 |
+| src\components\Message                                                                                              |         11 |      1,772 |          6 |        162 |      1,940 |
+| src\components\Message (Files)                                                                                      |          8 |      1,333 |          6 |        118 |      1,457 |
+| src\components\Message\CostumItem                                                                                   |          2 |        392 |          0 |         35 |        427 |
+| src\components\Message\hooks                                                                                        |          1 |         47 |          0 |          9 |         56 |
+| src\components\NavBar                                                                                               |         10 |        541 |         13 |         73 |        627 |
+| src\components\Profil                                                                                               |         19 |      3,920 |        191 |        305 |      4,416 |
+| src\components\Profil (Files)                                                                                       |          6 |        781 |        176 |         69 |      1,026 |
+| src\components\Profil\MyFrips                                                                                       |         13 |      3,139 |         15 |        236 |      3,390 |
+| src\components\Profil\MyFrips (Files)                                                                               |          7 |      1,863 |          0 |        122 |      1,985 |
+| src\components\Profil\MyFrips\MyPurchase                                                                            |          2 |        535 |          0 |         51 |        586 |
+| src\components\Profil\MyFrips\MySell                                                                                |          4 |        741 |         15 |         63 |        819 |
+| src\img                                                                                                             |          1 |          2 |          0 |          2 |          4 |
+| src\reducers                                                                                                        |         14 |      1,027 |          7 |        138 |      1,172 |
+| src\routes                                                                                                          |          3 |        165 |          0 |         56 |        221 |
+| src\store                                                                                                           |          1 |          7 |          0 |          5 |         12 |
+| src\utils                                                                                                           |          1 |         10 |          0 |          3 |         13 |
++---------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+
+Files
++---------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| filename                                                                                                            | language   | code       | comment    | blank      | total      |
++---------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\README.md                                                         | Markdown   |         38 |          0 |         33 |         71 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\package-lock.json                                                 | JSON       |     16,268 |          0 |          1 |     16,269 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\package.json                                                      | JSON       |         81 |          0 |          1 |         82 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\public\index.html                                                 | HTML       |         27 |         23 |          2 |         52 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\public\manifest.json                                              | JSON       |         15 |          0 |          1 |         16 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\actions\index.js                                              | JavaScript |        903 |         15 |        132 |      1,050 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\actions\type.js                                               | JavaScript |        110 |         12 |         42 |        164 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\api\api.js                                                    | JavaScript |          4 |          3 |          2 |          9 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\App.css                                            | CSS        |          7 |          0 |          1 |          8 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\App.js                                             | JavaScript |        155 |          0 |         27 |        182 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Checkout\Adress.js                                 | JavaScript |         35 |          0 |          4 |         39 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Checkout\CheckOutComponent.js                      | JavaScript |        332 |          6 |         25 |        363 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Checkout\ModalCostum.js                            | JavaScript |         26 |          0 |          4 |         30 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Checkout\PaymentForm.js                            | JavaScript |         42 |          0 |          5 |         47 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Checkout\PricePropose.js                           | JavaScript |        247 |          0 |         19 |        266 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Checkout\SecurityBadge.js                          | JavaScript |         17 |          0 |          3 |         20 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Checkout\StatusPaymentComponent.js                 | JavaScript |         69 |          0 |         11 |         80 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Checkout\StripeContainer.js                        | JavaScript |         54 |          0 |         12 |         66 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Favorite\FavoriteItem.js                           | JavaScript |        105 |          0 |          6 |        111 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Footer\Aide.js                                     | JavaScript |        430 |          0 |         24 |        454 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Footer\Assisstance.js                              | JavaScript |        176 |          0 |         79 |        255 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Footer\ConditionG.js                               | JavaScript |         49 |          0 |          7 |         56 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Footer\Footer.js                                   | JavaScript |         62 |          0 |          2 |         64 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Footer\PaginationComponent.js                      | JavaScript |         61 |          1 |          5 |         67 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Footer\Sell.js                                     | JavaScript |         10 |          0 |          3 |         13 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Header.js                                          | JavaScript |        618 |          0 |         48 |        666 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\CatalogueDisplay\CostumCatalogueComponent.js | JavaScript |        205 |          0 |          6 |        211 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\CatalogueDisplay\CostumChips.js              | JavaScript |         23 |          0 |          4 |         27 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\CatalogueDisplay\CostumPopper.js             | JavaScript |        167 |          1 |         14 |        182 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\CatalogueDisplay\CostumPriceComponent.js     | JavaScript |         86 |          0 |          9 |         95 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\CatalogueDisplay\DisplayCatalogue.js         | JavaScript |        336 |          0 |         45 |        381 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\CatalogueDisplay\SizeFilter.js               | JavaScript |        160 |          0 |         15 |        175 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\CatalogueDisplay\renderChipsComponents.js    | JavaScript |         74 |          0 |          7 |         81 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\DND\SortableGrid.js                          | JavaScript |        183 |          0 |         16 |        199 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\ItemCreate.js                                | JavaScript |         52 |          0 |          9 |         61 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\ItemEdit.js                                  | JavaScript |         47 |          0 |          8 |         55 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\ItemForm.js                                  | JavaScript |        241 |        297 |         27 |        565 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\ItemLists.js                                 | JavaScript |        299 |          1 |         26 |        326 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\Proposition\ProposeDialog.js                 | JavaScript |        173 |          0 |         17 |        190 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\formUpload\BrandForm.js                      | JavaScript |        223 |          0 |         23 |        246 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\formUpload\DeliveryFormRadio.js              | JavaScript |        114 |          0 |         13 |        127 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\formUpload\colorForm.js                      | JavaScript |        173 |          0 |         22 |        195 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\formUpload\costumTextfield.js                | JavaScript |         50 |          0 |          5 |         55 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\formUpload\dropDownItem.js                   | JavaScript |        155 |          0 |         14 |        169 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\formUpload\errorText.js                      | JavaScript |         16 |          0 |          7 |         23 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\formUpload\sizeForm.js                       | JavaScript |        127 |          0 |         14 |        141 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\formUpload\stateForm.js                      | JavaScript |        157 |          0 |         16 |        173 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\formUpload\uploadPicture.js                  | JavaScript |         32 |         22 |          5 |         59 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\itemPreview\DialogProductPreview.js          | JavaScript |         98 |          0 |          7 |        105 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\itemPreview\ImageGalleryPreview.js           | JavaScript |        325 |          0 |         15 |        340 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\itemPreview\ItemFromProfil.js                | JavaScript |        126 |          0 |         10 |        136 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\itemPreview\ItemPreview.js                   | JavaScript |        190 |          0 |         16 |        206 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\itemPreview\itemInformation.js               | JavaScript |        237 |          0 |         24 |        261 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\logicItems\displayImageMain.js               | JavaScript |         54 |          0 |          4 |         58 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\logicItems\displayNewItems.js                | JavaScript |        152 |          0 |         11 |        163 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\staticItems\staticItemName.js                | JavaScript |        923 |          1 |         50 |        974 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Items\staticItems\staticNavigationCatalogue.js     | JavaScript |        110 |          0 |          9 |        119 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Login\CostumStepper.js                             | JavaScript |        149 |         15 |         26 |        190 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Login\FirsStep.js                                  | JavaScript |         53 |          0 |          7 |         60 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Login\LoginPage.js                                 | JavaScript |        218 |          0 |         18 |        236 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Login\SecondStep.js                                | JavaScript |        148 |          0 |         21 |        169 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Login\TextFieldLogin.js                            | JavaScript |         22 |          1 |          5 |         28 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Login\UserRegister.js                              | JavaScript |        317 |          2 |         28 |        347 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\Conversation.js                            | JavaScript |        189 |          0 |         19 |        208 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\CostumItem\DialogForPropose.js             | JavaScript |        214 |          0 |         17 |        231 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\CostumItem\SecondPageDialog.js             | JavaScript |        178 |          0 |         18 |        196 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\Message.js                                 | JavaScript |        389 |          0 |         12 |        401 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\ProposeMessage.js                          | JavaScript |         10 |          0 |          2 |         12 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\RegroupByDate.js                           | JavaScript |         16 |          0 |          4 |         20 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\UserToUser.js                              | JavaScript |         86 |          0 |         11 |         97 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\hooks\useLoadingMessage.js                 | JavaScript |         47 |          0 |          9 |         56 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\newMessage.js                              | JavaScript |        421 |          0 |         45 |        466 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\preMessage.js                              | JavaScript |         10 |          0 |          3 |         13 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Message\renderMessageComponent.js                  | JavaScript |        212 |          6 |         22 |        240 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\CategoryProduct.js                          | JavaScript |          9 |          0 |          4 |         13 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\MobileHeader.js                             | JavaScript |          0 |          0 |          1 |          1 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\PageNotFound.js                             | JavaScript |         24 |          0 |          3 |         27 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\RightMenuCostum.js                          | JavaScript |          7 |          0 |          4 |         11 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\Search.js                                   | JavaScript |        221 |         12 |         31 |        264 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\SubHeaderManager.js                         | JavaScript |         46 |          0 |          6 |         52 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\SubHeaderNavigation.js                      | JavaScript |        113 |          0 |         12 |        125 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\createUITheme.js                            | JavaScript |         13 |          0 |          4 |         17 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\isLogin.js                                  | JavaScript |         29 |          0 |          3 |         32 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\NavBar\navBarStyle.js                              | JavaScript |         79 |          1 |          5 |         85 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\ChangeAdress.js                             | JavaScript |         87 |          0 |          8 |         95 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MemberProfile.js                            | JavaScript |          7 |          0 |          2 |          9 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\ModalAdress.js                              | JavaScript |        118 |          0 |         16 |        134 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFavorite.js                               | JavaScript |        269 |          1 |         13 |        283 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\DeleteModal.js                      | JavaScript |        114 |          0 |         21 |        135 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\Delivery.js                         | JavaScript |          7 |          0 |          2 |          9 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\Filter.js                           | JavaScript |        128 |          0 |         10 |        138 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\MyFrips.js                          | JavaScript |        355 |          0 |         23 |        378 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\MyItems.js                          | JavaScript |        906 |          0 |         47 |        953 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\MyProposition.js                    | JavaScript |        346 |          0 |         17 |        363 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\MyPurchase\MyPurchase.js            | JavaScript |        280 |          0 |         20 |        300 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\MyPurchase\PurchaseStep.js          | JavaScript |        255 |          0 |         31 |        286 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\MySell\DeliveryStep.js              | JavaScript |        292 |         15 |         27 |        334 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\MySell\DetailsDelivery.js           | JavaScript |        114 |          0 |          7 |        121 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\MySell\MySell.js                    | JavaScript |        293 |          0 |         24 |        317 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\MySell\RatingComponent.js           | JavaScript |         42 |          0 |          5 |         47 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\MyFrips\Promotion.js                        | JavaScript |          7 |          0 |          2 |          9 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\NotificationComponent.js                    | JavaScript |         66 |          1 |          9 |         76 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\components\Profil\Profil.js                                   | JavaScript |        234 |        174 |         21 |        429 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\img\image.js                                                  | JavaScript |          2 |          0 |          2 |          4 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\index.css                                                     | CSS        |          7 |          0 |          1 |          8 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\index.js                                                      | JavaScript |          5 |          0 |          0 |          5 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\react-app-env.d.ts                                            | TypeScript |          0 |          1 |          1 |          2 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\auth.js                                              | JavaScript |         85 |          0 |         10 |         95 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\creationItem.js                                      | JavaScript |         36 |          0 |          5 |         41 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\errorReducers.js                                     | JavaScript |         12 |          1 |          3 |         16 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\favoriteReducers.js                                  | JavaScript |         55 |          1 |          8 |         64 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\fetchDataAction.js                                   | JavaScript |         55 |          0 |          8 |         63 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\filterCatalogue.js                                   | JavaScript |        173 |          1 |         25 |        199 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\handleClickReducer.js                                | JavaScript |          0 |          0 |          1 |          1 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\index.js                                             | JavaScript |         23 |          0 |          1 |         24 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\itemForPropose.js                                    | JavaScript |         86 |          0 |         13 |         99 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\itemReducer.js                                       | JavaScript |        105 |          1 |         17 |        123 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\messageReducer.js                                    | JavaScript |        121 |          0 |         24 |        145 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\myFrips.js                                           | JavaScript |        174 |          2 |         10 |        186 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\notification.js                                      | JavaScript |         54 |          0 |          7 |         61 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\reducers\payment.js                                           | JavaScript |         48 |          1 |          6 |         55 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\routes\CheckUrl.js                                            | JavaScript |         75 |          0 |         25 |        100 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\routes\PrivateRoute.js                                        | JavaScript |         24 |          0 |          5 |         29 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\routes\SearchUrl.js                                           | JavaScript |         66 |          0 |         26 |         92 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\store\store.js                                                | JavaScript |          7 |          0 |          5 |         12 |
+| c:\Users\Stefa\Desktop\Frips2\Frips\frips-clients\src\utils\setAuthToken.js                                         | JavaScript |         10 |          0 |          3 |         13 |
+| Total                                                                                                               |            |     33,612 |        618 |      1,818 |     36,048 |
++---------------------------------------------------------------------------------------------------------------------+------------+------------+------------+------------+------------+

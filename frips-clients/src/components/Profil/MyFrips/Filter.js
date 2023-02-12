@@ -1,36 +1,47 @@
-import React, { useEffect, useState } from "react";
-import { FaFilter } from "react-icons/fa";
 import {
   Box,
   Checkbox,
   ClickAwayListener,
   ListItemIcon,
-  makeStyles,
   MenuItem,
   Popper,
   Typography,
 } from "@material-ui/core";
+import React, { useState } from "react";
+import { FaFilter } from "react-icons/fa";
 import { addFilterFrips } from "../../../actions";
 
-import _, { filter } from "lodash";
+import _ from "lodash";
 import { useDispatch } from "react-redux";
 
 const filterArrayItems = [
   [
     { Name: "Nombre de vue", id: 0 },
     { Name: "Nombre de j'aime", id: 1 },
-    { Name: "Meilleure offre", id: 5 },
+    { Name: "Meilleure offre", id: 2 },
+    { Name: "par date croissante", id: 3 },
+  ],
+  [
     { Name: "par date croissante", id: 3 },
     { Name: "par date décroissante", id: 4 },
+    { Name: "Meilleure offre", id: 2 },
   ],
   [
-    { Name: "par date croissante", id: 6 },
-    { Name: "par date décroissante", id: 7 },
-    { Name: "Meilleure offre", id: 8 },
+    { Name: "à envoyer", id: 10 },
+    { Name: "vendu", id: 11 },
+    { Name: "vendu par ordre décroissant", id: 8 },
+    { Name: "vendu par ordre croissant", id: 9 },
   ],
   [
-    { Name: "par date croissante", id: 9},
-    { Name: "par date décroissante", id: 10 },
+    { Name: "Offre acceptée", id: 5 },
+    { Name: "Offre en attente ", id: 6 },
+    { Name: "Offre refusée ", id: 7 },
+  ],
+  [
+    { Name: "à recevoir", id: 12 },
+    { Name: "reçu", id: 13 },
+    { Name: "acheté par ordre décroissant", id: 14 },
+    { Name: "acheté par ordre croissant", id: 15 },
   ],
 ];
 
@@ -63,16 +74,13 @@ const Filter = ({ id, classes, filterMyFrips }) => {
   const dispatch = useDispatch();
 
   const handleClick = (e) => {
+    console.log(e.currentTarget);
     setAnchorEl(e.currentTarget);
-    
   };
 
   const handleClickAway = () => {
-    
     setAnchorEl(null);
   };
-
-  
 
   return (
     <ClickAwayListener onClickAway={handleClickAway}>
@@ -91,11 +99,13 @@ const Filter = ({ id, classes, filterMyFrips }) => {
             filterMyFrips.length !== 0 ? "rgba(205, 217, 231,1)" : "",
         }}
       >
-      
-        <Box  display={"flex"} alignItems="center" height={40} justifyContent="center">
-        <Typography style={{fontSize:16}}>
-            Trier par
-          </Typography>
+        <Box
+          display={"flex"}
+          alignItems="center"
+          height={40}
+          justifyContent="center"
+        >
+          <Typography style={{ fontSize: 16 }}>Trier par</Typography>
           <ListItemIcon style={{ paddingLeft: 0, minWidth: 0 }}>
             <FaFilter />
             <Typography>({filterMyFrips.length})</Typography>
@@ -114,8 +124,7 @@ const Filter = ({ id, classes, filterMyFrips }) => {
           }}
           open={Boolean(AnchorEl)}
         >
-          <Box className={classes.boxShadow}>
-          
+          <Box itemRef={AnchorEl} className={classes.boxShadow}>
             {renderFilter(id, classes, dispatch, filterMyFrips)}
           </Box>
         </Popper>

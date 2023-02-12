@@ -48,8 +48,12 @@ const renderedItem = (state, classes, favorite, dispatch, navigate,number) => {
         <Card className={classes.BoxOneItem}>
           <CardHeader
             avatar={
-              <IconButton>
+              <IconButton onClick={()=>{
+                navigate(`/member/${item.account.Pseudo}`);
+
+              }}>
                 <Avatar
+
                   style={{
                     boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
                     cursor: "pointer",

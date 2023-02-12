@@ -10,7 +10,6 @@ let fs = require("fs-extra");
 const multer = require("multer");
 const fileStorage = multer.diskStorage({
   destination: (req, file, cb) => {
-    console.log(req.body.id[0]);
     let path = `public/images/${req.body.id[0]}`;
 
     fs.mkdirsSync(path);
@@ -35,7 +34,6 @@ const sharp = require("sharp");
 // @acces    Private
 
 router.post("/", upload.any(), async (req, res) => {
-  console.log("here");
 
   try {
     for (let index = 0; index < req.files.length; index++) {

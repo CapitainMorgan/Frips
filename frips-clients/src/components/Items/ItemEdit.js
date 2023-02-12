@@ -2,21 +2,23 @@ import { Box, CircularProgress } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import {
-  editItem, getItemCreationInfo
-} from "../../actions";
+import { editItem, getItemCreationInfo } from "../../actions";
 import ItemForm from "./ItemForm";
 
-const ItemEdit = ({ loading, loaded, editItemPage }) => {
+const ItemEdit = ({ loading, loaded, initialValues, imageBlob }) => {
   let { id } = useParams();
   const dispatch = useDispatch();
 
-  useEffect(() => {
-    dispatch(editItem(id));
-    dispatch(getItemCreationInfo());
-  }, [dispatch]);
 
-  if (loading && !loaded) {
+
+  useEffect(() => {
+    if (!loading && Object.keys(initialValues).length ===0 && imageBlob.length===0) {
+      dispatch(editItem(id));
+    }
+    dispatch(getItemCreationInfo());
+  }, [dispatch, id, loading, initialValues]);
+
+  if (loading && Object.keys(initialValues).length ===0 && imageBlob.length===0) {
     return (
       <Box
         height="100vh"
@@ -28,41 +30,25 @@ const ItemEdit = ({ loading, loaded, editItemPage }) => {
         <CircularProgress size={100} />
       </Box>
     );
-  }
-  let initialValues
-  if(editItemPage){
-    const newArray = Array.from(editItemPage?.image).map((file) =>
-    URL.createObjectURL(file)
-  );
+  } else {
 
-   initialValues = {
-    Titre: editItemPage?.Name,
-    Description: editItemPage?.Description,
-    image: newArray,
-    Catalogue: editItemPage?.item_category,
-    Brand: editItemPage?.item_brand,
-    Size: editItemPage?.Price,
-    Color: editItemPage?.item_color,
-    Price: editItemPage?.Price,
-    State: editItemPage?.itemcondition,
-  };
+    return (
+      <Box>
+        <ItemForm
+          id={id}
+          edit={true}
+          editItem={imageBlob}
+          initialValues={initialValues}
+        />
+      </Box>
+    );
   }
-
-  return (
-    <Box>
-      <ItemForm
-        id={id}
-        edit={true}
-        editItem={editItemPage.image}
-        initialValues={initialValues}
-      />
-    </Box>
-  );
 };
 const mapStateToProps = (state) => ({
   loading: state.items.loading,
   loaded: state.items.loaded,
-  editItemPage: state.items.editItemPage,
+  initialValues: state.items.initialValues,
+  imageBlob: state.items.imageBlob,
 });
 
 export default connect(mapStateToProps)(ItemEdit);

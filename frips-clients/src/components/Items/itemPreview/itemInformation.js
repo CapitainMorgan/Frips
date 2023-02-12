@@ -4,6 +4,7 @@ import {
   Button,
   CardHeader,
   Divider,
+  IconButton,
   Popover,
   Typography,
 } from "@material-ui/core";
@@ -17,13 +18,10 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { newConv } from "../../../actions";
 import PricePropose from "../../Checkout/PricePropose";
-const ItemInformation = ({ state, classes, flag, setFlag }) => {
+const ItemInformation = ({ state, classes,review }) => {
   const history = useNavigate();
-  const [star, setStar] = useState(4);
   const [anchorEl, setAnchorEl] = React.useState(false);
   const [favorite, setFavorite] = useState(null);
-
-
 
   const handleClick = () => {
     setAnchorEl(true);
@@ -36,52 +34,49 @@ const ItemInformation = ({ state, classes, flag, setFlag }) => {
   const dispatch = useDispatch();
 
 
-  const handlePopoverOpen = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
 
   if (!state?.Price) {
     return null;
   }
 
-  const handlePopoverClose = () => {
-    setAnchorEl(null);
-  };
-  const openPoPover = Boolean(anchorEl);
   return (
     <Box height={"100%"}>
       <Box className={classes.floatContentProfil} position="relative">
-        <Box
-          display="flex"
-          padding={2}
-          width={"100%"}
-          onClick={() => alert("nique toi")}
-        >
+        <Box display="flex" padding={2} width={"100%"}>
           <Box display="flex" alignItems="center">
-            <CardHeader style={{ padding: 0 }} avatar={<Avatar>S</Avatar>} />
-            <Box display="block" position="relative">
-              <Box display="flex">
-                <Typography
-                  aria-owns={openPoPover ? "mouse-over-popover" : undefined}
-                  aria-haspopup="true"
-                  onMouseEnter={handlePopoverOpen}
-                  onMouseLeave={handlePopoverClose}
+            <CardHeader
+              style={{ padding: 0 }}
+              avatar={
+                <IconButton
+                  onClick={() => {
+                    history(`/member/${state.account.Pseudo}`);
+                  }}
                 >
-                  <VerifiedUserIcon color="primary" />
-                </Typography>
-                <Typography>{state.userName}</Typography>
-
-             
-              </Box>
-              <Rating value={star} readOnly />
-            </Box>
-            <Box display="flex" position="absolute" right={0}>
-              <NavigateNextIcon />
+                  <Avatar
+                    style={{
+                      boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                      cursor: "pointer",
+                      height: 50,
+                      width: 50,
+                    }}
+                    alt={`${state.account.Pseudo}`}
+                    src={`/imageProfile/${state.account.id}/${state.account?.image?.image}`}
+                  />
+                </IconButton>
+              }
+            />
+            <Box display="flex" flexDirection={"column"} position="relative">
+              <Typography
+                onClick={() => {
+                  history(`/member/${state.account.Pseudo}`);
+                }}
+                style={{ fontSize: 16, cursor: "pointer" }}
+              >
+                {state.account.Pseudo}
+              </Typography>
+              <Rating value={review} precision={0.5} readOnly />
             </Box>
           </Box>
-        </Box>
-        <Box display="flex" justifyContent="center" alignItems="center">
-          {/*faire boutton suivre ???? */}
         </Box>
       </Box>
       <Box className={classes.floatContentInformation}>
@@ -206,7 +201,6 @@ const ItemInformation = ({ state, classes, flag, setFlag }) => {
             Envoyer un message
           </Button>
 
-
           <Button
             style={{ width: "100%", marginTop: 5 }}
             variant="contained"
@@ -227,7 +221,13 @@ const ItemInformation = ({ state, classes, flag, setFlag }) => {
             Faire une offre
           </Button>
           {anchorEl ? (
-            <PricePropose itemPrice={state.Price} idReceiver={state.account.id} itemId={state.id} handleClickAway={handleClickAway} anchorEl={anchorEl} />
+            <PricePropose
+              itemPrice={state.Price}
+              idReceiver={state.account.id}
+              itemId={state.id}
+              handleClickAway={handleClickAway}
+              anchorEl={anchorEl}
+            />
           ) : null}
 
           <Button

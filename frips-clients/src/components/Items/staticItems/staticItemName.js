@@ -36,14 +36,14 @@ export const Catalogue = [
                 subitems: [
                   {
                     Upid: 4,
-                    sizeType: "FV",
+                    sizeType: 0,
                     Name: "Parkas",
 
                     id: 5,
                   },
                   {
                     Upid: 4,
-                    sizeType: "FV",
+                    sizeType: 0,
                     Name: "Manteaux longs",
 
                     id: 6,
@@ -51,7 +51,7 @@ export const Catalogue = [
                   {
                     Upid: 4,
 
-                    sizeType: "FV",
+                    sizeType: 0,
                     Name: "Manteaux d'hivers",
 
                     id: 7,
@@ -69,31 +69,31 @@ export const Catalogue = [
                     id: 10,
                     Upid: 9,
                     Name: "Blouson aviateur",
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                   {
                     id: 11,
                     Name: "Vestes en jean",
                     Upid: 9,
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                   {
                     id: 12,
                     Name: "Vestes en cuir ",
                     Upid: 9,
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                   {
                     id: 13,
                     Name: "Vestes légères",
                     Upid: 9,
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                   {
                     id: 14,
                     Name: "Vestes polaires",
                     Upid: 9,
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                 ],
               },
@@ -102,7 +102,7 @@ export const Catalogue = [
                 Name: "Manteaux & vestes",
 
                 id: 15,
-                sizeType: "FV",
+                sizeType: 0,
               },
             ],
           },
@@ -116,7 +116,7 @@ export const Catalogue = [
             subitems: [
               {
                 id: 17,
-                sizeType: "FV",
+                sizeType: 0,
                 Name: "Sweats à capuche",
                 Upid: 16,
               },
@@ -130,31 +130,31 @@ export const Catalogue = [
                     id: 19,
                     Name: "Pulls col V",
                     Upid: 18,
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                   {
                     id: 20,
                     Name: "Pulls col roulé",
                     Upid: 18,
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                   {
                     id: 21,
                     Name: "Sweats longs",
                     Upid: 18,
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                   {
                     id: 22,
                     Name: "Pulls d'hiver",
                     Upid: 18,
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                   {
                     id: 23,
                     Name: "Autres sweats",
                     Upid: 18,
-                    sizeType: "FV",
+                    sizeType: 0,
                   },
                 ],
               },
@@ -176,19 +176,19 @@ export const Catalogue = [
                 Upid: 26,
                 Name: "Blazers",
                 id: 27,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 26,
                 Name: "Ensemble tailler/pantalon",
                 id: 28,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 26,
                 Name: "Blazers & tailleurs",
                 id: 29,
-                sizeType: "FV",
+                sizeType: 0,
               },
             ],
           },
@@ -203,62 +203,62 @@ export const Catalogue = [
                 Upid: 30,
                 id: 31,
                 Name: "Robes courtes",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 30,
                 id: 32,
                 Name: "Robes longues",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 30,
                 Name: "Robes d'été",
                 id: 33,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 30,
                 id: 34,
                 Name: "Robes d'hiver",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 30,
                 id: 35,
                 Name: "Robes chics",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 30,
                 id: 36,
                 Name: "Robes sans bretelles",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 30,
                 id: 36,
                 Name: "Robes sans bretelles",
-                sizeType: "FV",
+                sizeType: 0,
               },
 
               {
                 Upid: 30,
                 id: 37,
                 Name: "Robes de soirée",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 30,
                 id: 38,
                 Name: "Robes de mariée",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 30,
                 id: 39,
                 Name: "Autres robes",
-                sizeType: "FV",
+                sizeType: 0,
               },
             ],
           },
@@ -272,43 +272,43 @@ export const Catalogue = [
                 Upid: 40,
                 id: 41,
                 Name: "Mini-jupes",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 40,
                 id: 42,
                 Name: "Jupes mi-longues",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 40,
                 id: 43,
                 Name: "Jupes longues",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 40,
                 id: 44,
                 Name: "Jupes taille haute",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 40,
                 id: 45,
                 Name: "Jupes tulipes",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 40,
                 id: 46,
                 Name: "Jupes patineuses",
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 40,
                 id: 47,
                 Name: "Jupes patineuses",
-                sizeType: "FV",
+                sizeType: 0,
               },
             ],
           },
@@ -322,37 +322,37 @@ export const Catalogue = [
                 Upid: 48,
                 Name: "Chemises",
                 id: 49,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 48,
                 Name: "Blouses",
                 id: 50,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 48,
                 Name: "T-shirts",
                 id: 51,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 48,
                 Name: "Débardeurs",
                 id: 52,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 48,
                 Name: "Tuniques",
                 id: 53,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 48,
                 Name: "Tops courts",
                 id: 53,
-                sizeType: "FV",
+                sizeType: 0,
               },
             ],
           },
@@ -367,37 +367,37 @@ export const Catalogue = [
                 Upid: 56,
                 Name: "Pantalons skinny",
                 id: 57,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 56,
                 Name: "Pantalons en cuir",
                 id: 58,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 56,
                 Name: "Pantalons droits",
                 id: 59,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 56,
                 Name: "Leggings",
                 id: 60,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 56,
                 Name: "Pantalons skinny",
                 id: 60,
-                sizeType: "FV",
+                sizeType: 0,
               },
               {
                 Upid: 56,
                 Name: "Sarouels",
                 id: 61,
-                sizeType: "FV",
+                sizeType: 0,
               },
             ],
           },
@@ -411,26 +411,36 @@ export const Catalogue = [
                 upId: 62,
                 Name: "Shorts taille haute",
                 id: 63,
+                sizeType: 0,
+
               },
               {
                 upId: 63,
                 Name: "Shorts taille basse",
                 id: 64,
+                sizeType: 0,
+
               },
               {
                 upId: 63,
                 Name: "Shorts en jeans",
                 id: 65,
+                sizeType: 0,
+
               },
               {
                 upId: 63,
                 Name: "Shorts en cuir",
                 id: 66,
+                sizeType: 0,
+
               },
               {
                 upId: 63,
                 Name: "Shorts cargo",
                 id: 67,
+                sizeType: 0,
+
               },
             ],
           },
@@ -444,10 +454,14 @@ export const Catalogue = [
                 upId: 68,
                 Name: "Une pièce",
                 id: 69,
+                sizeType: 0,
+
               },
               {
                 upId: 68,
                 Name: "Deux pièces",
+                sizeType: 0,
+
                 id: 70,
               },
             ],
@@ -456,6 +470,8 @@ export const Catalogue = [
           {
             Upid: 2,
             Name: "Autres vêtements",
+            sizeType: 0,
+
             id: 72,
           },
         ],
@@ -471,38 +487,45 @@ export const Catalogue = [
             id: 74,
             Name: "Bottes",
             upId: 73,
+            sizeType: 1,
           },
           {
             id: 75,
             Name: "Bottines",
             upId: 73,
+            sizeType: 1,
           },
           {
             id: 76,
             Name: "Chaussures à talons",
             upId: 73,
+            sizeType: 1,
           },
           {
             id: 77,
             Name: "Chaussures plates",
             upId: 73,
+            sizeType: 1,
           },
 
           {
             id: 78,
             Name: "Sneakers & Basket",
             upId: 73,
+            sizeType: 1,
           },
           {
             id: 79,
             Name: "Sandales",
             upId: 73,
+            sizeType: 1,
           },
 
           {
             id: 80,
             Name: "Autres chaussures",
             upId: 73,
+            sizeType: 1,
           },
         ],
       },
@@ -517,36 +540,43 @@ export const Catalogue = [
             Name: "Sacs à main",
             id: 82,
             upId: 81,
+            siteType:2,
           },
           {
             Name: "Sacs en bandoulière",
             id: 83,
             upId: 81,
+            siteType: 2,
           },
           {
             Name: "Sacs à dos",
             id: 84,
             upId: 81,
+            siteType: 2,
           },
           {
             Name: "Pochette",
             id: 85,
             upId: 81,
+            siteType: 2,
           },
           {
             Name: "Sacs banane",
             id: 86,
             upId: 81,
+            siteType: 2,
           },
           {
             Name: "Sacs de sport",
             id: 87,
             upId: 81,
+            siteType: 2,
           },
           {
             Name: "Autres sacs",
             id: 88,
             upId: 81,
+            siteType: 2,
           },
         ],
       },
@@ -566,186 +596,233 @@ export const Catalogue = [
   //HOMME HERE///
 ];
 
-
 export const arraySize = [
   {
-    id: 1,
+    id: "Femme",
+    idNavigation: 1,
+    Name: "Femme",
+    type: "list",
     subitems: [
       {
-        id: 2,
+        id: 1,
+        Name: "Taille",
         subitems: [
           {
-            size: "35",
-            plain: true,
+            Name: "XS / 34",
+            id: "XS / 34",
           },
           {
-            size: "36",
-            plain: true,
+            Name: "S / 36",
+            id: "S / 36",
           },
           {
-            size: "37",
-            plain: true,
+            Name: "M / 38",
+            id: "M / 38",
           },
           {
-            size: "38",
-            plain: true,
+            Name: "L / 40",
+            id: "L / 40",
           },
           {
-            size: "39",
-            plain: true,
+            Name: "Xl / 42",
+            id: "Xl / 42",
           },
           {
-            size: "40",
-            plain: true,
-          },
-          {
-            size: "41",
-            plain: true,
-          },
-          {
-            size: "42",
-            plain: true,
-          },
-          {
-            size: "43",
-            plain: true,
-          },
-          {
-            size: "35.5",
-          },
-          {
-            size: "36.5",
-          },
-          {
-            size: "37.5",
-          },
-          {
-            size: "38.5",
-          },
-          {
-            size: "39.5",
-          },
-          {
-            size: "40.5",
-          },
-
-          {
-            size: "Autres",
+            Name: "Autres",
+            id: "Autres",
           },
         ],
       },
       {
-        id: 1,
+        id: 2,
+        Name: "Chassaures",
+
         subitems: [
           {
-            size: "XS / 34",
+            Name: "35",
+            plain: true,
+            id: "35",
           },
           {
-            size: "S / 36",
+            Name: "36",
+            plain: true,
+            id: "36",
           },
           {
-            size: "M / 38",
+            Name: "37",
+            plain: true,
+            id: "37",
           },
           {
-            size: "L / 40",
+            Name: "38",
+            plain: true,
+            id: "38",
           },
           {
-            size: "Xl / 42",
+            Name: "39",
+            plain: true,
+            id: "39",
           },
           {
-            size: "Autres",
+            Name: "40",
+            plain: true,
+            id: "40",
+          },
+          {
+            Name: "41",
+            plain: true,
+            id: "41",
+          },
+          {
+            Name: "42",
+            plain: true,
+            id: "42",
+          },
+          {
+            Name: "43",
+            plain: true,
+            id: "43",
+          },
+          {
+            Name: "35.5",
+            id: "35.5",
+          },
+          {
+            Name: "36.5",
+            id: "36.5",
+          },
+          {
+            Name: "37.5",
+            id: "37.5",
+          },
+          {
+            Name: "38.5",
+            id: "38.5",
+          },
+          {
+            Name: "39.5",
+            id: "39.5",
+          },
+          {
+            Name: "40.5",
+            id: "40.5",
+          },
+
+          {
+            Name: "Autres",
+            id: "Autres",
+          },
+        ],
+      },
+      {
+        id: 3,
+        Name: "sac",
+        subitems: [
+          {
+            Name: "grand",
+            plain: true,
+            id: "grand",
+          },
+          {
+            Name: "petit",
+            id: "petit",
+            plain: true,
           },
         ],
       },
     ],
   },
   {
-    id: 2,
+    idNavigation: 2,
+    Name: "Homme",
+    type: "list",
+    id: "Homme",
+
     subitems: [
       {
         id: 2,
         subitems: [
           {
-            size: "36",
+            Name: "36",
             plain: true,
           },
           {
-            size: "37",
+            Name: "37",
             plain: true,
           },
           {
-            size: "38",
+            Name: "38",
             plain: true,
           },
           {
-            size: "39",
+            Name: "39",
             plain: true,
           },
           {
-            size: "40",
+            Name: "40",
             plain: true,
           },
           {
-            size: "41",
+            Name: "41",
             plain: true,
           },
           {
-            size: "42",
+            Name: "42",
             plain: true,
           },
           {
-            size: "43",
+            Name: "43",
             plain: true,
           },
           {
-            size: "44",
+            Name: "44",
             plain: true,
           },
           {
-            size: "45",
+            Name: "45",
             plain: true,
           },
           {
-            size: "46",
+            Name: "46",
             plain: true,
           },
 
           {
-            size: "36.5",
+            Name: "36.5",
           },
           {
-            size: "37.5",
+            Name: "37.5",
           },
           {
-            size: "38.5",
+            Name: "38.5",
           },
           {
-            size: "39.5",
+            Name: "39.5",
           },
           {
-            size: "40.5",
+            Name: "40.5",
           },
           {
-            size: "41.5",
+            Name: "41.5",
           },
           {
-            size: "42.5",
+            Name: "42.5",
           },
           {
-            size: "43.5",
+            Name: "43.5",
           },
           {
-            size: "44.5",
+            Name: "44.5",
           },
           {
-            size: "45.5",
+            Name: "45.5",
           },
           {
-            size: "46.5",
+            Name: "46.5",
           },
 
           {
-            size: "Autres",
+            Name: "Autres",
           },
         ],
       },
@@ -753,32 +830,28 @@ export const arraySize = [
         id: 1,
         subitems: [
           {
-            size: "XS",
+            Name: "XS",
           },
           {
-            size: "S",
+            Name: "S",
           },
           {
-            size: "M",
+            Name: "M",
           },
           {
-            size: "L",
+            Name: "L",
           },
           {
-            size: "Xl",
+            Name: "Xl",
           },
           {
-            size: "Autres",
+            Name: "Autres",
           },
         ],
       },
     ],
   },
 ];
-
-
-
-
 
 export const listCategorie = (
   id = null,
@@ -801,8 +874,12 @@ export const listCategorie = (
               disableFocusRipple
               disableTouchRipple
               onClick={(e) => {
-                setSize(item.number);
-                console.log(item.Name);
+                if (item.id === 1) {
+                  setSize([0]);
+                }
+                if (item.id === 104) {
+                  setSize([1]);
+                }
 
                 setNavigationValue([
                   ...rank,
@@ -810,7 +887,6 @@ export const listCategorie = (
                 ]);
               }}
             >
-              {" "}
               {item.Name}
               <IconButton
                 className={classes.Arrow}
@@ -818,7 +894,6 @@ export const listCategorie = (
                 disableRipple
                 disableTouchRipple
               >
-                {" "}
                 <ChevronRightIcon style={{ fontSize: 25 }} />{" "}
               </IconButton>
             </MenuItem>
@@ -880,13 +955,13 @@ export const listCategorie = (
 
 export const renderArraySize = (size, selection) => {
   switch (selection) {
-    case "FV":
+    case 1:
       return size[0].subitems[1].subitems;
 
-    case "FC":
+    case 2:
       return size[0].subitems[0].subitems;
 
-    case "HV":
+    case 3:
       return size[1].subitems[1].subitems;
 
     case "HC":
@@ -896,4 +971,3 @@ export const renderArraySize = (size, selection) => {
       return size;
   }
 };
-

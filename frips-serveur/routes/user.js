@@ -12,8 +12,66 @@ const { account } = new PrismaClient();
 // @desc    Register user
 // @acces    Public
 
+router.post("/checkUser", async (req, res) => {
+  let { Pseudo, Email } = req.body;
+  try {
+    let user = await account.findUnique({
+      where: {
+        Pseudo,
+      },
+      select: {
+        Pseudo: true,
+      },
+    });
+
+    let email = await account.findUnique({
+      where: {
+        Email,
+      },
+      select: {
+        Email: true,
+      },
+    });
+
+    if (user || email) {
+      if (user && email) {
+        res
+          .status(400)
+          .json({ msg: "Ce pseudo et ce mail sont déjà utilisés" });
+      } else if (user) {
+        res.status(400).json({ msg: "Ce pseudo est déjà utilisé" });
+      } else {
+        res.status(400).json({ msg: "Ce mail est déjà utilisé" });
+      }
+    }
+    else{
+      res.status(200).json({ msg: "ok" });
+
+    }
+
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).send("Serveur error");
+  }
+});
+
 router.post("/", async (req, res) => {
-  let { Pseudo, Email, Password,IBAN,MOIS,ANNEE,name,firstName } = req.body;
+  let {
+    Pseudo,
+    Email,
+    Password,
+    IBAN,
+    Mois,
+    Jour,
+    Annee,
+    name,
+    firstName,
+    Rue,
+    Numero,
+    Localite,
+    NPA,
+  } = req.body;
   const salt = await bcrypt.genSalt(10);
   Password = await bcrypt.hash(Password, salt);
 
@@ -52,9 +110,17 @@ router.post("/", async (req, res) => {
           Pseudo,
           Email,
           Password,
-          Lastname:name,
-          Firstname:firstName
-
+          Lastname: name,
+          Firstname: firstName,
+          BirthDate: new Date(parseInt(Annee), parseInt(Mois), parseInt(Jour)),
+          address: {
+            create: {
+              City: Localite,
+              NPA: parseInt(NPA),
+              NumStreet: Numero,
+              Street: Rue,
+            },
+          },
         },
       });
 

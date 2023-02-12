@@ -1,7 +1,14 @@
 /* eslint-enable react/jsx-no-comment-textnodes */
 import React, { useEffect } from "react";
 
-import { Box, Button, CircularProgress, Divider, makeStyles, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  CircularProgress,
+  Divider,
+  makeStyles,
+  Typography,
+} from "@material-ui/core";
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import AddIcon from "@material-ui/icons/Add";
 import { ErrorMessage, Field, Form, Formik } from "formik";
@@ -23,10 +30,10 @@ import ImageBox from "./DND/SortableGrid";
 import {
   CostumPriceField,
   CostumTextField,
-  CostumTextFieldDescription
+  CostumTextFieldDescription,
 } from "./formUpload/costumTextfield";
-import TextError from "./formUpload/errorText";
 import { connect } from "react-redux";
+import DeliveryFormRadio from "./formUpload/DeliveryFormRadio";
 
 const useStyles = makeStyles((theme) => ({
   boxForm: {
@@ -72,7 +79,51 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
+  DeliveryBox: {
+    display: "block",
+    width: "100%",
+    flexWrap: "wrap",
+
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
 }));
+
+const createSizeArray = (id) => {
+  const SizeArray = [];
+  if (id < 104) {
+    SizeArray.push(0);
+    if (id < 73) {
+      SizeArray.push(0);
+    }
+    if (id > 73 && id < 81) {
+      SizeArray.push(1);
+    } else {
+      SizeArray.push(2);
+    }
+  }
+  return SizeArray;
+};
+
+const TextError = (props) => {
+  console.log(props);
+  if (props.error) {
+    return (
+      <Typography style={{ color: "red", fontSize: "1.0em" }}>
+        {props.error.msg} !
+      </Typography>
+    );
+  } else {
+    return (
+      <Typography style={{ color: "red", fontSize: "0.8em" }}>
+        {props.children}
+      </Typography>
+    );
+  }
+};
 
 const validationSchema = yup.object({
   image: yup
@@ -89,6 +140,7 @@ const validationSchema = yup.object({
     .string("Enter your password")
     .min(25, "La description doit au moins avoir 25 charactères")
     .required("Une Description est requise"),
+  Size: yup.string("Enter your password").required("Une taille est requise"),
 
   Catalogue: yup
     .string("Mettez au moins une photo")
@@ -109,35 +161,47 @@ const validationSchema = yup.object({
     .array()
     .min(1, "Mettez aux moins une couleur")
     .required("Mettez aux moins une couleur"),
+  Delivery: yup
+    .array()
+    .min(1, "Mettez aux moins un mode de livraison")
+    .required("Mettez aux moins un mode de livraison"),
 });
 
-
-const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
+const ItemForm = ({
+  initialValues,
+  edit,
+  id,
+  editItem,
+  itemInfo,
+  loading,
+  editInitialValues,
+}) => {
   const dispatch = useDispatch();
 
-  const [size, setSize] = useState(null);
+  const [size, setSize] = useState([]);
   const [picture, setPicture] = useState(!edit ? [] : [...editItem]);
   const history = useNavigate();
-  
 
   const onSubmit = (values) => {
     if (!edit) {
       dispatch(createItem(values, picture, history));
     } else {
+
       dispatch(editItemSend(values, picture, history, id));
     }
   };
 
   useEffect(() => {
-    
-    if(!itemInfo && !loading){
-
+    if (!Boolean(itemInfo) && !loading) {
       dispatch(getItemCreationInfo());
-
     }
-    
-  }, [itemInfo])
-  
+  }, [itemInfo, loading]);
+
+  useEffect(() => {
+    if (Object.keys(editInitialValues).length !== 0) {
+      setSize(createSizeArray(initialValues.Catalogue));
+    }
+  }, [Object.keys(editInitialValues).length !== 0]);
 
   const classes = useStyles();
   const theme = useTheme();
@@ -153,7 +217,10 @@ const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
     }
   };
 
-  if (!initialValues.Titre && edit && loading) {
+  if (
+    (Object.keys(initialValues)?.length === 0 && loading) ||
+    editItem?.length === 0 
+  ) {
     return (
       <Box
         height="100vh"
@@ -165,304 +232,331 @@ const ItemForm = ({ initialValues, edit, id, editItem,itemInfo,loading }) => {
         <CircularProgress size={100} />
       </Box>
     );
-  }
-  
-  return (
-    <Box style={{ backgroundColor: "#F5f5f3" }}>
-      <Box width={"100%"} height={30} />
-      <Formik
-        enableReinitialize={true}
-        onSubmit={onSubmit}
-        initialValues={initialValues || null}
-        validationSchema={validationSchema}
-      >
-        {(formik) => {
-          return (
-            <Form>
-              <Box className={classes.formContainer}>
-                <Box marginTop={3} marginBottom={3}>
-                  <Typography style={{ fontSize: 25, fontWeight: 500 }}>
-                    {!edit ? "Mettre en Vente" : "Modification"}
-                  </Typography>
-                </Box>
-
-                <Box className={classes.BoxShadow}>
-                  <Box padding={3}>
-                    <Typography style={{ color: "#909090" }}>
-                      Ajoute jusqu'à 10 photos
+  } else {
+    console.log(initialValues)
+    return (
+      <Box style={{ backgroundColor: "#F5f5f3" }}>
+        <Box width={"100%"} height={30} />
+        <Formik
+          enableReinitialize={true}
+          onSubmit={onSubmit}
+          initialValues={initialValues || {}}
+          validationSchema={validationSchema}
+        >
+          {(formik) => {
+            console.log(formik)
+            return (
+              <Form>
+                <Box className={classes.formContainer}>
+                  <Box marginTop={3} marginBottom={3}>
+                    <Typography style={{ fontSize: 25, fontWeight: 500 }}>
+                      {!edit ? "Mettre en Vente" : "Modification"}
                     </Typography>
                   </Box>
 
-                  <Dropzone
-                    noClick
-                    noKeyboard
-                    accept="image/*"
-                    onDrop={(acceptedFiles) => {
-                      const fileArray = Array.from(acceptedFiles).map((file) =>
-                        URL.createObjectURL(file)
-                      );
+                  <Box className={classes.BoxShadow}>
+                    <Box padding={3}>
+                      <Typography style={{ color: "#909090" }}>
+                        Ajoute jusqu'à 10 photos
+                      </Typography>
+                    </Box>
 
-                      if (fileArray.length + formik.values.image.length <= 10) {
-                        setPicture(picture.concat(acceptedFiles));
-                        formik.setFieldValue(
-                          "image",
-                          formik.values.image.concat(fileArray)
+                    <Dropzone
+                      noClick
+                      noKeyboard
+                      accept="image/*"
+                      onDrop={(acceptedFiles) => {
+                        const fileArray = Array.from(acceptedFiles).map(
+                          (file) => URL.createObjectURL(file)
                         );
-                      } else {
-                        const item1 = picture
-                          .concat(acceptedFiles)
-                          .slice(0, 10);
-                        const item = formik.values.image
-                          .concat(fileArray)
-                          .slice(0, 10);
-                        formik.setFieldValue("image", item);
-                        setPicture(item1);
-                      }
-                    }}
-                  >
-                    {({ getRootProps, getInputProps, open }) => {
-                      return (
-                        <Box
-                          minHeight={182}
-                          margin={3}
-                          style={{
-                            border: "1px black dashed",
-                            overflow: "hidden",
-                          }}
-                          display="flex"
-                          justifyContent="center"
-                          alignItems="center"
-                          {...getRootProps()}
-                        >
-                          {formik.values.image.length === 0 ? (
-                            <Box>
-                              <input {...getInputProps()} />
-                              <Button
-                                startIcon={<AddIcon></AddIcon>}
-                                variant="outlined"
-                                color="primary"
-                                onClick={open}
-                              >
-                                <Typography>Ajouter des photos</Typography>
-                              </Button>
-                            </Box>
-                          ) : (
-                            <Box height={"100%"} width={"100%"}>
-                              <Field
-                                id="image"
-                                name="image"
-                                open={open}
-                                edit={edit}
-                                getInputProps={getInputProps}
-                                picture={picture}
-                                setPicture={setPicture}
-                                component={ImageBox}
-                              ></Field>
-                            </Box>
-                          )}
-                        </Box>
-                      );
-                    }}
-                  </Dropzone>
 
-                  <Box padding={3}>
-                    <ErrorMessage
-                      name="image"
-                      component={TextError}
-                    ></ErrorMessage>
-                  </Box>
-                </Box>
+                        if (
+                          fileArray.length + formik.values.image.length <=
+                          10
+                        ) {
+                          setPicture(picture.concat(acceptedFiles));
+                          formik.setFieldValue(
+                            "image",
+                            formik.values.image.concat(fileArray)
+                          );
+                        } else {
+                          const item1 = picture
+                            .concat(acceptedFiles)
+                            .slice(0, 10);
+                          const item = formik.values.image
+                            .concat(fileArray)
+                            .slice(0, 10);
+                          formik.setFieldValue("image", item);
+                          setPicture(item1);
+                        }
+                      }}
+                    >
+                      {({ getRootProps, getInputProps, open }) => {
+                        return (
+                          <Box
+                            minHeight={182}
+                            margin={3}
+                            style={{
+                              border: "1px black dashed",
+                              overflow: "hidden",
+                            }}
+                            display="flex"
+                            justifyContent="center"
+                            alignItems="center"
+                            {...getRootProps()}
+                          >
+                            {formik.values.image.length === 0 ? (
+                              <Box>
+                                <input {...getInputProps()} />
+                                <Button
+                                  startIcon={<AddIcon></AddIcon>}
+                                  variant="outlined"
+                                  color="primary"
+                                  onClick={open}
+                                >
+                                  <Typography>Ajouter des photos</Typography>
+                                </Button>
+                              </Box>
+                            ) : (
+                              <Box height={"100%"} width={"100%"}>
+                                <Field
+                                  id="image"
+                                  name="image"
+                                  open={open}
+                                  edit={edit}
+                                  getInputProps={getInputProps}
+                                  picture={picture}
+                                  setPicture={setPicture}
+                                  component={ImageBox}
+                                ></Field>
+                              </Box>
+                            )}
+                          </Box>
+                        );
+                      }}
+                    </Dropzone>
 
-                <Box height={30}></Box>
-
-                <Box className={classes.BoxShadow} display="block">
-                  <Box className={classes.FormLittleBox} padding={3}>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Typography variant="h6">Titre</Typography>
-                      <ErrorMessage name="Titre" component={TextError} />
-                    </Box>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Field
-                        id="Titre"
-                        name="Titre"
-                        type="text"
-                        component={CostumTextField}
-                      ></Field>
-                    </Box>
-                  </Box>
-
-                  <Divider />
-
-                  <Box className={classes.FormLittleBox} padding={3}>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Typography variant="h6">Description</Typography>
-                      <ErrorMessage name="Description" component={TextError} />
-                    </Box>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Field
-                        id="Description"
-                        name="Description"
-                        type="text"
-                        component={CostumTextFieldDescription}
-                      ></Field>
-                    </Box>
-                  </Box>
-
-                  <Divider />
-                </Box>
-
-                <Box height={25}></Box>
-
-                <Box className={classes.BoxShadow}>
-                  <Box className={classes.FormLittleBox} padding={3}>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Typography variant="h6">Catalogue</Typography>
+                    <Box padding={3}>
                       <ErrorMessage
-                        name="Catalogue"
+                        name="image"
                         component={TextError}
                       ></ErrorMessage>
                     </Box>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Field
-                        name="Catalogue"
-                        as="checkbox"
-                        id="Catalogue"
-                        mobile={typeOfInput()}
-                        size={size}
-                        setSize={setSize}
-                        component={DropDownItem}
-                      ></Field>
-                    </Box>
                   </Box>
 
-                  <Divider />
+                  <Box height={30}></Box>
 
-                  <Box className={classes.FormLittleBox} padding={3}>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Typography variant="h6">Marque</Typography>
-                      <ErrorMessage
-                        name="Brand"
-                        component={TextError}
-                      ></ErrorMessage>
-                    </Box>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Field
-                        name="Brand"
-                        id="Brand"
-                        mobile={typeOfInput()}
-                        component={BrandForm}
-                      ></Field>
-                    </Box>
-                  </Box>
-                  <Divider />
-
-                  {formik.values.Catalogue !=="" ? (
-                    <Box>
-                      <Box className={classes.FormLittleBox} padding={3}>
-                        <Box className={classes.SubFormLittleBox}>
-                          <Typography variant="h6">Taille</Typography>
-                          <ErrorMessage
-                            name="Size"
-                            component={TextError}
-                          ></ErrorMessage>
-                        </Box>
-                        <Box className={classes.SubFormLittleBox}>
-                          <Field
-                            id="Size"
-                            name="Size"
-                            size={size}
-                            mobile={typeOfInput()}
-                            component={SizeForm}
-                          ></Field>
-                        </Box>
+                  <Box className={classes.BoxShadow} display="block">
+                    <Box className={classes.FormLittleBox} padding={3}>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Typography variant="h6">Titre</Typography>
+                        <ErrorMessage name="Titre" component={TextError} />
                       </Box>
-                      <Divider />
-
-                      <Box className={classes.FormLittleBox} padding={3}>
-                        <Box className={classes.SubFormLittleBox}>
-                          <Typography variant="h6">Couleurs</Typography>
-                          <ErrorMessage
-                            name="Color"
-                            component={TextError}
-                          ></ErrorMessage>
-                        </Box>
-                        <Box className={classes.SubFormLittleBox}>
-                          <Field
-                            id="Color"
-                            name="Color"
-                            mobile={typeOfInput()}
-                            component={ColorForm}
-                          ></Field>
-                        </Box>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Field
+                          id="Titre"
+                          name="Titre"
+                          type="text"
+                          component={CostumTextField}
+                        ></Field>
                       </Box>
-                      <Divider />
                     </Box>
-                  ) : null}
-                  <Box className={classes.FormLittleBox} padding={3}>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Typography variant="h6">Etat</Typography>
-                      <ErrorMessage
-                        name="State"
-                        component={TextError}
-                      ></ErrorMessage>
+
+                    <Divider />
+
+                    <Box className={classes.FormLittleBox} padding={3}>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Typography variant="h6">Description</Typography>
+                        <ErrorMessage
+                          name="Description"
+                          component={TextError}
+                        />
+                      </Box>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Field
+                          id="Description"
+                          name="Description"
+                          type="text"
+                          component={CostumTextFieldDescription}
+                        ></Field>
+                      </Box>
                     </Box>
-                    <Box className={classes.SubFormLittleBox}>
+
+                    <Divider />
+                  </Box>
+
+                  <Box height={25}></Box>
+
+                  <Box className={classes.BoxShadow}>
+                    <Box className={classes.FormLittleBox} padding={3}>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Typography variant="h6">Catalogue</Typography>
+                        <ErrorMessage
+                          name="Catalogue"
+                          component={TextError}
+                        ></ErrorMessage>
+                      </Box>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Field
+                          name="Catalogue"
+                          as="checkbox"
+                          id="Catalogue"
+                          mobile={typeOfInput()}
+                          size={size}
+                          setSize={setSize}
+                          component={DropDownItem}
+                        ></Field>
+                      </Box>
+                    </Box>
+
+                    <Divider />
+
+                    <Box className={classes.FormLittleBox} padding={3}>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Typography variant="h6">Marque</Typography>
+                        <ErrorMessage
+                          name="Brand"
+                          component={TextError}
+                        ></ErrorMessage>
+                      </Box>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Field
+                          name="Brand"
+                          id="Brand"
+                          mobile={typeOfInput()}
+                          component={BrandForm}
+                        ></Field>
+                      </Box>
+                    </Box>
+                    <Divider />
+
+                    {size.length === 2 ||
+                    formik.values?.Color.length !== 0 ||
+                    formik.values.s ? (
+                      <Box>
+                        <Box className={classes.FormLittleBox} padding={3}>
+                          <Box className={classes.SubFormLittleBox}>
+                            <Typography variant="h6">Taille</Typography>
+                            <ErrorMessage
+                              name="Size"
+                              component={TextError}
+                            ></ErrorMessage>
+                          </Box>
+                          <Box className={classes.SubFormLittleBox}>
+                            <Field
+                              id="Size"
+                              name="Size"
+                              size={size}
+                              mobile={typeOfInput()}
+                              component={SizeForm}
+                            ></Field>
+                          </Box>
+                        </Box>
+                        <Divider />
+
+                        <Box className={classes.FormLittleBox} padding={3}>
+                          <Box className={classes.SubFormLittleBox}>
+                            <Typography variant="h6">Couleurs</Typography>
+                            <ErrorMessage
+                              name="Color"
+                              component={TextError}
+                            ></ErrorMessage>
+                          </Box>
+                          <Box className={classes.SubFormLittleBox}>
+                            <Field
+                              id="Color"
+                              name="Color"
+                              mobile={typeOfInput()}
+                              component={ColorForm}
+                            ></Field>
+                          </Box>
+                        </Box>
+                        <Divider />
+                      </Box>
+                    ) : null}
+                    <Box className={classes.FormLittleBox} padding={3}>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Typography variant="h6">Etat</Typography>
+                        <ErrorMessage
+                          name="State"
+                          component={TextError}
+                        ></ErrorMessage>
+                      </Box>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Field
+                          name="State"
+                          id="State"
+                          mobile={typeOfInput}
+                          component={StateForm}
+                        ></Field>
+                      </Box>
+                    </Box>
+                    <Divider />
+                  </Box>
+
+                  <Box height={25} />
+
+                  <Box className={classes.BoxShadow}>
+                    <Box className={classes.FormLittleBox} padding={3}>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Typography variant="h6">Prix</Typography>
+                        <ErrorMessage name="Price" component={TextError} />
+                      </Box>
+                      <Box className={classes.SubFormLittleBox}>
+                        <Field
+                          name="Price"
+                          id="Price"
+                          component={CostumPriceField}
+                        ></Field>
+                      </Box>
+                    </Box>
+                  </Box>
+
+                  <Box height={25} />
+
+                  <Box className={classes.BoxShadow}>
+                    <Box padding={3}>
+                      <Typography variant="h6">Mode de Livraison</Typography>
+                      <ErrorMessage name="Delivery" component={TextError} />
+                    </Box>
+                    <Box className={classes.DeliveryBox} padding={3}>
                       <Field
-                        name="State"
-                        id="State"
-                        mobile={typeOfInput}
-                        component={StateForm}
+                        name="Delivery"
+                        id="Delivery"
+                        component={DeliveryFormRadio}
                       ></Field>
                     </Box>
                   </Box>
-                  <Divider />
-                </Box>
 
-                <Box height={25}></Box>
+                  <Box height={25} />
 
-                <Box className={classes.BoxShadow}>
-                  <Box className={classes.FormLittleBox} padding={3}>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Typography variant="h6">Prix</Typography>
-                      <ErrorMessage name="Price" component={TextError} />
-                    </Box>
-                    <Box className={classes.SubFormLittleBox}>
-                      <Field
-                        name="Price"
-                        id="Price"
-                        component={CostumPriceField}
-                      ></Field>
-                    </Box>
+                  <Box display="flex" justifyContent="flex-end">
+                    <Button
+                      style={{ color: "white" }}
+                      variant="contained"
+                      type="submit"
+                      color="primary"
+                    >
+                      {!edit ? "Ajouter" : "Sauvegarder les changements"}
+                    </Button>
                   </Box>
+
+                  <Box height={200}></Box>
                 </Box>
-
-                <Box height={25}></Box>
-
-                <Box display="flex" justifyContent="flex-end">
-                  <Button
-                    style={{ color: "white" }}
-                    variant="contained"
-                    type="submit"
-                    color="primary"
-                  >
-                    {!edit ? "Ajouter" : "Sauvegarder les changements"}
-                  </Button>
-                </Box>
-
-                <Box height={200}></Box>
-              </Box>
-            </Form>
-          );
-        }}
-      </Formik>
-    </Box>
-  );
+              </Form>
+            );
+          }}
+        </Formik>
+      </Box>
+    );
+  }
 };
 const mapStateToProps = (state) => ({
-  itemInfo:state.itemInfo.itemInfo,
+  itemInfo: state.itemInfo.itemInfo,
   loadingFilter: state.filterCatalogue.filterLoading,
-  
-  loading:state.itemInfo.loading
+  editInitialValues: state.items.initialValues,
+
+  loading: state.itemInfo.loading,
 });
 
-export default connect(mapStateToProps)( ItemForm);
+export default connect(mapStateToProps)(ItemForm);

@@ -5,28 +5,11 @@ const multer = require("multer");
 const { nanoid } = require("nanoid");
 let fs = require("fs-extra");
 const path = require("path"); // path for cut the file extension
-const { PrismaClient } = require('@prisma/client')
+const { PrismaClient } = require("@prisma/client");
 const { similarProduct } = require("./logicFunction/logicSimilarProduct");
 
-const {
-  item,
-  account,
-  image,
-  nbview,
-  pricepropose,
-  
-
-  favorit,
-  
-  color,
-  brand,
-  
-  
-  
-  item_color,
-  item_category,
-  category,
-} = new PrismaClient();
+const { item, image, nbview, favorit, brand, pricepropose ,review} =
+  new PrismaClient();
 
 // @route   Post api/items
 // @desc    post one item
@@ -36,6 +19,7 @@ const upload = multer().any();
 
 const colorLengthFunction = (Color) => {
   const [firstColor, SecondColor] = Color;
+  console.log(Color);
 
   if (Color.length == 2) {
     return {
@@ -48,11 +32,33 @@ const colorLengthFunction = (Color) => {
       },
     };
   } else {
+    console.log("ici");
+
     return {
       create: {
         data: {
-          id_Color: parseInt(firstColor),
-          id_Item: Item.id,
+          id_Color: parseInt(Color),
+        },
+      },
+    };
+  }
+};
+
+const createManyDeliveryMethods = (arrayDelivery) => {
+  if (arrayDelivery.length > 1) {
+    const ArrayOfIds = arrayDelivery.map((item) => {
+      return { id_Fees: item };
+    });
+    return {
+      createMany: {
+        data: ArrayOfIds,
+      },
+    };
+  } else {
+    return {
+      create: {
+        data: {
+          id_Fees: arrayDelivery[0],
         },
       },
     };
@@ -68,8 +74,24 @@ router.post("/", auth, upload, async (req, res) => {
   const Price = parseFloat(req.body.Price);
   const Catalogue = req.body.Catalogue;
   const CurrentAuction = true;
+  let Color = req.body.Color;
   const State = parseInt(req.body.State);
   const Brand = req.body.Brand;
+  let Delivery = req.body.Delivery;
+
+  if (!Array.isArray(Color)) {
+    Color = Array.of(Color);
+  }
+
+  if (!Array.isArray(Delivery)) {
+    Delivery = Delivery.split(",").map(Number);
+  }
+
+  console.log(Color);
+
+  console.log(Delivery)
+
+  
 
   try {
     const exist = await brand.upsert({
@@ -77,7 +99,7 @@ router.post("/", auth, upload, async (req, res) => {
         Name: Brand,
       },
       create: {
-        Name: Brand
+        Name: Brand,
       },
       update: {},
     });
@@ -89,7 +111,8 @@ router.post("/", auth, upload, async (req, res) => {
         Size,
         Price,
         DatePuplication,
-        
+        Disponibility: true,
+        Verified: true,
         id_Seller: id,
         CurrentAuction,
         item_category: {
@@ -97,7 +120,29 @@ router.post("/", auth, upload, async (req, res) => {
             id_Category: parseInt(Catalogue),
           },
         },
-        item_color: colorLengthFunction(req.body.Color),
+        item_color: {
+          create: Color.map((color) => {
+            return {
+              color: {
+                connect: {
+                  id: parseInt(color),
+                },
+              },
+            };
+          }),
+        },
+        item_fees: {
+          create: Delivery.map((id_Fees) => {
+            return {
+              fees: {
+                connect: {
+                  id: parseInt(id_Fees),
+                },
+              },
+            };
+          }),
+        },
+       
 
         id_ItemCondition: State,
         item_brand: {
@@ -126,6 +171,9 @@ router.post("/", auth, upload, async (req, res) => {
       await image.create({
         data: {
           id_Item: Item.id,
+
+          confidencial: false,
+
           image: `${id}` + path.extname(req.files[index].originalname),
         },
       });
@@ -150,7 +198,14 @@ router.post("/", auth, upload, async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const Item = await item.findMany({
+      where: {
+        transaction: {
+          none: {},
+        },
+      },
       include: {
+        transaction: true,
+
         image: {
           take: 1,
         },
@@ -188,6 +243,32 @@ router.get("/", async (req, res) => {
     });
 
     res.status(200).json(Item);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("Server error");
+  }
+});
+
+router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_Item } = req.params;
+  try {
+    const findUser = await item.findUnique({
+      where: {
+        id: parseInt(id_Item),
+      },
+    });
+
+    if (findUser?.id_Seller === id) {
+      const deleted = await item.delete({
+        where: {
+          id: parseFloat(id_Item),
+        },
+      });
+      res.sendStatus(200);
+    } else {
+      res.status(401).send({ msg: "Action non-autorisée" });
+    }
   } catch (error) {
     console.log(error);
     res.status(500).json("Server error");
@@ -457,20 +538,29 @@ const filterCatalogue = (Catalogue) => {
   };
 };
 const isFilter = (filter) => {
-  const { newCatalogue, newCouleur, newEtat, newMarque, Price, itemsId } =
-    filter;
+  const {
+    newCatalogue,
+    newCouleur,
+    newEtat,
+    newMarque,
+    Price,
+    itemsId,
+    newTaille,
+  } = filter;
 
   if (
     newCatalogue.length !== 0 ||
     newCouleur.length !== 0 ||
     newEtat.length !== 0 ||
     newMarque.length !== 0 ||
+    newTaille.length !== 0 ||
     Price[0] !== 0 ||
     Price[1] !== null
   ) {
     return {
       OR: [
         { id_ItemCondition: { in: newEtat } },
+        { Size: { in: newTaille } },
         { item_color: { some: { id_Color: { in: newCouleur } } } },
         {
           item_brand: {
@@ -634,6 +724,11 @@ router.post("/more", async (req, res) => {
 router.get("/new", async (req, res) => {
   try {
     const Item = await item.findMany({
+      where: {
+        transaction: {
+          none: {},
+        },
+      },
       include: {
         image: {
           take: 1,
@@ -666,6 +761,8 @@ router.get("/new", async (req, res) => {
         account: {
           select: {
             Pseudo: true,
+            id: true,
+
             image: true,
           },
         },
@@ -700,17 +797,20 @@ router.get("/Id_of_MyFavorite", auth, async (req, res) => {
 });
 
 router.post("/proposition", auth, async (req, res) => {
-  const {Price,idItem} = req.body
+  const { Price, idItem } = req.body;
+  const { id } = req.user;
+
+  console.log(id);
+
   try {
     await pricepropose.create({
-      
-      data:{
-        Price:parseFloat(Price),
-        id_Item:idItem,
-        id_Account:req.user.id,
-        Approve:false,
-      }
-    })
+      data: {
+        id_Account: id,
+        Price: parseFloat(Price),
+        id_Item: parseInt(idItem),
+        SendDate: new Date(),
+      },
+    });
 
     res.sendStatus(200);
   } catch (error) {
@@ -744,7 +844,7 @@ router.get("/:id", async (req, res) => {
 
       select: {
         image: true,
-        Name:true,
+        Name: true,
         account: {
           select: {
             Pseudo: true,
@@ -773,6 +873,11 @@ router.get("/:id", async (req, res) => {
                     },
                   },
                 },
+              },
+            },
+            image: {
+              select: {
+                image: true,
               },
             },
           },
@@ -816,11 +921,28 @@ router.get("/:id", async (req, res) => {
           },
         },
       },
+
     });
- 
+   const {_avg} =  await review.aggregate({
+      where:{
+        id_Account:Item.account.id
+      },
+      _avg:{
+        Note:true
+      }
+    })
+
+
     const userItem = await item.findMany({
       where: {
-        id_Seller: Item.account.id,
+        AND: [
+          { id_Seller: Item.account.id },
+          {
+            transaction: {
+              none: {},
+            },
+          },
+        ],
       },
       orderBy: {
         DatePuplication: "desc",
@@ -865,17 +987,18 @@ router.get("/:id", async (req, res) => {
       },
       take: 6,
     });
-    
-    console.log(Item.item_category[0].category.Name);
+
     const findedSimilarProduct = await similarProduct(
       Item.item_brand[0].brand.id,
       Item.item_category[0].category.id
     );
 
+
     Item = {
       ...Item,
       userItem,
       findedSimilarProduct,
+      review:_avg?.Note
     };
     res.status(200).json(Item);
   } catch (error) {
@@ -923,31 +1046,29 @@ router.post("/favorit", auth, async (req, res) => {
   }
 });
 
-router.post("/view",auth,async (req,res)=>{
-  const idUser = req.user.id
-  const {id} = req.body
-  console.log("here")
-  console.log(req.body)
+router.post("/view", auth, async (req, res) => {
+  const idUser = req.user.id;
+  const { id } = req.body;
   try {
     await nbview.upsert({
-      where:{
-        id_Account_id_Item:{
-          id_Account:idUser,
-          id_Item:id
-        }
+      where: {
+        id_Account_id_Item: {
+          id_Account: idUser,
+          id_Item: id,
+        },
       },
-      create:{
-        id_Account:idUser,
-        id_Item:id
+      create: {
+        id_Account: idUser,
+        id_Item: id,
       },
-      update:{}
-    })
-    res.status(200).json("viewed")
+      update: {},
+    });
+    res.status(200).json("viewed");
   } catch (error) {
-    console.log("view")
-    console.log(error)
+    console.log(error);
+    res.status(500).json("Serveur error");
   }
-})
+});
 
 router.delete("/favorit", auth, async (req, res) => {
   try {
@@ -1184,6 +1305,5 @@ router.post("/search", auth, async (req, res) => {
     res.status(500).json("Server error");
   }
 });
-
 
 module.exports = router;

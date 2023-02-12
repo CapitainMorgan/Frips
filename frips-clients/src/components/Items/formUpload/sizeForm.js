@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 
-import { Box, Checkbox, ClickAwayListener, Dialog, Divider, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
+import { Box, Checkbox, Dialog, Divider, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import { arraySize, renderArraySize } from "../staticItems/staticItemName";
 
 import CloseIcon from "@material-ui/icons/Close";
+import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyle = makeStyles((theme) => ({
   checkBox: {
@@ -28,8 +29,10 @@ const useStyle = makeStyles((theme) => ({
 const SizeForm = ({ form, field, mobile, size, ...props }) => {
   const classes = useStyle();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [id,subId]= size
 
-  const renderedStateClothes = renderArraySize(arraySize, size).map(
+  
+  const renderedStateClothes = arraySize[id]?.subitems[subId]?.subitems.map(
     (item, index) => {
       return (
         <Box style={{ position: "relative" }}>
@@ -37,15 +40,15 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
           <MenuItem
             className={classes.BoxItem}
             onClick={() => {
-              form.setFieldValue("Size", item.size);
+              form.setFieldValue("Size", item.id);
               setAnchorEl();
             }}
           >
-            {item.size}
+            {item.id}
             <Checkbox
               className={classes.checkBox}
               style={{ backgroundColor: "transparent" }}
-              checked={item.size === field.value}
+              checked={item.id === field.value}
               color="primary"
               disableFocusRipple
               disableRipple
@@ -96,7 +99,9 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
               style={{ backgroundColor: "white", position: "absolute" }}
               width={"100%"}
             >
-              {renderedStateClothes}
+              <Box maxHeight={250} overflow="auto">
+                {renderedStateClothes}
+              </Box>
             </Box>
           </Popper>
         ) : (
@@ -122,6 +127,7 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
               </Box>
 
               <Box style={{ backgroundColor: "white" }} width={"100%"}>
+              
                 {renderedStateClothes}
               </Box>
             </Box>

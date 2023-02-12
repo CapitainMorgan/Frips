@@ -57,18 +57,17 @@ const getUser = (userId) => {
 try {
   io.on("connection", (socket) => {
     console.log("A User connected to socket io");
-  
+
     socket.on("join", (socket) => {
       addNewUser(socket.userId, socket.socketId);
     });
-  
+
     socket.on("join room", (room) => {
       console.log("new room joined");
       socket.join(room);
     });
     socket.on("new message", (newMessage) => {
-      const { id, id_Receiver, chat_id } = newMessage;
-  
+      const { id, id_Receiver, chat_id, item, Price } = newMessage;
       const user = getUser(id_Receiver);
       try {
         if (io.sockets.adapter.rooms.get(id)?.has(user?.socketId)) {
@@ -78,8 +77,23 @@ try {
             id_Chat: newMessage.id,
             Date_Houre: newMessage.date,
             Text: newMessage.Message.text,
-            id_Item: newMessage?.id_Item ? newMessage?.id_Item : null,
-            item: newMessage?.item ? item : null,
+            id_Item: Boolean(item?.id) ? item?.id : null,
+            item: Boolean(item)
+              ? {
+                  Price: item.Price,
+                  id: item.id,
+                  pricepropose: [
+                    {
+                      Price: parseFloat(Price),
+                      SendDate: new Date(),
+                      Approve: null,
+                      id_Account:id_Sender,
+                      dateApprove: null,
+                    },
+                  ],
+                  image: [{ image: item.image[0].image }],
+                }
+              : null,
             newMessage: true,
           });
         } else {
@@ -98,22 +112,22 @@ try {
         console.log(error);
       }
     });
-  
+
     socket.on("unsubscribe", (room) => {
       console.log("leave room");
-  
+
       socket.leave(room);
-  
+
       console.dir(io.sockets.adapter.rooms, { depth: true });
     });
     socket.on("disconnect", () => {
       console.log("User disconnect");
-  
+
       removeUser(socket.id);
     });
   });
 } catch (error) {
-  console.log(error)
+  console.log(error);
 }
 
 server.listen(PORT);

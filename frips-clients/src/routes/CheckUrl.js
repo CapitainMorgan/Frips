@@ -51,7 +51,7 @@ const CheckUrl = ({ itemInfo,loading,loadingFilter,chips }) => {
         dispatch(addToFilter(setLastOne(location,itemInfo.infoCategory),"Catalogue"))
       }
     
-  },[itemInfo,location]);
+  },[location,loading]);
 
  
   

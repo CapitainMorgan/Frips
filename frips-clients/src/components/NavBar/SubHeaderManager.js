@@ -33,8 +33,7 @@ const SubHeaderManager = () => {
       margin="auto"
       display="flex"
       alignItems="center"
-      paddingLeft={"10%"}
-      paddingRight={"10%"}
+      
     >
       <SubHeaderNavigation
         category={1}

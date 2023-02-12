@@ -1,121 +1,166 @@
 import { Box, Typography } from "@material-ui/core";
 import { ErrorMessage, Field } from "formik";
 import React from "react";
+import { Controller } from "react-hook-form";
+import StepTextError from "../Items/formUpload/errorText";
 import TextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "./TextFieldLogin";
 
-const SecondStep = ({ formik }) => {
+const SecondStep = ({ control, errors }) => {
   return (
     <React.Fragment>
-        <Box>
-            Ces informations serviront comment garants à des fins juridiques et ne serviront aucunement à des fins de profiling
-        </Box>
+      <Box>
+        Ces informations serviront comment garants à des fins juridiques et ne
+        serviront aucunement à des fins de profiling
+      </Box>
       <Box marginTop={3} display="flex">
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-          <Field
-            name="firstName"
-            id="firstName"
-            component={TextFieldLogin}
-            placeholder={"Prénom"}
+          <Controller
+            name="step2.firstName"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "Prénom" }} />
+              );
+            }}
           />
-          <ErrorMessage name="firstName" component={TextError} />
+
+          <StepTextError text={errors?.step2?.firstName?.message} />
         </Box>
 
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-          <Field
-            name="name"
-            id="name"
-            component={TextFieldLogin}
-            placeholder={"Nom de famille"}
+        <Controller
+            name="step2.name"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "Nom de famille" }} />
+              );
+            }}
           />
-          <ErrorMessage name="name" component={TextError} />
+
+          <StepTextError text={errors?.step2?.name?.message} />
+          
         </Box>
       </Box>
       <Box marginTop={3} display="flex">
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-          <Field
-            name="Jour"
-            id="Jour"
-            component={TextFieldLogin}
-            placeholder={"Jour"}
+        <Controller
+            name="step2.Jour"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "Jour" }} />
+              );
+            }}
           />
-          <ErrorMessage name="Jour" component={TextError} />
+
+          <Box>
+            <StepTextError text={errors?.step2?.Jour?.message} />
+          </Box>
         </Box>
 
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-          <Field
-            name="Mois"
-            id="Mois"
-            component={TextFieldLogin}
-            placeholder={"Mois"}
+        <Controller
+            name="step2.Mois"
+            control={control}
+            
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "Mois" }} />
+              );
+            }}
           />
-          <ErrorMessage name="Mois" component={TextError} />
+
+          <StepTextError text={errors?.step2?.Mois?.message} />
         </Box>
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-          <Field
-            name="Annee"
-            id="Annee"
-            component={TextFieldLogin}
-            placeholder={"Année"}
+        <Controller
+            name="step2.Annee"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "Année" }} />
+              );
+            }}
           />
-          <ErrorMessage name="Annee" component={TextError} />
+
+          <StepTextError text={errors?.step2?.Annee?.message} />
         </Box>
       </Box>
 
       <Box marginTop={3} display="flex">
         <Box display={"flex"} flexDirection="column" width={"75%"}>
-          <Field
-            name="Rue"
-            id="Rue"
-            component={TextFieldLogin}
-            placeholder={"Rue"}
+        <Controller
+            name="step2.Rue"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "Rue" }} />
+              );
+            }}
           />
-          <ErrorMessage name="Rue" component={TextError} />
+
+          <StepTextError text={errors?.step2?.Rue?.message} />
         </Box>
 
         <Box display={"flex"} flexDirection="column" width={"25%"}>
-          <Field
-            name="Numero"
-            id="Numero"
-            component={TextFieldLogin}
-            placeholder={"Numéro"}
+        <Controller
+            name="step2.Numero"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "Numéro" }} />
+              );
+            }}
           />
-          <ErrorMessage name="Numero" component={TextError} />
+
+          <StepTextError text={errors?.step2?.Numero?.message} />
         </Box>
       </Box>
 
       <Box marginTop={3} display="flex">
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-          <Field
-            name="NPA"
-            id="NPA"
-            component={TextFieldLogin}
-            placeholder={"NPA"}
+        <Controller
+            name="step2.NPA"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "NPA" }} />
+              );
+            }}
           />
-          <ErrorMessage name="NPA" component={TextError} />
+
+          <StepTextError text={errors?.step2?.NPA?.message} />
         </Box>
 
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-          <Field
-            name="Localite"
-            id="Localite"
-            component={TextFieldLogin}
-            placeholder={"Localité"}
+        <Controller
+            name="step2.Localite"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "Localité" }} />
+              );
+            }}
           />
-          <ErrorMessage name="Localite" component={TextError} />
+
+          <StepTextError text={errors?.step2?.Localite?.message} />
         </Box>
       </Box>
       <Box marginTop={3}>
-        <Field
-          name="IBAN"
-          id="IBAN"
-          component={TextFieldLogin}
-          placeholder={"IBAN"}
-        />
-        <ErrorMessage name="IBAN" component={TextError} />
+      <Controller
+            name="step2.IBAN"
+            control={control}
+            render={({ field }) => {
+              return (
+                <TextFieldLogin {...{ ...field, placeholder: "IBAN" }} />
+              );
+            }}
+          />
+
+          <StepTextError text={errors?.step2?.IBAN?.message} />
       </Box>
-      
-      
     </React.Fragment>
   );
 };

@@ -60,7 +60,7 @@ const useStyles = makeStyles((theme) => ({
   },
   grow: {
     flexGrow: 1,
-    backgroundColor: "white",
+    backgroundColor: "#F5f5f3",
   },
   menuButton: {
     marginLeft: "50px",

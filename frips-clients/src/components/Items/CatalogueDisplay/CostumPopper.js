@@ -1,5 +1,5 @@
 import {
-    Box, Checkbox, ClickAwayListener, ListItemIcon, makeStyles, MenuItem, Popper, Typography
+    Box, Checkbox, ListItemIcon, makeStyles, MenuItem, Popper, Typography
 } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -10,6 +10,8 @@ import { addToFilter, removeToFilter } from "../../../actions";
 import _ from "lodash";
 import CostumCatalogueComponent from "./CostumCatalogueComponent";
 import CostumPriceComponent from "./CostumPriceComponent";
+import SizeFilter from "./SizeFilter";
+import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyles = makeStyles((theme) => ({
   BoxShadow: {
@@ -50,6 +52,9 @@ const renderCatalogueCategorie = (
 
   if (label === "Catalogue") {
     return <CostumCatalogueComponent label={label} filter={filter} />;
+  }
+  if (label === "Taille") {
+    return <SizeFilter filter={filter} label={label}/>;
   }
 
   if (label === "sortedBy") {
@@ -108,6 +113,18 @@ const renderCatalogueCategorie = (
   });
 };
 
+const renderLabel = (label) =>{
+  if(label==="Price"){
+    return "Prix"
+  }
+  if(label ==="sortedBy"){
+    return "Trier par"
+  }
+  else{
+    return label
+  }
+}
+
 const CostumPopper = ({ item }) => {
   const { label, array } = item;
   const [Anchor, setAnchorEl] = useState(null);
@@ -124,7 +141,7 @@ const CostumPopper = ({ item }) => {
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClickAway}>
+    <ClickAwayListener onClickAway={handleClickAway} >
       <Box
         className={classes.hover}
         border={1}
@@ -146,7 +163,7 @@ const CostumPopper = ({ item }) => {
       >
         <MenuItem onClick={handleClick}>
           <Typography style={{ fontSize: 16 }}>
-            {label !== "sortedBy" ? label : "Trier par"}
+            {renderLabel(label)}
           </Typography>
           <ListItemIcon style={{ paddingLeft: 0, minWidth: 0 }}>
             {Anchor ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}

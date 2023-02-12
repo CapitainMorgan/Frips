@@ -22,7 +22,7 @@ const renderChips = (filterType, classes, dispatch) => {
   if (!filterType) return;
 
   return filterType.map((value, index) => {
-    if (value.De) {
+    if (value?.De) {
       return (
         <Chip
           style={{ fontSize: 16 }}
@@ -34,7 +34,7 @@ const renderChips = (filterType, classes, dispatch) => {
         />
       );
     }
-    if (value.A) {
+    if (value?.A) {
       return (
         <Chip
           style={{ fontSize: 16 }}

@@ -1,7 +1,9 @@
 import React, {
   useCallback,
   useEffect,
-  useMemo, useRef, useState
+  useMemo,
+  useRef,
+  useState,
 } from "react";
 
 import { Box, CircularProgress, makeStyles } from "@material-ui/core";
@@ -49,14 +51,15 @@ const useStyles = makeStyles((theme) => ({
     position: "relative",
     flex: 2,
     display: "flex",
+    flexWrap: "wrap",
     height: 300,
-    maxHeight:300,
-    overflow: "auto",
+    maxHeight: "100vh",
+    overflowY: "scroll",
     flexDirection: "column-reverse",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      height: "100%",
     },
+    
   },
 }));
 
@@ -118,19 +121,17 @@ const MessageComponent = ({
   isBottom,
   setIsBottom,
   isAccepted,
-  setIsAccepted
+  setIsAccepted,
 }) => {
   const classes = useStyles();
   const [number, setNumber] = useState(1);
-  const setRef = useRef(null)
+  const setRef = useRef(null);
   const dispatch = useDispatch();
-
 
   let id_Chat;
   if (message) {
     id_Chat = message[0]?.id_Chat;
   }
-
 
   const [time, settime] = useState(true);
   useEffect(() => {
@@ -139,38 +140,39 @@ const MessageComponent = ({
     }, 1000);
   }, [message, time]);
 
+  useEffect(() => {
+    setRef.current?.scrollTo(0,0)
+  }, []);
+
   const position = useCallback((node) => {
     if (node) {
       node.scrollTop = node.scrollHeight;
     }
   }, []);
   const handleScroll = (e) => {
-    console.log(e.target.scrollTop===0)
-    if (e.target.scrollTop===0) {
-
-
+    console.log(e.target.scrollTop === 0);
+    if (e.target.scrollTop === 0) {
       setIsBottom(true);
     } else {
       setIsBottom(false);
-
-      } 
-    };
-  useEffect(()=>{
-    if(isAccepted){
+    }
+  };
+  useEffect(() => {
+    if (isAccepted) {
       setRef.current?.scrollIntoView({
         behavior: "smooth",
         block: "nearest",
         // <-- only scroll this div, not the parent as well
-      }); 
-      setIsBottom(true)
+      });
+      setIsBottom(true);
 
-      dispatch(receivedNewMessage(false))
-      setIsAccepted(false)
+      dispatch(receivedNewMessage(false));
+      setIsAccepted(false);
     }
-  },[isAccepted,newMessage])
+  }, [isAccepted, newMessage]);
 
   const renderedConv = useMemo(() => {
-    if (message) {
+    if (message.length !== 0) {
       return renderMessages(
         message,
         userId,
@@ -191,13 +193,18 @@ const MessageComponent = ({
   };
 
   return (
-    <div className={classes.MessageBox} ref={position.current} id="scrollable" >
+    <div className={classes.MessageBox} id="scrollable">
       <InfiniteScroll
         onScroll={handleScroll}
         dataLength={message.length}
         next={fetchContacts}
         hasMore={hasmore > message.length}
-        style={{ display: "flex", flexDirection: "column-reverse" }} //To put endMessage and loader to the top.
+        style={{
+          display: "flex",
+          flexDirection: "column-reverse",
+          position: "relative",
+          WebkitTransform: "translate3d(0, 0, 0)",
+        }} //To put endMessage and loader to the top.
         scrollThreshold={1}
         inverse={true} //
         scrollableTarget="scrollable"
@@ -207,6 +214,7 @@ const MessageComponent = ({
             alignItems="center"
             justifyContent="center"
             padding={2}
+            position="relative"
           >
             <CircularProgress size={30}></CircularProgress>
           </Box>

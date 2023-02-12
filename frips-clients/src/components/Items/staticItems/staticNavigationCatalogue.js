@@ -53,8 +53,10 @@ export const navigationCatalogue = (
             className={classes.BoxItem}
             key={index}
             onClick={() => {
-              if (item.sizeType) {
-                setSize(item.sizeType);
+              console.log(item)
+              if (!Number.isNaN(item.sizeType)) {
+
+                setSize(oldArray => [...oldArray, item.sizeType]);
               }
               form.setFieldValue("Catalogue", item.id);
               setNavigationValue([]);

@@ -9,7 +9,7 @@ const Adress = ({ addresse }) => {
   if (!addresse?.address) {
     return (
       <MenuItem style={{ width: "100%", padding: 0, height: 50 }}>
-        <Box flexGrow={1}>Ajouter une Adresse</Box>
+        <Box flexGrow={1}>Changer votre adresse de livraison</Box>
         <Box>
           <AddIcon style={{ fontSize: 30 }} />
         </Box>

@@ -5,6 +5,8 @@ import moment from "moment";
 import "moment/locale/de";
 import "moment/locale/fr";
 import ProposeMessage from "./ProposeMessage";
+import { useDispatch } from "react-redux";
+import { sendDateProposition } from "../../actions";
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 30,
@@ -51,13 +53,105 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Message = ({ own, Text, hours, item, id_Sender, userId, image ,setRef,index,newMessage}) => {
- 
+const offerReceiver = (item, dispatch) => {
+  console.log(item.pricepropose);
+  if (
+    item?.pricepropose[0].SendDate &&
+    item?.pricepropose[0].Approve === null && 
+    !item?.pricepropose[0]?.dateApprove
+  ) {
+    return (
+      <Box padding={2} width="100%" display={"flex"}>
+        <div style={{ flexGrow: 1, padding: 5 }}>
+          <Button
+            onClick={() => {
+              dispatch(sendDateProposition(item.id, new Date(),true,!item?.pricepropose[0].id_Account))
+            }}
+            style={{ backgroundColor: "white", width: "100%" }}
+          >
+            Accepter
+          </Button>
+        </div>
+        <div style={{ flexGrow: 1, padding: 5 }}>
+          <Button
+            onClick={() => {
+              dispatch(sendDateProposition(item.id, null,false,!item?.pricepropose[0].id_Account));
+            }}
+            style={{ backgroundColor: "white", width: "100%" }}
+          >
+            Refuser
+          </Button>
+        </div>
+      </Box>
+    );
+  }
+  if (item?.pricepropose[0]?.SendDate && item?.pricepropose[0]?.Approve) {
+    return (
+      <Box padding={2} width="100%" display={"flex"} justifyContent="center" alignItems={"center"}>
+        <Typography style={{ fontSize: 16 }}> Offre acceptée </Typography>
+      </Box>
+    );
+  }
+  if (item?.pricepropose[0]?.SendDate && !item?.pricepropose[0]?.Approve) {
+    return (
+      <Box padding={2} width="100%" display={"flex"} justifyContent="center" alignItems={"center"}>
+        <Typography style={{ fontSize: 16 }}> Offre refusée </Typography>
+      </Box>
+    );
+  }
+};
+
+const offerSender = (item, dispatch) => {
+  if (
+    item?.pricepropose[0].SendDate  &&
+    item?.pricepropose[0].Approve === null && 
+    !item?.pricepropose[0]?.dateApprove
+  ) {
+    return (
+      <Box padding={2} width="100%" display={"flex"} justifyContent="center" alignItems={"center"}>
+        <Typography style={{ fontSize: 16 }}>...Offre en attente </Typography>
+      </Box>
+    );
+  }
+  if (item?.pricepropose[0]?.SendDate && item?.pricepropose[0]?.Approve &&
+    item?.pricepropose[0]?.dateApprove) {
+    return (
+      <Box padding={2} width="100%" display={"flex"}>
+        <Typography style={{ fontSize: 16 }} justifyContent="center" alignItems={"center"}> Offre acceptée </Typography>
+      </Box>
+    );
+  }
+  if (
+    item?.pricepropose[0]?.SendDate &&
+    !item?.pricepropose[0]?.Approve &&
+    item?.pricepropose[0]?.dateApprove
+  ) {
+    return (
+      <Box padding={2} width="100%" display={"flex"}>
+        <Typography style={{ fontSize: 16 }} justifyContent="center" alignItems={"center"}> Offre refusée </Typography>
+      </Box>
+    );
+  }
+};
+
+const Message = ({
+  own,
+  Text,
+  hours,
+  item,
+  id_Sender,
+  userId,
+  image,
+  setRef,
+  index,
+  newMessage,
+}) => {
   const classes = useStyles();
+  const dispatch = useDispatch();
   if (own) {
-    if (item) {
+    if (Boolean(item)) {
       return (
-        <div className={classes.MessageBoxLeft} >
+        <div className={classes.MessageBoxLeft} key={index}>
           <Box
             padding={2}
             paddingTop={1}
@@ -107,32 +201,13 @@ const Message = ({ own, Text, hours, item, id_Sender, userId, image ,setRef,inde
 
                   <Box padding={2} display="flex" flexGrow={1}>
                     <Typography style={{ fontSize: 16 }}>Offre :</Typography>
-                    <Typography
-                      style={{ fontSize: 16, fontWeight: 600 }}
-                    ></Typography>
+                    <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                      {item?.pricepropose[0]?.Price}
+                    </Typography>
                   </Box>
                 </Box>
               </Box>
-              {userId !== id_Sender ? (
-                <Box padding={2} width="100%" display={"flex"}>
-                  <div style={{ flexGrow: 1, padding: 5 }}>
-                    <Button style={{ backgroundColor: "white", width: "100%" }}>
-                      Accepeter
-                    </Button>
-                  </div>
-                  <div style={{ flexGrow: 1, padding: 5 }}>
-                    <Button style={{ backgroundColor: "white", width: "100%" }}>
-                      Refuser
-                    </Button>
-                  </div>
-                </Box>
-              ) : (
-                <div style={{ flexGrow: 1, padding: 5 }}>
-                  <Typography style={{ fontSize: 16 }}>
-                    Votre offre est en Attente
-                  </Typography>
-                </div>
-              )}
+              {offerSender(item, dispatch)}
 
               <Box
                 className={classes.MessageBoxLeft}
@@ -140,8 +215,7 @@ const Message = ({ own, Text, hours, item, id_Sender, userId, image ,setRef,inde
                 padding={0.2}
               >
                 <Typography style={{ fontSize: 12 }}>
-                
-                   {moment(hours).local().format("LT")}
+                  {moment(hours).local().format("LT")}
                 </Typography>
               </Box>
             </Box>
@@ -150,7 +224,7 @@ const Message = ({ own, Text, hours, item, id_Sender, userId, image ,setRef,inde
       );
     } else {
       return (
-        <div className={classes.MessageBoxLeft} >
+        <div className={classes.MessageBoxLeft}>
           <Box
             padding={2}
             paddingTop={1}
@@ -184,7 +258,7 @@ const Message = ({ own, Text, hours, item, id_Sender, userId, image ,setRef,inde
                 padding={0.2}
               >
                 <Typography style={{ fontSize: 12 }}>
-                 { moment(hours).local().format("LT")}
+                  {moment(hours).local().format("LT")}
                 </Typography>
               </Box>
             </Box>
@@ -195,7 +269,10 @@ const Message = ({ own, Text, hours, item, id_Sender, userId, image ,setRef,inde
   } else {
     if (item) {
       return (
-        <div className={classes.MessageBoxRight} ref={index===0  ? setRef : null}>
+        <div
+          className={classes.MessageBoxRight}
+          ref={index === 0 ? setRef : null}
+        >
           <Box paddingTop={1} paddingBottom={1}>
             <Box
               className={classes.Message}
@@ -239,25 +316,14 @@ const Message = ({ own, Text, hours, item, id_Sender, userId, image ,setRef,inde
 
                   <Box padding={2} display="flex" flexGrow={1}>
                     <Typography style={{ fontSize: 16 }}>Offre :</Typography>
-                    <Typography
-                      style={{ fontSize: 16, fontWeight: 600 }}
-                    ></Typography>
+                    <Typography style={{ fontSize: 16, fontWeight: 600 }}>
+                      {item?.pricepropose[0]?.Price}
+                    </Typography>
                   </Box>
                 </Box>
               </Box>
+              {offerReceiver(item, dispatch)}
 
-              <Box padding={2} width="100%" display={"flex"}>
-                <div style={{ flexGrow: 1, padding: 5 }}>
-                  <Button style={{ backgroundColor: "white", width: "100%" }}>
-                    Accepeter
-                  </Button>
-                </div>
-                <div style={{ flexGrow: 1, padding: 5 }}>
-                  <Button style={{ backgroundColor: "white", width: "100%" }}>
-                    Refuser
-                  </Button>
-                </div>
-              </Box>
               <Box
                 className={classes.MessageBoxRight}
                 width="100%"
@@ -276,7 +342,10 @@ const Message = ({ own, Text, hours, item, id_Sender, userId, image ,setRef,inde
       );
     } else {
       return (
-        <div className={classes.MessageBoxRight} ref={index===0 ? setRef : null}>
+        <div
+          className={classes.MessageBoxRight}
+          ref={index === 0 ? setRef : null}
+        >
           <Avatar
             src={`/imageProfile/${image.ProfileNumber}/${image.imageProfile}`}
             style={{ marginRight: 10 }}

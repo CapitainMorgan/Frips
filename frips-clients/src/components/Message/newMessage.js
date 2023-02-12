@@ -7,11 +7,18 @@ import {
   makeStyles,
   TextField,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import "moment/locale/fr";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { useLocation, useNavigate, useOutletContext, useParams } from "react-router-dom";
+import {
+  useLocation,
+  useNavigate,
+  useOutletContext,
+  useParams,
+} from "react-router-dom";
 import {
   addMessage,
   getConv,
@@ -25,6 +32,8 @@ import MessageComponent from "./renderMessageComponent";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import SecondPageDialog from "./CostumItem/SecondPageDialog";
 import { isNumber } from "lodash";
+import PricePropose from "../Checkout/PricePropose";
+import { ERROR_MESSAGE } from "../../actions/type";
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 65,
@@ -57,23 +66,32 @@ const useStyles = makeStyles((theme) => ({
 
   MessageBox: {
     position: "relative",
-    flex: 10,
+    flexGrow: 3,
     display: "flex",
     height: 300,
     overflow: "auto",
     flexDirection: "column",
     [theme.breakpoints.down("sm")]: {
-      height:"100%" ,
-
+      height: "90vh",
     },
   },
   container: {
-    flexGrow:1,
+    flexGrow: 1,
     [theme.breakpoints.down("sm")]: {
-      height:"100%" ,
+      flexGrow: 1,
+      height:"80vh",
+      marginTop:10
 
     },
   },
+  Divider:{
+    height:"10vh",
+    [theme.breakpoints.down("sm")]: {
+      height:"1vh",
+
+    },
+  },
+  
 }));
 
 const renderProfileName = (Profile, userId) => {
@@ -92,6 +110,15 @@ const renderProfileNumber = (Profile, userId) => {
     return Profile.Profile2.ProfileNumber;
   } else {
     return Profile.Profile1.ProfileNumber;
+  }
+};
+
+const renderProfilImage = (Profile, userId) => {
+  if (!Profile) return;
+  if (Profile.Profile1.ProfileNumber === userId) {
+    return Profile.Profile2?.imageProfile;
+  } else {
+    return Profile.Profile1?.imageProfile;
   }
 };
 
@@ -121,10 +148,26 @@ const Conversation = ({
   const [receivedMessage, setReceivedMessage] = useState(false);
   const [isBottom, setIsBottom] = useState(true);
   const [isAccepted, setIsAccepted] = useState(false);
-  const history = useNavigate()
-  const fromItem = useLocation().state
+  const [anchorEl, setAnchorEl] = useState(false);
+  const history = useNavigate();
+  const fromItem = useLocation().state;
+  const theme = useTheme();
+
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
+
   
-  console.log(fromItem)
+
+  const handleClick = () => {
+    setAnchorEl(true);
+  };
+
+  const handleClickAway = () => {
+    dispatch({type:ERROR_MESSAGE,payload:null})
+    setAnchorEl(false);
+  };
+
+  
+
 
   useEffect(() => {
     if (socket?.connected) {
@@ -144,17 +187,19 @@ const Conversation = ({
   }, [socket]);
 
   useEffect(() => {
-    if (isNumber(id)) {
+    if (!Number.isNaN(id)) {
       dispatch(getConv(id));
       dispatch(readMessage(id));
     }
   }, [dispatch, id]);
 
+  
+
   useEffect(() => {
     if (isBottom) {
       dispatch(receivedNewMessage(false));
     }
-  }, [newMessage]);
+  }, [newMessage,dispatch]);
 
   useEffect(() => {
     if (Profile) {
@@ -173,7 +218,7 @@ const Conversation = ({
         display="flex"
         justifyContent="center"
         width="100%"
-        height="100vh"
+        height={"100%"}
         alignItems="center"
       >
         <CircularProgress size={100} />
@@ -181,10 +226,26 @@ const Conversation = ({
     );
   }
 
+
   return (
-    <Box  style={{ backgroundColor: "#F5f5f3" }}>
-      <Box height="10vh" />
+    <Box style={{ backgroundColor: "#F5f5f3" }}>
+      <Box className={classes.Divider} />
       <Box className={classes.container}>
+        {anchorEl ? (
+          <PricePropose
+          item={fromItem}
+          Profile={Profile}
+          chat_id={id}
+          imageSender={imageSender}
+          userId={userId}
+          socket={socket}
+          id_Receiver={id_Receiver}
+            anchorEl={anchorEl}
+            handleClickAway={handleClickAway}
+            itemId={fromItem.id}
+            itemPrice={fromItem.Price}
+          />
+        ) : null}
         <Box
           className={classes.boxShadow}
           minHeight="70vh"
@@ -198,27 +259,27 @@ const Conversation = ({
             display="flex"
             alignItems="center"
           >
-          <Avatar
-            style={{ marginRight: 10 }}
-          />
-            <Typography style={{ fontSize: "1.2em" }} >
+            <Avatar   
+              alt={renderProfilImage(Profile, userId)}
+              style={{border:2,borderColor:"black"}}
+              src={`/imageProfile/${renderProfileNumber(Profile,userId)}/${renderProfilImage(Profile, userId)}`}></Avatar>
+            <Typography style={{ fontSize: "1.2em" ,marginLeft:5}}>
               {renderProfileName(Profile, userId)}
             </Typography>
-            
           </Box>
           <Divider />
 
-          {fromItem ? <React.Fragment>
-          <Box display={"flex"} padding={3}>
+          {fromItem ? (
+            <React.Fragment>
+              <Box display={"flex"} padding={3}>
                 <Box
-                style={{height:50,width:50}}
-                  
+                  style={{ height: 50, width: 50 }}
                   onClick={() => {
                     history(`/items/${fromItem.id}`);
                   }}
                 >
                   <img
-                      alt={`/images/${fromItem.id}/${fromItem.image[0].image}`}
+                    alt={`/images/${fromItem.id}/${fromItem.image[0].image}`}
                     src={`/images/${fromItem.id}/${fromItem.image[0].image}`}
                     style={{
                       width: "100%",
@@ -233,28 +294,57 @@ const Conversation = ({
                   flexDirection={"column"}
                   justifyContent="center"
                 >
-                  <Typography style={{ fontSize: 16 }}>{fromItem.Name}</Typography>
+                  <Typography style={{ fontSize: 16 }}>
+                    {fromItem.Name}
+                  </Typography>
                   <Typography style={{ fontSize: 16 }}>
                     {fromItem.Size} · {fromItem.item_brand[0].brand.Name}
                   </Typography>
                 </Box>
-              </Box>
-         
-          
-          <Divider /> 
-          </React.Fragment>
-          :null}
 
-          <Box flex={1}>
-          <MessageComponent
-            isBottom={isBottom}
-            setIsBottom={setIsBottom}
-            receivedMessage={receivedMessage}
-            setReceiveNewMessage={setReceivedMessage}
-            setIsAccepted={setIsAccepted}
-            isAccepted={isAccepted}
-          />
-          </Box>
+                <Box
+                  display={"flex"}
+                  flexGrow={1}
+                  alignItems="center"
+                  justifyContent={"center"}
+                >
+                  <Button variant="outlined" color="primary" onClick={handleClick}>
+                    Faire une offre
+                  </Button>
+
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ marginLeft: 5 }}
+                  >
+                    Voir plus d'items ?
+                  </Button>
+                </Box>
+              </Box>
+
+              <Divider />
+            </React.Fragment>
+          ) : null}
+
+          {!mobile ? <Box display={"flex"} flexGrow={2}>
+            <MessageComponent
+              isBottom={isBottom}
+              setIsBottom={setIsBottom}
+              receivedMessage={receivedMessage}
+              setReceiveNewMessage={setReceivedMessage}
+              setIsAccepted={setIsAccepted}
+              isAccepted={isAccepted}
+            />
+          </Box>: 
+            <MessageComponent
+              isBottom={isBottom}
+              setIsBottom={setIsBottom}
+              receivedMessage={receivedMessage}
+              setReceiveNewMessage={setReceivedMessage}
+              setIsAccepted={setIsAccepted}
+              isAccepted={isAccepted}
+            />
+         }
           {newMessage && !isBottom ? (
             <Box
               display={"flex"}
@@ -295,7 +385,9 @@ const Conversation = ({
             >
               <TextField
                 fullWidth
+                
                 type="submit"
+                
                 onKeyPress={(e) => {
                   if (e.key === "Enter" && Message.text.trim()) {
                     if (socket?.connected) {

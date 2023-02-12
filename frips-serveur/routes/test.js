@@ -87,7 +87,6 @@ router.post("/", async (req, res) => {
       },
     });
 
-    console.log(result);
     res.status(200).json(result);
   } catch (error) {
     console.log(error);

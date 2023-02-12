@@ -4,8 +4,7 @@ import { Box, InputAdornment, Popper, TextField } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
-import {
-    ClickAwayListener, Dialog, IconButton, makeStyles, MenuItem, Typography
+import { Dialog, IconButton, makeStyles, MenuItem, Typography
 } from "@material-ui/core";
 import { alpha } from "@material-ui/core/styles/colorManipulator";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
@@ -13,6 +12,7 @@ import _ from "lodash";
 
 import CloseIcon from "@material-ui/icons/Close";
 import { useSelector } from "react-redux";
+import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyles = makeStyles({
   pointer: {
@@ -48,7 +48,6 @@ const CostumBox = ({ item, setvalue, value }) => {
         className={classes.BoxItem}
         key={item.Name}
         onClick={() => {
-          console.log(_.includes(value, item));
           if (!_.find(value, item)) {
             if (value.length !== 2) {
               setvalue.setFieldValue("Color", [...value, item]);
@@ -83,7 +82,7 @@ const CostumBox = ({ item, setvalue, value }) => {
 const extractName = (field) => {
   let new_array = [];
 
-  field.map((item) => {
+  field?.map((item) => {
     if (item.Name) {
       new_array.push(item.Name);
     }
@@ -99,6 +98,8 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
   );
   const [anchorEl, setAnchorEl] = useState(null);
 
+  console.log(form)
+
   const renderedColorForm = ColorInfo.map((item, index) => {
     return (
       <CostumBox value={field.value} setvalue={form} item={item}></CostumBox>
@@ -109,7 +110,6 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
     setAnchorEl(e.currentTarget);
   };
 
-  console.log(field.value);
 
   const handleClickAway = () => {
     setAnchorEl(null);

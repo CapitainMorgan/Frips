@@ -1,22 +1,19 @@
 import {
-  Box,
-  ClickAwayListener, makeStyles, MenuItem, Popper, Typography
+  Box, makeStyles, MenuItem, Popper, Typography
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Catalogue } from "../Items/staticItems/staticItemName";
+import ClickAwayListener from "../SpecialComponent/ClickAwayListener";
 const useStyles = makeStyles((theme) => ({
   fakeBox: {
     cursor: "pointer",
-    padding: 8,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
     fontSize: 20,
-
-    "&:hover": {},
-  },
+    width:"100vh",  },
   BoxShadow: {
     boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
     backgroundColor: "white",
@@ -40,7 +37,6 @@ const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
   };
 
   const handleClickAway = (e) => {
-    e.stopPropagation();
 
     setAnchor(null);
   };
@@ -70,6 +66,7 @@ const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
               position="absolute"
               className={classes.BoxShadow}
               top={0}
+              marginTop={1.5}
               left={15}
               width={"100%"}
               display="flex"

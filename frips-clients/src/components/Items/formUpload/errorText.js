@@ -1,20 +1,22 @@
 import { Typography } from "@material-ui/core";
 import React from "react";
 
-const TextError = (props) => {
-  if (props.error) {
+
+
+
+
+const StepTextError = ({text}) => {
+  if (text) {
     return (
       <Typography style={{ color: "red", fontSize: "1.0em" }}>
-        {props.error.msg} !
+        {text} !
       </Typography>
     );
   } else {
     return (
-      <Typography style={{ color: "red", fontSize: "0.8em" }}>
-        {props.children}
-      </Typography>
+      <React.Fragment/>
     );
   }
 };
 
-export default TextError;
+export default StepTextError;

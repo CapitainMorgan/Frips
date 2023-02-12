@@ -11,6 +11,7 @@ const initialValues = {
     Catalogue: [],
     Couleur: [],
     Marque: [],
+    Taille: [],
     Price: [0, Number.POSITIVE_INFINITY],
     Etat: [],
     Search:[],

@@ -16,17 +16,17 @@ import LoginPage from "./Login/LoginPage";
 import Theme from "./NavBar/createUITheme";
 import UserProfile from "./Profil/Profil";
 
-
-
-
 import { Box } from "@material-ui/core";
 import { useTheme } from "@material-ui/core/styles";
 import _ from "lodash";
 import { Provider } from "react-redux";
 import {
-  getAllConv, getItemCreationInfo, handleNotificaiton,
+  getAllConv,
+  getItemCreationInfo,
+  handleNotificaiton,
+  idFavorite,
   loadUser,
-  setSocket
+  setSocket,
 } from "../actions";
 import CheckUrl from "../routes/CheckUrl";
 import store from "../store/store";
@@ -41,14 +41,16 @@ import PageNotFound from "./NavBar/PageNotFound";
 import MyFavorite from "./Profil/MyFavorite";
 import MyFrips from "./Profil/MyFrips/MyFrips";
 import NotificationComponent from "./Profil/NotificationComponent";
-import "./App.css"
+import "./App.css";
 import StripeContainer from "./Checkout/StripeContainer";
 import StatusPaymentComponent from "./Checkout/StatusPaymentComponent";
+import CheckOutComponent from "./Checkout/CheckOutComponent";
+import MemberProfile from "./Profil/MyFrips/Members/MemberProfile";
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
-const ENDPOINT = "192.168.1.105:5000";
+const ENDPOINT = "http://192.168.1.108:5000";
 const socket = io(ENDPOINT);
 
 const App = () => {
@@ -56,8 +58,9 @@ const App = () => {
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  
   useEffect(() => {
+    store.dispatch(idFavorite());
+
     socket.on("connect", () => {
       store.dispatch(setSocket(socket));
       store.dispatch(loadUser(socket));
@@ -79,7 +82,6 @@ const App = () => {
       }
     });
 
-
     return () => {
       socket.on("disconnect");
     };
@@ -89,13 +91,15 @@ const App = () => {
     store.getState().socket,
   ]);
 
- 
-  
-
   return (
     <Provider store={store}>
       <ThemeProvider theme={Theme}>
-        <Box display={"flex"} flexDirection="column" height={"100vh"}>
+        <Box
+          display={"flex"}
+          flexDirection="column"
+          height={"100vh"}
+          style={{ backgroundColor: "#F5f5f3" }}
+        >
           <Router>
             <Header />
             <NotificationComponent notification={notification} />
@@ -113,10 +117,8 @@ const App = () => {
                 key={"login"}
               />
               <Route path="/member" key={"member-management"}>
-                <Route path="/member/:name" element={<div style={{height:200}}>salut</div>} />
+                <Route path="/member/:name" element={<MemberProfile />} />
               </Route>
-
-              
 
               <Route path="/items" key={"items-id"}>
                 <Route path="/items/:id" element={<ItemPreview />} />
@@ -124,28 +126,34 @@ const App = () => {
                   path="/items/allNewItems"
                   element={<DisplayCatalogue />}
                 />
-
               </Route>
 
               <Route element={<PrivateRoute />} key={"private-route"}>
-                <Route path="/items/new" caseSensitive={false} element={<ItemCreate />} />
+                <Route
+                  path="/items/new"
+                  caseSensitive={false}
+                  element={<ItemCreate />}
+                />
                 <Route path="/settings/profile" element={<UserProfile />} />
                 <Route path="/members/myFrips" element={<MyFrips />} />
                 <Route path="/member/conversation" element={<Conversation />} />
                 <Route path="/member/myFavorite" element={<MyFavorite />} />
                 <Route path="/member/message/:id" element={<NewMessage />} />
                 <Route path="/items/edit/:id" element={<ItemEdit />} />
-                <Route path="/items/offer/:id" element={<div style={{height:200}}>salut</div>} />
-                <Route path="/payment/:id" element={<StripeContainer />} />
-                <Route path="/payment/:id/paymentStatus" element={<StatusPaymentComponent />} />
-
+                <Route
+                  path="/items/offer/:id"
+                  element={<div style={{ height: 200 }}>salut</div>}
+                />
+                <Route path="/payment/:id" element={<CheckOutComponent />} />
+                <Route
+                  path="/payment/:id/paymentStatus"
+                  element={<StatusPaymentComponent />}
+                />
               </Route>
-              <Route path="/filter" element={<DisplayCatalogue />}/>
-                
+              <Route path="/filter" element={<DisplayCatalogue />} />
 
               <Route path="/" key={"root-filter"}>
                 <Route index element={<ItemList />} />
-
 
                 <Route element={<CheckUrl />}>
                   <Route path=":upCategory" element={<DisplayCatalogue />}>

@@ -18,6 +18,7 @@ import { addFavorite, removeFavorite } from "../../../actions";
 
 const renderedItem = (state, classes, favorite, dispatch, history) => {
   return state.map((item, index) => {
+    console.log(item);
     if (index === state.length - 1) {
       return (
         <Box
@@ -74,8 +75,19 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
           <Card className={classes.BoxOneItem}>
             <CardHeader
               avatar={
-                <IconButton>
-                  <Avatar>S</Avatar>
+                <IconButton
+                  onClick={() => {
+                    history(`/member/${item.account.Pseudo}`);
+                  }}
+                >
+                  <Avatar
+                    style={{
+                      boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                      cursor: "pointer",
+                    }}
+                    alt={`${item.account.Pseudo}`}
+                    src={`/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+                  />
                 </IconButton>
               }
               titleTypographyProps={{
@@ -111,9 +123,9 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
               <IconButton
                 onClick={() => {
                   if (_.some(favorite, { id_Item: item.id })) {
-                    dispatch(removeFavorite(state[index].id,4));
+                    dispatch(removeFavorite(state[index].id, 4));
                   } else {
-                    dispatch(addFavorite(state[index].id,4));
+                    dispatch(addFavorite(state[index].id, 4));
                   }
                 }}
               >
@@ -137,7 +149,7 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
   });
 };
 
-const DisplayNewItems = ({ classes, favorite }) => {
+const DisplayNewItems = ({ classes, favorite, loading }) => {
   const history = useNavigate();
 
   const dispatch = useDispatch();
@@ -147,12 +159,14 @@ const DisplayNewItems = ({ classes, favorite }) => {
   const renderedItems = useMemo(() => {
     return renderedItem(items, classes, favorite, dispatch, history);
   }, [items, favorite]);
-
-  return <Box className={classes.GridSytem}>{renderedItems}</Box>;
+  if (!loading) {
+    return <Box className={classes.GridSytem}>{renderedItems}</Box>;
+  }
 };
 
 const mapStateToProps = (state) => ({
   items: state.items.newItem,
+  loading: state.items.loading,
 });
 
 export default connect(mapStateToProps)(DisplayNewItems);

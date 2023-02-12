@@ -14,8 +14,7 @@ const transformStringToUrl = (string) => {
 
 const checkUrl = (url, infoItem) => {
   const arrayUrl = Object.values(url);
-  
-  
+
   for (let index = 0; index < arrayUrl.length; index++) {
     const findCategory = _.find(infoItem, {
       Name: transformStringToUrl(arrayUrl[index]),
@@ -27,30 +26,17 @@ const checkUrl = (url, infoItem) => {
   return true;
 };
 
-
-const SearchUrl = ({ itemInfo,loading,loadingFilter }) => {
+const SearchUrl = ({ itemInfo, loading, loadingFilter }) => {
   const location = useParams();
   const dispatch = useDispatch();
   useEffect(() => {
-      if(!itemInfo && !loading){
+    if (!itemInfo && !loading) {
+      dispatch(getItemCreationInfo());
+    } 
+  }, [itemInfo, location]);
 
-        dispatch(getItemCreationInfo());
-
-      }
-      else if(itemInfo && !loading ){
-        dispatch(addToFilter(setLastOne(location,itemInfo.infoCategory),"Catalogue"))
-      }
-
- 
-   
-    
-  },[itemInfo,location]);
-
- 
-  
-  
   if (!itemInfo || loadingFilter) {
-    return(
+    return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
         display="flex"
@@ -61,31 +47,23 @@ const SearchUrl = ({ itemInfo,loading,loadingFilter }) => {
       >
         <CircularProgress size={100} />
       </Box>
-    )
-  }
-  else{
-    return (
-      checkUrl(location, itemInfo.infoCategory) && !loadingFilter  ? 
+    );
+  } else {
+    return checkUrl(location, itemInfo.infoCategory) && !loadingFilter ? (
       <React.Fragment>
-      <Outlet />
-      
+        <Outlet />
       </React.Fragment>
-
-      : 
-        <Navigate to="/PageIntrouvable" replace />
-      
-    )
+    ) : (
+      <Navigate to="/PageIntrouvable" replace />
+    );
   }
 };
 
-
-
 const mapStateToProps = (state) => ({
-  itemInfo:state.itemInfo.itemInfo,
+  itemInfo: state.itemInfo.itemInfo,
   loadingFilter: state.filterCatalogue.filterLoading,
-  
-  loading:state.itemInfo.loading
 
+  loading: state.itemInfo.loading,
 });
 
 export default connect(mapStateToProps)(SearchUrl);

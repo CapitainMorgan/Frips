@@ -12,8 +12,10 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import CloseIcon from "@material-ui/icons/Close";
 import axios from "axios";
-import DoneIcon from '@material-ui/icons/Done';
-import CancelIcon from '@material-ui/icons/Cancel';
+import DoneIcon from "@material-ui/icons/Done";
+import CancelIcon from "@material-ui/icons/Cancel";
+import { sendMessage } from "../../actions";
+import { connect } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   pointer: {
     cursor: "pointer",
@@ -59,89 +61,95 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-const loadingSendProposition = (succeed,loading) =>{
-  if(loading){
-    return <CircularProgress size={28} />
+const loadingSendProposition = (succeed, loading) => {
+  if (loading) {
+    return <CircularProgress size={28} />;
   }
-  if(succeed===1){
-    return <DoneIcon />
+  if (succeed === 1) {
+    return <DoneIcon />;
   }
-  if(succeed===2){
+  if (succeed === 2) {
     return (
-    <Box display={"flex"} flexDirection="column" justifyContent={"center"} alignItems="center">
-      <Typography style={{ fontSize: 14 ,color:"black"}}>Oups il semblerait que vous ayez déjà soumis une offre</Typography>
-    </Box>
-      )
+      <Box
+        display={"flex"}
+        flexDirection="column"
+        justifyContent={"center"}
+        alignItems="center"
+      >
+        <Typography style={{ fontSize: 14, color: "black" }}>
+          Oups il semblerait que vous ayez déjà soumis une offre
+        </Typography>
+      </Box>
+    );
+  } else {
+    return <Typography style={{ fontSize: 14 }}>Faire une offre</Typography>;
   }
-  else{
-    return <Typography style={{ fontSize: 14 }}>Faire une offre</Typography>
-  }
-  
-    
-  
-}
+};
 
-const displayColor = (succeed,loading) =>{
-  if(succeed ===0){
-    return "#82A0C2"
+const displayColor = (succeed, loading) => {
+  if (succeed === 0) {
+    return "#82A0C2";
   }
-  if(succeed ===1){
-    return "green"
+  if (succeed === 1) {
+    return "green";
   }
-  if(succeed ===2){
-    return "red"
+  if (succeed === 2) {
+    return "red";
   }
-
-}
+};
 
 const PricePropose = ({
-  idAccount,
-  itemId,
+  item,
   anchorEl,
+  imageSender,
+  Profile,
+  Message,
+  userId,
+  id_Receiver,
+  chat_id,
+  error,
+  itemId,
   handleClickAway,
   itemPrice,
+  socket,
 }) => {
   const classes = useStyles();
   const [Price, setPrice] = useState("");
-  const [succeed,SetSucceed] = useState(0)
-  const [loading,setLoading] = useState(false)
+  const [succeed, SetSucceed] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
-  
+
   const handleChange = (e) => {
     if (!isNaN(e.target.value)) {
       setPrice(e.target.value);
     }
   };
-  console.log(succeed)
 
-  const sendProposition = async (Price,idItem) =>{
+  const sendProposition = async (Price, idItem) => {
     try {
-      setLoading(true)
-       const succeed = await axios.post(`/api/items/proposition`, { Price,idItem });
-        if(succeed){
-
-        SetSucceed(1)
-        setLoading(false)
+      setLoading(true);
+      const succeed = await axios.post("/api/items/proposition", {
+        Price:Price,
+        idItem:idItem,
+      });
+      if (succeed) {
+        SetSucceed(1);
+        setLoading(false);
 
         setTimeout(() => {
-          handleClickAway()
+          handleClickAway();
         }, 2000);
-        }
-
-      
+      }
     } catch (error) {
-      setLoading(false)
+      setLoading(false);
 
-      SetSucceed(2)
+      SetSucceed(2);
       setTimeout(() => {
-        handleClickAway()
+        handleClickAway();
       }, 4000);
     }
-  }
-  console.log(succeed)
-  
+  };
 
   return (
     <Modal
@@ -176,7 +184,7 @@ const PricePropose = ({
           <TextField
             placeholder={`${itemPrice} CHF`}
             value={Price}
-            disabled={succeed===2}
+            disabled={succeed === 2}
             InputProps={{
               endAdornment: (
                 <InputAdornment position="end">
@@ -194,19 +202,65 @@ const PricePropose = ({
           />
           <Box height={10} />
           <Button
-            style={{ width: "100%", marginTop: 5,backgroundColor:displayColor(succeed) }}
+            style={{
+              width: "100%",
+              marginTop: 5,
+              backgroundColor: displayColor(succeed),
+            }}
             variant="contained"
-            disabled={loading || succeed===2}
+            disabled={loading || succeed === 2 || error}
             onClick={async () => {
-              sendProposition(Price,itemId)
+              if (item) {
+                if (socket?.connected) {
+                  setLoading(true)
+                  const data = {
+                    Message: "",
+                    id_Sender: userId,
+                    id_Receiver: id_Receiver(Profile, userId),
+                    id: chat_id,
+                    Profile: [
+                      Profile.Profile2.ProfileNumber,
+                      Profile.Profile1.ProfileNumber,
+                    ],
+                    date: new Date(),
+                    item,
+                    Price,
+                    imageSender: imageSender?.image ? imageSender : null,
+                  };
+                  dispatch(
+                    sendMessage(
+                      "",
+                      chat_id,
+                      id_Receiver(Profile, userId),
+                      userId,
+                      item,
+                      Price,
+                      data,
+                      socket
+                    )
+                  );
+                      
+                 
+
+                }
+              } else {
+                sendProposition(Price, itemId);
+              }
             }}
           >
-          {loadingSendProposition(succeed,loading)}
+            {loadingSendProposition(succeed, loading)}
+            {error ? <Typography style={{fontSize:16}}>{error}</Typography>:null}
+
           </Button>
+
         </Box>
       </Box>
     </Modal>
   );
 };
 
-export default PricePropose;
+const mapStateToProps = (state) => ({
+  error: state.messageReducer.error,
+});
+
+export default connect(mapStateToProps)(PricePropose);

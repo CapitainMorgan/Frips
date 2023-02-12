@@ -1,6 +1,8 @@
 @font-face {
-    font-family: "Lobster";
-    src: local("Lobster"),
-     url("./fonts/Lobster-Regular.ttf") format("truetype");
-    font-weight: bold;
+    font-family: 'Lobster';
+    src: local('Lobster'), url(../src/fonts/Lobster-Regular.ttf) format('truetype');
+}
+
+Typography {
+    font-family: Lobster;
 }

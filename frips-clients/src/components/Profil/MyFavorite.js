@@ -109,9 +109,9 @@ const renderedItem = (favoriteItems, classes, favorite, dispatch, navigate) => {
             <IconButton
               onClick={() => {
                 if (_.some(favorite, { id_Item: item.id })) {
-                  dispatch(removeFavorite(item.id, 2));
+                  dispatch(removeFavorite(item.id, 1));
                 } else {
-                  dispatch(addFavorite(item.id, 2));
+                  dispatch(addFavorite(item.id, 1));
                 }
               }}
             >

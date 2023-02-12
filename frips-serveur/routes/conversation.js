@@ -124,52 +124,83 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
   const { id } = req.user;
   const { id_Item } = req.body;
   const PricePropose = req.body.Price;
-
+  console.log(pricepropose);
+  console.log(id_Item);
+  console.log(req.body);
   try {
     if (id_Item && PricePropose) {
-      await pricepropose.upsert({
-        where:{
-          id_Account_id_Item:{
-            id_Account:id,
-            id_Item:id_Item
-          }
+      const { message: newMessage } = await chat.findUnique({
+        where: {
+          id: parseInt(id_Chat),
         },
-        create:{
-            id_Item: id_Item,
-            id_Account: id,
-            Price: parseInt(PricePropose),
-            dateApprove: null,
-            Approve: false,
-  
-          
+        select: {
+          message: {
+            where: {
+              item: {
+                pricepropose: {
+                  some: {
+                    SendDate: {
+                      gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
-        update:{
-            id_Item: id_Item,
-            id_Account: id,
-            Price: parseInt(PricePropose),
-            dateApprove: null,
-            Approve: false,
-  
-          
-        }
-
-        
       });
+
+      if (newMessage.length > 0) {
+        res.sendStatus(403);
+      } else {
+        console.log("passed");
+        await pricepropose.upsert({
+          where: {
+            id_Account_id_Item: {
+              id_Account: id,
+              id_Item: id_Item,
+            },
+          },
+          create: {
+            id_Item: id_Item,
+            id_Account: id,
+            Price: parseInt(PricePropose),
+            SendDate: new Date(),
+          },
+          update: {
+            id_Item: id_Item,
+            id_Account: id,
+            Price: parseInt(PricePropose),
+            SendDate: new Date(),
+          },
+        });
+        await message.create({
+          data: {
+            Unread: true,
+            Text: text,
+            Date_Houre: new Date(),
+            id_Sender: id,
+            id_Receiver: req.body.id_Receiver,
+            id_Chat: parseInt(id_Chat),
+            id_Item: Boolean(id_Item) ? id_Item : null,
+          },
+        });
+        return res.status(200).json("message send");
+      }
+    } else {
+      const msg = await message.create({
+        data: {
+          Unread: true,
+          Text: text,
+          Date_Houre: new Date(),
+          id_Sender: id,
+          id_Receiver: req.body.id_Receiver,
+          id_Chat: parseInt(id_Chat),
+          id_Item: Boolean(id_Item) ? id_Item : null,
+        },
+      });
+      res.status(200).json("message send");
     }
-
-    await message.create({
-      data: {
-        Unread: true,
-        Text: text,
-        Date_Houre: new Date(),
-        id_Sender: id,
-        id_Receiver: req.body.id_Receiver,
-        id_Item: id_Item,
-        id_Chat: parseInt(id_Chat),
-      },
-    });
-
-    res.status(200).json("message send");
   } catch (error) {
     console.log(error);
     res.status(500).send("Serveur error");
@@ -181,7 +212,7 @@ router.put("/updateMessage", auth, async (req, res) => {
   const { id } = req.user;
 
   try {
-   const Messages = await message.updateMany({
+    const Messages = await message.updateMany({
       where: {
         id_Chat: parseInt(id_Chat),
         id_Receiver: id,
@@ -190,7 +221,6 @@ router.put("/updateMessage", auth, async (req, res) => {
         Unread: false,
       },
     });
-
 
     res.status(200).json("Messages updates");
   } catch (error) {
@@ -211,14 +241,11 @@ router.get("/unReadNotification", auth, async (req, res) => {
               id,
             },
           },
-        }
-        ,
-         
-      },  
-      select:{
-        id:true
-      }
-      
+        },
+      },
+      select: {
+        id: true,
+      },
     });
     res.status(200).json(conversation);
   } catch (error) {
@@ -255,6 +282,7 @@ router.get("/MyConversation/lastMessage/:id", auth, async (req, res) => {
 
 router.get("/MyConversation/:id", auth, async (req, res) => {
   const { id } = req.params;
+  console.log("conversation");
 
   try {
     const messageNumber = await message.count({
@@ -284,7 +312,15 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
                   select: {
                     Price: true,
                     id_Account: true,
+                    dateApprove: true,
+                    Approve: true,
+                    id_Item: true,
+                    SendDate: true,
                   },
+                  orderBy: {
+                    Price: "desc",
+                  },
+                  take: 1,
                 },
               },
             },
@@ -315,7 +351,6 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
       },
     });
 
-
     const data = {
       Profile: {
         id: conv.account_accountTochat_id_Account_1.id,
@@ -333,7 +368,6 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
       messageNumber,
     };
 
-
     res.status(200).json(data);
   } catch (error) {
     console.log(error);
@@ -343,8 +377,6 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
 router.post("/MyConversation/:id", auth, async (req, res) => {
   const { id } = req.params;
   const { number } = req.body;
-
-  console.log(id)
 
   try {
     const conv = await chat.findUnique({
@@ -356,6 +388,7 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
           orderBy: {
             Date_Houre: "desc",
           },
+
           take: 20,
           skip: 20 * number,
           include: {
@@ -366,6 +399,14 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
                 },
                 Price: true,
                 Size: true,
+                pricepropose: {
+                  select: {
+                    Approve: true,
+                    dateApprove: true,
+                    id_Item: true,
+                  },
+                },
+                id: true,
               },
             },
           },
@@ -388,6 +429,42 @@ router.get("/myConversation", auth, async (req, res) => {
   const { id } = req.user;
 
   try {
+    const count = await chat.count({
+      where: {
+        OR: [
+          {
+            id_Account_1: id,
+          },
+          {
+            id_Account_2: id,
+          },
+        ],
+        AND: [
+          {
+            OR: [
+              {
+                NOT: {
+                  message: {
+                    every: {
+                      Text: null,
+                    },
+                  },
+                },
+              },
+              {
+                NOT: {
+                  message: {
+                    every: {
+                      id_Item: null,
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      },
+    });
     let myConversation = await chat.findMany({
       where: {
         OR: [
@@ -398,65 +475,57 @@ router.get("/myConversation", auth, async (req, res) => {
             id_Account_2: id,
           },
         ],
-        AND:[
-            {OR:[
-                {NOT:{
-                    message:{
-                        every:{
-                            Text:null
-                        }
-                    }
-                }},
-                {NOT:{
-                    message:{
-                        every:{
-                            id_Item:null
-                        }
-                    }
-                }},
-               
-            ]}
+        AND: [
+          {
+            OR: [
+              {
+                NOT: {
+                  message: {
+                    every: {
+                      Text: null,
+                    },
+                  },
+                },
+              },
+              {
+                NOT: {
+                  message: {
+                    every: {
+                      id_Item: null,
+                    },
+                  },
+                },
+              },
+            ],
+          },
         ],
-        
       },
-      
-      
-      
-      
-
 
       select: {
         message: {
-          take:1,
-          orderBy:{
-            Date_Houre:"desc"
+          take: 1,
+          orderBy: {
+            Date_Houre: "desc",
           },
-
-          
         },
 
-        id:true,
+        id: true,
 
-        
         account_accountTochat_id_Account_2: {
           select: {
             Pseudo: true,
-            id:true
+            id: true,
           },
         },
         account_accountTochat_id_Account_1: {
           select: {
             Pseudo: true,
-            id:true
+            id: true,
           },
         },
-
-      }
-      
+      },
     });
-
-   
-    res.status(200).json(myConversation);
+    res.status(200).json({ myConversation, count });
   } catch (error) {
     console.log(error);
     res.status(500).send("Serveur error : conversation");

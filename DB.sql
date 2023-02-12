@@ -91,18 +91,6 @@ CREATE TABLE Account(
    FOREIGN KEY(id_Address) REFERENCES Address(id)
 );
 
-CREATE TABLE Review(
-   id INT AUTO_INCREMENT,
-   Date_Houre DATETIME NOT NULL,
-   Note INT NOT NULL,
-   Text VARCHAR(255),
-   id_Account INT NOT NULL,
-   id_Transaction INT NOT NULL,
-   PRIMARY KEY(id),
-   FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Transaction) REFERENCES Transaction(id)
-);
-
 CREATE TABLE Chat(
    id INT AUTO_INCREMENT,
    id_Account_1 INT NOT NULL,
@@ -233,6 +221,18 @@ CREATE TABLE Item_Color(
    PRIMARY KEY(id_Item, id_Color),
    FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
    FOREIGN KEY(id_Color) REFERENCES Color(id)
+);
+
+CREATE TABLE Review(
+   id INT AUTO_INCREMENT,
+   Date_Houre DATETIME NOT NULL,
+   Note INT NOT NULL,
+   Text VARCHAR(255),
+   id_Account INT NOT NULL,
+   id_Transaction INT NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_Account) REFERENCES Account(id),
+   FOREIGN KEY(id_Transaction) REFERENCES Transaction(id)
 );
 
 CREATE TABLE Favorit(

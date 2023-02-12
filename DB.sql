@@ -97,8 +97,10 @@ CREATE TABLE Review(
    Note INT NOT NULL,
    Text VARCHAR(255),
    id_Account INT NOT NULL,
+   id_Transaction INT NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_Account) REFERENCES Account(id)
+   FOREIGN KEY(id_Account) REFERENCES Account(id),
+   FOREIGN KEY(id_Transaction) REFERENCES Transaction(id)
 );
 
 CREATE TABLE Chat(
@@ -142,7 +144,7 @@ CREATE TABLE Message(
    FOREIGN KEY(id_Sender) REFERENCES Account(id),
    FOREIGN KEY(id_Receiver) REFERENCES Account(id),
    FOREIGN KEY(id_Chat) REFERENCES Chat(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id)
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
 );
 
 CREATE TABLE Report(
@@ -151,17 +153,18 @@ CREATE TABLE Report(
    Text VARCHAR(255) NOT NULL,
    id_Item INT NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id)
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
 );
 
 CREATE TABLE Image(
    id INT AUTO_INCREMENT,
    image VARCHAR(255) NOT NULL,
+   confidencial BOOL NOT NULL,
    id_Item INT,
    id_Account INT,
    PRIMARY KEY(id),
    UNIQUE(id_Account),
-   FOREIGN KEY(id_Item) REFERENCES Item(id),
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
    FOREIGN KEY(id_Account) REFERENCES Account(id)
 );
 
@@ -169,7 +172,7 @@ CREATE TABLE Item_Category(
    id_Item INT,
    id_Category INT,
    PRIMARY KEY(id_Item, id_Category),
-   FOREIGN KEY(id_Item) REFERENCES Item(id),
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
    FOREIGN KEY(id_Category) REFERENCES Category(id)
 );
 
@@ -185,15 +188,16 @@ CREATE TABLE PricePropose(
    id_Account INT,
    id_Item INT,
    Price DOUBLE NOT NULL,
-   Approve BOOL NOT NULL,   
+   Approve BOOL NOT NULL, 
+	SendDate DATE NOT NULL,  
    dateApprove DATETIME,
-   PRIMARY KEY(id_Account, id_Item),
+   PRIMARY KEY(id_Account, id_Item, SendDate),
    FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id)
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
 );
 
 CREATE TABLE Transaction(
-   id VARCHAR(50) NOT NULL,
+   id INT AUTO_INCREMENT,
    id_Account INT NOT NULL,
    Price DOUBLE,
    Protection DOUBLE,
@@ -202,16 +206,16 @@ CREATE TABLE Transaction(
    DateSend DATETIME,
    StripeIdentifier VARCHAR(50),
    id_Item INT NOT NULL,
-   PRIMARY KEY(id_Account, id_Item),
+   PRIMARY KEY(id),
    FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id)
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
 );
 
 CREATE TABLE Item_Brand(
    id_Item INT,
    id_Brand INT,
    PRIMARY KEY(id_Item, id_Brand),
-   FOREIGN KEY(id_Item) REFERENCES Item(id),
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
    FOREIGN KEY(id_Brand) REFERENCES Brand(id)
 );
 
@@ -227,7 +231,7 @@ CREATE TABLE Item_Color(
    id_Item INT,
    id_Color INT,
    PRIMARY KEY(id_Item, id_Color),
-   FOREIGN KEY(id_Item) REFERENCES Item(id),
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
    FOREIGN KEY(id_Color) REFERENCES Color(id)
 );
 
@@ -236,7 +240,7 @@ CREATE TABLE Favorit(
    id_Item INT,
    PRIMARY KEY(id_Account, id_Item),
    FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id)
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
 );
 
 CREATE TABLE NbView(
@@ -244,16 +248,20 @@ CREATE TABLE NbView(
    id_Item INT,
    PRIMARY KEY(id_Account, id_Item),
    FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id)
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
 );
 
 CREATE TABLE Item_Fees(
    id_Item INT,
    id_Fees INT,
    PRIMARY KEY(id_Item, id_Fees),
-   FOREIGN KEY(id_Item) REFERENCES Item(id),
+   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
    FOREIGN KEY(id_Fees) REFERENCES Fees(id)
 );
+
+INSERT INTO `fees` (`id`, `Name`, `Description`, `Price`) VALUES
+	(1, 'Poste', 'Envoi par poste', 7),
+	(2, 'Main-propre', 'Livré en main-propre', 0);
 
 INSERT INTO `brand` (`id`, `Name`) VALUES
 	(13, 'Abercrombie & Fitch'),
@@ -589,4 +597,73 @@ INSERT INTO `category` (`id`, `Name`) VALUES
    (90,101),
    (90,102),
    (73,103),
-   (104,105);
+   (104,105),
+	(105,106),
+	(106,107),
+	(106,108),
+	(106,109),
+	(106,110),
+	(105,111),
+	(111,112),
+	(112,113),
+	(112,114),
+	(112,115),
+	(112,116),
+	(112,117),
+	(112,118),
+	(111,119),
+	(119,120),
+	(119,121),
+	(119,122),
+	(119,123),
+	(119,124),
+	(119,125),
+	(111,126),
+	(105,127),
+	(105,128),
+	(128,129),
+	(105,130),
+	(130,131),
+	(130,132),
+	(130,133),
+	(130,134),
+	(130,135),
+	(105,136),
+	(136,137),
+	(136,138),
+	(136,139),
+	(105,140),
+	(140,141),
+	(140,142),
+	(140,143),
+	(105,144),
+	(105,145),
+	(104,146),
+	(146,147),
+	(146,148),
+	(146,149),
+	(146,150),
+	(146,151),
+	(146,152),
+	(146,153),
+	(104,154),
+	(154,155),
+	(155,156),
+	(155,157),
+	(155,158),
+	(155,159),
+	(155,160),
+	(154,161),
+	(154,162),
+	(154,163),
+	(154,164),
+	(154,165),
+	(154,166),
+	(154,167),
+	(154,168),
+	(168,169),
+	(168,170),
+	(168,171),
+	(168,172),
+	(168,173),
+	(174,175);

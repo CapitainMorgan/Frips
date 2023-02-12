@@ -91,18 +91,6 @@ CREATE TABLE Account(
    FOREIGN KEY(id_Address) REFERENCES Address(id)
 );
 
-CREATE TABLE Review(
-   id INT AUTO_INCREMENT,
-   Date_Houre DATETIME NOT NULL,
-   Note INT NOT NULL,
-   Text VARCHAR(255),
-   id_Account INT NOT NULL,
-   id_Transaction INT NOT NULL,
-   PRIMARY KEY(id),
-   FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Transaction) REFERENCES Transaction(id)
-);
-
 CREATE TABLE Chat(
    id INT AUTO_INCREMENT,
    id_Account_1 INT NOT NULL,
@@ -188,8 +176,8 @@ CREATE TABLE PricePropose(
    id_Account INT,
    id_Item INT,
    Price DOUBLE NOT NULL,
-   Approve BOOL NOT NULL, 
-	SendDate DATE NOT NULL,  
+   Approve BOOL, 
+   SendDate DATE NOT NULL,  
    dateApprove DATETIME,
    PRIMARY KEY(id_Account, id_Item, SendDate),
    FOREIGN KEY(id_Account) REFERENCES Account(id),
@@ -204,11 +192,23 @@ CREATE TABLE Transaction(
    DateSell DATETIME NOT NULL,
    Status VARCHAR(50),
    DateSend DATETIME,
-   StripeIdentifier VARCHAR(50),
+   StripeIdentifier VARCHAR(255),
    id_Item INT NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_Account) REFERENCES Account(id),
    FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
+);
+
+CREATE TABLE Review(
+   id INT AUTO_INCREMENT,
+   Date_Houre DATETIME NOT NULL,
+   Note INT NOT NULL,
+   Text VARCHAR(255),
+   id_Account INT NOT NULL,
+   id_Transaction INT NOT NULL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_Account) REFERENCES Account(id),
+   FOREIGN KEY(id_Transaction) REFERENCES Transaction(id)
 );
 
 CREATE TABLE Item_Brand(
@@ -259,11 +259,13 @@ CREATE TABLE Item_Fees(
    FOREIGN KEY(id_Fees) REFERENCES Fees(id)
 );
 
-INSERT INTO `fees` (`id`, `Name`, `Description`, `Price`) VALUES
-	(1, 'Poste', 'Envoi par poste', 7),
-	(2, 'Main-propre', 'Livré en main-propre', 0);
+INSERT INTO `Fees` (`id`, `Name`, `Description`, `Price`) VALUES
+	(1, 'Livraison Poste Standard'  ,  '2 - 3 jours ouvrables'   ,  7),
+	(2, 'Livraison Poste Rapide',    '1 jour ouvrable'  ,   9),
+	(3, 'Livraison en main-propre'  ,  ''  , 0);
 
-INSERT INTO `brand` (`id`, `Name`) VALUES
+/*!40000 ALTER TABLE `Brand` ENABLE KEYS */;
+INSERT INTO `Brand` (`id`, `Name`) VALUES
 	(13, 'Abercrombie & Fitch'),
 	(5, 'Adidas'),
 	(17, 'Autre'),
@@ -281,11 +283,10 @@ INSERT INTO `brand` (`id`, `Name`) VALUES
 	(16, 'Sans marques'),
 	(9, 'Uniqlo'),
 	(2, 'Zara');
-/*!40000 ALTER TABLE `brand` ENABLE KEYS */;
 
 -- Listage des données de la table frips.color : ~18 rows (environ)
-/*!40000 ALTER TABLE `color` DISABLE KEYS */;
-INSERT INTO `color` (`id`, `Name`, `Code`) VALUES
+/*!40000 ALTER TABLE `Color` DISABLE KEYS */;
+INSERT INTO `Color` (`id`, `Name`, `Code`) VALUES
 	(1, 'Noir', '#000000'),
 	(2, 'Gris', '#919191'),
 	(3, 'Beige', '#F4E0C6'),
@@ -307,8 +308,8 @@ INSERT INTO `color` (`id`, `Name`, `Code`) VALUES
 /*!40000 ALTER TABLE `color` ENABLE KEYS */;
 
 -- Listage des données de la table frips.itemcondition : ~5 rows (environ)
-/*!40000 ALTER TABLE `itemcondition` DISABLE KEYS */;
-INSERT INTO `itemcondition` (`id`, `Name`, `Description`) VALUES
+/*!40000 ALTER TABLE `ItemCondition` DISABLE KEYS */;
+INSERT INTO `ItemCondition` (`id`, `Name`, `Description`) VALUES
 	(1, 'Neuf avec étiquette', 'Item neuf, jamais porté/utilisé avec étiquettes ou dans son emballage/boîte d\'origines'),
 	(2, 'Neuf sans étiquette', 'Item neuf, jamais porté/utilisé, sans étiquettes ni emballage d\'origine'),
 	(3, 'Très bon état', 'Item très peu porté/utilisé, qui peut avoir des légères imperfection mais qui reste en bon très bon état. Précise l\'état en ajoutant des photos et rajoutant dans la descripition, les défauts potentiels'),
@@ -316,7 +317,7 @@ INSERT INTO `itemcondition` (`id`, `Name`, `Description`) VALUES
 	(5, 'Correct', 'Item porté/utilisé souvent, montre les signes d\'usures et d\'imperfections. Précise l\'état en ajoutant des photos et rajoutant dans la descripition, les défauts potentiels');
 
 
-INSERT INTO `category` (`id`, `Name`) VALUES
+INSERT INTO `Category` (`id`, `Name`) VALUES
 	(1, 'Femme'),
 	(2, 'Vêtements'),
 	(3, 'Manteaux & vestes'),
@@ -494,7 +495,7 @@ INSERT INTO `category` (`id`, `Name`) VALUES
 	(175, 'Vêtements');
 
 
-   INSERT INTO `category_category` (`id_Parent`, `id_Child`) VALUES
+   INSERT INTO `Category_Category` (`id_Parent`, `id_Child`) VALUES
    (1,2),
    (2,3),
    (3,4),

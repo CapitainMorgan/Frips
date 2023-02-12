@@ -188,8 +188,8 @@ CREATE TABLE PricePropose(
    id_Account INT,
    id_Item INT,
    Price DOUBLE NOT NULL,
-   Approve BOOL NOT NULL, 
-	SendDate DATE NOT NULL,  
+   Approve BOOL, 
+   SendDate DATE NOT NULL,  
    dateApprove DATETIME,
    PRIMARY KEY(id_Account, id_Item, SendDate),
    FOREIGN KEY(id_Account) REFERENCES Account(id),
@@ -204,7 +204,7 @@ CREATE TABLE Transaction(
    DateSell DATETIME NOT NULL,
    Status VARCHAR(50),
    DateSend DATETIME,
-   StripeIdentifier VARCHAR(50),
+   StripeIdentifier VARCHAR(255),
    id_Item INT NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_Account) REFERENCES Account(id),
@@ -260,8 +260,9 @@ CREATE TABLE Item_Fees(
 );
 
 INSERT INTO `fees` (`id`, `Name`, `Description`, `Price`) VALUES
-	(1, 'Poste', 'Envoi par poste', 7),
-	(2, 'Main-propre', 'Livré en main-propre', 0);
+	(1, 'Livraison Poste Standard', '2 - 3 jours ouvrables', 7),
+	(2, 'Livraison Poste Rapide', '1 jour ouvrable', 9)
+	(3, 'Livraison en main-propre'  , '', 0);
 
 INSERT INTO `brand` (`id`, `Name`) VALUES
 	(13, 'Abercrombie & Fitch'),

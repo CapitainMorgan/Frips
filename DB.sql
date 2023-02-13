@@ -55,7 +55,7 @@ CREATE TABLE color(
    UNIQUE(Name)
 );
 
-CREATE TABLE itemCondition(
+CREATE TABLE itemcondition(
    id INT AUTO_INCREMENT,
    Name VARCHAR(50),
    Description VARCHAR(255),
@@ -115,7 +115,7 @@ CREATE TABLE item(
    id_ItemCondition INT NOT NULL,
    PRIMARY KEY(id),
    FOREIGN KEY(id_Seller) REFERENCES account(id),
-   FOREIGN KEY(id_ItemCondition) REFERENCES itemCondition(id)
+   FOREIGN KEY(id_ItemCondition) REFERENCES itemcondition(id)
 );
 
 
@@ -172,7 +172,7 @@ CREATE TABLE achievment_user(
    FOREIGN KEY(id_Achievement) REFERENCES achievement(id)
 );
 
-CREATE TABLE pricePropose(
+CREATE TABLE pricepropose(
    id_Account INT,
    id_Item INT,
    Price DOUBLE NOT NULL,
@@ -243,7 +243,7 @@ CREATE TABLE favorit(
    FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE 
 );
 
-CREATE TABLE nbView(
+CREATE TABLE nbview(
    id_Account INT,
    id_Item INT,
    PRIMARY KEY(id_Account, id_Item),
@@ -308,8 +308,8 @@ INSERT INTO `color` (`id`, `Name`, `Code`) VALUES
 /*!40000 ALTER TABLE `color` ENABLE KEYS */;
 
 -- Listage des données de la table frips.itemcondition : ~5 rows (environ)
-/*!40000 ALTER TABLE `itemCondition` DISABLE KEYS */;
-INSERT INTO `itemCondition` (`id`, `Name`, `Description`) VALUES
+/*!40000 ALTER TABLE `itemcondition` DISABLE KEYS */;
+INSERT INTO `itemcondition` (`id`, `Name`, `Description`) VALUES
 	(1, 'Neuf avec étiquette', 'Item neuf, jamais porté/utilisé avec étiquettes ou dans son emballage/boîte d\'origines'),
 	(2, 'Neuf sans étiquette', 'Item neuf, jamais porté/utilisé, sans étiquettes ni emballage d\'origine'),
 	(3, 'Très bon état', 'Item très peu porté/utilisé, qui peut avoir des légères imperfection mais qui reste en bon très bon état. Précise l\'état en ajoutant des photos et rajoutant dans la descripition, les défauts potentiels'),

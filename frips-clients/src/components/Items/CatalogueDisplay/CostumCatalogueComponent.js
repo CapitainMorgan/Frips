@@ -102,7 +102,7 @@ const CostumCatalogueComponent = ({ label, filter }) => {
           </Typography>
         </Box>
       ) : null}
-      <MenuItem
+      {depth!==0 ? <MenuItem
         className={classes.ItemBox}
         onClick={() => {
           if (
@@ -147,7 +147,7 @@ const CostumCatalogueComponent = ({ label, filter }) => {
           disableRipple
           disableTouchRipple
         ></Checkbox>
-      </MenuItem>
+      </MenuItem>:null}
       {navigation(depth, navigationValue).map((item, index) => {
         return (
           <MenuItem

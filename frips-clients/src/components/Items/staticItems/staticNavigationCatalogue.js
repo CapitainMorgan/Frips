@@ -53,7 +53,6 @@ export const navigationCatalogue = (
             className={classes.BoxItem}
             key={index}
             onClick={() => {
-              console.log(item)
               if (!Number.isNaN(item.sizeType)) {
 
                 setSize(oldArray => [...oldArray, item.sizeType]);

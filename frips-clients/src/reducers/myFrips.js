@@ -26,6 +26,7 @@ const initialValues = {
   purchase: [],
   filter: [],
   sellNotification: [],
+  purchaseNotifcation:[],
   propositionNotification: [],
   pagination: 1,
   msg: "",
@@ -41,6 +42,7 @@ export default (state = initialValues, action) => {
         ...state,
         items: payload.items,
         count: payload.count,
+        msg:payload.msg
       };
 
     case FETCH_MYSELL:
@@ -50,11 +52,11 @@ export default (state = initialValues, action) => {
           ...item,
           DateSell: new Date(DateSell),
           DateSend: DateSend,
-          account,
+          
           Price: item.Price,
           Price_Fees: Price - item.Price,
           review,
-
+          buyerAccount:account,
           Status,
         })
       );
@@ -72,8 +74,7 @@ export default (state = initialValues, action) => {
           DateSell: new Date(DateSell),
           DateSend: DateSend,
           review,
-
-          account,
+          buyerAccount:account,
           Price: item.Price,
           Price_Fees: Price - item.Price,
           Status,
@@ -157,6 +158,7 @@ export default (state = initialValues, action) => {
         ...state,
         propositionNotification: [...payload.resultsProposition],
         sellNotification: [...payload.resultsSell],
+        purchaseNotifcation:[...payload.resultsPurchase]
       };
     case STATUS_PROPOSITION:
       return {

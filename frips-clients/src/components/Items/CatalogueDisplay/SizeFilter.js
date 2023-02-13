@@ -120,7 +120,6 @@ const renderArraySize = (
 };
 
 const handleArray = (selectIndex) => {
-  console.log(selectIndex)
   
   if(selectIndex===0 || selectIndex===1){
     const subArray = [];
@@ -129,7 +128,6 @@ const handleArray = (selectIndex) => {
        subArray.push(itemToPush)
       })
     })
-    console.log(subArray)
     return subArray
   }
   else{

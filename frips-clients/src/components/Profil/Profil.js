@@ -16,6 +16,7 @@ import React, { useEffect, useRef, useState } from "react";
 import ReactAvatarEditor from "react-avatar-editor";
 import { useDispatch, useSelector } from "react-redux";
 import { changeImageProfile } from "../../actions";
+import API_ENDPOINT from "../../api/url";
 import ModalAdress from "./ModalAdress";
 
 const useStyles = makeStyles((theme) => ({
@@ -138,7 +139,6 @@ const UserProfile = () => {
   }, []);
 
   const handleScale = (e, value) => {
-    console.log(value);
     const scale = parseFloat(value);
     setSelectedImage({ ...selectedImage, scale: scale });
   };
@@ -198,8 +198,8 @@ const UserProfile = () => {
                   fontSize: 20,
                   boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
                 }}
-                alt={`${state.Pseudo}`}
-                src={`/imageProfile/${state.id}/${state.image?.image}`}
+                alt={`${API_ENDPOINT}/${state.Pseudo}`}
+                src={`${API_ENDPOINT}/imageProfile/${state.id}/${state.image?.image}`}
               />
 
               <Button
@@ -282,7 +282,6 @@ const UserProfile = () => {
                           style={{ width: "100%" }}
                           onClick={() => {
                             const canvas = editor.current.getImage();
-                            console.log(editor.current);
 
                             canvas.toBlob(function (blob) {
                               const file = new File(

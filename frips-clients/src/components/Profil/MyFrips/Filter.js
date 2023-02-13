@@ -74,7 +74,6 @@ const Filter = ({ id, classes, filterMyFrips }) => {
   const dispatch = useDispatch();
 
   const handleClick = (e) => {
-    console.log(e.currentTarget);
     setAnchorEl(e.currentTarget);
   };
 

@@ -173,7 +173,6 @@ const ImageBox = ({
     <Box
       style={{
         overflowX: "hidden",
-        backgroundColor: "blue",
         height: "100%",
         width: "100%",
       }}

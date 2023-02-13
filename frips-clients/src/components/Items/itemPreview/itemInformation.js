@@ -17,6 +17,7 @@ import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { newConv } from "../../../actions";
+import API_ENDPOINT from "../../../api/url";
 import PricePropose from "../../Checkout/PricePropose";
 const ItemInformation = ({ state, classes,review }) => {
   const history = useNavigate();
@@ -60,7 +61,7 @@ const ItemInformation = ({ state, classes,review }) => {
                       width: 50,
                     }}
                     alt={`${state.account.Pseudo}`}
-                    src={`/imageProfile/${state.account.id}/${state.account?.image?.image}`}
+                    src={`${API_ENDPOINT}/imageProfile/${state.account.id}/${state.account?.image?.image}`}
                   />
                 </IconButton>
               }

@@ -62,7 +62,6 @@ const PaymentForm = ({
 
     if (result.error) {
       // Show error to your customer (for example, payment details incomplete)
-      console.log(result.error.message);
       dispatch({ type: PAYMENT_FAILED });
       navigate(`/payment/${idItem}/paymentStatus`, { replace: true });
     } else {

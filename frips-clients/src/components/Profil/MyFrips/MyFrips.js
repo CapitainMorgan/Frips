@@ -189,7 +189,6 @@ const renderNavigationArray = (
   mobile
 ) => {
   return navigationArray.map((navigationItem, index) => {
-    console.log(propositionNotif);
     if (navigationItem.Name === "Mes ventes") {
       return (
         <Badge
@@ -361,16 +360,7 @@ const MyFrips = ({
               id={navigationId}
               classes={classes}
             />
-            <Button
-              style={{ marginLeft: 20 }}
-              color="primary"
-              variant="contained"
-              onClick={() => {
-                notify("caca");
-              }}
-            >
-              En savoir plus
-            </Button>
+           
           </Box>
         </Box>
 

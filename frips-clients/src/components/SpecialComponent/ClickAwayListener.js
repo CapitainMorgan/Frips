@@ -5,7 +5,6 @@ const ClickAwayListener = ({ children, onClickAway }) => {
   const [isClickInside, setIsClickInside] = useState(false);
 
   const handleClick = (e) => {
-    console.log(e)
     if (node.current.contains(e.target)) {
       setIsClickInside(true);
     } else {

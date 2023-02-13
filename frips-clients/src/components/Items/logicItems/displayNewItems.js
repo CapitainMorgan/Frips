@@ -15,10 +15,10 @@ import React, { useMemo } from "react";
 import { connect, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addFavorite, removeFavorite } from "../../../actions";
+import API_ENDPOINT from "../../../api/url";
 
 const renderedItem = (state, classes, favorite, dispatch, history) => {
   return state.map((item, index) => {
-    console.log(item);
     if (index === state.length - 1) {
       return (
         <Box
@@ -86,7 +86,7 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
                       cursor: "pointer",
                     }}
                     alt={`${item.account.Pseudo}`}
-                    src={`/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+                    src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
                   />
                 </IconButton>
               }
@@ -106,7 +106,7 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
               >
                 <img
                   alt={`/images/${state[index].id}/${state[index].image[0].image}`}
-                  src={`/images/${state[index].id}/${state[index].image[0].image}`}
+                  src={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               </CardActionArea>

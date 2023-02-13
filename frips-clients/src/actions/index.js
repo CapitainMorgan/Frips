@@ -1,5 +1,5 @@
-import axios from "axios";
 import _ from "lodash";
+import axiosInstance from "../api/api";
 import setAuthToken from "../utils/setAuthToken";
 import {
   ADD_FAVORITE,
@@ -88,7 +88,7 @@ export const loadUser = (socket) => async (dispatch) => {
   }
 
   try {
-    const res = await axios.get("/api/auth");
+    const res = await axiosInstance.get("/api/auth");
     dispatch({
       type: USER_LOADED,
       payload: res.data,
@@ -120,18 +120,17 @@ export const setSocket = (socket) => async (dispatch, getState) => {
 
 export const itemViewed = (id) => async (dispatch) => {
   try {
-    await axios.post("/api/items/view", { id }, config);
+    await axiosInstance.post("/api/items/view", { id }, config);
   } catch (error) {}
 };
 
 export const registerUser = (values, from, history) => async (dispatch) => {
   try {
-    const { data } = await axios.post(
+    const { data } = await axiosInstance.post(
       "/api/user",
       { ...values.step1, ...values.step2 },
       config
     );
-    console.log(data);
     dispatch({
       type: REGISTER_SUCCESS,
       payload: data,
@@ -150,7 +149,7 @@ export const registerUser = (values, from, history) => async (dispatch) => {
 
 export const userIfExist = (values, setActiveStep) => async (dispatch) => {
   try {
-    await axios.post("/api/user/checkUser", {
+    await axiosInstance.post("/api/user/checkUser", {
       Email: values.Email,
       Pseudo: values.Pseudo,
     });
@@ -169,7 +168,7 @@ export const userIfExist = (values, setActiveStep) => async (dispatch) => {
 
 export const login = (values, from, history) => async (dispatch) => {
   try {
-    const res = await axios.post("/api/auth", values, config);
+    const res = await axiosInstance.post("/api/auth", values, config);
     console.log(res);
     dispatch({
       type: LOGIN_SUCCES,
@@ -195,11 +194,15 @@ export const changeImageProfile = (image) => async (dispatch, getState) => {
     const formData = new FormData();
     formData.append("singleImage", image);
 
-    const { data } = await axios.post("/api/members/myProfile", formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
+    const { data } = await axiosInstance.post(
+      "/api/members/myProfile",
+      formData,
+      {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
 
     dispatch({ type: "IMAGE_CHANGE", payload: data });
   } catch (error) {
@@ -220,7 +223,6 @@ export const logout = (history) => (dispatch) => {
 
 export const createItem =
   (formValues, images, history) => async (dispatch, getState) => {
-    console.log(formValues);
     try {
       let formData = new FormData();
       for (const key in formValues) {
@@ -238,7 +240,7 @@ export const createItem =
         }
       }
 
-      const response = await axios.post("/api/items", formData);
+      const response = await axiosInstance.post("/api/items", formData);
 
       dispatch({ type: CREATE_ITEM, payload: response.data });
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: true });
@@ -254,7 +256,7 @@ export const fetchItems = (fromHome) => async (dispatch, getState) => {
   const loading = getState().items.loading;
 
   try {
-    const { data } = await axios.get("/api/items");
+    const { data } = await axiosInstance.get("/api/items");
     dispatch({ type: LOADING_FETCH_ITEM });
     dispatch({ type: FETCH_ITEMS, payload: data });
     dispatch(fetchNewItems());
@@ -265,13 +267,15 @@ export const fetchItems = (fromHome) => async (dispatch, getState) => {
 
 export const fetchNewItems = () => async (dispatch, getState) => {
   try {
-    const { data } = await axios.get("/api/items/new");
+    const { data } = await axiosInstance.get("/api/items/new");
     dispatch({ type: FETCH_NEW_ITEMS, payload: data });
   } catch (error) {}
 };
 
 export const fetchMoreItems = (number) => async (dispatch, getState) => {
-  const { data } = await axios.post(`/api/items/more`, { number: number });
+  const { data } = await axiosInstance.post(`/api/items/more`, {
+    number: number,
+  });
 
   dispatch({ type: GET_MORE_ITEMS, payload: data });
 };
@@ -284,7 +288,7 @@ export const fetchMyfrips = (url, type) => async (dispatch, getState) => {
   let numberCount;
   try {
     dispatch({ type: "LOADING_MYFRIPS" });
-    const { data } = await axios.post(url, { filter, number });
+    const { data } = await axiosInstance.post(url, { filter, number });
 
     newItemsDisplay = [...data.items];
     numberCount = data.count;
@@ -302,7 +306,7 @@ export const fetchMyfrips = (url, type) => async (dispatch, getState) => {
 export const fetchItem = (id) => async (dispatch) => {
   try {
     dispatch({ type: LOADING_FETCH_ITEM });
-    const response = await axios.get(`/api/items/${id}`);
+    const response = await axiosInstance.get(`/api/items/${id}`);
     dispatch({ type: FETCH_ITEM, payload: response.data });
     dispatch({ type: SUCCESS_FETCH_ITEM });
   } catch (error) {}
@@ -312,9 +316,7 @@ export const editItem = (id, formValues) => async (dispatch) => {
   try {
     dispatch({ type: "LOADING_ITEM" });
 
-    const response = await axios.get(`/api/edit/${id}`);
-
-    console.log(response);
+    const response = await axiosInstance.get(`/api/edit/${id}`);
 
     for (let index = 0; index < response.data.image.length; index++) {
       const blob = await (
@@ -386,7 +388,7 @@ export const editItemSend =
 
       formData.append("id_Item", id);
 
-      const response = await axios.post("/api/edit", formData);
+      const response = await axiosInstance.post("/api/edit", formData);
     } catch (error) {
       console.log(error);
     }
@@ -398,7 +400,9 @@ export const editItemSend =
 
 export const getItemForPropse = (id) => async (dispatch, getState) => {
   try {
-    const { data } = await axios.post("/api/items/ItemForPorpose", { id: id });
+    const { data } = await axiosInstance.post("/api/items/ItemForPorpose", {
+      id: id,
+    });
 
     dispatch({ type: GET_ITEM_PROPOSE, payload: data });
   } catch (error) {}
@@ -448,7 +452,7 @@ export const sendMessage =
           Date_Hour: new Date().toISOString(),
           item: null,
         };
-        await axios.post(
+        await axiosInstance.post(
           "/api/conversation/myConversation/newMessage",
           {
             Text,
@@ -476,7 +480,7 @@ export const sendMessage =
             image: [{ image: item.image[0].image }],
           },
         };
-        await axios.post(
+        await axiosInstance.post(
           "/api/conversation/myConversation/newMessage",
           {
             Text,
@@ -507,7 +511,11 @@ export const newConv = (id, item, history) => async (dispatch, getState) => {
     },
   };
   try {
-    const response = await axios.post("/api/conversation", { id: id }, config);
+    const response = await axiosInstance.post(
+      "/api/conversation",
+      { id: id },
+      config
+    );
     dispatch({ type: GENERATE_CONV, payload: response.data });
 
     if (response) {
@@ -519,7 +527,9 @@ export const newConv = (id, item, history) => async (dispatch, getState) => {
 
 export const getUnReadNotification = () => async (dispatch) => {
   try {
-    const { data } = await axios.get(`/api/conversation/unReadNotification`);
+    const { data } = await axiosInstance.get(
+      `/api/conversation/unReadNotification`
+    );
     dispatch({ type: "UNREAD_NOTIFICATION", payload: data });
   } catch (error) {
     console.log(error);
@@ -542,7 +552,7 @@ export const handleNotificaiton =
 
 export const readMessage = (id_Chat) => async (dispatch, getState) => {
   try {
-    await axios.put(`/api/conversation/updateMessage`, { id_Chat });
+    await axiosInstance.put(`/api/conversation/updateMessage`, { id_Chat });
     dispatch({ type: "READ_CONVERSATION", payload: { id: id_Chat } });
 
     dispatch({ type: "CLEAR_NOTIFICATION", payload: id_Chat });
@@ -553,7 +563,7 @@ export const readMessage = (id_Chat) => async (dispatch, getState) => {
 
 export const sendPropose = (Price, idItem) => async (dispatch, getState) => {
   try {
-    await axios.post(`/api/items/proposition`, { Price, idItem });
+    await axiosInstance.post(`/api/items/proposition`, { Price, idItem });
   } catch (error) {
     console.log(error);
   }
@@ -562,7 +572,9 @@ export const sendPropose = (Price, idItem) => async (dispatch, getState) => {
 export const getConv = (id) => async (dispatch) => {
   try {
     dispatch({ type: MESSAGE_LOADING });
-    const response = await axios.get(`/api/conversation/myConversation/${id}`);
+    const response = await axiosInstance.get(
+      `/api/conversation/myConversation/${id}`
+    );
     dispatch({ type: GET_CONV, payload: response.data });
     dispatch({ type: "MESSAGE_FETCH_SUCCESS" });
   } catch (error) {
@@ -574,7 +586,9 @@ export const getAllConv = () => async (dispatch) => {
   try {
     dispatch({ type: MESSAGE_LOADING });
 
-    const { data } = await axios.get(`/api/conversation/myConversation`);
+    const { data } = await axiosInstance.get(
+      `/api/conversation/myConversation`
+    );
 
     dispatch({ type: GET_ALL_CONV, payload: data });
     dispatch({ type: "MESSAGE_FETCH_SUCCESS" });
@@ -608,7 +622,7 @@ export const moreMessageLoading = () => async (dispatch, getState) => {
 export const getMoreMessage = (id, number) => async (dispatch, getState) => {
   moreMessageLoading();
   try {
-    const { data } = await axios.post(
+    const { data } = await axiosInstance.post(
       `/api/conversation/myConversation/${id}`,
       { number: number }
     );
@@ -625,7 +639,7 @@ export const getMoreMessage = (id, number) => async (dispatch, getState) => {
 
 export const deleteItem = (id_Item) => async (dispatch, getState) => {
   try {
-    const { data } = await axios.delete(
+    const { data } = await axiosInstance.delete(
       `/api/items/deleteItem/${id_Item}`,
       config
     );
@@ -676,7 +690,11 @@ export const addFavorite = (id, fromFavorite) => async (dispatch, getState) => {
     }
     dispatch({ type: ADD_FAVORITE, payload: { id_Item: id } });
 
-    await axios.post(`/api/items/favorit`, JSON.stringify(addId), config);
+    await axiosInstance.post(
+      `/api/items/favorit`,
+      JSON.stringify(addId),
+      config
+    );
   } catch (error) {
     console.log(error);
   }
@@ -701,7 +719,7 @@ export const removeFavorite =
         }
       }
       dispatch({ type: REMOVE_FAVORITE, payload: { id_Item: id } });
-      await axios.delete(`/api/items/favorit`, { data: addId }, config);
+      await axiosInstance.delete(`/api/items/favorit`, { data: addId }, config);
     } catch (error) {
       console.log(error);
     }
@@ -710,7 +728,9 @@ export const removeFavorite =
 export const fetchMyFavorite = (pagination) => async (dispatch, getState) => {
   try {
     dispatch({ type: "FETCH_FAVORITE" });
-    const { data } = await axios.post(`/api/items/favorit/all`, { pagination });
+    const { data } = await axiosInstance.post(`/api/items/favorit/all`, {
+      pagination,
+    });
     dispatch({ type: FETCH_MYFAVORITE, payload: data.items });
     dispatch({ type: NUMBER_COUNT, payload: data.count });
     dispatch(idFavorite());
@@ -720,7 +740,7 @@ export const fetchMyFavorite = (pagination) => async (dispatch, getState) => {
 
 export const idFavorite = () => async (dispatch) => {
   try {
-    const { data } = await axios.get("/api/items/Id_of_MyFavorite");
+    const { data } = await axiosInstance.get("/api/items/Id_of_MyFavorite");
     dispatch({ type: FETCH_MYFAVORITEIDs, payload: data });
   } catch (error) {}
 };
@@ -728,11 +748,13 @@ export const idFavorite = () => async (dispatch) => {
 ///FILTER ITEM ///
 
 export const filterCatalogue = (number) => async (dispatch) => {
-  //const response = await axios.get(`/api/items/Id_of_MyFavorite`)
+  //const response = await axiosInstance.get(`/api/items/Id_of_MyFavorite`)
 
   try {
     dispatch({ type: FETCH_FILTER });
-    const { data } = await axios.get("/api/items/filterCataloguePagination");
+    const { data } = await axiosInstance.get(
+      "/api/items/filterCataloguePagination"
+    );
     dispatch({ type: FETCH_ITEM_TYPE, payload: data });
   } catch (error) {}
 };
@@ -800,7 +822,7 @@ export const paginationForFilter = () => async (dispatch, getState) => {
 
   try {
     dispatch({ type: FETCH_FILTER });
-    const { data } = await axios.post("/api/items/pagination", {
+    const { data } = await axiosInstance.post("/api/items/pagination", {
       number,
       newCatalogue,
       newCouleur,
@@ -824,31 +846,40 @@ export const paginationForFilter = () => async (dispatch, getState) => {
   }
 };
 
+const WOMAN_ID = { Name: "Femme", id: 1 };
+const MAN_ID = { Name: "Homme", id: 101 };
+
 export const addFilterFromSearch =
   (string, findElement, history) => async (dispatch, getState) => {
-    const splitArray = string.split(/\b(?:a|the|was|\s)+\b/i);
     const array = getState().itemInfo.Search;
 
-    try {
-      dispatch({ type: "RESTORE" });
-      if (findElement) {
-        splitArray.forEach((element) => {
-          if (_.find(array[1], { Name: element })) {
-            dispatch(
-              addToFilter(_.find(array[1], { Name: element }), "Catalogue")
-            );
-          }
-          if (_.find(array[0], { Name: element })) {
-            dispatch(
-              addToFilter(_.find(array[0], { Name: element }), "Marque")
-            );
-          }
-        });
-        history(`/filter`);
+    if (string === "Femme") {
+      dispatch(addToFilter(WOMAN_ID, "Catalogue"));
+    } else if (string === "Homme") {
+      dispatch(addToFilter(MAN_ID, "Catalogue"));
+    } else {
+      const splitArray = string.split(/\b(?:a|the|was|\s)+\b/i);
+
+      try {
+        dispatch({ type: "RESTORE" });
+        if (findElement) {
+          splitArray.forEach((element) => {
+            if (_.find(array[1], { Name: element })) {
+              dispatch(
+                addToFilter(_.find(array[1], { Name: element }), "Catalogue")
+              );
+            }
+            if (_.find(array[0], { Name: element })) {
+              dispatch(
+                addToFilter(_.find(array[0], { Name: element }), "Marque")
+              );
+            }
+          });
+          history(`/filter`);
+        }
+      } catch (error) {
+        console.log(error);
       }
-      console.log(history);
-    } catch (error) {
-      alert(error);
     }
   };
 
@@ -862,7 +893,7 @@ export const succeedPayment =
   (idItem, StripeIdentifier, id_Account, navigate, id_Fees) =>
   async (dispatch, getState) => {
     try {
-      const { data } = await axios.post("/api/paymentIntent/succeed", {
+      const { data } = await axiosInstance.post("/api/paymentIntent/succeed", {
         idItem,
         StripeIdentifier,
         id_Account,
@@ -876,7 +907,7 @@ export const succeedPayment =
 export const getItemCreationInfo = () => async (dispatch, getState) => {
   try {
     dispatch({ type: FETCH_INFO_ITEM });
-    const { data } = await axios.get("/api/infoItem/info");
+    const { data } = await axiosInstance.get("/api/infoItem/info");
 
     dispatch({ type: INFO_ITEM, payload: data });
     dispatch({ type: "FETCH_INFO_ITEM_SUCCESS" });
@@ -886,7 +917,7 @@ export const getItemCreationInfo = () => async (dispatch, getState) => {
 export const getInfoSearch = () => async (dispatch, getState) => {
   try {
     dispatch({ type: FETCH_INFO_ITEM });
-    const { data } = await axios.get("/api/infoItem/search");
+    const { data } = await axiosInstance.get("/api/infoItem/search");
     dispatch({ type: SEARCH, payload: data });
     dispatch({ type: "FETCH_INFO_ITEM_SUCCESS" });
   } catch (error) {}
@@ -922,7 +953,7 @@ export const fetchPaymentInfo =
   (idItem, isFromProposition) => async (dispatch, getState) => {
     try {
       dispatch({ type: LOADING_PAYMENT });
-      const { data } = await axios.post(
+      const { data } = await axiosInstance.post(
         "/api/paymentIntent/info",
         { idItem, isFromProposition },
         config
@@ -937,7 +968,7 @@ export const fetchPaymentIntent =
   (idItem, id_Fees, isFromProposition) => async (dispatch, getState) => {
     try {
       dispatch({ type: LOADING_PAYMENT });
-      const { data } = await axios.post(
+      const { data } = await axiosInstance.post(
         "/api/paymentIntent/createCheckoutPayment",
         { idItem, id_Fees, isFromProposition },
         config
@@ -969,7 +1000,7 @@ export const sendSuccessFullPayment = (id) => async (dispatch, getSate) => {
 export const requestPayment = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: LOADING_PAYMENT });
-    const { data } = await axios.post(
+    const { data } = await axiosInstance.post(
       "/api/paymentIntent/info",
       { id },
       config
@@ -981,7 +1012,7 @@ export const requestPayment = (id) => async (dispatch, getState) => {
 
 export const updateAddress = (address) => async (dispatch, getState) => {
   try {
-    const { data } = await axios.post(
+    const { data } = await axiosInstance.post(
       "/api/members/updateAddress",
       address,
       config
@@ -995,7 +1026,7 @@ export const updateAddress = (address) => async (dispatch, getState) => {
 
 export const changeIban = (address) => async (dispatch, getState) => {
   try {
-    const { data } = await axios.post(
+    const { data } = await axiosInstance.post(
       "/api/members/updateIban",
       address,
       config
@@ -1009,7 +1040,7 @@ export const changeIban = (address) => async (dispatch, getState) => {
 
 export const getNotificationsMyFrips = () => async (dispatch, getState) => {
   try {
-    const { data } = await axios.get(
+    const { data } = await axiosInstance.get(
       "/api/members/myFripsNotifications",
       config
     );
@@ -1023,7 +1054,11 @@ export const getNotificationsMyFrips = () => async (dispatch, getState) => {
 export const changeStep =
   (id, type, id_transaction, url) => async (dispatch, getState) => {
     try {
-      await axios.post(`/api/members/${url}`, { id_transaction }, config);
+      await axiosInstance.post(
+        `/api/members/${url}`,
+        { id_transaction },
+        config
+      );
       dispatch({ type: type, payload: id });
     } catch (error) {
       console.log(error);
@@ -1041,7 +1076,7 @@ export const sendDateProposition =
     updateConv.item.pricepropose[0].dateApprove = dateApprove;
 
     try {
-      await axios.post(
+      await axiosInstance.post(
         `/api/members/StatusProposition`,
         { id_Item, approved, id_Account },
         config
@@ -1062,7 +1097,7 @@ export const sendStatusProposition =
     updateItems.pricepropose[0].dateApprove = dateApprove;
 
     try {
-      await axios.post(
+      await axiosInstance.post(
         `/api/members/StatusProposition`,
         { id_Item: id, approved, id_Account },
         config
@@ -1078,7 +1113,7 @@ export const fetchMembersInfo =
   (name, pagination) => async (dispatch, getState) => {
     try {
       dispatch({ type: MEMBERS_LOADING });
-      const { data } = await axios.post(
+      const { data } = await axiosInstance.post(
         `/api/members/${name}`,
         { number: pagination },
         config
@@ -1090,18 +1125,16 @@ export const fetchMembersInfo =
     }
   };
 
-  
 export const setReview =
-(note, id_transaction) => async (dispatch, getState) => {
-  try {
-    const { data } = await axios.post(
-      `/api/members/Rewiew`,
-      { note, id_transaction},
-      config
-    );
-    dispatch({ type: REVIEW, payload: data });
-  } catch (error) {
-    console.log(error);
-  }
-};
-
+  (note, id_transaction) => async (dispatch, getState) => {
+    try {
+      const { data } = await axiosInstance.post(
+        `/api/members/Rewiew`,
+        { note, id_transaction },
+        config
+      );
+      dispatch({ type: REVIEW, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };

@@ -14,6 +14,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import {
   addFavorite, handleClickAwaySecondPage, handleClickSecondPage
 } from "../../../actions";
+import API_ENDPOINT from "../../../api/url";
 import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 import SecondPageDialog from "./SecondPageDialog";
 
@@ -73,8 +74,8 @@ const renderItemForPropose = (state, classes, dispatch, isItemFrom) => {
               }}
             >
               <img
-                alt={`/images/${state[index].id}/${state[index].image[0].image}`}
-                src={`/images/${state[index].id}/${state[index].image[0].image}`}
+                alt={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
+                src={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </CardActionArea>

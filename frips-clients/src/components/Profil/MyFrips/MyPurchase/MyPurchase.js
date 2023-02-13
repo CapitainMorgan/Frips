@@ -5,20 +5,20 @@ import {
   CardActionArea,
   CircularProgress,
   makeStyles,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { BiPackage } from "react-icons/bi";
+import { TiWarning } from "react-icons/ti";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { changeMyFripsPagination, fetchMyfrips } from "../../../../actions";
-import { FETCH_MYPURCHASE, FETCH_MYSELL } from "../../../../actions/type";
-import { TiWarning } from "react-icons/ti";
-import DeliveryStep from "../MySell/DeliveryStep";
+import { FETCH_MYPURCHASE } from "../../../../actions/type";
+import API_ENDPOINT from "../../../../api/url";
 import MyPaginate from "../../../Footer/PaginationComponent";
 import PurchaseStep from "./PurchaseStep";
-
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -97,26 +97,55 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const renderDeliveryStep = ({ DateSend }) => {
+const renderDeliveryStep = ({ DateSend,review,Status }) => {
   if (!DateSend) {
     return (
       <Badge overlap="circle">
         <Box display={"flex"} alignItems="center">
           <Typography style={{ fontSize: 16 }} component="span" color="inherit">
-            <TiWarning color="#dc3545 " size={"1.7em"} />A livrer
+            <TiWarning color="#dc3545 " size={"1.7em"} />en cours d'envoi
           </Typography>
         </Box>
       </Badge>
     );
+  } 
+  if(DateSend && !Status){
+    return (
+      <Badge overlap="circle">
+        <Box display={"flex"} alignItems="center">
+          <Typography style={{ fontSize: 16 }} component="span" color="inherit">
+            <BiPackage color="#82A0C2 " size={"1.7em"} />envoie en transit
+          </Typography>
+        </Box>
+      </Badge>
+    );
+  }
+
+  if (DateSend && Boolean(review[0]?.Note)) {
+    return (
+      <Typography
+        style={{
+          borderRadius: 5,
+          padding: 5,
+          fontSize: 16,
+          border: "1px solid rgb(80, 220, 100)",
+          backgroundColor: "rgba(80, 220, 100,0.2)",
+        }}
+      >
+        Terminé
+      </Typography>
+    );
   } else {
     return (
-      <Badge
-        badgeContent={
-          <Typography component="span" color="inherit">
-            Laisser une Review
-          </Typography>
-        }
-      ></Badge>
+      <Typography
+        style={{
+          borderRadius: 5,
+          padding: 5,
+          fontSize: 18,
+        }}
+      >
+        Laisser une review
+      </Typography>
     );
   }
 };
@@ -124,6 +153,9 @@ const renderDeliveryStep = ({ DateSend }) => {
 const renderedItem = (classes, state, history) => {
   return state.map((item, index) => {
     const { account } = item;
+    const {buyerAccount} = item
+
+    console.log(item)
     return (
       <Box
         width={"100%"}
@@ -144,7 +176,7 @@ const renderedItem = (classes, state, history) => {
               >
                 <img
                   alt={state[index].image[0].id_Item}
-                  src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                  src={`${API_ENDPOINT}/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -165,18 +197,7 @@ const renderedItem = (classes, state, history) => {
               <Typography style={{ wordBreak: "break-word" }} color="primary">
                 {item.Name}
               </Typography>
-              <Box
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: 1,
-                }}
-              >
-                <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                  {item.Price} CHF
-                </Typography>
-                <Typography>{item.Size}</Typography>
-              </Box>
+              
             </Box>
             <Box
               display={"flex"}
@@ -214,7 +235,7 @@ const renderedItem = (classes, state, history) => {
                 justifyContent={"center"}
                 alignItems="center"
               >
-                <Typography>{"dsa"}</Typography>
+                <Typography>{item?.item_fees[0]?.fees?.Name}</Typography>
               </Box>
             </Box>
             <Box
@@ -232,7 +253,7 @@ const renderedItem = (classes, state, history) => {
                 alignItems="center"
               >
                 <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                  {item.Price}
+                  {item.Price} CHF
                 </Typography>
               </Box>
             </Box>
@@ -255,7 +276,7 @@ const renderedItem = (classes, state, history) => {
               </Box>
             </Box>
           </Box>
-          <PurchaseStep classesSell={classes} item={item} id={item.id} account={account} />
+          <PurchaseStep buyerAccount={buyerAccount} classesSell={classes} item={item} id={item.id} account={account} />
         </Card>
       </Box>
     );

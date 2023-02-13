@@ -31,7 +31,6 @@ const validationSchema = yup.object().shape({
 
 
 const renderTextField = (control, errors, initialValue) => {
-    console.log(errors)
   return Object.keys(initialValue).map((item) => {
     return (
       <Box marginTop={3} display="flex" alignItems={"center"}>
@@ -78,7 +77,6 @@ const ModalAdress = ({ classes, open, handleClose, address }) => {
     defaultValues: initialValue,
   });
 
-  console.log(errors)
 
   const onSubmit = (values) => {
     dispatch(updateAddress(values));

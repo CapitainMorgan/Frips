@@ -5,6 +5,7 @@ import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import API_ENDPOINT from "../../api/url";
 
 const useStyles = makeStyles((theme) => ({
   progressBarStyle: {
@@ -18,7 +19,6 @@ const clearWaitingQueue = () => {
 };
 
 const notify = (notification) => {
-  console.log(notification);
   toast.info(
     <Box fontSize={16} display="flex" alignItems={"center"}>
       <Box
@@ -28,8 +28,8 @@ const notify = (notification) => {
         justifyContent={"center"}
       >
         <Avatar
-          alt={`${notification.Pseudo}`}
-          src={`/imageProfile/${notification.id_Sender}/${notification.imageSender?.image}`}
+          alt={`${API_ENDPOINT}/${notification.Pseudo}`}
+          src={`${API_ENDPOINT}/imageProfile/${notification.id_Sender}/${notification.imageSender?.image}`}
         />
       </Box>
 
@@ -50,7 +50,6 @@ const notify = (notification) => {
 
 const NotificationComponent = ({ notification }) => {
   const classes = useStyles();
-  console.log(notification);
 
   useEffect(() => {
     if (notification !== null) {

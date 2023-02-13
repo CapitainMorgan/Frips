@@ -5,7 +5,7 @@ import StepTextError from "../Items/formUpload/errorText";
 import TextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "./TextFieldLogin";
 
-const FirsStep = ({ control, onSubmit, errors, getValues }) => {
+const FirsStep = ({ control, onSubmit, errors, getValues ,setshowPassword,showPassword}) => {
 
   return (
     <React.Fragment>
@@ -46,7 +46,7 @@ const FirsStep = ({ control, onSubmit, errors, getValues }) => {
           control={control}
           render={({ field }) => {
             return (
-              <TextFieldLogin {...{ ...field, placeholder: "Mot de passe" }} />
+              <TextFieldLogin {...{ ...field, placeholder: "Mot de passe",setshowPassword,showPassword }} />
             );
           }}
         />

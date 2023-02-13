@@ -1,5 +1,5 @@
 import {
-    Box, Checkbox, ListItemIcon, makeStyles, MenuItem, Popper, Typography
+    Box, Checkbox, ClickAwayListener, ListItemIcon, makeStyles, MenuItem, Popper, Typography
 } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -11,7 +11,6 @@ import _ from "lodash";
 import CostumCatalogueComponent from "./CostumCatalogueComponent";
 import CostumPriceComponent from "./CostumPriceComponent";
 import SizeFilter from "./SizeFilter";
-import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyles = makeStyles((theme) => ({
   BoxShadow: {

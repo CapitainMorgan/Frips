@@ -88,7 +88,6 @@ const StateForm = ({ field, form, mobile }) => {
     setAnchorEl(e.currentTarget);
   };
 
-  console.log(field.value);
 
   const handleClickAway = () => {
     setAnchorEl(null);

@@ -50,7 +50,6 @@ const DeliveryMethod = ({
 
   const renderDeliveryMethods = (arrayDelivery) => {
     return arrayDelivery?.map(({fees}) => {
-      console.log(fees)
       return (
         <Box
           className={classes.BoxItem}

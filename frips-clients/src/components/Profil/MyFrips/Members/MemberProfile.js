@@ -7,31 +7,23 @@ import {
   CircularProgress,
   Divider,
   IconButton,
-  makeStyles,
-  Slide,
-  Snackbar,
-  Typography,
+  makeStyles, Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import { Alert } from "@material-ui/lab";
 import _ from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
-  addFavorite,
-  changeMyFripsPagination,
-  fetchMembersInfo,
-  idFavorite,
-  removeFavorite,
+  addFavorite, fetchMembersInfo, removeFavorite
 } from "../../../../actions";
+import API_ENDPOINT from "../../../../api/url";
 import MyPaginate from "../../../Footer/PaginationComponent";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import InformationProfile from "./InformationProfile";
 
 const useStyles = makeStyles((theme) => ({
@@ -89,7 +81,7 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
             avatar={
                 <Avatar
                   alt={`${item.account.Pseudo}`}
-                  src={`/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+                  src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
                 />
             }
             titleTypographyProps={{
@@ -108,8 +100,8 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
               }}
             >
               <img
-                alt={`/images/${state[index].id}/${state[index].image[0].image}`}
-                src={`/images/${state[index].id}/${state[index].image[0].image}`}
+                alt={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
+                src={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </CardActionArea>
@@ -161,11 +153,9 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleChange = ({ selected }) => {
-    console.log(selected);
     setPagination(selected + 1);
   };
 
-  console.log(!account);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -231,7 +221,7 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
               navigate(`/member/${account?.Pseudo}`)
             }}
               alt={`${account?.Pseudo}`}
-              src={`/imageProfile/${account?.id}/${account?.image?.image}`}
+              src={`${API_ENDPOINT}/imageProfile/${account?.id}/${account?.image?.image}`}
               className={classes.large}
             />
             <InformationProfile account={account} items={items} />

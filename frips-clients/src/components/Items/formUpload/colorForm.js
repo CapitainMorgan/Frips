@@ -98,7 +98,6 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
   );
   const [anchorEl, setAnchorEl] = useState(null);
 
-  console.log(form)
 
   const renderedColorForm = ColorInfo.map((item, index) => {
     return (

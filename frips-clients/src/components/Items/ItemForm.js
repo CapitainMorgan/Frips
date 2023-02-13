@@ -109,7 +109,6 @@ const createSizeArray = (id) => {
 };
 
 const TextError = (props) => {
-  console.log(props);
   if (props.error) {
     return (
       <Typography style={{ color: "red", fontSize: "1.0em" }}>
@@ -233,7 +232,6 @@ const ItemForm = ({
       </Box>
     );
   } else {
-    console.log(initialValues)
     return (
       <Box style={{ backgroundColor: "#F5f5f3" }}>
         <Box width={"100%"} height={30} />
@@ -244,7 +242,6 @@ const ItemForm = ({
           validationSchema={validationSchema}
         >
           {(formik) => {
-            console.log(formik)
             return (
               <Form>
                 <Box className={classes.formContainer}>

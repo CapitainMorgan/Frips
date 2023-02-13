@@ -150,7 +150,6 @@ const MessageComponent = ({
     }
   }, []);
   const handleScroll = (e) => {
-    console.log(e.target.scrollTop === 0);
     if (e.target.scrollTop === 0) {
       setIsBottom(true);
     } else {

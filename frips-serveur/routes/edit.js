@@ -54,7 +54,7 @@ router.get("/:idItem", auth, async (req, res) => {
             },
             item_color: {
               select: {
-                color:true
+                color: true,
               },
             },
             item_category: {
@@ -72,7 +72,7 @@ router.get("/:idItem", auth, async (req, res) => {
       },
     });
 
-    console.log(item[0].item_color[0])
+    console.log(item[0].item_color[0]);
 
     res.status(200).json(item[0]);
   } catch (error) {
@@ -122,7 +122,6 @@ router.post("/", auth, upload, async (req, res) => {
     Color = Array.of(Color);
   }
 
-
   try {
     const ancientItem = await item.findUnique({
       where: {
@@ -152,7 +151,7 @@ router.post("/", auth, upload, async (req, res) => {
       },
     });
 
-    console.log(    ancientItem.item_fees)
+    console.log(ancientItem.item_fees);
     const exist = await brand.upsert({
       where: {
         Name: Brand,
@@ -213,24 +212,21 @@ router.post("/", auth, upload, async (req, res) => {
             };
           }),
         },
-      item_fees:{
-        deleteMany:{},
-        create:Delivery.map((id_Fees) => {
-          return {
-            fees: {
-              connect: {
-                id: parseInt(id_Fees),
+        item_fees: {
+          deleteMany: {},
+          create: Delivery.map((id_Fees) => {
+            return {
+              fees: {
+                connect: {
+                  id: parseInt(id_Fees),
+                },
               },
-            },
-          };
-        }),
+            };
+          }),
+        },
       },
-     
-      
-    }
-
     });
-   
+
     let pathDir = `public/images/${Item.id}`;
 
     fs.readdir(pathDir, (err, files) => {

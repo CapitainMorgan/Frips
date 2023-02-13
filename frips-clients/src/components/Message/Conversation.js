@@ -168,7 +168,6 @@ const AllConversations = () => {
   }, [dispatch,loading]);
 
   const classes = useStyles();
-  console.log(conversations.length)
 
   if (conversations.length === 0 && loading) {
     return (

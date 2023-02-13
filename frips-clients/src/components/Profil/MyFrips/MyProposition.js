@@ -20,6 +20,7 @@ import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { changeMyFripsPagination, fetchMyfrips } from "../../../actions";
 import { FETCH_PROPOSITION } from "../../../actions/type";
+import API_ENDPOINT from "../../../api/url";
 import MyPaginate from "../../Footer/PaginationComponent";
 import DeleteModal from "./DeleteModal";
 
@@ -151,7 +152,6 @@ const renderStatus = (id, Approve, dateApprove, history,id_proposition) => {
 };
 const renderedItem = (classes, items, history, handleClick, setNavigation) => {
   return items.map((item, index) => {
-    console.log(item);
     return (
       <Box
         width={"100%"}
@@ -171,8 +171,8 @@ const renderedItem = (classes, items, history, handleClick, setNavigation) => {
                 }}
               >
                 <img
-                  alt={items[index].image[0].id_Item}
-                  src={`http://localhost:5000/images/${items[index].image[0].id_Item}/${items[index].image[0].image}`}
+                  alt={`${API_ENDPOINT}/${items[index].image[0].id_Item}`}
+                  src={`${API_ENDPOINT}/images/${items[index].image[0].id_Item}/${items[index].image[0].image}`}
                   style={{
                     width: "100%",
                     height: "100%",

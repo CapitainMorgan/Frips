@@ -4,7 +4,6 @@ import {
   Button,
   makeStyles, Typography
 } from "@material-ui/core";
-import axios from "axios";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,6 +11,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { registerUser, userIfExist } from "../../actions";
 import { REGISTER_FAILURE } from "../../actions/type";
+import axiosInstance from "../../api/api";
 import StepTextError from "../Items/formUpload/errorText";
 import CostumStepper from "./CostumStepper";
 import FirsStep from "./FirsStep";
@@ -134,7 +134,7 @@ function getSteps() {
   return ["Créer un profile", "Valider ses informations personnels"];
 }
 const check = async (Email, Pseudo, dispatch) => {
-  axios
+  axiosInstance
     .post("/api/user/checkUser", { Email: Email, Pseudo: Pseudo })
     .then(() => {})
     .catch((error) => {
@@ -166,7 +166,6 @@ export const Register = () => {
     defaultValues: initialValue,
   });
   const pseudo = watch("step1.Pseudo"); // you can also target specific fields by their names
-  console.log(pseudo);
 
   const { Email, Pseudo, Password } = getValues().step1;
 
@@ -180,6 +179,8 @@ export const Register = () => {
             onSubmit={onSubmit}
             getValues={getValues}
             errors={errors}
+            showPassword={showPassword}
+            setshowPassword={setshowPassword}
           />
         );
       case 1:
@@ -201,8 +202,6 @@ export const Register = () => {
   const error = useSelector((state) => state.auth.error);
   const history = useNavigate();
   const handleNext = async () => {
-    console.log(getValues().step1);
-    console.log(validateEmail(Email));
     const results = await trigger([
       "step1.Email",
       "step1.Pseudo",
@@ -227,7 +226,6 @@ export const Register = () => {
   let { from } = location.state || { from: { pathname: "/" } };
 
   const onSubmit = (values) => {
-    console.log(values)
     dispatch(registerUser(values, from, history));
 
   };
@@ -249,6 +247,7 @@ export const Register = () => {
           className={classes.BoxShadow}
           display="flex"
           flexDirection="column"
+          marginBottom={10}
           padding={3}
         >
           <CostumStepper activeStep={activeStep} steps={steps} />
@@ -261,16 +260,7 @@ export const Register = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             {renderStepper(activeStep)}
-            <Button
-              style={{ width: "100%", height: 50 }}
-              variant="contained"
-              color="primary"
-              type="submit"
-            >
-              <Typography style={{ fontSize: 14, color: "white" }}>
-                S'inscrire
-              </Typography>
-            </Button>
+           
 
             {error ? (
               <Box marginTop={3}>
@@ -324,21 +314,6 @@ export const Register = () => {
           </form>
         </Box>
       </Box>
-      <div>
-        {activeStep === steps.length ? (
-          <div>
-            <Typography className={classes.instructions}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Reset
-            </Button>
-            <Button onClick={handleReset} className={classes.button}>
-              Valider
-            </Button>
-          </div>
-        ) : null}
-      </div>
     </Box>
   );
 };

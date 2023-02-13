@@ -8,7 +8,6 @@ const RatingComponent = ({ Pseudo, id, review }) => {
   const [value, setValue] = useState(review || 0);
   const dispatch = useDispatch();
 
-  console.log(review)
 
   return (
     <Box

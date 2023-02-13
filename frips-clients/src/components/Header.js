@@ -28,6 +28,7 @@ import ExpandMore from "@material-ui/icons/ExpandMore";
 import { useNavigate } from "react-router-dom";
 import Search from "./NavBar/Search";
 import SubHeaderManager from "./NavBar/SubHeaderManager";
+import API_ENDPOINT from "../api/url";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -301,7 +302,7 @@ const Header = ({ onSearchSubmit }) => {
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/items/Femme");
+                history("/Femme");
                 handleMobileMenuClose();
               }}
             >
@@ -310,7 +311,7 @@ const Header = ({ onSearchSubmit }) => {
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/items/Homme");
+                history("/Homme");
                 handleMobileMenuClose();
               }}
             >
@@ -342,21 +343,13 @@ const Header = ({ onSearchSubmit }) => {
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/items/Homme");
+                history("/members/myFrips");
                 handleMobileMenuClose();
               }}
             >
-              Mes Offres
+              Mes Annonces
             </MenuItem>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                history("/items/Homme");
-                handleMobileMenuClose();
-              }}
-            >
-              Créer une réduction
-            </MenuItem>
+            
             {isAuth(handleMenuDesktop)}
           </Box>
         </Box>
@@ -577,7 +570,7 @@ const Header = ({ onSearchSubmit }) => {
                           }}
                           onClick={handleMenuDesktop}
                           alt={`${state.user?.Pseudo}`}
-                          src={`/imageProfile/${state.user?.id}/${state.user?.image?.image}`}
+                          src={`${API_ENDPOINT}/imageProfile/${state.user?.id}/${state.user?.image?.image}`}
                         />
 
                         <Box

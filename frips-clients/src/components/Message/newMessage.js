@@ -34,6 +34,7 @@ import SecondPageDialog from "./CostumItem/SecondPageDialog";
 import { isNumber } from "lodash";
 import PricePropose from "../Checkout/PricePropose";
 import { ERROR_MESSAGE } from "../../actions/type";
+import API_ENDPOINT from "../../api/url";
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 65,
@@ -262,7 +263,7 @@ const Conversation = ({
             <Avatar   
               alt={renderProfilImage(Profile, userId)}
               style={{border:2,borderColor:"black"}}
-              src={`/imageProfile/${renderProfileNumber(Profile,userId)}/${renderProfilImage(Profile, userId)}`}></Avatar>
+              src={`${API_ENDPOINT}/imageProfile/${renderProfileNumber(Profile,userId)}/${renderProfilImage(Profile, userId)}`}></Avatar>
             <Typography style={{ fontSize: "1.2em" ,marginLeft:5}}>
               {renderProfileName(Profile, userId)}
             </Typography>

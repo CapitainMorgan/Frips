@@ -56,8 +56,7 @@ const filterArray = subArray.filter((el, index) => {
     return regex.test(el.Name);
   });
 })
-console.log(filterArray)
-console.log(matchSorter(filterArray,))
+
 return filterArray*/
 const options = {
   includeScore: true,
@@ -79,7 +78,6 @@ const WOMAN_ID = { Name: "Femme", id: 1 };
 const MAN_ID = { Name: "Homme", id: 101 };
 
 const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
-  console.log(arrays);
 
   const [arrayBrand, arrayCategory] = arrays;
   const suggestionArray = [];
@@ -115,7 +113,6 @@ const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
     suggestionArray.push(MAN_ID.Name);
   }
 
-  suggestionArray.push(`rechercher "${currentText}"`);
 
   return suggestionArray;
 };
@@ -130,6 +127,7 @@ const renderSuggestion = (suggestion,dispatch,history,handleMenuClose) => {
   return suggestion.map((item) => {
     return (
       <MenuItem style={{ height: 40 }} key={item} onClick={()=>{
+        console.log(item)
         
         dispatch(addFilterFromSearch(item,true,history))
         handleMenuClose()
@@ -205,9 +203,6 @@ const Search = ({ SearchInfo, loading ,loadingFilter}) => {
         <SearchIcon />
       </div>
         <InputBase
-          onClick={() => {
-            console.log(term);
-          }}
           ref={menuRef}
           spellCheck="false"
           style={{ zIndex: 1400 }}

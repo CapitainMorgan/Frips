@@ -27,6 +27,7 @@ import {
   fetchMyFavorite,
   removeFavorite,
 } from "../../actions/index";
+import API_ENDPOINT from "../../api/url";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -70,8 +71,8 @@ const renderedItem = (favoriteItems, classes, favorite, dispatch, navigate) => {
                     boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
                     cursor: "pointer",
                   }}
-                  alt={`${item?.account?.Pseudo}`}
-                  src={`/imageProfile/${item?.account?.id}/${item.account?.image?.image}`}
+                  alt={`${API_ENDPOINT}/${item?.account?.Pseudo}`}
+                  src={`${API_ENDPOINT}/imageProfile/${item?.account?.id}/${item.account?.image?.image}`}
                 />
               </IconButton>
             }
@@ -91,8 +92,8 @@ const renderedItem = (favoriteItems, classes, favorite, dispatch, navigate) => {
               }}
             >
               <img
-                alt={`/images/${item.id}/${item?.image[0]?.image}`}
-                src={`/images/${item.id}/${item?.image[0]?.image}`}
+                alt={`${API_ENDPOINT}/images/${item.id}/${item?.image[0]?.image}`}
+                src={`${API_ENDPOINT}/images/${item.id}/${item?.image[0]?.image}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </CardActionArea>

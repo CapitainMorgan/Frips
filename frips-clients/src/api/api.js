@@ -1,9 +1,8 @@
 import axios from "axios";
+import API_ENDPOINT from "./url";
 
-/* headers: {
-    Authorization: "Client-ID nl-wl_vcNXHaqMTJVLzw_iehEHgS9STryXVWe6ipgI8"
-}*/
+const axiosInstance = axios.create({
+  baseURL: API_ENDPOINT,
+});
 
-export default axios.create({
-    baseURL: 'http://localhost:8000/api',
-})
+export default axiosInstance;

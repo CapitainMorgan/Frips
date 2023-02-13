@@ -20,6 +20,7 @@ import { changeStep, review } from "../../../../actions";
 import { DELIVERY } from "../../../../actions/type";
 import DetailsDelivery from "./DetailsDelivery";
 import RatingComponent from "./RatingComponent";
+
 const useQontoStepIconStyles = makeStyles({
   root: {
     color: "#eaeaf0",
@@ -176,17 +177,6 @@ function getSteps() {
   return ["Livraison", "Review"];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return "Livraison";
-    case 1:
-      return "Review";
-
-    default:
-      return "Unknown step";
-  }
-}
 
 const handleNumberStep = ({ Status, DateSend,review }) => {
   if (!DateSend) {
@@ -202,7 +192,7 @@ const handleNumberStep = ({ Status, DateSend,review }) => {
   }
 };
 
-const DeliveryStep = ({ item, account, id, classesSell }) => {
+const DeliveryStep = ({ item, account, id, classesSell,buyerAccount }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [index, setindex] = useState(0);
@@ -218,7 +208,7 @@ const DeliveryStep = ({ item, account, id, classesSell }) => {
 
   const handleIndex = ({ Status, DateSend, id_transaction,review }) => {
     if (index === 0) {
-      return <DetailsDelivery classes={classesSell} account={account} />;
+      return <DetailsDelivery buyerAccount={buyerAccount} classes={classesSell} account={account} />;
     }
     if (index === 1 && Boolean(DateSend)) {
       return (
@@ -231,7 +221,7 @@ const DeliveryStep = ({ item, account, id, classesSell }) => {
       );
     } else
       return (
-        <DetailsDelivery classes={classesSell} item={item} account={account} />
+        <DetailsDelivery buyerAccount={buyerAccount} classes={classesSell} item={item} account={account} />
       );
   };
 

@@ -3,7 +3,7 @@ CREATE DATABASE `frips` /*!40100 COLLATE 'utf8_general_ci' */;
 
 USE `frips`;
 
-CREATE TABLE Achievement(
+CREATE TABLE achievement(
    id INT AUTO_INCREMENT,
    Name VARCHAR(50) NOT NULL,
    Color INT NOT NULL,
@@ -13,7 +13,7 @@ CREATE TABLE Achievement(
    PRIMARY KEY(id)
 );
 
-CREATE TABLE Moderator(
+CREATE TABLE moderator(
    id INT AUTO_INCREMENT,
    Email VARCHAR(255) NOT NULL,
    Password VARCHAR(60) NOT NULL,
@@ -23,7 +23,7 @@ CREATE TABLE Moderator(
    UNIQUE(Pseudo)
 );
 
-CREATE TABLE Address(
+CREATE TABLE address(
    id INT AUTO_INCREMENT,
    State VARCHAR(50),
    NPA SMALLINT NOT NULL,
@@ -34,20 +34,20 @@ CREATE TABLE Address(
    PRIMARY KEY(id)
 );
 
-CREATE TABLE Brand(
+CREATE TABLE brand(
    id INT AUTO_INCREMENT,
    Name VARCHAR(50) NOT NULL,
    PRIMARY KEY(id),
    UNIQUE(Name)
 );
 
-CREATE TABLE Category(
+CREATE TABLE category(
    id INT AUTO_INCREMENT,
    Name VARCHAR(50),
    PRIMARY KEY(id)
 );
 
-CREATE TABLE Color(
+CREATE TABLE color(
    id INT AUTO_INCREMENT,
    Name VARCHAR(50) NOT NULL,   
    Code VARCHAR(10) NOT NULL,
@@ -55,14 +55,14 @@ CREATE TABLE Color(
    UNIQUE(Name)
 );
 
-CREATE TABLE ItemCondition(
+CREATE TABLE itemCondition(
    id INT AUTO_INCREMENT,
    Name VARCHAR(50),
    Description VARCHAR(255),
    PRIMARY KEY(id)
 );
 
-CREATE TABLE Fees(
+CREATE TABLE fees(
    id INT AUTO_INCREMENT,
    Name VARCHAR(50),
    Description VARCHAR(255),
@@ -70,7 +70,7 @@ CREATE TABLE Fees(
    PRIMARY KEY(id)
 );
 
-CREATE TABLE Account(
+CREATE TABLE account(
    id INT AUTO_INCREMENT,
    Email VARCHAR(255) NOT NULL,
    Password VARCHAR(60) NOT NULL,
@@ -88,19 +88,19 @@ CREATE TABLE Account(
    UNIQUE(Email),
    UNIQUE(Pseudo),
    UNIQUE(TelNumber),
-   FOREIGN KEY(id_Address) REFERENCES Address(id)
+   FOREIGN KEY(id_Address) REFERENCES address(id)
 );
 
-CREATE TABLE Chat(
+CREATE TABLE chat(
    id INT AUTO_INCREMENT,
    id_Account_1 INT NOT NULL,
    id_Account_2 INT NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_Account_1) REFERENCES Account(id),
-   FOREIGN KEY(id_Account_2) REFERENCES Account(id)
+   FOREIGN KEY(id_Account_1) REFERENCES account(id),
+   FOREIGN KEY(id_Account_2) REFERENCES account(id)
 );
 
-CREATE TABLE Item(
+CREATE TABLE item(
    id INT AUTO_INCREMENT,
    Description VARCHAR(255),
    Name VARCHAR(50),
@@ -114,12 +114,12 @@ CREATE TABLE Item(
    id_Seller INT NOT NULL,
    id_ItemCondition INT NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_Seller) REFERENCES Account(id),
-   FOREIGN KEY(id_ItemCondition) REFERENCES ItemCondition(id)
+   FOREIGN KEY(id_Seller) REFERENCES account(id),
+   FOREIGN KEY(id_ItemCondition) REFERENCES itemCondition(id)
 );
 
 
-CREATE TABLE Message(
+CREATE TABLE message(
    id INT AUTO_INCREMENT,
    Text VARCHAR(255),
    Date_Houre DATETIME NOT NULL,
@@ -129,22 +129,22 @@ CREATE TABLE Message(
    id_Chat INT NOT NULL,
    id_Item INT,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_Sender) REFERENCES Account(id),
-   FOREIGN KEY(id_Receiver) REFERENCES Account(id),
-   FOREIGN KEY(id_Chat) REFERENCES Chat(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
+   FOREIGN KEY(id_Sender) REFERENCES account(id),
+   FOREIGN KEY(id_Receiver) REFERENCES account(id),
+   FOREIGN KEY(id_Chat) REFERENCES chat(id),
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE 
 );
 
-CREATE TABLE Report(
+CREATE TABLE report(
    id INT AUTO_INCREMENT,
    Date_Houre DATETIME NOT NULL,
    Text VARCHAR(255) NOT NULL,
    id_Item INT NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE 
 );
 
-CREATE TABLE Image(
+CREATE TABLE image(
    id INT AUTO_INCREMENT,
    image VARCHAR(255) NOT NULL,
    confidencial BOOL NOT NULL,
@@ -152,27 +152,27 @@ CREATE TABLE Image(
    id_Account INT,
    PRIMARY KEY(id),
    UNIQUE(id_Account),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
-   FOREIGN KEY(id_Account) REFERENCES Account(id)
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE,
+   FOREIGN KEY(id_Account) REFERENCES account(id)
 );
 
-CREATE TABLE Item_Category(
+CREATE TABLE item_category(
    id_Item INT,
    id_Category INT,
    PRIMARY KEY(id_Item, id_Category),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
-   FOREIGN KEY(id_Category) REFERENCES Category(id)
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE,
+   FOREIGN KEY(id_Category) REFERENCES category(id)
 );
 
-CREATE TABLE Achievment_User(
+CREATE TABLE achievment_user(
    id_Account INT,
    id_Achievement INT,
    PRIMARY KEY(id_Account, id_Achievement),
-   FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Achievement) REFERENCES Achievement(id)
+   FOREIGN KEY(id_Account) REFERENCES account(id),
+   FOREIGN KEY(id_Achievement) REFERENCES achievement(id)
 );
 
-CREATE TABLE PricePropose(
+CREATE TABLE pricePropose(
    id_Account INT,
    id_Item INT,
    Price DOUBLE NOT NULL,
@@ -180,11 +180,11 @@ CREATE TABLE PricePropose(
    SendDate DATE NOT NULL,  
    dateApprove DATETIME,
    PRIMARY KEY(id_Account, id_Item, SendDate),
-   FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
+   FOREIGN KEY(id_Account) REFERENCES account(id),
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE 
 );
 
-CREATE TABLE Transaction(
+CREATE TABLE transaction(
    id INT AUTO_INCREMENT,
    id_Account INT NOT NULL,
    Price DOUBLE,
@@ -195,11 +195,11 @@ CREATE TABLE Transaction(
    StripeIdentifier VARCHAR(255),
    id_Item INT NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
+   FOREIGN KEY(id_Account) REFERENCES account(id),
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE 
 );
 
-CREATE TABLE Review(
+CREATE TABLE review(
    id INT AUTO_INCREMENT,
    Date_Houre DATETIME NOT NULL,
    Note INT NOT NULL,
@@ -207,65 +207,65 @@ CREATE TABLE Review(
    id_Account INT NOT NULL,
    id_Transaction INT NOT NULL,
    PRIMARY KEY(id),
-   FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Transaction) REFERENCES Transaction(id)
+   FOREIGN KEY(id_Account) REFERENCES account(id),
+   FOREIGN KEY(id_Transaction) REFERENCES transaction(id)
 );
 
-CREATE TABLE Item_Brand(
+CREATE TABLE item_brand(
    id_Item INT,
    id_Brand INT,
    PRIMARY KEY(id_Item, id_Brand),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
-   FOREIGN KEY(id_Brand) REFERENCES Brand(id)
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE,
+   FOREIGN KEY(id_Brand) REFERENCES brand(id)
 );
 
-CREATE TABLE Category_Category(
+CREATE TABLE category_category(
    id_Parent INT,
    id_Child INT,
    PRIMARY KEY(id_Parent, id_Child),
-   FOREIGN KEY(id_Parent) REFERENCES Category(id),
-   FOREIGN KEY(id_Child) REFERENCES Category(id)
+   FOREIGN KEY(id_Parent) REFERENCES category(id),
+   FOREIGN KEY(id_Child) REFERENCES category(id)
 );
 
-CREATE TABLE Item_Color(
+CREATE TABLE item_color(
    id_Item INT,
    id_Color INT,
    PRIMARY KEY(id_Item, id_Color),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
-   FOREIGN KEY(id_Color) REFERENCES Color(id)
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE,
+   FOREIGN KEY(id_Color) REFERENCES color(id)
 );
 
-CREATE TABLE Favorit(
+CREATE TABLE favorit(
    id_Account INT,
    id_Item INT,
    PRIMARY KEY(id_Account, id_Item),
-   FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
+   FOREIGN KEY(id_Account) REFERENCES account(id),
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE 
 );
 
-CREATE TABLE NbView(
+CREATE TABLE nbView(
    id_Account INT,
    id_Item INT,
    PRIMARY KEY(id_Account, id_Item),
-   FOREIGN KEY(id_Account) REFERENCES Account(id),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE 
+   FOREIGN KEY(id_Account) REFERENCES account(id),
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE 
 );
 
-CREATE TABLE Item_Fees(
+CREATE TABLE item_fees(
    id_Item INT,
    id_Fees INT,
    PRIMARY KEY(id_Item, id_Fees),
-   FOREIGN KEY(id_Item) REFERENCES Item(id) ON DELETE CASCADE,
-   FOREIGN KEY(id_Fees) REFERENCES Fees(id)
+   FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE,
+   FOREIGN KEY(id_Fees) REFERENCES fees(id)
 );
 
-INSERT INTO `Fees` (`id`, `Name`, `Description`, `Price`) VALUES
+INSERT INTO `fees` (`id`, `Name`, `Description`, `Price`) VALUES
 	(1, 'Livraison Poste Standard'  ,  '2 - 3 jours ouvrables'   ,  7),
 	(2, 'Livraison Poste Rapide',    '1 jour ouvrable'  ,   9),
 	(3, 'Livraison en main-propre'  ,  ''  , 0);
 
-/*!40000 ALTER TABLE `Brand` ENABLE KEYS */;
-INSERT INTO `Brand` (`id`, `Name`) VALUES
+/*!40000 ALTER TABLE `brand` ENABLE KEYS */;
+INSERT INTO `brand` (`id`, `Name`) VALUES
 	(13, 'Abercrombie & Fitch'),
 	(5, 'Adidas'),
 	(17, 'Autre'),
@@ -285,8 +285,8 @@ INSERT INTO `Brand` (`id`, `Name`) VALUES
 	(2, 'Zara');
 
 -- Listage des données de la table frips.color : ~18 rows (environ)
-/*!40000 ALTER TABLE `Color` DISABLE KEYS */;
-INSERT INTO `Color` (`id`, `Name`, `Code`) VALUES
+/*!40000 ALTER TABLE `color` DISABLE KEYS */;
+INSERT INTO `color` (`id`, `Name`, `Code`) VALUES
 	(1, 'Noir', '#000000'),
 	(2, 'Gris', '#919191'),
 	(3, 'Beige', '#F4E0C6'),
@@ -308,8 +308,8 @@ INSERT INTO `Color` (`id`, `Name`, `Code`) VALUES
 /*!40000 ALTER TABLE `color` ENABLE KEYS */;
 
 -- Listage des données de la table frips.itemcondition : ~5 rows (environ)
-/*!40000 ALTER TABLE `ItemCondition` DISABLE KEYS */;
-INSERT INTO `ItemCondition` (`id`, `Name`, `Description`) VALUES
+/*!40000 ALTER TABLE `itemCondition` DISABLE KEYS */;
+INSERT INTO `itemCondition` (`id`, `Name`, `Description`) VALUES
 	(1, 'Neuf avec étiquette', 'Item neuf, jamais porté/utilisé avec étiquettes ou dans son emballage/boîte d\'origines'),
 	(2, 'Neuf sans étiquette', 'Item neuf, jamais porté/utilisé, sans étiquettes ni emballage d\'origine'),
 	(3, 'Très bon état', 'Item très peu porté/utilisé, qui peut avoir des légères imperfection mais qui reste en bon très bon état. Précise l\'état en ajoutant des photos et rajoutant dans la descripition, les défauts potentiels'),
@@ -317,7 +317,7 @@ INSERT INTO `ItemCondition` (`id`, `Name`, `Description`) VALUES
 	(5, 'Correct', 'Item porté/utilisé souvent, montre les signes d\'usures et d\'imperfections. Précise l\'état en ajoutant des photos et rajoutant dans la descripition, les défauts potentiels');
 
 
-INSERT INTO `Category` (`id`, `Name`) VALUES
+INSERT INTO `category` (`id`, `Name`) VALUES
 	(1, 'Femme'),
 	(2, 'Vêtements'),
 	(3, 'Manteaux & vestes'),
@@ -495,7 +495,7 @@ INSERT INTO `Category` (`id`, `Name`) VALUES
 	(175, 'Vêtements');
 
 
-   INSERT INTO `Category_Category` (`id_Parent`, `id_Child`) VALUES
+   INSERT INTO `category_category` (`id_Parent`, `id_Child`) VALUES
    (1,2),
    (2,3),
    (3,4),

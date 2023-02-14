@@ -17,9 +17,9 @@ import { useNavigate } from "react-router-dom";
 import { addFavorite, removeFavorite } from "../../../actions";
 import API_ENDPOINT from "../../../api/url";
 
-const renderedItem = (state, classes, favorite, dispatch, history) => {
+const renderedItem = (state, classes, favorite, dispatch, history,mobile) => {
   return state.map((item, index) => {
-    if (index === state.length - 1) {
+    if (index === state.length - 1 && !mobile) {
       return (
         <Box
           width={"100%"}
@@ -69,34 +69,45 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
           </Card>
         </Box>
       );
-    } else {
+    }
+    
+    if(index === state.length - 1 && mobile){
+      return;
+    }
+    
+    else {
       return (
         <Box width={"100%"} height={"100%"} padding={1}>
           <Card className={classes.BoxOneItem}>
-            <CardHeader
-              avatar={
-                <IconButton
-                  onClick={() => {
-                    history(`/member/${item.account.Pseudo}`);
-                  }}
-                >
-                  <Avatar
-                    style={{
-                      boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-                      cursor: "pointer",
-                    }}
-                    alt={`${item.account.Pseudo}`}
-                    src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
-                  />
-                </IconButton>
-              }
-              titleTypographyProps={{
-                style: {
-                  fontSize: 14,
-                },
+          <Box
+            display={"flex"}
+            alignItems="center"
+            
+            marginBottom={2}
+            width="100%"
+          >
+            <IconButton
+              onClick={() => {
+                history(`/member/${item.account.Pseudo}`);
               }}
-              title={item.account.Pseudo}
-            />
+            >
+              <Avatar
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                  cursor: "pointer",
+                }}
+                alt={`${item.account.Pseudo}`}
+                src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+              />
+            </IconButton>
+            <Typography
+              style={{
+                wordBreak:"break-all"
+              }}
+            >
+              {item.account.Pseudo}
+            </Typography>
+          </Box>
             <Box>
               <CardActionArea
                 style={{ width: "100%", height: 300 }}
@@ -149,7 +160,7 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
   });
 };
 
-const DisplayNewItems = ({ classes, favorite, loading }) => {
+const DisplayNewItems = ({ classes, favorite, loading,mobile }) => {
   const history = useNavigate();
 
   const dispatch = useDispatch();
@@ -157,7 +168,7 @@ const DisplayNewItems = ({ classes, favorite, loading }) => {
   const items = useSelector((state) => state.items.newItem);
 
   const renderedItems = useMemo(() => {
-    return renderedItem(items, classes, favorite, dispatch, history);
+    return renderedItem(items, classes, favorite, dispatch, history,mobile);
   }, [items, favorite]);
   if (!loading) {
     return <Box className={classes.GridSytem}>{renderedItems}</Box>;

@@ -11,11 +11,11 @@ import {
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import CloseIcon from "@material-ui/icons/Close";
-import axios from "axios";
 import DoneIcon from "@material-ui/icons/Done";
 import CancelIcon from "@material-ui/icons/Cancel";
 import { sendMessage } from "../../actions";
 import { connect } from "react-redux";
+import axiosInstance from "../../api/api";
 const useStyles = makeStyles((theme) => ({
   pointer: {
     cursor: "pointer",
@@ -129,7 +129,7 @@ const PricePropose = ({
   const sendProposition = async (Price, idItem) => {
     try {
       setLoading(true);
-      const succeed = await axios.post("/api/items/proposition", {
+      const succeed = await axiosInstance.post("/api/items/proposition", {
         Price:Price,
         idItem:idItem,
       });

@@ -12,7 +12,6 @@ const TextFieldLogin = (props) => {
     event.preventDefault();
   };
  
-  console.log(props.name ==="step1.Password")
   if(props.name ==="step1.Password"){
     return(
       <TextField

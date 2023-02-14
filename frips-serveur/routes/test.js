@@ -2,14 +2,22 @@ const express = require("express");
 const router = express.Router();
 const config = require("config");
 const { check, validationResult } = require("express-validator");
-
+const { JSDOM } = require("jsdom");
+const nodemailer = require('nodemailer');
+ 
 const { PrismaClient } = require("@prisma/client");
-
+const MyComponent = require("../email/email")
 const { account, item, category_category, brand} = new PrismaClient();
 
 // @route   POST api/users
 // @desc    Register user
 // @acces    Public
+
+const createHTMLElement = (html) => {
+  const { document } = new JSDOM(html).window;
+  return document.body.firstChild;
+};
+
 
 router.post("/", async (req, res) => {
   try {
@@ -95,10 +103,36 @@ router.post("/", async (req, res) => {
 });
 router.post("/s", async (req, res) => {
   try {
-  
-   
+    const transporter = nodemailer.createTransport({
+      service: 'smtp-mail.outlook.com',
+      
+      auth: {
+        user: 'StefanUpeski@hotmail.com',
+        pass: 'Suisse12',
+        
 
-    res.status(200).json([]);
+      }
+    });
+
+    const options = {
+      from: 'StefanUpeski@hotmail.com',
+      to: 'StefanUpeski@hotmail.com',
+      subject: 'hello world',
+      text:"salut",
+
+  
+    };
+    
+    transporter.sendMail(options, (error, info) => {
+      if (error) {
+        console.log(error)
+        res.status(500).send('Error sending email');
+      } else {
+        console.log('Email sent: ' + info.response);
+        res.status(200).send('Email sent successfully');
+      }
+    });
+
   } catch (error) {
     console.log(error);
     res.status(500).json("Server error");

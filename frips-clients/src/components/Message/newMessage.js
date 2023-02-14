@@ -280,8 +280,8 @@ const Conversation = ({
                   }}
                 >
                   <img
-                    alt={`/images/${fromItem.id}/${fromItem.image[0].image}`}
-                    src={`/images/${fromItem.id}/${fromItem.image[0].image}`}
+                    alt={`${API_ENDPOINT}/images/${fromItem.id}/${fromItem.image[0].image}`}
+                    src={`${API_ENDPOINT}/images/${fromItem.id}/${fromItem.image[0].image}`}
                     style={{
                       width: "100%",
                       height: "100%",

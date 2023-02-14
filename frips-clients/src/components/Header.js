@@ -117,6 +117,9 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     userSelect: "none",
     WebkitUserSelect: "none",
+    WebkitTapHighlightColor:"none",
+    WebkitTouchCallout:"none"
+    
   },
   BoxItem: {
     height: 50,
@@ -349,8 +352,7 @@ const Header = ({ onSearchSubmit }) => {
             >
               Mes Annonces
             </MenuItem>
-            
-            {isAuth(handleMenuDesktop)}
+            {isAuth(handleMobileMenuClose)}
           </Box>
         </Box>
 
@@ -490,7 +492,7 @@ const Header = ({ onSearchSubmit }) => {
               }}
             >
               <Typography className={classes.Logo}>
-                {mobile ? "F" : "Frips"}
+                {mobile ? "F" : "MyFrips"}
               </Typography>
             </Box>
             {!mobile ? (

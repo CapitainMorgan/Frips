@@ -32,6 +32,13 @@ const useStyles = makeStyles((theme) => ({
   BoxShadow: {
     boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
     backgroundColor: "white",
+    width:500,
+    [theme.breakpoints.down("sm")]: {
+      width: "auto",
+
+      left: "auto",
+      right: "auto",
+    },
   },
 }));
 
@@ -213,6 +220,8 @@ export const Register = () => {
     }
   };
 
+  console.log(activeStep)
+
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
   };
@@ -243,7 +252,7 @@ export const Register = () => {
         <Box height={"5vh"} />
 
         <Box
-          width={500}
+          
           className={classes.BoxShadow}
           display="flex"
           flexDirection="column"
@@ -267,7 +276,7 @@ export const Register = () => {
                 <StepTextError text={error?.msg} />
               </Box>
             ) : null}
-            {activeStep === steps.length ? (
+            {activeStep === steps.length-1 ? (
               <Box marginTop={5} width={"100%"}>
                 <Button
                   style={{ width: "100%", height: 50 }}

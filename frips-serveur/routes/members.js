@@ -160,10 +160,10 @@ const constructQueryMySell = (whereFilter) => {
   }
   whereFilter.map((item) => {
     if (item === 10) {
-      arrayWhere.push({ DateSend: { equals: null } });
+      arrayWhere.push({ DateSend: { equals: undefined } });
     }
     if (item === 11) {
-      arrayWhere.push({ DateSend: { not: { equals: null } } });
+      arrayWhere.push({ DateSend: { not: { equals: undefined } } });
     }
   });
   return arrayWhere;
@@ -280,7 +280,6 @@ router.post("/mySell", auth, async (req, res) => {
       skip: 5 * (number - 1),
     });
 
-    console.log(mySell);
 
     if (countMySell === 0 && filter.length !== 0) {
       res.status(200).json({

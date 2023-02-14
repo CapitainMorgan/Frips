@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: "repeat(5,20%)",
     width: "100%",
     position: "relative",
+    padding:3,
 
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -77,21 +78,35 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
     return (
       <Box width={"100%"} height={"100%"} padding={1} key={index}>
         <Card className={classes.BoxOneItem}>
-          <CardHeader
-            avatar={
-                <Avatar
-                  alt={`${item.account.Pseudo}`}
-                  src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
-                />
-            }
-            titleTypographyProps={{
-              style: {
-                fontSize: 14,
-                color: "#4D4D4D",
-              },
-            }}
-            title={item.account.Pseudo}
-          />
+        <Box
+            display={"flex"}
+            alignItems="center"
+            
+            marginBottom={2}
+            width="100%"
+          >
+            <IconButton
+              onClick={() => {
+                navigate(`/member/${item.account.Pseudo}`);
+              }}
+            >
+              <Avatar
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                  cursor: "pointer",
+                }}
+                alt={`${item.account.Pseudo}`}
+                src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+              />
+            </IconButton>
+            <Typography
+              style={{
+                wordBreak:"break-all"
+              }}
+            >
+              {item.account.Pseudo}
+            </Typography>
+          </Box>
           <Box>
             <CardActionArea
               style={{ width: "100%", height: 300 }}
@@ -194,7 +209,7 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
         justifyContent={"center"}
         alignItems="center"
       >
-        <Typography style={{ fontSize: 16 }}>{""}</Typography>
+        <Typography style={{ fontSize: 16 }}>{"aucun utilisateur"}</Typography>
       </Box>
     );
   }
@@ -228,7 +243,7 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
           </Box>
           <Divider />
   
-          <Box padding={3} className={classes.GridSytem} minHeight={300}>
+          <Box  className={classes.GridSytem} minHeight={300}>
             {renderedItem(items, classes, favorite, dispatch, navigate)}
           </Box>
           <Box className={classes.PaginationBox}>

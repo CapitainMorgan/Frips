@@ -46,12 +46,12 @@ import StripeContainer from "./Checkout/StripeContainer";
 import StatusPaymentComponent from "./Checkout/StatusPaymentComponent";
 import CheckOutComponent from "./Checkout/CheckOutComponent";
 import MemberProfile from "./Profil/MyFrips/Members/MemberProfile";
+import API_ENDPOINT from "../api/url";
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
-const ENDPOINT = "http://192.168.1.108:5000";
-const socket = io(ENDPOINT);
+const socket = io(API_ENDPOINT,{reconnection:true});
 
 const App = () => {
   const [notification, setNotification] = useState(null);

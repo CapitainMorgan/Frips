@@ -148,13 +148,11 @@ const PurchaseStep = ({ item, account, id, classesSell, buyerAccount }) => {
     setindex(handleNumberStep(item));
   }, [item]);
 
-  const handleIndex = ({ Status, DateSend, id_transaction, review },item) => {
+  const handleIndex = ({ Status, DateSend, id_transaction, review }, item) => {
     if (index === 0) {
-      console.log(item)
       return (
         <DetailsDelivery
-        item={item
-        }
+          item={item}
           buyerAccount={buyerAccount}
           classes={classesSell}
           account={account}
@@ -237,7 +235,7 @@ const PurchaseStep = ({ item, account, id, classesSell, buyerAccount }) => {
       </Box>
 
       <Divider />
-      {handleIndex(item,item)}
+      {handleIndex(item, item)}
     </div>
   );
 };

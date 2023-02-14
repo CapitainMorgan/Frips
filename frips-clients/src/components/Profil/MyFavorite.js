@@ -63,27 +63,35 @@ const renderedItem = (favoriteItems, classes, favorite, dispatch, navigate) => {
     return (
       <Box width={"100%"} height={"100%"} padding={1} key={index}>
         <Card className={classes.BoxOneItem}>
-          <CardHeader
-            avatar={
-              <IconButton>
-                <Avatar
-                  style={{
-                    boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-                    cursor: "pointer",
-                  }}
-                  alt={`${API_ENDPOINT}/${item?.account?.Pseudo}`}
-                  src={`${API_ENDPOINT}/imageProfile/${item?.account?.id}/${item.account?.image?.image}`}
-                />
-              </IconButton>
-            }
-            titleTypographyProps={{
-              style: {
-                fontSize: 14,
-                color: "#4D4D4D",
-              },
-            }}
-            title={item.account.Pseudo}
-          />
+        <Box
+            display={"flex"}
+            alignItems="center"
+            
+            marginBottom={2}
+            width="100%"
+          >
+            <IconButton
+              onClick={() => {
+                navigate(`/member/${item.account.Pseudo}`);
+              }}
+            >
+              <Avatar
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                  cursor: "pointer",
+                }}
+                alt={`${item.account.Pseudo}`}
+                src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+              />
+            </IconButton>
+            <Typography
+              style={{
+                wordBreak:"break-all"
+              }}
+            >
+              {item.account.Pseudo}
+            </Typography>
+          </Box>
           <Box>
             <CardActionArea
               style={{ width: "100%", height: 300 }}

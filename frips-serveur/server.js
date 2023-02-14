@@ -10,9 +10,9 @@ const io = require("socket.io")(server, {
   cors: {
     origin: "*",
   },
-  forceNew: true,
-  upgrade: false,
-  rejectUnauthorized: false,
+      forceNew: true,
+      upgrade: false,
+      rejectUnauthorized: false,
 });
 const { PrismaClient } = require("@prisma/client");
 let onlineUsers = [];

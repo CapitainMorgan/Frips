@@ -460,7 +460,7 @@ INSERT INTO `category` (`id`, `Name`) VALUES
 	(140, 'Vêtements de sports'),
 	(141, 'Survêtements'),
 	(142, 'Shorts de sport'),
-	(143, 'Hauts et tee-shirts'),
+	(143, 'Hauts & T-shirts'),
 	(144, 'Maillots de bain'),
 	(145, 'Autres vêtements'),
 	(146, 'Chaussures'),

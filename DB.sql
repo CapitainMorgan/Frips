@@ -179,7 +179,7 @@ CREATE TABLE pricepropose(
    Approve BOOL, 
    SendDate DATE,  
    dateApprove DATETIME,
-   PRIMARY KEY(id_Account, id_Item, SendDate),
+   PRIMARY KEY(id_Account, id_Item),
    FOREIGN KEY(id_Account) REFERENCES account(id),
    FOREIGN KEY(id_Item) REFERENCES item(id) ON DELETE CASCADE 
 );

@@ -602,11 +602,29 @@ router.post("/pagination", async (req, res) => {
 
   try {
     const count = await item.count({
-      where: isFilter(req.body),
+      where:{
+        OR:isFilter(req.body),
+        transaction:{
+          some:{
+            DateSell:{
+              equals:undefined
+            }
+          }
+        }
+      }
     });
 
     const Item = await item.findMany({
-      where: isFilter(req.body),
+      where:{
+        OR:isFilter(req.body),
+        transaction:{
+          some:{
+            DateSell:{
+              equals:undefined
+            }
+          }
+        }
+      },
       include: {
         image: {
           take: 1,

@@ -174,7 +174,7 @@ const renderedItem = (classes, state, history) => {
 
             <Box padding={2} className={classes.details}>
               <Typography style={{ wordBreak: "break-word" }} color="primary">
-                {item.Name}
+                {item?.Name}
               </Typography>
              
             </Box>
@@ -184,7 +184,7 @@ const renderedItem = (classes, state, history) => {
 
               <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 15 }}>
-                  {account.Pseudo}
+                  {account?.Pseudo}
                 </Typography>
               </Box>
             </Box>

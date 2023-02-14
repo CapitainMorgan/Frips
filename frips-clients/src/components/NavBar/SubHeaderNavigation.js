@@ -87,7 +87,7 @@ const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
                   );
                 })}
               </Box>
-              <Box width={"70%"}>
+              <Box  width={"70%"}>
                 <Box display="grid" gridTemplateColumns="repeat(2,50%)">
                   {Catalogue[0].subitems[indexItem].subitems.map(
                     (item, index) => {
@@ -96,7 +96,7 @@ const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
                           key={index}
                           disableTouchRipple
                           disableGutters
-                          style={{ height: 50, fontSize: 16 }}
+                          style={{ height: 50, fontSize: 16,color:"black" }}
                           onClick={(e) => {
                             thirdQuery = "/" + transformStringToUrl(item.Name);
                             handleClickAway(e);

@@ -165,7 +165,7 @@ const ItemPreview = (props) => {
                 review={singleItem.review}
               />
             </Box>
-            <Box height={5} width={"100%"}></Box>
+            <Box  height={"10vh"} width={"100%"}></Box>
 
             <Box className={classes.ArticleProfil}>
               <ItemProfil
@@ -181,7 +181,7 @@ const ItemPreview = (props) => {
               </Typography>
             </Box>
 
-            <Box height={2} width={"100%"} />
+            <Box height={"5vh"} width={"100%"} />
 
             <Box className={classes.ArticleProfil}>
               <ItemProfil

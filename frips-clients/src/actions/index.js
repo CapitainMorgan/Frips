@@ -169,7 +169,6 @@ export const userIfExist = (values, setActiveStep) => async (dispatch) => {
 export const login = (values, from, history) => async (dispatch) => {
   try {
     const res = await axiosInstance.post("/api/auth", values, config);
-    console.log(res);
     dispatch({
       type: LOGIN_SUCCES,
       payload: res.data,

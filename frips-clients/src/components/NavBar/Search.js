@@ -127,7 +127,6 @@ const renderSuggestion = (suggestion,dispatch,history,handleMenuClose) => {
   return suggestion.map((item) => {
     return (
       <MenuItem style={{ height: 40 }} key={item} onClick={()=>{
-        console.log(item)
         
         dispatch(addFilterFromSearch(item,true,history))
         handleMenuClose()

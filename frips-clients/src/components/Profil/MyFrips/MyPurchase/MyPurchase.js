@@ -155,7 +155,6 @@ const renderedItem = (classes, state, history) => {
     const { account } = item;
     const {buyerAccount} = item
 
-    console.log(item)
     return (
       <Box
         width={"100%"}

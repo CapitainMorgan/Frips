@@ -71,7 +71,7 @@ const ItemInformation = ({ state, classes,review }) => {
                 onClick={() => {
                   history(`/member/${state.account.Pseudo}`);
                 }}
-                style={{ fontSize: 16, cursor: "pointer" }}
+                style={{ fontSize: 16, cursor: "pointer",wordBreak:"break-word" }}
               >
                 {state.account.Pseudo}
               </Typography>

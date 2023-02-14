@@ -6,11 +6,12 @@ import {
   Typography
 } from "@material-ui/core";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate, useParams,useCon, useLocation } from "react-router-dom";
 import { fetchPaymentInfo, fetchPaymentIntent } from "../../actions";
+import axiosInstance from "../../api/api";
+import API_ENDPOINT from "../../api/url";
 import Adress from "./Adress";
 import DeliveryMethod from "./DeliveryMethod";
 import StripeContainer from "./StripeContainer";
@@ -142,7 +143,7 @@ const CheckOut = ({ loading, cs, item, idAccount }) => {
 
   useEffect(() => {
     async function fetchData(isRerseved) {
-      await axios.post("/api/paymentIntent/reserved", {
+      await axiosInstance.post("/api/paymentIntent/reserved", {
         idItem: id,
         isRerseved: isRerseved,
       });
@@ -204,8 +205,8 @@ const CheckOut = ({ loading, cs, item, idAccount }) => {
                 >
                   <img
                     id={`payment-${item.id}`}
-                    alt={`/images/${item.id}/${item.image[0].image}`}
-                    src={`/images/${item.id}/${item.image[0].image}`}
+                    alt={`${API_ENDPOINT}/images/${item.id}/${item.image[0].image}`}
+                    src={`${API_ENDPOINT}/images/${item.id}/${item.image[0].image}`}
                     style={{
                       width: "100%",
                       height: "100%",

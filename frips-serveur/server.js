@@ -18,6 +18,7 @@ const { PrismaClient } = require("@prisma/client");
 let onlineUsers = [];
 
 const prisma = new PrismaClient();
+const { account, item, category_category, brand, chat, message } = prisma
 
 app.use(cors());
 app.use(express.json({ extended: false }));
@@ -66,11 +67,18 @@ try {
       console.log("new room joined");
       socket.join(room);
     });
-    socket.on("new message", (newMessage) => {
+    socket.on("new message", async (newMessage) => {
       const { id, id_Receiver, chat_id, item, Price } = newMessage;
       const user = getUser(id_Receiver);
+      const rooms = io.sockets.adapter.rooms.get(id)
+
+      
       try {
-        if (io.sockets.adapter.rooms.get(id)?.has(user?.socketId)) {
+        if(!user &&!rooms){
+          return;
+        }
+        else if (io.sockets.adapter.rooms.get(id).has(user.socketId)) {
+
           socket.to(id).emit("message received", {
             id_Sender: newMessage.id_Sender,
             id_Receiver: newMessage.id_Receiver,
@@ -97,7 +105,8 @@ try {
             newMessage: true,
           });
         } else {
-          socket.to(user?.socketId).emit("message notification", {
+          console.log("sendother")
+          socket.to(user.socketId).emit("message notification", {
             id_Sender: newMessage.id_Sender,
             imageSender: newMessage.imageSender,
             Text: newMessage.Message.text,

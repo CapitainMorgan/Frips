@@ -3,7 +3,8 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 
 const { PrismaClient } = require("@prisma/client");
-
+const _ = require("lodash");
+const { sendEmailMessage } = require("../email/sendEmailMessage");
 const { account, item, chat, message, pricepropose } = new PrismaClient();
 
 router.post("/", auth, async (req, res) => {
@@ -124,9 +125,8 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
   const { id } = req.user;
   const { id_Item } = req.body;
   const PricePropose = req.body.Price;
-  console.log(pricepropose);
-  console.log(id_Item);
-  console.log(req.body);
+  const { id_Receiver } = req.body;
+
   try {
     if (id_Item && PricePropose) {
       const { message: newMessage } = await chat.findUnique({
@@ -153,7 +153,7 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
       if (newMessage.length > 0) {
         res.sendStatus(403);
       } else {
-        console.log("passed");
+        await sendEmailMessage(id, id_Receiver, id_Chat, id_Item, PricePropose);
         await pricepropose.upsert({
           where: {
             id_Account_id_Item: {
@@ -188,7 +188,9 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
         return res.status(200).json("message send");
       }
     } else {
-      const msg = await message.create({
+      await sendEmailMessage(id, id_Receiver, id_Chat);
+
+      await message.create({
         data: {
           Unread: true,
           Text: text,
@@ -282,93 +284,114 @@ router.get("/MyConversation/lastMessage/:id", auth, async (req, res) => {
 
 router.get("/MyConversation/:id", auth, async (req, res) => {
   const { id } = req.params;
-  console.log("conversation");
 
   try {
-    const messageNumber = await message.count({
-      where: {
-        id_Chat: parseInt(id),
-      },
-    });
-
-    const conv = await chat.findUnique({
+    const convExist = await chat.findMany({
       where: {
         id: parseInt(id),
       },
       select: {
-        message: {
-          orderBy: { Date_Houre: "desc" },
-
-          take: 20,
-          include: {
-            item: {
-              select: {
-                image: {
-                  take: 1,
-                },
-                Price: true,
-                id: true,
-                pricepropose: {
-                  select: {
-                    Price: true,
-                    id_Account: true,
-                    dateApprove: true,
-                    Approve: true,
-                    id_Item: true,
-                    SendDate: true,
-                  },
-                  orderBy: {
-                    Price: "desc",
-                  },
-                  take: 1,
-                },
-              },
-            },
-          },
-        },
-        account_accountTochat_id_Account_2: {
-          select: {
-            Pseudo: true,
-            id: true,
-            image: {
-              select: {
-                image: true,
-              },
-            },
-          },
-        },
-        account_accountTochat_id_Account_1: {
-          select: {
-            Pseudo: true,
-            id: true,
-            image: {
-              select: {
-                image: true,
-              },
-            },
-          },
-        },
+        id_Account_1: true,
+        id_Account_2: true,
       },
     });
 
-    const data = {
-      Profile: {
-        id: conv.account_accountTochat_id_Account_1.id,
-        Pseudo: conv.account_accountTochat_id_Account_1.Pseudo,
-        image: conv.account_accountTochat_id_Account_1.image?.image,
-      },
-      Profile1: {
-        id: conv.account_accountTochat_id_Account_2.id,
-        Pseudo: conv.account_accountTochat_id_Account_2.Pseudo,
-        image: conv.account_accountTochat_id_Account_2.image?.image,
-      },
+    console.log(convExist)
+    console.log(req.user.id)
+    if (
+      (convExist[0]?.id_Account_1 !== req.user.id &&
+      convExist[0]?.id_Account_2 !== req.user.id )
+    ) {
+      console.log("ici")
+      res.status(400);
+    }
 
-      message: conv.message,
-
-      messageNumber,
-    };
-
-    res.status(200).json(data);
+    else{
+      const messageNumber = await message.count({
+        where: {
+          id_Chat: parseInt(id),
+        },
+      });
+  
+      const conv = await chat.findUnique({
+        where: {
+          id: parseInt(id),
+        },
+        select: {
+          message: {
+            orderBy: { Date_Houre: "desc" },
+  
+            take: 20,
+            include: {
+              item: {
+                select: {
+                  image: {
+                    take: 1,
+                  },
+                  Price: true,
+                  id: true,
+                  pricepropose: {
+                    select: {
+                      Price: true,
+                      id_Account: true,
+                      dateApprove: true,
+                      Approve: true,
+                      id_Item: true,
+                      SendDate: true,
+                    },
+                    orderBy: {
+                      Price: "desc",
+                    },
+                    take: 1,
+                  },
+                },
+              },
+            },
+          },
+          account_accountTochat_id_Account_2: {
+            select: {
+              Pseudo: true,
+              id: true,
+              image: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+          account_accountTochat_id_Account_1: {
+            select: {
+              Pseudo: true,
+              id: true,
+              image: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      });
+  
+      const data = {
+        Profile: {
+          id: conv.account_accountTochat_id_Account_1.id,
+          Pseudo: conv.account_accountTochat_id_Account_1.Pseudo,
+          image: conv.account_accountTochat_id_Account_1.image?.image,
+        },
+        Profile1: {
+          id: conv.account_accountTochat_id_Account_2.id,
+          Pseudo: conv.account_accountTochat_id_Account_2.Pseudo,
+          image: conv.account_accountTochat_id_Account_2.image?.image,
+        },
+  
+        message: conv.message,
+  
+        messageNumber,
+      };
+  
+      res.status(200).json(data);
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send("Serveur error");
@@ -379,6 +402,24 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
   const { number } = req.body;
 
   try {
+    const isUserInConv = await chat.findMany({
+      where: {
+        id_Chat: parseInt(id),
+        OR: [
+          {
+            id_Account_1: req.user.id,
+            id_Account_2: req.user.id,
+          },
+        ],
+      },
+    });
+
+    console.log(isUserInConv);
+
+    if (isUserInConv.length === 0) {
+      res.status(400);
+    }
+
     const conv = await chat.findUnique({
       where: {
         id: parseInt(id),
@@ -465,6 +506,7 @@ router.get("/myConversation", auth, async (req, res) => {
         ],
       },
     });
+
     let myConversation = await chat.findMany({
       where: {
         OR: [
@@ -504,9 +546,11 @@ router.get("/myConversation", auth, async (req, res) => {
       select: {
         message: {
           take: 1,
-          orderBy: {
-            Date_Houre: "desc",
-          },
+          orderBy: [
+            {
+              Date_Houre: "desc",
+            },
+          ],
         },
 
         id: true,
@@ -515,17 +559,45 @@ router.get("/myConversation", auth, async (req, res) => {
           select: {
             Pseudo: true,
             id: true,
+            image: {
+              select: {
+                image: true,
+              },
+            },
           },
         },
         account_accountTochat_id_Account_1: {
           select: {
             Pseudo: true,
             id: true,
+            image: {
+              select: {
+                image: true,
+              },
+            },
           },
         },
       },
     });
-    res.status(200).json({ myConversation, count });
+
+    const unreadMessages = myConversation.filter((m) => {
+      return m.message[0].Unread && m.message[0].id_Sender !== id;
+    });
+    const readMessages = myConversation.filter((m) => {
+      return !m.message[0].Unread || m.message[0].id_Sender === id;
+    });
+
+    const sortedUnreadMessages = unreadMessages.sort(
+      (a, b) =>
+        new Date(b.message[0].Date_Houre) - new Date(a.message[0].Date_Houre)
+    );
+    const sortedReadMessages = readMessages.sort(
+      (a, b) =>
+        new Date(b.message[0].Date_Houre) - new Date(a.message[0].Date_Houre)
+    );
+    const sortedMessages = [...sortedUnreadMessages, ...sortedReadMessages];
+
+    res.status(200).json({ myConversation: sortedMessages, count });
   } catch (error) {
     console.log(error);
     res.status(500).send("Serveur error : conversation");

@@ -185,7 +185,6 @@ const ItemForm = ({
     if (!edit) {
       dispatch(createItem(values, picture, history));
     } else {
-
       dispatch(editItemSend(values, picture, history, id));
     }
   };
@@ -205,11 +204,10 @@ const ItemForm = ({
   const classes = useStyles();
   const theme = useTheme();
 
-  const desktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const mobile = useMediaQuery(theme.breakpoints.up("sm"));
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const typeOfInput = () => {
-    if (desktop) {
+    if (!mobile) {
       return null;
     } else if (mobile) {
       return true;
@@ -218,7 +216,7 @@ const ItemForm = ({
 
   if (
     (Object.keys(initialValues)?.length === 0 && loading) ||
-    editItem?.length === 0 
+    editItem?.length === 0
   ) {
     return (
       <Box

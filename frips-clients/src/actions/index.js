@@ -1,5 +1,6 @@
 import _ from "lodash";
 import axiosInstance from "../api/api";
+import API_ENDPOINT from "../api/url";
 import setAuthToken from "../utils/setAuthToken";
 import {
   ADD_FAVORITE,
@@ -26,6 +27,7 @@ import {
   FETCH_MYFAVORITE,
   FETCH_MYFAVORITEIDs,
   FETCH_MYFRIPS,
+  FETCH_MYSELLBYID,
   FETCH_NEW_ITEMS,
   FETCH_NEW_ITEM_TYPE,
   GENERATE_CONV,
@@ -319,7 +321,9 @@ export const editItem = (id, formValues) => async (dispatch) => {
 
     for (let index = 0; index < response.data.image.length; index++) {
       const blob = await (
-        await fetch(`/images/${id}/${response.data.image[index].image}`)
+        await fetch(
+          `${API_ENDPOINT}/images/${id}/${response.data.image[index].image}`
+        )
       ).blob();
       response.data.image[index] = new File(
         [blob],
@@ -538,15 +542,33 @@ export const getUnReadNotification = () => async (dispatch) => {
 export const handleNotificaiton =
   (notification) => async (dispatch, getState) => {
     const notif = getState().notification.unReadNotification;
+    const conversations = getState().messageReducer.conversations;
 
     const { id_Chat } = notification;
     try {
       if (!_.find(notif, { id: id_Chat })) {
         dispatch({ type: "NEW_NOTIFICATION", payload: { id: id_Chat } });
       }
+      console.log(conversations);
 
-      dispatch({ type: "UPDATE_MESSAGE", payload: notification });
-    } catch (error) {}
+      const updateConv = _.find(conversations, { id: id_Chat });
+
+      updateConv.message[0] = notification;
+
+      console.log(conversations);
+
+      const sortedArray = _.orderBy(
+        conversations,
+        (obj) => _.get(obj, "message[0].Date_Houre"),
+        "desc"
+      );
+
+      console.log(sortedArray);
+
+      dispatch({ type: "UPDATE_MESSAGE", payload: sortedArray });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
 export const readMessage = (id_Chat) => async (dispatch, getState) => {
@@ -1137,3 +1159,34 @@ export const setReview =
       console.log(error);
     }
   };
+
+export const fetchMySellId =
+  (id) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: "LOADING_MYFRIPS" });
+
+      const { data } = await axiosInstance.get(
+        `/api/members/mySell/${id}`,
+        config
+      );
+      dispatch({ type: FETCH_MYSELLBYID, payload: data });
+      dispatch({ type: "SUCCESS_FETCH_MYFRIPS" });
+
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  export const fetchMyPurchaseId =
+  (note, id_transaction) => async (dispatch, getState) => {
+    try {
+      const { data } = await axiosInstance.post(
+        `/api/members/Rewiew`,
+        { note, id_transaction },
+        config
+      );
+      dispatch({ type: REVIEW, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  }; 

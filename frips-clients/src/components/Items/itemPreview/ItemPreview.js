@@ -109,6 +109,7 @@ const ItemPreview = (props) => {
   const dispatch = useDispatch();
   let singleItem = useSelector((state) => state.items.UniqueItem);
   let loading = useSelector((state) => state.items.loading);
+  const myAccount = useSelector(state => state.auth.user)
   let favorite = useSelector((state) => state.favoriteReducers.favoritIds);
   const [anchorEl, setAnchorEl] = useState(false);
   const location = useLocation();
@@ -163,6 +164,7 @@ const ItemPreview = (props) => {
                 state={singleItem}
                 classes={classes}
                 review={singleItem.review}
+                myAccount={myAccount}
               />
             </Box>
             <Box  height={"10vh"} width={"100%"}></Box>

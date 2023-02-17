@@ -30,8 +30,8 @@ const useStyle = makeStyles((theme) => ({
     color: "#8B8B8B",
   },
   Dialog: {
-    width: 300,
-    height: 500,
+    width: "50vh",
+    height: "80vh",
   },
 }));
 

@@ -33,8 +33,6 @@ const DetailAddress = ({buyerAccount}) =>{
 
 const DetailsDelivery = ({
   item,
-  Price,
-  DeliveryType,
   buyerAccount,
   account,
   classes,

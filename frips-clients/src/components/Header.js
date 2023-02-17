@@ -60,8 +60,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   grow: {
-    flexGrow: 1,
     backgroundColor: "#F5f5f3",
+    display:"flex",
+    flexGrow:1
   },
   menuButton: {
     marginLeft: "50px",
@@ -115,11 +116,16 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 35,
     cursor: "pointer",
     color: "white",
+    background: "transparent",
+    outline: "none",
+
     userSelect: "none",
+    msTouchSelect: "none",
+
     WebkitUserSelect: "none",
-    WebkitTapHighlightColor:"none",
-    WebkitTouchCallout:"none"
-    
+
+    WebkitTapHighlightColor: "transparent",
+    WebkitTouchCallout: "none",
   },
   BoxItem: {
     height: 50,
@@ -609,6 +615,9 @@ const Header = ({ onSearchSubmit }) => {
                   <IconButton
                     aria-label="show  new notifications"
                     color="inherit"
+                    onClick={() => {
+                      history("/member/myFavorite");
+                    }}
                   >
                     <Badge color="secondary">
                       <FavoriteIcon />

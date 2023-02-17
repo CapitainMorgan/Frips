@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { newConv } from "../../../actions";
 import API_ENDPOINT from "../../../api/url";
 import PricePropose from "../../Checkout/PricePropose";
-const ItemInformation = ({ state, classes,review }) => {
+const ItemInformation = ({ state, classes,review,myAccount }) => {
   const history = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(false);
   const [favorite, setFavorite] = useState(null);
@@ -192,7 +192,8 @@ const ItemInformation = ({ state, classes,review }) => {
           justifyContent="center"
           alignItems="center"
         >
-          <Button
+         
+          {myAccount.id !== state.account.id ?  <Button
             variant="outlined"
             style={{ width: "100%", marginTop: 5 }}
             onClick={() => {
@@ -200,7 +201,7 @@ const ItemInformation = ({ state, classes,review }) => {
             }}
           >
             Envoyer un message
-          </Button>
+          </Button>:null  }
 
           <Button
             style={{ width: "100%", marginTop: 5 }}
@@ -211,7 +212,7 @@ const ItemInformation = ({ state, classes,review }) => {
             Acheter
           </Button>
 
-          <Button
+          {myAccount.id !==state.account.id ? <Button
             style={{ width: "100%", marginTop: 5 }}
             variant="outlined"
             color="primary"
@@ -220,7 +221,7 @@ const ItemInformation = ({ state, classes,review }) => {
             }}
           >
             Faire une offre
-          </Button>
+          </Button>:null}
           {anchorEl ? (
             <PricePropose
               itemPrice={state.Price}

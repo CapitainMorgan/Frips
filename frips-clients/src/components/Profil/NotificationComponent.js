@@ -48,11 +48,11 @@ const notify = (notification) => {
   );
 };
 
-const NotificationComponent = ({ notification }) => {
+const NotificationComponent = ({ notification ,mobile}) => {
   const classes = useStyles();
 
   useEffect(() => {
-    if (notification !== null) {
+    if (notification !== null &&!mobile) {
       notify(notification);
     }
   }, [notification]);

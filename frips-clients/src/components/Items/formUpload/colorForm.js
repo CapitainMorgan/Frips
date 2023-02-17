@@ -32,8 +32,8 @@ const useStyles = makeStyles({
     right: 10,
   },
   Dialog: {
-    width: 300,
-    height: 500,
+    width: "50vh",
+    height: "80vh",
   },
 });
 

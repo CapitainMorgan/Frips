@@ -47,6 +47,7 @@ import StatusPaymentComponent from "./Checkout/StatusPaymentComponent";
 import CheckOutComponent from "./Checkout/CheckOutComponent";
 import MemberProfile from "./Profil/MyFrips/Members/MemberProfile";
 import API_ENDPOINT from "../api/url";
+import MySellById from "./Profil/MyFrips/MySell/MySellById";
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
@@ -136,6 +137,10 @@ const App = () => {
                 />
                 <Route path="/settings/profile" element={<UserProfile />} />
                 <Route path="/members/myFrips" element={<MyFrips />} />
+                <Route path="/members/myFrips/:url" element={<MyFrips />} />
+
+                <Route path="/members/myFrips/mySell/:id" element={<MySellById />} />
+
                 <Route path="/member/conversation" element={<Conversation />} />
                 <Route path="/member/myFavorite" element={<MyFavorite />} />
                 <Route path="/member/message/:id" element={<NewMessage />} />

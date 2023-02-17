@@ -15,82 +15,69 @@ import moment from "moment";
 import "moment/locale/de";
 import "moment/locale/fr";
 import React, { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getAllConv } from "../../actions";
+import API_ENDPOINT from "../../api/url";
 const useStyles = makeStyles((theme) => ({
-  FormLittleBox: {
-    display: "flex",
-    flexWrap: "wrap",
-    boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
-    backgroundColor: "white",
-
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-    },
-  },
-  SubFormLittleBox: {
-    display: "flex",
-    alignItems: "center",
-    width: "50%",
-    flexWrap: "wrap",
-
-    [theme.breakpoints.down("sm")]: {
-      width: "100%",
-      justifyContent: "center",
-      fontSize: 16,
-      padding: 5,
-    },
-  },
-  MenuSetting: {
-    height: 65,
-    width: "100%",
-    display: "flex",
-    position: "relative",
-  },
   boxShadow: {
     boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
     backgroundColor: "white",
-    width: "80%",
-    display: "flex",
-    flexDirection: "column",
-    padding: 12,
-    margin: "auto",
+    borderRadius: 10,
+    marginTop: "1%",
+  },
+  Divider: {
+    height: "5vh",
     [theme.breakpoints.down("sm")]: {
-      height: "100%",
-      width: "100%",
-      padding: 0,
+      height: 0,
     },
   },
-  Spacer: {
-    width: "100%",
-    height: 50,
-    display: "flex",
-    flexDirection: "column",
-  },
- 
-  
-  formContainer: {
-    boxSizing: "border-box",
-    width: 1000,
-    height:"100vh",
-    margin: "auto",
-    [theme.breakpoints.down("sm")]: {
-      width: "auto",
 
-      left: "auto",
-      right: "auto",
+  formContainer: {
+    marginBottom: "5vh",
+    height: "60vh",
+    overflow: "auto",
+    margin: "auto",
+    width: "50%",
+
+    [theme.breakpoints.down("sm")]: {
+      flexGrow: 1,
+      width: "100%",
+
+      marginBottom: 0,
+      height: "calc(100vh - 98px)",
     },
   },
 }));
 
+const renderAvatarUrl = (
+  { account_accountTochat_id_Account_2, account_accountTochat_id_Account_1 },
+  userId
+) => {
+  console.log(account_accountTochat_id_Account_2)
+  if (account_accountTochat_id_Account_2.id === userId) {
+    return `${account_accountTochat_id_Account_1.id}/${account_accountTochat_id_Account_1?.image?.image}`;
+  } else if (account_accountTochat_id_Account_1.id === userId) {
+    return `${account_accountTochat_id_Account_2.id}/${account_accountTochat_id_Account_2?.image?.image}`;
+  }
+};
 
+const renderPseudo = ({ account_accountTochat_id_Account_2, account_accountTochat_id_Account_1 },
+  userId) =>{
+    if(account_accountTochat_id_Account_2.id === userId){
+      return `${account_accountTochat_id_Account_1.Pseudo}`
+    }
+    else{
+      return `${account_accountTochat_id_Account_1.Pseudo}`
 
+    }
+  }
 
 const UserMessage = (messages, classes, history, idUser) => {
   return messages.map((item, index) => {
+    console.log(item.message[0].Unread && idUser !== item.message[0].id_Sender);
     return (
-      <Box display="flex" width="100%" marginTop={1} key={index} >
+      <Box className={classes.boxShadow} key={index}>
         <MenuItem
           key={index}
           className={classes.MenuSetting}
@@ -98,9 +85,12 @@ const UserMessage = (messages, classes, history, idUser) => {
             history(`/member/message/${item.id}`);
           }}
         >
-          <Avatar  />
+          <Avatar
+            alt={renderPseudo(item,idUser)}
+            src={`${API_ENDPOINT}/imageProfile/${renderAvatarUrl(item,idUser)}`}
+          />
+
           <Box display="flex" paddingLeft={2} flexGrow={1} width="100%">
-            <Box>{item.pseudo}</Box>
             <Box display="flex" flexGrow={1} width="100%">
               <Typography
                 style={{
@@ -123,20 +113,16 @@ const UserMessage = (messages, classes, history, idUser) => {
                 )}
               </Typography>
               <Box flexGrow={1} justifyContent="flex-end" display={"flex"}>
-                <Box
-                  display={"flex"}
-                  flexDirection="column"
-                  alignItems={"center"}
-                >
-                  <Typography style={{ fontSize: 13 }}>
-                    {moment(item.DateHoure).fromNow()}
-                  </Typography>
+                <Box display={"flex"} alignItems={"center"}>
                   {item.message[0].Unread &&
-                  idUser.id !== item.message[0].id_Sender ? (
-                    <Icon>
+                  idUser !== item.message[0].id_Sender ? (
+                    <Icon style={{ marginRight: "1vh" }}>
                       <AdjustOutlinedIcon color="primary" />
                     </Icon>
                   ) : null}
+                  <Typography style={{ fontSize: 13 }}>
+                    {moment(item.message[0].Date_Houre).fromNow()}
+                  </Typography>
                 </Box>
               </Box>
             </Box>
@@ -147,25 +133,19 @@ const UserMessage = (messages, classes, history, idUser) => {
   });
 };
 
-const AllConversations = () => {
+const AllConversations = ({ conversations, loading, count, idUser }) => {
   const dispatch = useDispatch();
-  const conversations = useSelector((state) => state.messageReducer.conversations);
-  const count = useSelector((state) => state.messageReducer.count);
 
-  const loading = useSelector((state)=>state.messageReducer.loading)
-  const idUser = useSelector((state) => state.auth.user);
   const history = useNavigate();
 
-  useEffect(()=>{
-    window.scrollTo(0, 0);
-
-  },[])
   useEffect(() => {
-    if(conversations.length === 0 && !loading && count!==0){
+    window.scrollTo(0, 0);
+  }, []);
+  useEffect(() => {
+    if (conversations.length === 0 && !loading && count !== 0) {
       dispatch(getAllConv());
-
-    }    
-  }, [dispatch,loading]);
+    }
+  }, [dispatch, loading]);
 
   const classes = useStyles();
 
@@ -181,26 +161,24 @@ const AllConversations = () => {
       >
         <CircularProgress size={100} />
       </Box>
-    )
+    );
   }
 
   return (
     <Box style={{ backgroundColor: "#F5f5f3" }}>
-      <Box height={100}></Box>
+      <Box className={classes.Divider} />
       <Box className={classes.formContainer}>
-        <Box className={classes.boxShadow} maxHeight={400}>
-          <Box>
-            <Button variant="contained" color="primary" startIcon={<AddIcon />}>
-              Envoyer un nouveau message
-            </Button>
-          </Box>
-          {!loading 
-            ? UserMessage(conversations, classes, history, idUser)
-            : null}
-        </Box>
+        {!loading ? UserMessage(conversations, classes, history, idUser) : null}
       </Box>
     </Box>
   );
 };
 
-export default AllConversations;
+const mapStateToProps = (state) => ({
+  conversations: state.messageReducer.conversations,
+  loading: state.messageReducer.loading,
+  count: state.messageReducer.count,
+  idUser: state.auth.user.id,
+});
+
+export default connect(mapStateToProps)(AllConversations);

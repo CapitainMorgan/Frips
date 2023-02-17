@@ -198,7 +198,7 @@ const UserProfile = () => {
                   fontSize: 20,
                   boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
                 }}
-                alt={`${API_ENDPOINT}/${state.Pseudo}`}
+                alt={`${state.Pseudo}`}
                 src={`${API_ENDPOINT}/imageProfile/${state.id}/${state.image?.image}`}
               />
 

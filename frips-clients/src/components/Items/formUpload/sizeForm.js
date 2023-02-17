@@ -21,8 +21,8 @@ const useStyle = makeStyles((theme) => ({
     fontSize: 16,
   },
   Dialog: {
-    width: 300,
-    height: "auto",
+    width: "50vh",
+    height: "80vh",
   },
 }));
 

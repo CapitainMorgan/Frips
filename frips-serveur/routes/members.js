@@ -1,10 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
-const jwt = require("jsonwebtoken");
-const config = require("config");
-const { check, validationResult } = require("express-validator");
-const bcrypt = require("bcryptjs");
 const _ = require("lodash");
 const { PrismaClient } = require("@prisma/client");
 const multer = require("multer");
@@ -160,10 +156,10 @@ const constructQueryMySell = (whereFilter) => {
   }
   whereFilter.map((item) => {
     if (item === 10) {
-      arrayWhere.push({ DateSend: { equals: undefined } });
+      arrayWhere.push({ DateSend: { equals: null } });
     }
     if (item === 11) {
-      arrayWhere.push({ DateSend: { not: { equals: undefined } } });
+      arrayWhere.push({ DateSend: { not: { equals: null } } });
     }
   });
   return arrayWhere;
@@ -296,6 +292,100 @@ router.post("/mySell", auth, async (req, res) => {
     } else {
       res.status(200).json({ items: mySell, count: countMySell, msg: "" });
     }
+  } catch (error) {
+    res.status(500).json("Servor Error");
+    console.log(error);
+  }
+});
+
+router.get("/mySell/:id_Item", auth, async (req, res) => {
+  const { id } = req.user;
+  const {id_Item} = req.params
+
+  try {
+    
+    const mySellItem = await transaction.findFirst({
+      where: {
+        id_Item:parseInt(id_Item),
+        item:{
+          id_Seller:id
+        }
+      },
+      select: {
+        item: {
+          select: {
+            image: {
+              take: 1,
+            },
+            id: true,
+            Name: true,
+            Price: true,
+            item_fees: {
+              select: {
+                fees: {
+                  select: {
+                    Name: true,
+                    Description: true,
+                    Price: true,
+                  },
+                },
+              },
+            },
+            account: {
+              select: {
+                Pseudo: true,
+                id: true,
+                address: true,
+                Firstname: true,
+                Lastname: true,
+                Email: true,
+              },
+            },
+
+            DeliveryDetails: true,
+          },
+        },
+
+
+        DateSell: true,
+        DateSend: true,
+        account: {
+          select: {
+            Pseudo: true,
+            id: true,
+            address: true,
+            Firstname: true,
+            Lastname: true,
+            Email: true,
+
+          },
+        },
+        review: {
+          where: {
+            transaction: {
+              item: {
+                id_Seller: id,
+              },
+            },
+            id_Account: {
+              equals: id,
+            },
+          },
+          select: {
+            Note: true,
+            id_Account: true,
+          },
+        },
+        id: true,
+
+        Price: true,
+        Status: true,
+      },
+      
+    });
+
+
+   res.status(200).json(mySellItem)
   } catch (error) {
     res.status(500).json("Servor Error");
     console.log(error);
@@ -496,6 +586,8 @@ const constructQueryMyProposition = (whereFilter) => {
   });
   return arrayWhere;
 };
+
+
 router.post("/MyProposition", auth, async (req, res) => {
   const { id } = req.user;
   const { filter, number } = req.body;

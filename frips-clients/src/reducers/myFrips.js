@@ -6,6 +6,7 @@ import {
   FETCH_MYFRIPS,
   FETCH_MYPURCHASE,
   FETCH_MYSELL,
+  FETCH_MYSELLBYID,
   FETCH_PROPOSITION,
   GET_NOTIFICATION,
   LOADING_MYFRIPS,
@@ -23,6 +24,7 @@ const initialValues = {
   delivery: [],
   proposition: [],
   sell: [],
+  item:null,
   purchase: [],
   filter: [],
   sellNotification: [],
@@ -44,7 +46,23 @@ export default (state = initialValues, action) => {
         count: payload.count,
         msg:payload.msg
       };
-
+      case FETCH_MYSELLBYID:
+        return {
+          ...state,
+          item:{
+            id_transaction:payload.id,
+            ...payload.item,
+            DateSell: new Date(payload.DateSell),
+          DateSend: payload.DateSend,
+          
+          Price: payload.Price,
+          Price_Fees: payload.Price - payload.Price,
+          review:payload.review,
+          buyerAccount:payload.account,
+          Status:payload.Status,
+          }
+        }
+ 
     case FETCH_MYSELL:
       const sellArray = payload.items.map(
         ({ item, DateSell, DateSend, account, Price, Status, id, review }) => ({

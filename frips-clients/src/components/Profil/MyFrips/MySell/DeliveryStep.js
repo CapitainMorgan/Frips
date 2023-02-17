@@ -177,8 +177,7 @@ function getSteps() {
   return ["Livraison", "Review"];
 }
 
-
-const handleNumberStep = ({ Status, DateSend,review }) => {
+const handleNumberStep = ({ Status, DateSend, review }) => {
   if (!DateSend) {
     return 0;
   }
@@ -192,7 +191,7 @@ const handleNumberStep = ({ Status, DateSend,review }) => {
   }
 };
 
-const DeliveryStep = ({ item, account, id, classesSell,buyerAccount }) => {
+const DeliveryStep = ({ item, account, id, classesSell, buyerAccount }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [index, setindex] = useState(0);
@@ -200,15 +199,21 @@ const DeliveryStep = ({ item, account, id, classesSell,buyerAccount }) => {
   const steps = getSteps();
   const dispatch = useDispatch();
 
-
   useEffect(() => {
     setActiveStep(handleNumberStep(item));
     setindex(handleNumberStep(item));
   }, [item]);
 
-  const handleIndex = ({ Status, DateSend, id_transaction,review }) => {
+  const handleIndex = ({ Status, DateSend, id_transaction, review }) => {
     if (index === 0) {
-      return <DetailsDelivery buyerAccount={buyerAccount} classes={classesSell} account={account} />;
+      return (
+        <DetailsDelivery
+          item={item}
+          buyerAccount={buyerAccount}
+          classes={classesSell}
+          account={account}
+        />
+      );
     }
     if (index === 1 && Boolean(DateSend)) {
       return (
@@ -221,7 +226,12 @@ const DeliveryStep = ({ item, account, id, classesSell,buyerAccount }) => {
       );
     } else
       return (
-        <DetailsDelivery buyerAccount={buyerAccount} classes={classesSell} item={item} account={account} />
+        <DetailsDelivery
+          item={item}
+          buyerAccount={buyerAccount}
+          classes={classesSell}
+          account={account}
+        />
       );
   };
 

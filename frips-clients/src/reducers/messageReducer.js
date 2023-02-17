@@ -1,8 +1,20 @@
 import _ from "lodash";
 import {
-  ADD_MESSAGE_IMAGE, ADD_MORE_MESSAGE, ERROR_MESSAGE, GENERATE_CONV,
+  ADD_MESSAGE_IMAGE,
+  ADD_MORE_MESSAGE,
+  ERROR_MESSAGE,
+  GENERATE_CONV,
   GET_ALL_CONV,
-  GET_CONV, GET_MORE_MESSAGE, GET_MORE_MESSAGE_LOADING, MESSAGE_FETCH_SUCCESS, MESSAGE_LOADING, NEW_MESSAGE, NO_MORE, Page_NUMBER, SEND_DATE, UPDATE_MESSAGE
+  GET_CONV,
+  GET_MORE_MESSAGE,
+  GET_MORE_MESSAGE_LOADING,
+  MESSAGE_FETCH_SUCCESS,
+  MESSAGE_LOADING,
+  NEW_MESSAGE,
+  NO_MORE,
+  Page_NUMBER,
+  SEND_DATE,
+  UPDATE_MESSAGE,
 } from "../actions/type";
 
 const initialState = {
@@ -12,9 +24,9 @@ const initialState = {
   lastMessage: [],
   moreMessageLoading: false,
   pageNumber: 1,
-  countConversations:null,
+  countConversations: null,
   id_Chat: null,
-  error:null,
+  error: null,
   sendPropose: false,
   ProfileNumber: {},
   numberLoadingMessage: null,
@@ -31,14 +43,14 @@ export default (state = initialState, action) => {
     case NEW_MESSAGE:
       return {
         ...state,
-        newMessage:payload,
+        newMessage: payload,
       };
 
     case GET_ALL_CONV:
       return {
         ...state,
         conversations: payload.myConversation,
-        count:payload.count,
+        count: payload.count,
         hasmore: true,
       };
 
@@ -72,21 +84,19 @@ export default (state = initialState, action) => {
         loading: true,
       };
 
-      case UPDATE_MESSAGE:
-        const updateConv = _.find(state.conversations,{id:payload.id_Chat})
+    case UPDATE_MESSAGE:
+      
 
-        updateConv.message[0] = payload
 
-        return {
-          ...state,
-          conversations:[...state.conversations]
-        }
-      case MESSAGE_FETCH_SUCCESS:
-        return{
-          ...state,
-          loading:false
-        }  
-    
+      return {
+        ...state,
+        conversations:[...payload],
+      };
+    case MESSAGE_FETCH_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
 
     case GET_MORE_MESSAGE:
       return {
@@ -115,21 +125,17 @@ export default (state = initialState, action) => {
         sendPropose: false,
       };
 
-      case ERROR_MESSAGE:
-        return {
-          
-            ...state,
-            error:payload
-          
-        }
+    case ERROR_MESSAGE:
+      return {
+        ...state,
+        error: payload,
+      };
 
-      case SEND_DATE:
-        return {
-          ...state,
-          message:[...payload]
-        }
-      
-      
+    case SEND_DATE:
+      return {
+        ...state,
+        message: [...payload],
+      };
 
     case ADD_MESSAGE_IMAGE:
       return {

@@ -4,21 +4,18 @@ import {
   Button,
   CircularProgress,
   Divider,
+  InputAdornment,
   makeStyles,
   TextField,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import "moment/locale/fr";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import {
-  useLocation,
-  useNavigate,
-  useOutletContext,
-  useParams,
-} from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   addMessage,
   getConv,
@@ -27,14 +24,12 @@ import {
   receivedNewMessage,
   sendMessage,
 } from "../../actions";
-import ListForPropose from "./CostumItem/DialogForPropose";
-import MessageComponent from "./renderMessageComponent";
-import MailOutlineIcon from "@material-ui/icons/MailOutline";
-import SecondPageDialog from "./CostumItem/SecondPageDialog";
-import { isNumber } from "lodash";
-import PricePropose from "../Checkout/PricePropose";
 import { ERROR_MESSAGE } from "../../actions/type";
 import API_ENDPOINT from "../../api/url";
+import PricePropose from "../Checkout/PricePropose";
+import MessageComponent from "./renderMessageComponent";
+import { AiOutlineSend } from "react-icons/ai";
+
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 65,
@@ -45,12 +40,20 @@ const useStyles = makeStyles((theme) => ({
   boxShadow: {
     boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
     backgroundColor: "white",
-    width: "70%",
+    width: "60%",
     display: "flex",
     flexDirection: "column",
     padding: 12,
     margin: "auto",
     flex: 3,
+    [theme.breakpoints.down("sm")]: {
+      height: "100%",
+      width: "100%",
+    },
+  },
+  textfield:{
+    width:"70%",
+    margin:"auto",
     [theme.breakpoints.down("sm")]: {
       height: "100%",
       width: "100%",
@@ -78,21 +81,19 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     flexGrow: 1,
+    marginBottom:"5vh",
     [theme.breakpoints.down("sm")]: {
       flexGrow: 1,
-      height:"80vh",
-      marginTop:10
-
+      marginBottom:0,
+      height: "calc(100vh - 98px)",
     },
   },
-  Divider:{
-    height:"10vh",
+  Divider: {
+    height: "10vh",
     [theme.breakpoints.down("sm")]: {
-      height:"1vh",
-
+      height: 0,
     },
   },
-  
 }));
 
 const renderProfileName = (Profile, userId) => {
@@ -156,19 +157,14 @@ const Conversation = ({
 
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  
-
   const handleClick = () => {
     setAnchorEl(true);
   };
 
   const handleClickAway = () => {
-    dispatch({type:ERROR_MESSAGE,payload:null})
+    dispatch({ type: ERROR_MESSAGE, payload: null });
     setAnchorEl(false);
   };
-
-  
-
 
   useEffect(() => {
     if (socket?.connected) {
@@ -194,13 +190,11 @@ const Conversation = ({
     }
   }, [dispatch, id]);
 
-  
-
   useEffect(() => {
     if (isBottom) {
       dispatch(receivedNewMessage(false));
     }
-  }, [newMessage,dispatch]);
+  }, [newMessage, dispatch]);
 
   useEffect(() => {
     if (Profile) {
@@ -227,20 +221,19 @@ const Conversation = ({
     );
   }
 
-
   return (
     <Box style={{ backgroundColor: "#F5f5f3" }}>
       <Box className={classes.Divider} />
       <Box className={classes.container}>
         {anchorEl ? (
           <PricePropose
-          item={fromItem}
-          Profile={Profile}
-          chat_id={id}
-          imageSender={imageSender}
-          userId={userId}
-          socket={socket}
-          id_Receiver={id_Receiver}
+            item={fromItem}
+            Profile={Profile}
+            chat_id={id}
+            imageSender={imageSender}
+            userId={userId}
+            socket={socket}
+            id_Receiver={id_Receiver}
             anchorEl={anchorEl}
             handleClickAway={handleClickAway}
             itemId={fromItem.id}
@@ -260,11 +253,15 @@ const Conversation = ({
             display="flex"
             alignItems="center"
           >
-            <Avatar   
+            <Avatar
               alt={renderProfilImage(Profile, userId)}
-              style={{border:2,borderColor:"black"}}
-              src={`${API_ENDPOINT}/imageProfile/${renderProfileNumber(Profile,userId)}/${renderProfilImage(Profile, userId)}`}></Avatar>
-            <Typography style={{ fontSize: "1.2em" ,marginLeft:5}}>
+              style={{ border: 2, borderColor: "black" }}
+              src={`${API_ENDPOINT}/imageProfile/${renderProfileNumber(
+                Profile,
+                userId
+              )}/${renderProfilImage(Profile, userId)}`}
+            ></Avatar>
+            <Typography style={{ fontSize: "1.2em", marginLeft: 5 }}>
               {renderProfileName(Profile, userId)}
             </Typography>
           </Box>
@@ -309,7 +306,11 @@ const Conversation = ({
                   alignItems="center"
                   justifyContent={"center"}
                 >
-                  <Button variant="outlined" color="primary" onClick={handleClick}>
+                  <Button
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleClick}
+                  >
                     Faire une offre
                   </Button>
 
@@ -327,7 +328,18 @@ const Conversation = ({
             </React.Fragment>
           ) : null}
 
-          {!mobile ? <Box display={"flex"} flexGrow={2}>
+          {!mobile ? (
+            <Box display={"flex"} flexGrow={2}>
+              <MessageComponent
+                isBottom={isBottom}
+                setIsBottom={setIsBottom}
+                receivedMessage={receivedMessage}
+                setReceiveNewMessage={setReceivedMessage}
+                setIsAccepted={setIsAccepted}
+                isAccepted={isAccepted}
+              />
+            </Box>
+          ) : (
             <MessageComponent
               isBottom={isBottom}
               setIsBottom={setIsBottom}
@@ -336,16 +348,7 @@ const Conversation = ({
               setIsAccepted={setIsAccepted}
               isAccepted={isAccepted}
             />
-          </Box>: 
-            <MessageComponent
-              isBottom={isBottom}
-              setIsBottom={setIsBottom}
-              receivedMessage={receivedMessage}
-              setReceiveNewMessage={setReceivedMessage}
-              setIsAccepted={setIsAccepted}
-              isAccepted={isAccepted}
-            />
-         }
+          )}
           {newMessage && !isBottom ? (
             <Box
               display={"flex"}
@@ -376,72 +379,60 @@ const Conversation = ({
             padding={2}
             alignItems="center"
             height="20%"
-            justifyContent="center"
           >
-            <Box
-              display="flex"
-              width="90%"
-              alignItems="center"
-              justifyContent="center"
-            >
-              <TextField
-                fullWidth
-                
-                type="submit"
-                
-                onKeyPress={(e) => {
-                  if (e.key === "Enter" && Message.text.trim()) {
-                    if (socket?.connected) {
-                      dispatch(
-                        sendMessage(
-                          Message.text,
-                          Message.chat_id,
-                          id_Receiver(Profile, userId),
-                          userId,
-                          null,
-                          null
-                        )
-                      );
-                      setMessage({ text: "", chat_id: id, id });
+            <TextField
+              placeholder="Envoyer un message"
+              className={classes.textfield}
+              type="submit"
+              onKeyPress={(e) => {
+                if (e.key === "Enter" && Message.text.trim()) {
+                  if (socket?.connected) {
+                    dispatch(
+                      sendMessage(
+                        Message.text,
+                        Message.chat_id,
+                        id_Receiver(Profile, userId),
+                        userId,
+                        null,
+                        null
+                      )
+                    );
+                    setMessage({ text: "", chat_id: id, id });
 
-                      const data = {
-                        Message,
-                        id_Sender: userId,
-                        id_Receiver: id_Receiver(Profile, userId),
-                        id: id,
-                        Profile: [
-                          Profile.Profile2.ProfileNumber,
-                          Profile.Profile1.ProfileNumber,
-                        ],
-                        date: new Date(),
-                        item: null,
-                        Price: null,
-                        imageSender: imageSender?.image ? imageSender : null,
-                      };
+                    const data = {
+                      Message,
+                      id_Sender: userId,
+                      id_Receiver: id_Receiver(Profile, userId),
+                      id: id,
+                      Profile: [
+                        Profile.Profile2.ProfileNumber,
+                        Profile.Profile1.ProfileNumber,
+                      ],
+                      date: new Date(),
+                      item: null,
+                      Price: null,
+                      imageSender: imageSender?.image ? imageSender : null,
+                    };
 
-                      socket.emit("new message", data);
-                    }
-                    e.preventDefault();
+                    socket.emit("new message", data);
                   }
-                }}
-                value={Message.text}
-                multiline={true}
-                onChange={onChange}
-                inputProps={{
-                  style: { fontSize: 16, maxHeight: "5vh" },
-                }}
-              />
+                  e.preventDefault();
+                }
+              }}
+              value={Message.text}
+              multiline={true}
+              onChange={onChange}
+             
+              InputProps={{
+                style: { fontSize: 16, maxHeight: "5vh" },
 
-              <Box
-                display="flex"
-                alignItems="center"
-                width="20%"
-                justifyContent="center"
-                padding={2}
-              >
-                <SecondPageDialog id={id} socket={socket} />
-              </Box>
-            </Box>
+            endAdornment: (
+              <InputAdornment position="end" className={classes.pointer}>
+                <AiOutlineSend size={20} color="#4C6A8C" />
+              </InputAdornment>
+            ),
+          }}
+            />
           </Box>
         </Box>
       </Box>

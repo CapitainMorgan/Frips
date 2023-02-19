@@ -221,7 +221,7 @@ const DeliveryStep = ({ item, account, id, classesSell, buyerAccount }) => {
           review={review[0]?.Note ? review[0]?.Note : null}
           id={id_transaction}
           classes={classesSell}
-          Pseudo={account.Pseudo}
+          Pseudo={buyerAccount.Pseudo}
         />
       );
     } else

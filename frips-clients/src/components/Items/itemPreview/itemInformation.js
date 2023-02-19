@@ -193,7 +193,7 @@ const ItemInformation = ({ state, classes,review,myAccount }) => {
           alignItems="center"
         >
          
-          {myAccount.id !== state.account.id ?  <Button
+          {myAccount?.id !== state?.account?.id ?  <Button
             variant="outlined"
             style={{ width: "100%", marginTop: 5 }}
             onClick={() => {
@@ -212,7 +212,7 @@ const ItemInformation = ({ state, classes,review,myAccount }) => {
             Acheter
           </Button>
 
-          {myAccount.id !==state.account.id ? <Button
+          {myAccount?.id !==state?.account?.id ? <Button
             style={{ width: "100%", marginTop: 5 }}
             variant="outlined"
             color="primary"

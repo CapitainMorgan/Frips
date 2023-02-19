@@ -13,7 +13,11 @@ import React, { useEffect } from "react";
 import { TiWarning } from "react-icons/ti";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { changeMyFripsPagination, fetchMyfrips } from "../../../../actions";
+import {
+  changeMyFripsPagination,
+  fetchMyfrips,
+  removeNotificationMyFrips,
+} from "../../../../actions";
 import { FETCH_MYSELL } from "../../../../actions/type";
 import API_ENDPOINT from "../../../../api/url";
 import MyPaginate from "../../../Footer/PaginationComponent";
@@ -138,10 +142,10 @@ const renderDeliveryStep = ({ DateSend, review }, classes) => {
   }
 };
 
-const renderedItem = (classes, state, history) => {
+const renderedItem = (classes, state, history, dispatch) => {
   return state.map((item, index) => {
     const { account } = item;
-    const {buyerAccount} = item
+    const { buyerAccount } = item;
     return (
       <Box
         width={"100%"}
@@ -176,7 +180,6 @@ const renderedItem = (classes, state, history) => {
               <Typography style={{ wordBreak: "break-word" }} color="primary">
                 {item?.Name}
               </Typography>
-             
             </Box>
 
             <Box className={classes.menus}>
@@ -254,6 +257,7 @@ const MySell = ({
       dispatch({ type: "RESET_FILTER_MYFRIPS" });
     };
   }, [dispatch]);
+
   useEffect(() => {
     if (!loading && items.length === 0 && Boolean(count)) {
       dispatch(fetchMyfrips(`/api/members/mySell`, FETCH_MYSELL));
@@ -334,7 +338,7 @@ const mapStateToProps = (state) => ({
   filterMyFrips: state.myFrips.filter,
   count: state.myFrips.count,
   msg: state.myFrips.msg,
-  myaccount:state.auth.user
+  myaccount: state.auth.user,
 });
 
 export default connect(mapStateToProps)(MySell);

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Box, Checkbox, Dialog, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
+import { Box, Checkbox, ClickAwayListener, Dialog, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -9,7 +9,6 @@ import SearchIcon from "@material-ui/icons/Search";
 import _ from "lodash";
 
 import { useSelector } from "react-redux";
-import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyle = makeStyles((theme) => ({
   checkBox: {
@@ -29,7 +28,7 @@ const useStyle = makeStyles((theme) => ({
     fontWeight: 500,
   },
   Dialog: {
-    width: "50vh",
+    width: "80vw",
     height: "80vh",
   },
 }));

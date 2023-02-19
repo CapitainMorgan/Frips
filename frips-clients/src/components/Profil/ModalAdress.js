@@ -9,8 +9,9 @@ import { updateAddress } from "../../actions";
 import StepTextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "../Login/TextFieldLogin";
 
-
 const validationSchema = yup.object().shape({
+  Prenom: yup.string("Entrez un Prénom ").required("Un Prénom est requis"),
+  Nom: yup.string("Entrez un Nom ").required("Un Nom est requis"),
   NPA: yup.string("Entrez un NPA ").required("Un NPA est requis"),
   Rue: yup
     .string("Entrez une rue ")
@@ -29,9 +30,9 @@ const validationSchema = yup.object().shape({
     .required("Un numéro est requis"),
 });
 
-
 const renderTextField = (control, errors, initialValue) => {
   return Object.keys(initialValue).map((item) => {
+    console.log(item)
     return (
       <Box marginTop={3} display="flex" alignItems={"center"}>
         <Box width={"50%"}>
@@ -55,14 +56,26 @@ const renderTextField = (control, errors, initialValue) => {
   });
 };
 
-const ModalAdress = ({ classes, open, handleClose, address }) => {
+const ModalAdress = ({
+  classes,
+  open,
+  handleClose,
+  address,
+  Firstname,
+  Lastname,
+}) => {
   const dispatch = useDispatch();
+  console.log(Firstname)
   const initialValue = {
+    Prenom: Firstname,
+    Nom: Lastname,
     NPA: address.NPA,
     Localite: address.City,
     Rue: address.Street,
     Numero: address.NumStreet,
   };
+
+  console.log(initialValue)
   const {
     control,
     register,
@@ -77,17 +90,14 @@ const ModalAdress = ({ classes, open, handleClose, address }) => {
     defaultValues: initialValue,
   });
 
-
   const onSubmit = (values) => {
     dispatch(updateAddress(values));
-    handleClose()
-    
+    handleClose();
   };
 
   return (
-      <Dialog open={open}>
-          <form onSubmit={handleSubmit(onSubmit)}>
-
+    <Dialog open={open}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Box className={classes.Dialog}>
           <Box
             justifyContent="center"
@@ -122,9 +132,8 @@ const ModalAdress = ({ classes, open, handleClose, address }) => {
             </Button>
           </Box>
         </Box>
-        </form>
-
-      </Dialog>
+      </form>
+    </Dialog>
   );
 };
 

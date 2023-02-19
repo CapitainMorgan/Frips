@@ -22,6 +22,7 @@ router.get("/", auth, async (req, res) => {
         Pseudo: true,
         Email: true,
         Firstname:true,
+        Lastname:true,
         id: true,
         image: {
           select: {
@@ -61,7 +62,7 @@ router.post("/", async (req, res) => {
       res.status(400).json({ errors: [{ msg: "Identifiant invalide" }] });
     }
 
-    const isMatch = await bcrypt.compare(Password, user.Password);
+    const isMatch = await bcrypt.compare(Password, user?.Password);
 
     if (!isMatch) {
       res.status(400).json({ errors: [{ msg: "Identifiant invalide" }] });

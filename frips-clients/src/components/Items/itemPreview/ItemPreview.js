@@ -3,6 +3,7 @@ import {
   makeStyles,
   Typography
 } from "@material-ui/core";
+import { isNumber } from "lodash";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
@@ -111,16 +112,17 @@ const ItemPreview = (props) => {
   let loading = useSelector((state) => state.items.loading);
   const myAccount = useSelector(state => state.auth.user)
   let favorite = useSelector((state) => state.favoriteReducers.favoritIds);
-  const [anchorEl, setAnchorEl] = useState(false);
   const location = useLocation();
-  const [flag, setFlag] = useState(false);
 
   useEffect(() => {
-    dispatch(fetchItem(id));
-    dispatch(idFavorite());
-    dispatch(itemViewed(id));
+    if(isNumber(id)){
+      dispatch(fetchItem(id));
+      dispatch(idFavorite());
+      dispatch(itemViewed(id));
+    }
 
     window.scrollTo(0, 0);
+
     return () => {
       dispatch({ type: RESET_ITEM });
     };

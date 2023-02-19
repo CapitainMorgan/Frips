@@ -1,6 +1,7 @@
 import {
   Box, Card,
   CardActionArea,
+  ClickAwayListener,
   Dialog,
   Divider,
   IconButton,
@@ -15,7 +16,6 @@ import {
   addFavorite, handleClickAwaySecondPage, handleClickSecondPage
 } from "../../../actions";
 import API_ENDPOINT from "../../../api/url";
-import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 import SecondPageDialog from "./SecondPageDialog";
 
 const useStyles = makeStyles((theme) => ({

@@ -28,7 +28,7 @@ const initialValues = {
   purchase: [],
   filter: [],
   sellNotification: [],
-  purchaseNotifcation:[],
+  purchaseNotification:[],
   propositionNotification: [],
   pagination: 1,
   msg: "",
@@ -161,22 +161,25 @@ export default (state = initialValues, action) => {
         };
       }
     case REMOVE_NOTIFICATION_MYFRIPS:
-      if (_.includes(state.propositionNotification, payload)) {
-        const removedItems = _.remove(state.propositionNotification, (id) => {
-          return id !== payload;
+      
+      if (_.find(state[payload.obj], {id:payload.id})) {
+        const removedItems = _.remove(state[payload.obj], (item) => {
+          return item.id !== payload.id;
         });
         return {
           ...state,
-          propositionNotification: [...removedItems],
+          [payload.obj]:[...removedItems]
+          
+
         };
       }
     // eslint-disable-next-line no-fallthrough
     case GET_NOTIFICATION:
       return {
         ...state,
-        propositionNotification: [...payload.resultsProposition],
-        sellNotification: [...payload.resultsSell],
-        purchaseNotifcation:[...payload.resultsPurchase]
+        propositionNotification: [...payload?.resultsProposition],
+        sellNotification: [...payload?.resultsSell],
+        purchaseNotifcation:[...payload?.resultsPurchase]
       };
     case STATUS_PROPOSITION:
       return {
@@ -206,9 +209,9 @@ export default (state = initialValues, action) => {
       };
 
     case RECEIVED:
-      const updatedDataReceived = state.sell.map((item) => {
+      const updatedDataReceived = state.purchase.map((item) => {
         if (item.id === payload) {
-          return { ...item, Status: "envoyé" };
+          return { ...item, Status: "reçu" };
         }
         return item;
       });

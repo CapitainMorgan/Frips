@@ -275,7 +275,7 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
       justifyContent="center"
     >
       <Box width={"100%"}>
-        {success ? (
+        {success  ? (
           <Snackbar
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             open={open}

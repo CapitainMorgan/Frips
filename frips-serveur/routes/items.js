@@ -8,8 +8,7 @@ const path = require("path"); // path for cut the file extension
 const { PrismaClient } = require("@prisma/client");
 const { similarProduct } = require("./logicFunction/logicSimilarProduct");
 
-const { item, image, nbview, favorit, brand, pricepropose ,review} =
-  new PrismaClient();
+const { item, image, nbview, favorit, brand ,review,pricepropose} =new PrismaClient();
 
 // @route   Post api/items
 // @desc    post one item
@@ -811,19 +810,23 @@ router.post("/proposition", auth, async (req, res) => {
   const { Price, idItem } = req.body;
   const { id } = req.user;
 
+
+  console.log(req.body)
+
   console.log(id);
+  console.log(Price)
+  console.log(idItem)
+  const DatePuplication = await new Date();
 
   try {
     await pricepropose.create({
-      data: {
-        id_Account: id,
-        Price: parseFloat(Price),
-        id_Item: parseInt(idItem),
-        SendDate: new Date(),
-      },
-    });
-
-    res.sendStatus(200);
+      data:{
+        Price:parseFloat(Price),
+        SendDate:DatePuplication ,
+        id_Account:id,
+        id_Item:id
+      }
+    })
   } catch (error) {
     console.log(error);
     res.status(500).json("Server error");

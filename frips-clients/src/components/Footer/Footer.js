@@ -14,22 +14,8 @@ export const Footer = () => {
       display={"flex"}
       style={{ backgroundColor: "#82A0C2" }}
     >
-      <Box margin="auto" display="flex" alignItems="center">
-        <Box height={"100%"} width={100}>
-          <img
-            src={Logo}
-            alt={Logo}
-            key={Logo}
-            style={{
-              width: "100%",
-              height: "100%",
-              objectFit: "cover",
-              border: 1,
-              borderRadius: 5,
-              stroke: 1,
-            }}
-          />
-        </Box>
+      <Box margin="auto" display="flex" alignItems="center" height={100}>
+        
         <Box>
           <MenuItem
             onClick={() => history("/Condition-général-de-vente-et-politique")}
@@ -40,19 +26,15 @@ export const Footer = () => {
         <Box>
           <MenuItem onClick={() => history("/Aide")}>Aide</MenuItem>
         </Box>
-        <Box>
-          <MenuItem onClick={() => history("/assisstance")}>
-            Assisstance
-          </MenuItem>
-        </Box>
+        
         <Box>
           <IconButton>
-            <InstagramIcon />{" "}
+            <InstagramIcon />
           </IconButton>
         </Box>
         <Box>
           <IconButton>
-            <FacebookIcon />{" "}
+            <FacebookIcon />
           </IconButton>
         </Box>
       </Box>

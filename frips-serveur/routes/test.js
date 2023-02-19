@@ -33,7 +33,7 @@ router.post("/s", async (req, res) => {
   const count = 0
   try {
     sendEmailNewUser()  
-    
+    sendEmailSell()
 
 
   } catch (error) {

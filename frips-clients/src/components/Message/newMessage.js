@@ -94,6 +94,9 @@ const useStyles = makeStyles((theme) => ({
       height: 0,
     },
   },
+  page:{
+    height:`calc(100vh - ${window.innerHeight} - ${document.documentElement.clientHeight})`
+  }
 }));
 
 const renderProfileName = (Profile, userId) => {
@@ -154,17 +157,23 @@ const Conversation = ({
   const history = useNavigate();
   const fromItem = useLocation().state;
   const theme = useTheme();
-
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+
+  useEffect(()=>{
+    window.scrollTo(0,document.body.scrollHeight)
+
+  },[])
+
 
   const handleClick = () => {
     setAnchorEl(true);
   };
-
   const handleClickAway = () => {
     dispatch({ type: ERROR_MESSAGE, payload: null });
     setAnchorEl(false);
   };
+  
 
   useEffect(() => {
     if (socket?.connected) {
@@ -222,7 +231,7 @@ const Conversation = ({
   }
 
   return (
-    <Box style={{ backgroundColor: "#F5f5f3" }}>
+    <Box style={{ backgroundColor: "#F5f5f3" }} className={classes.page} >
       <Box className={classes.Divider} />
       <Box className={classes.container}>
         {anchorEl ? (
@@ -427,7 +436,41 @@ const Conversation = ({
                 style: { fontSize: 16, maxHeight: "5vh" },
 
             endAdornment: (
-              <InputAdornment position="end" className={classes.pointer}>
+              <InputAdornment onClick={(e)=>{
+                if(Message.text.trim()){
+                  if (socket?.connected) {
+                    dispatch(
+                      sendMessage(
+                        Message.text,
+                        Message.chat_id,
+                        id_Receiver(Profile, userId),
+                        userId,
+                        null,
+                        null
+                      )
+                    );
+                    setMessage({ text: "", chat_id: id, id });
+
+                    const data = {
+                      Message,
+                      id_Sender: userId,
+                      id_Receiver: id_Receiver(Profile, userId),
+                      id: id,
+                      Profile: [
+                        Profile.Profile2.ProfileNumber,
+                        Profile.Profile1.ProfileNumber,
+                      ],
+                      date: new Date(),
+                      item: null,
+                      Price: null,
+                      imageSender: imageSender?.image ? imageSender : null,
+                    };
+
+                    socket.emit("new message", data);
+                  }
+                  e.preventDefault();
+                }
+              }} position="end" className={classes.pointer}>
                 <AiOutlineSend size={20} color="#4C6A8C" />
               </InputAdornment>
             ),

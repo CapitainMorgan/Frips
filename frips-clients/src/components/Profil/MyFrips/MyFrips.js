@@ -11,7 +11,7 @@ import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { GiClothes } from "react-icons/gi";
 import { connect, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { getNotificationsMyFrips } from "../../../actions/index";
 import Filter from "./Filter";
@@ -161,10 +161,8 @@ const handleNavigation = (key, classes, setNavigation) => {
     case 1:
       return <MySell classes={classes} />;
     case 2:
-      return <MySell classes={classes} />;
-    case 3:
       return <MyProposition classes={classes} />;
-    case 4:
+    case 3:
       return <MyPurchase classes={classes} />;
 
     default:
@@ -174,7 +172,6 @@ const handleNavigation = (key, classes, setNavigation) => {
 
 const navigationArray = [
   { Name: "Mes Items",url:"myItems" },
-  { Name: "Promotion" ,url:"myPromotion"},
   { Name: "Mes ventes",url:"mySell" },
   { Name: "Mes propositions",url:"myProposition" },
   { Name: "Mes achats",url:"myPurchase" },
@@ -308,20 +305,19 @@ const MyFrips = ({
   const params = useParams()
   const [navigationId, setNavigation] = useState(0);
   const theme = useTheme();
+  const location = useLocation()
+
+  
 
 
   useEffect(()=>{
     if(Object.keys(params).length !== 0){
-      console.log(params)
-      alert("here")
-      console.log(_.findIndex(navigationArray, {url:params.url }))
       if(_.findIndex(navigationArray, {url:params.url })>=0){
         setNavigation(_.findIndex(navigationArray, {url:params.url }))
-
       }
       
     }
-  },[])
+  },[location])
   
   useEffect(() => {
     dispatch(getNotificationsMyFrips());

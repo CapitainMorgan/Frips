@@ -34,6 +34,7 @@ import {
 } from "./formUpload/costumTextfield";
 import { connect } from "react-redux";
 import DeliveryFormRadio from "./formUpload/DeliveryFormRadio";
+import TaskSuccess from "./TaskSuccess";
 
 const useStyles = makeStyles((theme) => ({
   boxForm: {
@@ -132,12 +133,12 @@ const validationSchema = yup.object({
   Titre: yup
     .string("Enter your email")
 
-    .min(10, "Le titre doit au moins avoir 10 caractères")
+    .min(5, "Le titre doit au moins avoir 10 caractères")
 
     .required("Un Titre est requis"),
   Description: yup
     .string("Enter your password")
-    .min(25, "La description doit au moins avoir 25 charactères")
+    .min(15, "La description doit au moins avoir 15 charactères")
     .required("Une Description est requise"),
   Size: yup.string("Enter your password").required("Une taille est requise"),
 
@@ -172,22 +173,27 @@ const ItemForm = ({
   id,
   editItem,
   itemInfo,
+  error,
   loading,
   editInitialValues,
 }) => {
   const dispatch = useDispatch();
-
+  const [isLoading, setIsLoading] = useState(false);
   const [size, setSize] = useState([]);
   const [picture, setPicture] = useState(!edit ? [] : [...editItem]);
   const history = useNavigate();
 
   const onSubmit = (values) => {
     if (!edit) {
-      dispatch(createItem(values, picture, history));
+      dispatch(createItem(values, picture, history, setIsLoading));
     } else {
-      dispatch(editItemSend(values, picture, history, id));
+      dispatch(editItemSend(values, picture, history, id, setIsLoading));
     }
   };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     if (!Boolean(itemInfo) && !loading) {
@@ -214,6 +220,9 @@ const ItemForm = ({
     }
   };
 
+  if(isLoading &&mobile){
+    return <TaskSuccess error={error} isLoading={isLoading} />
+  }
   if (
     (Object.keys(initialValues)?.length === 0 && loading) ||
     editItem?.length === 0
@@ -526,17 +535,34 @@ const ItemForm = ({
                   <Box height={25} />
 
                   <Box display="flex" justifyContent="flex-end">
-                    <Button
-                      style={{ color: "white" }}
-                      variant="contained"
-                      type="submit"
-                      color="primary"
-                    >
-                      {!edit ? "Ajouter" : "Sauvegarder les changements"}
-                    </Button>
+                    {!edit ? (
+                      <Button
+                        disabled={isLoading}
+                        style={{ color: "white", fontSize: 15 }}
+                        variant="contained"
+                        type="submit"
+                        color="primary"
+                      >
+                        {isLoading ? <CircularProgress size={24} /> : "Ajouter"}
+                      </Button>
+                    ) : (
+                      <Button
+                        disabled={isLoading}
+                        style={{ color: "white", fontSize: 15 }}
+                        variant="contained"
+                        type="submit"
+                        color="primary"
+                      >
+                        {isLoading ? (
+                          <CircularProgress size={24} />
+                        ) : (
+                          "Sauvegarder les changements"
+                        )}
+                      </Button>
+                    )}
                   </Box>
 
-                  <Box height={200}></Box>
+                  <Box height={"5vh"} />
                 </Box>
               </Form>
             );
@@ -550,7 +576,7 @@ const mapStateToProps = (state) => ({
   itemInfo: state.itemInfo.itemInfo,
   loadingFilter: state.filterCatalogue.filterLoading,
   editInitialValues: state.items.initialValues,
-
+  error: state.items.error,
   loading: state.itemInfo.loading,
 });
 

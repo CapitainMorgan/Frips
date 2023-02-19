@@ -23,6 +23,7 @@ export const CREATE_ITEM = "CREATE_ITEM";
 export const FETCH_ITEM = "FETCH_ITEM";
 export const FETCH_ITEMS = "FETCH_ITEMS";
 export const EDIT_ITEM = "EDIT_ITEM";
+export const ERROR_ITEM = "ERROR_ITEM"
 export const SUCCESS_FETCH_ITEM = "SUCCESS_FETCH_ITEM";
 export const LOADING_FETCH_ITEM = "LOADING_FETCH_ITEM";
 

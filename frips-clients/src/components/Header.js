@@ -15,9 +15,8 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import React, { useRef } from "react";
 import Div100vh from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useTheme } from "@material-ui/core/styles";
-
+import { MdOutlineAttachMoney } from "react-icons/md";
 import { Button } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
@@ -61,8 +60,8 @@ const useStyles = makeStyles((theme) => ({
   },
   grow: {
     backgroundColor: "#F5f5f3",
-    display:"flex",
-    flexGrow:1
+    display: "flex",
+    flexGrow: 1,
   },
   menuButton: {
     marginLeft: "50px",
@@ -155,6 +154,8 @@ const Header = ({ onSearchSubmit }) => {
   const unReadNotification = useSelector(
     (state) => state.notification.unReadNotification
   );
+ const  sellNotification = useSelector(
+    (state) => state.myFrips.sellNotification);
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const isAuth = (handleClose) => {
@@ -245,15 +246,7 @@ const Header = ({ onSearchSubmit }) => {
       >
         Mes Annonces
       </MenuItem>
-      <MenuItem
-        className={classes.BoxItem}
-        onClick={() => {
-          history("/settings/profile");
-          handleMenuDesktop();
-        }}
-      >
-        Créer une réduction
-      </MenuItem>
+      
       {isAuth(handleMenuDesktop)}
     </Menu>
   );
@@ -277,8 +270,7 @@ const Header = ({ onSearchSubmit }) => {
         <Box height={40} />
         <Box position="absolute" top={0} right={0}>
           <IconButton onClick={handleMobileMenuClose}>
-            {" "}
-            <CloseIcon />{" "}
+            <CloseIcon />
           </IconButton>
         </Box>
         <Box display="flex" justifyContent="center" padding={3}>
@@ -463,7 +455,7 @@ const Header = ({ onSearchSubmit }) => {
                 padding: 6,
               }}
             >
-              Frips
+              MyFrips
             </Typography>
             <Typography style={{ fontSize: 14, color: "black" }}>
               Tous droits réservés
@@ -513,7 +505,7 @@ const Header = ({ onSearchSubmit }) => {
                 <div className={classes.sectionDesktop}>
                   <Box flexGrow={1} display="flex" alignItems={"center"}>
                     {!state.isAuthenticated ? (
-                      <Box paddingLeft={2} alignItems="center">
+                      <Box marginLeft={2} alignItems="center">
                         <Button
                           onClick={() => history("/signup")}
                           variant="outlined"
@@ -526,7 +518,7 @@ const Header = ({ onSearchSubmit }) => {
                       </Box>
                     ) : null}
 
-                    {state.isAuthenticated ? <Box paddingLeft={2}></Box> : null}
+                    <Box marginLeft={2}/>
                     <Button
                       onClick={() => history("/items/new")}
                       variant="contained"
@@ -538,7 +530,18 @@ const Header = ({ onSearchSubmit }) => {
                     </Button>
                   </Box>
                   {state.isAuthenticated ? (
-                    <Box display="flex">
+                    <Box display="flex" marginLeft={1}>
+                      <IconButton
+                        aria-label="show 4 new mails"
+                        color="inherit"
+                        onClick={() => {
+                          history("/members/myFrips/mySell");
+                        }}
+                      >
+                        <Badge badgeContent={sellNotification?.length} color="secondary">
+                          <MdOutlineAttachMoney  size={25} />
+                        </Badge>
+                      </IconButton>
                       <IconButton
                         aria-label="show 4 new mails"
                         color="inherit"
@@ -598,6 +601,17 @@ const Header = ({ onSearchSubmit }) => {
                 </div>
 
                 <div className={classes.sectionMobile}>
+                  <IconButton
+                    aria-label="show 4 new mails"
+                    color="inherit"
+                    onClick={() => {
+                      history("/members/myFrips/mySell");
+                    }}
+                  >
+                    <Badge badgeContent={sellNotification?.length} color="secondary">
+                      <MdOutlineAttachMoney size={25} />
+                    </Badge>
+                  </IconButton>
                   <IconButton
                     aria-label="show 4 new mails"
                     color="inherit"

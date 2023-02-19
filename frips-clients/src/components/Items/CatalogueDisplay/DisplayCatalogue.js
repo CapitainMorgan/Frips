@@ -12,7 +12,7 @@ import {
   makeStyles,
   Typography,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
@@ -27,7 +27,7 @@ import {
   getItemCreationInfo,
   idFavorite,
   paginationForFilter,
-  removeFavorite
+  removeFavorite,
 } from "../../../actions";
 import MyPaginate from "../../Footer/PaginationComponent";
 import { arraySize, Catalogue } from "../staticItems/staticItemName";
@@ -115,8 +115,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const renderedItem = (state, classes, favorite, dispatch, history) => {
   return state.map((item, index) => {
     let category = item.item_category[0].category.Name;
@@ -124,10 +122,9 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
     return (
       <Box width={"100%"} height={"100%"} padding={1} id={item}>
         <Card className={classes.BoxOneItem}>
-        <Box
+          <Box
             display={"flex"}
             alignItems="center"
-            
             marginBottom={2}
             width="100%"
           >
@@ -147,7 +144,7 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
             </IconButton>
             <Typography
               style={{
-                wordBreak:"break-all"
+                wordBreak: "break-all",
               }}
             >
               {item.account.Pseudo}
@@ -177,12 +174,12 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
           </Box>
           <Divider />
           <Box height={44} display="flex" alignItems="center">
-          <IconButton
+            <IconButton
               onClick={() => {
                 if (_.some(favorite, { id_Item: item.id })) {
-                  dispatch(removeFavorite(state[index].id,5));
+                  dispatch(removeFavorite(state[index].id, 5));
                 } else {
-                  dispatch(addFavorite(state[index].id,5));
+                  dispatch(addFavorite(state[index].id, 5));
                 }
               }}
             >
@@ -210,8 +207,6 @@ const filterBy = [
   { Name: "Prix croissant", id: 1, label: "sortedBy" },
 ];
 
-
-
 const DisplayCatalogue = ({
   items,
   loaded,
@@ -228,7 +223,6 @@ const DisplayCatalogue = ({
   const theme = useTheme();
   const history = useNavigate();
 
-
   useEffect(() => {
     if (itemInfo && !infoLoading) {
       setTypeOfFilter([
@@ -241,18 +235,14 @@ const DisplayCatalogue = ({
         { label: "sortedBy", array: filterBy },
       ]);
     }
-    if(!itemInfo && !infoLoading){
-        dispatch(getItemCreationInfo());
-      
+    if (!itemInfo && !infoLoading) {
+      dispatch(getItemCreationInfo());
     }
-    
-  }, [dispatch,itemInfo,infoLoading]);
+  }, [dispatch, itemInfo, infoLoading]);
 
-  useEffect(()=>{
-    dispatch(idFavorite())
-
-  },[dispatch])
-
+  useEffect(() => {
+    dispatch(idFavorite());
+  }, [dispatch]);
 
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const favorite = useSelector((state) => state.favoriteReducers.favoritIds);
@@ -275,23 +265,17 @@ const DisplayCatalogue = ({
     if (items.length !== 0 && !loading) {
       setFilterItem(items);
     }
-    
-  }, [items, dispatch,loading]);
-
-  
+  }, [items, dispatch, loading]);
 
   useEffect(() => {
-      dispatch(paginationForFilter());
-    
-    
-  }, [dispatch, allFilterProps, pagination,filterLoading]);
-  
+    dispatch(paginationForFilter());
+  }, [dispatch, allFilterProps, pagination, filterLoading]);
 
   const renderedItems = useMemo(() => {
     return renderedItem(filterItem, classes, favorite, dispatch, history);
   }, [filterItem, items, allFilterProps]);
-  
-  if (loading && itemInfo?.length===0) {
+
+  if (loading && itemInfo?.length === 0) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -326,23 +310,25 @@ const DisplayCatalogue = ({
           {typeOfFilter ? <CostumChips TypeCatalogue={typeOfFilter} /> : null}
           <RenderChipsComponents />
         </Box>
-        {count ===0 &&!loading ?
-        <Box
-          display="flex"
-          justifyContent="center"
-          width="100%"
-          alignItems="center"
-        >
-          <Typography
-            style={{
-              fontSize: "1.3rem",
-              color: "#82A0C2",
-              paddingLeft: "1.3rem",
-            }}
+        {count === 0 && !loading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            width="100%"
+            alignItems="center"
           >
-           Oups il semblerait qu'il n'y ait aucun résultat correspondant à votre recherche
-          </Typography>
-        </Box>:null}
+            <Typography
+              style={{
+                fontSize: "1.3rem",
+                color: "#82A0C2",
+                paddingLeft: "1.3rem",
+              }}
+            >
+              Oups il semblerait qu'il n'y ait aucun résultat correspondant à
+              votre recherche
+            </Typography>
+          </Box>
+        ) : null}
 
         <Box height={"10vh"} />
 

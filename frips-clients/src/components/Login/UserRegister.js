@@ -4,13 +4,13 @@ import {
   Button,
   makeStyles, Typography
 } from "@material-ui/core";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { registerUser, userIfExist } from "../../actions";
-import { REGISTER_FAILURE } from "../../actions/type";
+import { REGISTER_FAILURE, RESET_ERROR } from "../../actions/type";
 import axiosInstance from "../../api/api";
 import StepTextError from "../Items/formUpload/errorText";
 import CostumStepper from "./CostumStepper";
@@ -125,9 +125,7 @@ const validationSchema = yup.object().shape({
       .string("Entrez un  numéro")
       .matches(/^[0-9]*$/, "Veuillez seulement utiliser des nombres")
       .required("Un numéro est requis"),
-    IBAN: yup
-      .string("Un IBAN est requis")
-      .required("Un IBAN est requis pour recevoir vos paiements"),
+    IBAN: yup.string().matches(/CH\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{1}|CH\d{19}/,"Veuillez entrer un IBAN valide").required("Un IBAN est requis")
   }),
 });
 /*     dispatch(register(values, from, history));
@@ -208,6 +206,15 @@ export const Register = () => {
 
   const error = useSelector((state) => state.auth.error);
   const history = useNavigate();
+
+
+
+  useEffect(()=>{
+    return () =>{
+      dispatch({type:RESET_ERROR})
+    }
+  },[])
+
   const handleNext = async () => {
     const results = await trigger([
       "step1.Email",
@@ -220,7 +227,6 @@ export const Register = () => {
     }
   };
 
-  console.log(activeStep)
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);

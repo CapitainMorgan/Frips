@@ -17,6 +17,7 @@ import {
   DISPATCH_HANDLECLICK,
   EDIT_ITEM,
   ERROR,
+  ERROR_ITEM,
   ERROR_MESSAGE,
   FETCH_FILTER,
   FETCH_INFO_ITEM,
@@ -64,10 +65,12 @@ import {
   PAYMENT_INFO_SUCCESS_FETCH,
   PAYMENT_INTENT,
   PAYMENT_SUCCESS,
+  RECEIVED,
   REGISTER_FAILURE,
   REGISTER_SUCCESS,
   REMOVE_FAVORITE,
   REMOVE_FILTER,
+  REMOVE_NOTIFICATION_MYFRIPS,
   RESET_ERROR,
   REVIEW,
   SEARCH,
@@ -120,10 +123,17 @@ export const setSocket = (socket) => async (dispatch, getState) => {
   }
 };
 
-export const itemViewed = (id) => async (dispatch) => {
+export const itemViewed = (id) => async (dispatch,getState) => {
+  const auth = getState().auth.user
+  alert(id)
+  console.log(auth)
   try {
-    await axiosInstance.post("/api/items/view", { id }, config);
-  } catch (error) {}
+    if(auth){
+      await axiosInstance.post("/api/items/view", { id }, config);
+    }
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 export const registerUser = (values, from, history) => async (dispatch) => {
@@ -223,8 +233,9 @@ export const logout = (history) => (dispatch) => {
 ////ITEM/////
 
 export const createItem =
-  (formValues, images, history) => async (dispatch, getState) => {
+  (formValues, images, history,setIsLoading) => async (dispatch, getState) => {
     try {
+      setIsLoading(true)
       let formData = new FormData();
       for (const key in formValues) {
         if (key === "image") {
@@ -240,14 +251,16 @@ export const createItem =
           formData.append(key, formValues[key]);
         }
       }
-
+      
       const response = await axiosInstance.post("/api/items", formData);
 
       dispatch({ type: CREATE_ITEM, payload: response.data });
+      setIsLoading(false)
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: true });
-      // history("/")
+     // history("/")
     } catch (error) {
-      console.log(error);
+      dispatch({type:ERROR_ITEM,payload:true})
+
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: false });
     }
     //
@@ -371,8 +384,9 @@ export const editItem = (id, formValues) => async (dispatch) => {
 };
 
 export const editItemSend =
-  (formValues, images, history, id) => async (dispatch) => {
+  (formValues, images, history, id,setIsLoading) => async (dispatch) => {
     try {
+      setIsLoading(true)
       let formData = new FormData();
       for (const key in formValues) {
         if (key === "image") {
@@ -392,7 +406,9 @@ export const editItemSend =
       formData.append("id_Item", id);
 
       const response = await axiosInstance.post("/api/edit", formData);
+      setIsLoading(false)
     } catch (error) {
+      dispatch({type:ERROR_ITEM,payload:true})
       console.log(error);
     }
   };
@@ -533,13 +549,28 @@ export const getUnReadNotification = () => async (dispatch) => {
     const { data } = await axiosInstance.get(
       `/api/conversation/unReadNotification`
     );
-    dispatch({ type: "UNREAD_NOTIFICATION", payload: data });
+    dispatch({ type: "UNREAD_NOTIFICATION", payload: data.conversation });
+    dispatch({ type: GET_NOTIFICATION, payload: {resultsSell:data.resultsSell,resultsPurchase:[],resultsProposition:[]} });
+
+
+    
   } catch (error) {
     console.log(error);
   }
 };
 
-export const handleNotificaiton =
+export const removeNotificationMyFrips =
+  (obj,id) => async (dispatch, getState) => {
+
+    try {
+      
+      dispatch({ type: REMOVE_NOTIFICATION_MYFRIPS, payload: {obj,id} });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  export const handleNotificaiton =
   (notification) => async (dispatch, getState) => {
     const notif = getState().notification.unReadNotification;
     const conversations = getState().messageReducer.conversations;
@@ -549,13 +580,11 @@ export const handleNotificaiton =
       if (!_.find(notif, { id: id_Chat })) {
         dispatch({ type: "NEW_NOTIFICATION", payload: { id: id_Chat } });
       }
-      console.log(conversations);
 
       const updateConv = _.find(conversations, { id: id_Chat });
 
       updateConv.message[0] = notification;
 
-      console.log(conversations);
 
       const sortedArray = _.orderBy(
         conversations,
@@ -985,6 +1014,7 @@ export const fetchPaymentInfo =
       dispatch({ type: PAYMENT_FAILED });
     }
   };
+
 export const fetchPaymentIntent =
   (idItem, id_Fees, isFromProposition) => async (dispatch, getState) => {
     try {
@@ -1033,13 +1063,19 @@ export const requestPayment = (id) => async (dispatch, getState) => {
 
 export const updateAddress = (address) => async (dispatch, getState) => {
   try {
+    const { Rue, Numero, Localite, NPA,Prenom,Nom } = address;
+    
+    const newAddress = {Street:Rue, NumStreet:Numero, City:Localite, NPA,}
+
+    
+   
     const { data } = await axiosInstance.post(
       "/api/members/updateAddress",
       address,
       config
     );
 
-    dispatch({ type: CHANGE_ADDRESS, payload: data });
+    dispatch({ type: CHANGE_ADDRESS, payload: {newAddress,Firstname:Prenom,Lastname:Nom} });
   } catch (error) {
     dispatch({ type: PAYMENT_FAILED });
   }
@@ -1081,6 +1117,14 @@ export const changeStep =
         config
       );
       dispatch({ type: type, payload: id });
+      if(type===DELIVERY){
+        dispatch(removeNotificationMyFrips("sellNotification",id_transaction))
+      }
+      if(type===RECEIVED){
+        alert("here")
+        dispatch(removeNotificationMyFrips("purchaseNotification",id_transaction))
+
+      }
     } catch (error) {
       console.log(error);
     }
@@ -1125,6 +1169,7 @@ export const sendStatusProposition =
       );
 
       dispatch({ type: STATUS_PROPOSITION, payload: items });
+      dispatch(removeNotificationMyFrips("propositionNotification",id))
     } catch (error) {
       console.log(error);
     }

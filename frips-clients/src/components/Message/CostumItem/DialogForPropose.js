@@ -3,6 +3,7 @@ import {
   Button,
   Card,
   CardActionArea,
+  ClickAwayListener,
   Dialog,
   Divider,
   IconButton,
@@ -21,7 +22,6 @@ import {
   handleClickSecondPage
 } from "../../../actions";
 import API_ENDPOINT from "../../../api/url";
-import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 import SecondPageDialog from "./SecondPageDialog";
 
 const useStyles = makeStyles((theme) => ({
@@ -137,7 +137,7 @@ const ListForPropose = ({
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClickAway}>
+    <ClickAwayListener disableReactTree onClickAway={handleClickAway}>
       <Box>
         <Button type="outlined" color="primary" onClick={handleClick}>
           faire une offre

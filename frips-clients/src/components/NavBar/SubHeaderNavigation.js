@@ -1,11 +1,18 @@
 import {
-  Box, makeStyles, MenuItem, Popper, Typography
+  Box,
+  ClickAwayListener,
+  makeStyles,
+  MenuItem,
+  Popper,
+  Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Catalogue } from "../Items/staticItems/staticItemName";
-import ClickAwayListener from "../SpecialComponent/ClickAwayListener";
+import { IoShirtSharp } from "react-icons/io5";
+import { GiConverseShoe, GiLargeDress, GiRunningShoe } from "react-icons/gi";
+import { BsHandbagFill } from "react-icons/bs";
 const useStyles = makeStyles((theme) => ({
   fakeBox: {
     cursor: "pointer",
@@ -13,31 +20,54 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     fontSize: 20,
-    width:"100vh",  },
+    width: "100vh",
+  },
   BoxShadow: {
     boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
     backgroundColor: "white",
+    borderRadius:5
   },
 }));
 
 let thirdQuery;
 
-const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
+const changeIcon = (index,category) => {
+  if(category===0){
+    if (index === 0) {
+      return <GiLargeDress color="#82A0C2" size={20} />;
+    } else if (index === 1) {
+      return <GiConverseShoe color="#82A0C2" size={20} />;
+    } else {
+      return <BsHandbagFill color="#82A0C2" size={20} />;
+    }
+  }
+  else{
+    if(index===0){
+      return <IoShirtSharp color="#82A0C2" size={20} />;
+
+    }
+    else{
+      return <GiRunningShoe color="#82A0C2" size={20} />;
+
+    }
+  }
+};
+
+const SubHeaderNavigation = ({ category, transformStringToUrl, name }) => {
   const history = useNavigate();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const classes = useStyles();
   const [anchor, setAnchor] = useState(null);
   const [indexItem, setIndex] = useState(0);
 
-  let secondQuery = "/" + Catalogue[0].subitems[indexItem].Name;
+  let secondQuery = "/" + Catalogue[category].subitems[indexItem]?.Name;
 
   const handleClick = (e) => {
     setAnchor(e.currentTarget);
   };
 
   const handleClickAway = (e) => {
-
     setAnchor(null);
   };
 
@@ -51,12 +81,12 @@ const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
           onClick={handleClick}
         >
           <Typography style={{ fontSize: 16, color: "black" }}>
-            Femme
+            {name}
           </Typography>
 
           <Popper
             disablePortal={false}
-            style={{ width: "65%" }}
+            style={{ width: "65%", zIndex: 2 }}
             popperOptions={{ positionFixed: true }}
             anchorEl={anchor}
             placement="bottom"
@@ -66,41 +96,53 @@ const SubHeaderNavigation = ({ category, transformStringToUrl }) => {
               position="absolute"
               className={classes.BoxShadow}
               top={0}
+              zIndex={2000}
               marginTop={1.5}
               left={15}
               width={"100%"}
               display="flex"
             >
               <Box width={"30%"} display="flex" flexDirection="column">
-                {Catalogue[0].subitems.map((item, index) => {
+                {Catalogue[category].subitems.map((item, index) => {
                   return (
                     <MenuItem
                       key={index}
-                      style={{ height: 50, fontSize: 16 }}
+                      style={{ height: 50, fontSize: 16, display: "flex" }}
                       onClick={() => {
                         secondQuery = "/" + item.label;
                         setIndex(index);
                       }}
                     >
-                      {item.Name}
+                      {changeIcon(index,category)}
+                      <Typography
+                        style={{
+                          marginleft: 10,
+                          fontSize: 16,
+                          flexGrow: 1,
+                          justifyContent: "center",
+                          display: "flex",
+                        }}
+                      >
+                        {item.Name}
+                      </Typography>
                     </MenuItem>
                   );
                 })}
               </Box>
-              <Box  width={"70%"}>
+              <Box width={"70%"}>
                 <Box display="grid" gridTemplateColumns="repeat(2,50%)">
-                  {Catalogue[0].subitems[indexItem].subitems.map(
+                  {Catalogue[category].subitems[indexItem].subitems.map(
                     (item, index) => {
                       return (
                         <MenuItem
                           key={index}
                           disableTouchRipple
                           disableGutters
-                          style={{ height: 50, fontSize: 16,color:"black" }}
+                          style={{ height: 50, fontSize: 16, color: "black" }}
                           onClick={(e) => {
                             thirdQuery = "/" + transformStringToUrl(item.Name);
                             handleClickAway(e);
-                            history("/Femme" + secondQuery + thirdQuery);
+                            history(`/${name}` + secondQuery + thirdQuery);
                           }}
                         >
                           {item.Name}

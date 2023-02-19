@@ -102,7 +102,6 @@ const Filter = ({ id, classes, filterMyFrips }) => {
           display={"flex"}
           alignItems="center"
           height={40}
-          minWidth={200}
           justifyContent="center"
         >
           <Typography style={{ fontSize: 16 }}>Trier par</Typography>

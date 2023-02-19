@@ -1,6 +1,7 @@
 import {
   alpha,
   Box,
+  ClickAwayListener,
   MenuItem,
   Popper,
   Typography
@@ -13,7 +14,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addFilterFromSearch, getInfoSearch } from "../../actions";
-import ClickAwayListener from "../SpecialComponent/ClickAwayListener";
 const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",

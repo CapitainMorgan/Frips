@@ -116,8 +116,8 @@ router.post("/myProfile", auth, upload, async (req, res) => {
 
 router.post("/updateAddress", auth, async (req, res) => {
   const { id } = req.user;
-  const { Rue, Numero, Localite, NPA } = req.body;
-  console.log(req.body);
+  const { Rue, Numero, Localite, NPA,Prenom,Nom } = req.body;
+  console.log(req.body)
   try {
     const { address } = await account.update({
       where: {
@@ -131,7 +131,10 @@ router.post("/updateAddress", auth, async (req, res) => {
             NumStreet: Numero,
             Street: Rue,
           },
+
         },
+        Firstname:Prenom,
+        Lastname:Nom
       },
       select: {
         address: true,

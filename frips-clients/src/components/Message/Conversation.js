@@ -3,6 +3,7 @@ import {
   Box,
   Button,
   CircularProgress,
+  Divider,
   Icon,
   makeStyles,
   MenuItem,
@@ -27,15 +28,14 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "1%",
   },
   Divider: {
-    height: "5vh",
+    height: "10vh",
     [theme.breakpoints.down("sm")]: {
-      height: 0,
+      height: "10vh",
     },
   },
 
   formContainer: {
     marginBottom: "5vh",
-    height: "60vh",
     overflow: "auto",
     margin: "auto",
     width: "50%",
@@ -43,9 +43,8 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       flexGrow: 1,
       width: "100%",
-
+      height: "100vh",
       marginBottom: 0,
-      height: "calc(100vh - 98px)",
     },
   },
 }));
@@ -54,7 +53,6 @@ const renderAvatarUrl = (
   { account_accountTochat_id_Account_2, account_accountTochat_id_Account_1 },
   userId
 ) => {
-  console.log(account_accountTochat_id_Account_2)
   if (account_accountTochat_id_Account_2.id === userId) {
     return `${account_accountTochat_id_Account_1.id}/${account_accountTochat_id_Account_1?.image?.image}`;
   } else if (account_accountTochat_id_Account_1.id === userId) {
@@ -62,16 +60,16 @@ const renderAvatarUrl = (
   }
 };
 
-const renderPseudo = ({ account_accountTochat_id_Account_2, account_accountTochat_id_Account_1 },
-  userId) =>{
-    if(account_accountTochat_id_Account_2.id === userId){
-      return `${account_accountTochat_id_Account_1.Pseudo}`
-    }
-    else{
-      return `${account_accountTochat_id_Account_1.Pseudo}`
-
-    }
+const renderPseudo = (
+  { account_accountTochat_id_Account_2, account_accountTochat_id_Account_1 },
+  userId
+) => {
+  if (account_accountTochat_id_Account_2.id === userId) {
+    return `${account_accountTochat_id_Account_1.Pseudo}`;
+  } else {
+    return `${account_accountTochat_id_Account_1.Pseudo}`;
   }
+};
 
 const UserMessage = (messages, classes, history, idUser) => {
   return messages.map((item, index) => {
@@ -86,9 +84,24 @@ const UserMessage = (messages, classes, history, idUser) => {
           }}
         >
           <Avatar
-            alt={renderPseudo(item,idUser)}
-            src={`${API_ENDPOINT}/imageProfile/${renderAvatarUrl(item,idUser)}`}
+            alt={renderPseudo(item, idUser)}
+            src={`${API_ENDPOINT}/imageProfile/${renderAvatarUrl(
+              item,
+              idUser
+            )}`}
           />
+          <Box width={"20%"} display={"flex"} justifyContent="center" alignItems={"center"}>
+          <Typography style={{
+                  textOverflow: "ellipsis",
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  width:"80%"
+          }}>
+          {renderPseudo(item, idUser)}
+          </Typography>
+          </Box>
+          
+          <Divider orientation="vertical" style={{color:"black",height:50,width:1.5}} />
 
           <Box display="flex" paddingLeft={2} flexGrow={1} width="100%">
             <Box display="flex" flexGrow={1} width="100%">
@@ -98,6 +111,7 @@ const UserMessage = (messages, classes, history, idUser) => {
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   width: "calc(20%)",
+                  flexGrow:1
                 }}
               >
                 {item.message[0]?.Text ? (
@@ -112,7 +126,7 @@ const UserMessage = (messages, classes, history, idUser) => {
                   </Box>
                 )}
               </Typography>
-              <Box flexGrow={1} justifyContent="flex-end" display={"flex"}>
+              <Box  justifyContent="flex-end" display={"flex"}>
                 <Box display={"flex"} alignItems={"center"}>
                   {item.message[0].Unread &&
                   idUser !== item.message[0].id_Sender ? (
@@ -135,19 +149,19 @@ const UserMessage = (messages, classes, history, idUser) => {
 
 const AllConversations = ({ conversations, loading, count, idUser }) => {
   const dispatch = useDispatch();
-
+  const classes = useStyles();
   const history = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
+
   useEffect(() => {
     if (conversations.length === 0 && !loading && count !== 0) {
       dispatch(getAllConv());
     }
   }, [dispatch, loading]);
 
-  const classes = useStyles();
 
   if (conversations.length === 0 && loading) {
     return (
@@ -165,7 +179,7 @@ const AllConversations = ({ conversations, loading, count, idUser }) => {
   }
 
   return (
-    <Box style={{ backgroundColor: "#F5f5f3" }}>
+    <Box style={{ backgroundColor: "#F5f5f3" }} height={"100%"}>
       <Box className={classes.Divider} />
       <Box className={classes.formContainer}>
         {!loading ? UserMessage(conversations, classes, history, idUser) : null}

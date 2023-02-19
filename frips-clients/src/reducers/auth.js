@@ -73,7 +73,9 @@ export default (state = initialState, action) => {
         ...state,
         user:{
           ...state.user,
-          address:payload
+          address:payload.newAddress,
+          Firstname:payload.Firstname,
+          Lastname:payload.Lastname
         }
       }  
     case SOCKET:

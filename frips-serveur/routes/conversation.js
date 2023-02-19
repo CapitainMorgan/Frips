@@ -249,7 +249,24 @@ router.get("/unReadNotification", auth, async (req, res) => {
         id: true,
       },
     });
-    res.status(200).json(conversation);
+
+    const resultsSell = await item.findMany({
+      where: {
+        id_Seller:id,
+        transaction: {
+          some: {
+            DateSend: {
+              equals: null,
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    res.status(200).json({conversation,resultsSell});
   } catch (error) {
     console.log(error);
     res.status(500).json("Serveur Erreur");

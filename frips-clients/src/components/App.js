@@ -103,7 +103,7 @@ const App = () => {
         >
           <Router>
             <Header />
-            <NotificationComponent notification={notification} />
+            <NotificationComponent mobile={mobile} notification={notification} />
             <Routes>
               <Route
                 path="/signup"

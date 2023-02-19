@@ -21,7 +21,7 @@ const sendEmailSell = async (Pseudo,Email) => {
       const options = {
         from: "noreply@myfrips.ch",
         to: Email,
-        subject: "Votre vente a été conclue !",
+        subject: "Une vente a été conclue !",
         html: emailSell(Pseudo)
       };
   

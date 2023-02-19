@@ -122,7 +122,7 @@ const renderFees = (id) => {
     return 0;
   }
 };
-const CheckOut = ({ loading, cs, item, idAccount }) => {
+const CheckOut = ({ loading, cs, item, idAccount,myAddress }) => {
   const classes = useStyles();
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [loadingPayment, setloadinPayment] = useState(false);
@@ -244,8 +244,9 @@ const CheckOut = ({ loading, cs, item, idAccount }) => {
                 </Typography>
               </Box>
               <Box height={5} />
+              
               <Box display="flex" alignItems="center">
-                <Adress addresse={item.account} />
+                <Adress addresse={myAddress} />
               </Box>
             </Box>
             <Box height={40} />
@@ -355,6 +356,7 @@ const mapStateToProps = (state) => ({
   cs: state.payment.clientSecret,
   loading: state.payment.loading,
   idAccount: state.auth.user.id,
+  myAddress:state.auth.user,
   item: state.payment.item,
 });
 

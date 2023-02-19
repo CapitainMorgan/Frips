@@ -50,8 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   ArrowBackIcon: {
     height: 40,
-    position: "absolute",
-    left: 0,
+    
     "&:hover": {
       background: "transparent",
     },
@@ -78,18 +77,15 @@ const renderArraySize = (
       <MenuItem
         className={classes.ItemBox}
         onClick={() => {
-          if((item.type && index===0 )|| (item.type && index===1)){
-            setNavigation(index)
-          }
-          else{
-            if (_.includes(filter[label], item)) {
-            dispatch(removeToFilter(item));
+          if ((item.type && index === 0) || (item.type && index === 1)) {
+            setNavigation(index);
           } else {
-            dispatch(addToFilter(item, label));
+            if (_.includes(filter[label], item)) {
+              dispatch(removeToFilter(item));
+            } else {
+              dispatch(addToFilter(item, label));
+            }
           }
-          }
-          
-          
         }}
       >
         <Typography style={{ fontSize: 18 }}>{item.Name}</Typography>
@@ -111,7 +107,6 @@ const renderArraySize = (
             disableTouchRipple
           >
             <ChevronRightIcon style={{ fontSize: 25 }} />
-            
           </IconButton>
         )}
       </MenuItem>
@@ -120,22 +115,18 @@ const renderArraySize = (
 };
 
 const handleArray = (selectIndex) => {
-  
-  if(selectIndex===0 || selectIndex===1){
+  if (selectIndex === 0 || selectIndex === 1) {
     const subArray = [];
-    arraySize[selectIndex].subitems.map((subItem,indexSub)=>{
-      subItem.subitems.map((itemToPush)=>{
-       subArray.push(itemToPush)
-      })
-    })
-    return subArray
-  }
-  else{
-    return arraySize
+    arraySize[selectIndex].subitems.map((subItem, indexSub) => {
+      subItem.subitems.map((itemToPush) => {
+        subArray.push(itemToPush);
+      });
+    });
+    return subArray;
+  } else {
+    return arraySize;
   }
 };
-
-
 
 const SizeFilter = ({ filter, label }) => {
   const [navigationId, setNavigation] = useState();
@@ -144,26 +135,32 @@ const SizeFilter = ({ filter, label }) => {
 
   return (
     <Box className={classes.BoxShadow}>
-    {navigationId === 0 || navigationId===1? (
+      {navigationId === 0 || navigationId === 1 ? (
         <Box className={classes.label}>
           <IconButton
             onClick={() => {
-              setNavigation(null)
+              setNavigation(null);
             }}
-            className={classes.ArrowBackIcon}
+            style={{justifySelf:"flex-start",display:"flex"}}
             disableFocusRipple
             disableRipple
             disableTouchRipple
           >
-            <ArrowBackIcon />
+            <ArrowBackIcon fontSize="large"  />
           </IconButton>
           <Typography style={{ fontSize: 18 }}>
-              
             {arraySize[navigationId].Name}
           </Typography>
         </Box>
       ) : null}
-      {renderArraySize(classes, filter, label, setNavigation, navigationId,dispatch)}
+      {renderArraySize(
+        classes,
+        filter,
+        label,
+        setNavigation,
+        navigationId,
+        dispatch
+      )}
     </Box>
   );
 };

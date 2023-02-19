@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Box, InputAdornment, Popper, TextField } from "@material-ui/core";
+import { Box, ClickAwayListener, InputAdornment, Popper, TextField } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
@@ -12,7 +12,6 @@ import _ from "lodash";
 
 import CloseIcon from "@material-ui/icons/Close";
 import { useSelector } from "react-redux";
-import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyles = makeStyles({
   pointer: {
@@ -32,7 +31,7 @@ const useStyles = makeStyles({
     right: 10,
   },
   Dialog: {
-    width: "50vh",
+    width: "80vw",
     height: "80vh",
   },
 });

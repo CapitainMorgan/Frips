@@ -1,6 +1,7 @@
 import {
   CREATE_ITEM,
   EDIT_ITEM,
+  ERROR_ITEM,
   FETCH_ID_FAVORITE,
   FETCH_ITEM,
   FETCH_ITEMS,
@@ -20,8 +21,9 @@ const initialValues = {
   loaded: false,
   favorites: [],
   newItem: [],
-  initialValues:{},
-  imageBlob:[],
+  error: false,
+  initialValues: {},
+  imageBlob: [],
   editItemPage: null,
   successCreationItem: null,
 };
@@ -47,13 +49,18 @@ export default (state = initialValues, action) => {
       };
     }
     case EDIT_ITEM:
-      
       return {
         ...state,
-        initialValues:action.payload.initialValues,
-        imageBlob:action.payload.imageBlob,
+        initialValues: action.payload.initialValues,
+        imageBlob: action.payload.imageBlob,
       };
-      
+
+    case ERROR_ITEM:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
     case FETCH_ITEMS:
       return {
         ...state,
@@ -87,19 +94,18 @@ export default (state = initialValues, action) => {
 
         UniqueItem: action.payload,
       };
-      case LOADING_FETCH_ITEM:
-        return{
-          ...state,
-          loading:true,
-          loaded:false
-        }
-        case SUCCESS_FETCH_ITEM:
-        return{
-          ...state,
-          loading:false,
-          loaded:true
-        }
-      
+    case LOADING_FETCH_ITEM:
+      return {
+        ...state,
+        loading: true,
+        loaded: false,
+      };
+    case SUCCESS_FETCH_ITEM:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+      };
 
     case FETCH_NEW_ITEMS:
       return {
@@ -113,7 +119,7 @@ export default (state = initialValues, action) => {
     case RESET_ITEM:
       return {
         ...state,
-        UniqueItem:[]
+        UniqueItem: [],
       };
 
     default:

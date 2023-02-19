@@ -1,4 +1,4 @@
-const emailSell = (id) => {
+const emailSell = (name,id) => {
   return `
   <!DOCTYPE html>
   <html>
@@ -9,7 +9,7 @@ const emailSell = (id) => {
     <body style="font-family: Arial, sans-serif; background-color: #f9f9f9;">
       <div style="width: 80%; margin: 0 auto; padding: 20px; background-color: #fff;">
         <p style="font-size: 17px; line-height: 24px; margin: 16px 0; text-align: left;">
-          Bonjour,<br>
+          Bonjour ${name},<br>
           <br>
           Nous sommes heureux de vous informer qu'un de vos articles sur MyFrips a été vendu ! Félicitations !<br>
           <br>
@@ -17,7 +17,7 @@ const emailSell = (id) => {
           <br>
           Vous pouvez accéder à la page de vente en cliquant sur le lien ci-dessous :<br>
           <br>
-          <a href="https://www.myfrips.ch/members/mySell/${id} style="display: inline-block; padding: 10px 20px; background-color: "#82a0c2"; color: #fff; text-decoration: none; border-radius: 5px;">Voir ma vente</a><br>
+          <a href="https://www.myfrips.ch/members/mySell/${id}" style="display: inline-block; padding: 10px 20px; background-color: #82a0c2; color: #fff; text-decoration: none; border-radius: 5px;">Voir ma vente</a><br>
           <br>
           Nous espérons que cette vente sera le début de nombreuses autres transactions réussies sur MyFrips.<br>
           <br>

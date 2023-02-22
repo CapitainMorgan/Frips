@@ -7,6 +7,12 @@ const multer = require("multer");
 const { nanoid } = require("nanoid");
 let fs = require("fs-extra");
 const path = require("path"); // path for cut the file extension
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { members: { type: "file", filename: "members.log" } },
+  categories: { default: { appenders: ["members"], level: "error" } },
+});
+var logger = log4js.getLogger("members");
 
 const {
   item,

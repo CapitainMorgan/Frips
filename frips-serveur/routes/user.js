@@ -8,6 +8,13 @@ const { PrismaClient } = require("@prisma/client");
 
 const { account } = new PrismaClient();
 
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { user: { type: "file", filename: "user.log" } },
+  categories: { default: { appenders: ["user"], level: "error" } },
+});
+var logger = log4js.getLogger("user");
+
 // @route   POST api/users
 // @desc    Register user
 // @acces    Public

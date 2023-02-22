@@ -11,6 +11,13 @@ const { item, account, image, message, transaction, pricepropose } =
   new PrismaClient();
 const taxe = 1.07;
 
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { payment: { type: "file", filename: "payment.log" } },
+  categories: { default: { appenders: ["payment"], level: "error" } },
+});
+var logger = log4js.getLogger("payment");
+
 const customRound = (price) => {
   let decimal = price - Math.floor(price);
   return decimal >= 0.25 && decimal <= 0.75

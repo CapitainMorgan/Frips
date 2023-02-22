@@ -1,12 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { conversation: { type: "file", filename: "conversation.log" } },
+  categories: { default: { appenders: ["conversation"], level: "error" } },
+});
+var logger = log4js.getLogger("conversation");
 
 const { PrismaClient } = require("@prisma/client");
 const _ = require("lodash");
 const { sendEmailMessage } = require("../email/sendEmailMessage");
-const { account, item, chat, message, pricepropose } = new PrismaClient();
+const { item, chat, message, pricepropose } = new PrismaClient();
 
+/**
+ * @route   POST api/conversation
+ * @desc    get conversation
+ * @acces   Private (need token)
+ */
 router.post("/", auth, async (req, res) => {
   let id_item = parseInt(req.body.id);
   const { id } = req.user;
@@ -14,7 +25,7 @@ router.post("/", auth, async (req, res) => {
   try {
     const id_Receiver = await item.findUnique({
       where: {
-        id: parseInt(id_item),
+        id: id_item,
       },
       select: {
         account: {
@@ -111,14 +122,18 @@ router.post("/", auth, async (req, res) => {
         message: create.message,
         id: create.id,
       };
-
       res.status(200).json(test);
     }
   } catch (error) {
+    logger.error("POST /conversation" + error);
     res.status(500).send("Serveur error");
   }
 });
 
+/** 
+ * @route   POST api/conversation/myConversation
+ * @desc    get new message 
+ */
 router.post("/myConversation/newMessage", auth, async (req, res) => {
   const id_Chat = req.body.chat_id;
   const text = req.body.Text;
@@ -204,7 +219,7 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
       res.status(200).json("message send");
     }
   } catch (error) {
-    console.log(error);
+    logger.error("POST /conversation/myConversation/newMessage" + error);
     res.status(500).send("Serveur error");
   }
 });
@@ -226,7 +241,7 @@ router.put("/updateMessage", auth, async (req, res) => {
 
     res.status(200).json("Messages updates");
   } catch (error) {
-    console.log(error);
+    logger.error("PUT /conversation/updateMessage" + error);
     res.status(500).json("Serveur Error");
   }
 });
@@ -268,7 +283,7 @@ router.get("/unReadNotification", auth, async (req, res) => {
 
     res.status(200).json({conversation,resultsSell});
   } catch (error) {
-    console.log(error);
+    logger.error("GET /conversation/unReadNotification" + error);
     res.status(500).json("Serveur Erreur");
   }
 });
@@ -294,7 +309,7 @@ router.get("/MyConversation/lastMessage/:id", auth, async (req, res) => {
 
     res.status(200).json(test);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /conversation/MyConversation/lastMessage/:id" + error);
     res.status(500).send("Serveur error");
   }
 });
@@ -410,7 +425,7 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
       res.status(200).json(data);
     }
   } catch (error) {
-    console.log(error);
+    logger.error("GET /conversation/MyConversation/:id" + error);
     res.status(500).send("Serveur error");
   }
 });
@@ -478,7 +493,7 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
 
     res.status(200).json(convMessage);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /conversation/MyConversation/:id" + error);
     res.status(500).send("Serveur error");
   }
 });
@@ -616,7 +631,7 @@ router.get("/myConversation", auth, async (req, res) => {
 
     res.status(200).json({ myConversation: sortedMessages, count });
   } catch (error) {
-    console.log(error);
+    logger.error("GET /conversation/myConversation" + error);
     res.status(500).send("Serveur error : conversation");
   }
 });

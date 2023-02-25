@@ -188,6 +188,8 @@ CREATE TABLE transaction(
    id INT AUTO_INCREMENT,
    id_Account INT NOT NULL,
    Price DOUBLE,
+   TaxPrice DOUBLE,
+   DeliveryPrice DOUBLE,
    Protection DOUBLE,
    DateSell DATETIME NOT NULL,
    Status VARCHAR(50),

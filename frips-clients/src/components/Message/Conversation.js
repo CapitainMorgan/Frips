@@ -73,70 +73,86 @@ const renderPseudo = (
 
 const UserMessage = (messages, classes, history, idUser) => {
   return messages.map((item, index) => {
-    console.log(item.message[0].Unread && idUser !== item.message[0].id_Sender);
     return (
       <Box className={classes.boxShadow} key={index}>
-        <MenuItem
-          key={index}
-          className={classes.MenuSetting}
-          onClick={() => {
-            history(`/member/message/${item.id}`);
-          }}
-        >
+        <MenuItem key={index} className={classes.MenuSetting}>
           <Avatar
+            onClick={(e) => {
+              e.preventDefault();
+              history(`/member/${renderPseudo(item, idUser)}`);
+            }}
             alt={renderPseudo(item, idUser)}
             src={`${API_ENDPOINT}/imageProfile/${renderAvatarUrl(
               item,
               idUser
             )}`}
           />
-          <Box width={"20%"} display={"flex"} justifyContent="center" alignItems={"center"}>
-          <Typography style={{
-                  textOverflow: "ellipsis",
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  width:"80%"
-          }}>
-          {renderPseudo(item, idUser)}
-          </Typography>
-          </Box>
-          
-          <Divider orientation="vertical" style={{color:"black",height:50,width:1.5}} />
-
-          <Box display="flex" paddingLeft={2} flexGrow={1} width="100%">
-            <Box display="flex" flexGrow={1} width="100%">
+          <Box
+            display={"flex"}
+            alignItems="center"
+            flexGrow={1}
+            onClick={() => {
+              history(`/member/message/${item.id}`);
+            }}
+          >
+            <Box
+              width={"20%"}
+              display={"flex"}
+              justifyContent="center"
+              alignItems={"center"}
+            >
               <Typography
                 style={{
                   textOverflow: "ellipsis",
                   whiteSpace: "nowrap",
                   overflow: "hidden",
-                  width: "calc(20%)",
-                  flexGrow:1
+                  width: "80%",
                 }}
               >
-                {item.message[0]?.Text ? (
-                  item.message[0].Text
-                ) : (
-                  <Box display={"flex"}>
-                    <AttachMoneyIcon style={{ color: "#228D57" }} />
-                    <Typography style={{ fontSize: 16 }}>
-                      Tu as une proposition d'offre ?
-                    </Typography>
-                    <AttachMoneyIcon style={{ color: "#228D57" }} />
-                  </Box>
-                )}
+                {renderPseudo(item, idUser)}
               </Typography>
-              <Box  justifyContent="flex-end" display={"flex"}>
-                <Box display={"flex"} alignItems={"center"}>
-                  {item.message[0].Unread &&
-                  idUser !== item.message[0].id_Sender ? (
-                    <Icon style={{ marginRight: "1vh" }}>
-                      <AdjustOutlinedIcon color="primary" />
-                    </Icon>
-                  ) : null}
-                  <Typography style={{ fontSize: 13 }}>
-                    {moment(item.message[0].Date_Houre).fromNow()}
-                  </Typography>
+            </Box>
+
+            <Divider
+              orientation="vertical"
+              style={{ color: "black", height: 50, width: 1.5 }}
+            />
+
+            <Box display="flex" paddingLeft={2} flexGrow={1} width="100%">
+              <Box display="flex" flexGrow={1} width="100%">
+                <Typography
+                  style={{
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    width: "calc(20%)",
+                    flexGrow: 1,
+                  }}
+                >
+                  {item.message[0]?.Text ? (
+                    item.message[0].Text
+                  ) : (
+                    <Box display={"flex"}>
+                      <AttachMoneyIcon style={{ color: "#228D57" }} />
+                      <Typography style={{ fontSize: 16 }}>
+                        Tu as une proposition d'offre ?
+                      </Typography>
+                      <AttachMoneyIcon style={{ color: "#228D57" }} />
+                    </Box>
+                  )}
+                </Typography>
+                <Box justifyContent="flex-end" display={"flex"}>
+                  <Box display={"flex"} alignItems={"center"}>
+                    {item.message[0].Unread &&
+                    idUser !== item.message[0].id_Sender ? (
+                      <Icon style={{ marginRight: "1vh" }}>
+                        <AdjustOutlinedIcon color="primary" />
+                      </Icon>
+                    ) : null}
+                    <Typography style={{ fontSize: 13 }}>
+                      {moment(item.message[0].Date_Houre).fromNow()}
+                    </Typography>
+                  </Box>
                 </Box>
               </Box>
             </Box>
@@ -160,10 +176,9 @@ const AllConversations = ({ conversations, loading, count, idUser }) => {
     if (conversations.length === 0 && !loading && count !== 0) {
       dispatch(getAllConv());
     }
-  }, [dispatch, loading]);
+  }, [dispatch, loading, count, conversations]);
 
-
-  if (conversations.length === 0 && loading) {
+  if (conversations.length === 0 && loading && !Boolean(count)) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -178,11 +193,24 @@ const AllConversations = ({ conversations, loading, count, idUser }) => {
     );
   }
 
+  if (!loading && count === 0) {
+    <Box
+      style={{ backgroundColor: "#F5f5f3" }}
+      display="flex"
+      justifyContent="center"
+      width="100%"
+      height="100vh"
+      alignItems="center"
+    >
+      <Typography style={{ fontSize: 16 }}>Vous avez aucun message</Typography>
+    </Box>;
+  }
+
   return (
     <Box style={{ backgroundColor: "#F5f5f3" }} height={"100%"}>
       <Box className={classes.Divider} />
       <Box className={classes.formContainer}>
-        {!loading ? UserMessage(conversations, classes, history, idUser) : null}
+        {UserMessage(conversations, classes, history, idUser)}
       </Box>
     </Box>
   );

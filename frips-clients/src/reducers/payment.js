@@ -1,10 +1,13 @@
 import {
+  ERROR_PAYMENT_PAGE,
+  ISRESERVED,
   LOADING_PAYMENT,
   PAYMENT_FAILED,
   PAYMENT_INFO,
   PAYMENT_INFO_SUCCESS_FETCH,
   PAYMENT_INTENT,
   PAYMENT_SUCCESS,
+  RESET_PAYMENT,
 } from "../actions/type.js";
 
 const initialValues = {
@@ -13,6 +16,8 @@ const initialValues = {
   clientSecret: "",
   successed: null,
   failed: null,
+  error: null,
+  isDisponible: false,
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -53,7 +58,20 @@ export default (state = initialValues, action) => {
       return {
         ...state,
         clientSecret: payload.client_secret,
-      }
+      };
+    case ISRESERVED:
+      return {
+        ...state,
+        isDisponible: payload,
+      };
+    case ERROR_PAYMENT_PAGE:
+      return {
+        ...state,
+        isDisponible: false,
+        error: payload,
+      };
+    case RESET_PAYMENT:
+      return initialValues;
 
     default:
       return state;

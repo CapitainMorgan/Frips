@@ -5,10 +5,7 @@ const { check, validationResult } = require("express-validator");
 const { JSDOM } = require("jsdom");
 
 const { PrismaClient } = require("@prisma/client");
-const MyComponent = require("../email/emailMessage");
-const { sendEmailNewUser } = require("../email/sendEmailNewUser");
-const { sendEmailSell } = require("../email/sendEmailSell");
-const { sendEmailConfirmation } = require("../email/sendConfirmationSend");
+const { sendEmail } = require("../email/sendEmail");
 const { account, item, category_category, brand, chat, message } =
   new PrismaClient();
 
@@ -22,18 +19,21 @@ const createHTMLElement = (html) => {
 };
 
 router.post("/", async (req, res) => {
+  const test = "nike air force"
   try {
-    const result = await res.status(200).json(result);
+     
+     console.log(items)
+    res.status(200).json(items)
   } catch (error) {
     console.log(error);
     res.status(500).json("Server error");
   }
 });
-router.post("/s", async (req, res) => {
+router.post("/s", async (req, res,next) => {
   const count = 0
   try {
-    sendEmailNewUser()  
-    sendEmailSell()
+    
+    await sendEmail(1,"NewMessage",next,{id_Item:1})
 
 
   } catch (error) {

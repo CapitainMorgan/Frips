@@ -6,15 +6,13 @@ import {
   makeStyles,
   Modal,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import CloseIcon from "@material-ui/icons/Close";
 import DoneIcon from "@material-ui/icons/Done";
-import CancelIcon from "@material-ui/icons/Cancel";
+import React, { useState } from "react";
+import { connect, useDispatch } from "react-redux";
 import { sendMessage } from "../../actions";
-import { connect } from "react-redux";
 import axiosInstance from "../../api/api";
 const useStyles = makeStyles((theme) => ({
   pointer: {
@@ -120,6 +118,8 @@ const PricePropose = ({
 
   const dispatch = useDispatch();
 
+  console.log(loading)
+
   const handleChange = (e) => {
     if (!isNaN(e.target.value)) {
       setPrice(e.target.value);
@@ -208,7 +208,7 @@ const PricePropose = ({
               backgroundColor: displayColor(succeed),
             }}
             variant="contained"
-            disabled={loading || succeed === 2 || error}
+            disabled={loading ||  error}
             onClick={async () => {
               if (item) {
                 if (socket?.connected) {
@@ -239,6 +239,10 @@ const PricePropose = ({
                       socket
                     )
                   );
+                  setLoading(false);
+                  handleClickAway()
+
+
                       
                  
 
@@ -248,7 +252,7 @@ const PricePropose = ({
               }
             }}
           >
-            {loadingSendProposition(succeed, loading)}
+            {!error ? loadingSendProposition(succeed, loading):null}
             {error ? <Typography style={{fontSize:16}}>{error}</Typography>:null}
 
           </Button>

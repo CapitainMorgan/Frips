@@ -57,6 +57,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       height: "100%",
       width: "100%",
+      margin:0
     },
   },
 
@@ -95,7 +96,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   page:{
-    height:`calc(100vh - ${window.innerHeight} - ${document.documentElement.clientHeight})`
+    
   }
 }));
 
@@ -261,8 +262,10 @@ const Conversation = ({
             className={classes.MenuSetting}
             display="flex"
             alignItems="center"
+            
           >
             <Avatar
+            
               alt={renderProfilImage(Profile, userId)}
               style={{ border: 2, borderColor: "black" }}
               src={`${API_ENDPOINT}/imageProfile/${renderProfileNumber(
@@ -273,10 +276,12 @@ const Conversation = ({
             <Typography style={{ fontSize: "1.2em", marginLeft: 5 }}>
               {renderProfileName(Profile, userId)}
             </Typography>
+            
+            
           </Box>
           <Divider />
 
-          {fromItem ? (
+          {fromItem && !mobile ? (
             <React.Fragment>
               <Box display={"flex"} padding={3}>
                 <Box
@@ -328,7 +333,7 @@ const Conversation = ({
                     color="primary"
                     style={{ marginLeft: 5 }}
                   >
-                    Voir plus d'items ?
+                    Voir plus d'offres ?
                   </Button>
                 </Box>
               </Box>
@@ -336,7 +341,6 @@ const Conversation = ({
               <Divider />
             </React.Fragment>
           ) : null}
-
           {!mobile ? (
             <Box display={"flex"} flexGrow={2}>
               <MessageComponent

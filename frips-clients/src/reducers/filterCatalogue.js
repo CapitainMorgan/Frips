@@ -123,7 +123,7 @@ export default (state = initialValues, action) => {
         }
 
         arrayChip = state.Chips.filter((item) => {
-          return item.id !== payload.id;
+          return item.Name !== payload.Name;
         });
       }
 

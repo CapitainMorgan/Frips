@@ -11,6 +11,7 @@ import {
   GET_NOTIFICATION,
   LOADING_MYFRIPS,
   RECEIVED,
+  REMOVE_ITEM,
   REMOVE_NOTIFICATION_MYFRIPS,
   RESET_FILTER_MYFRIPS,
   REVIEW,
@@ -24,11 +25,11 @@ const initialValues = {
   delivery: [],
   proposition: [],
   sell: [],
-  item:null,
+  item: null,
   purchase: [],
   filter: [],
   sellNotification: [],
-  purchaseNotification:[],
+  purchaseNotification: [],
   propositionNotification: [],
   pagination: 1,
   msg: "",
@@ -44,37 +45,48 @@ export default (state = initialValues, action) => {
         ...state,
         items: payload.items,
         count: payload.count,
-        msg:payload.msg
+        msg: payload.msg,
       };
-      case FETCH_MYSELLBYID:
-        return {
-          ...state,
-          item:{
-            id_transaction:payload.id,
-            ...payload.item,
-            DateSell: new Date(payload.DateSell),
+    case FETCH_MYSELLBYID:
+      return {
+        ...state,
+        item: {
+          id_transaction: payload.id,
+          ...payload.item,
+          DateSell: new Date(payload.DateSell),
           DateSend: payload.DateSend,
-          
+
           Price: payload.Price,
-          Price_Fees: payload.Price - payload.Price,
-          review:payload.review,
-          buyerAccount:payload.account,
-          Status:payload.Status,
-          }
-        }
- 
+          Price_Fees: payload.item.Price - payload.Price,
+          review: payload.review,
+          buyerAccount: payload.account,
+          Status: payload.Status,
+        },
+      };
+
     case FETCH_MYSELL:
       const sellArray = payload.items.map(
-        ({ item, DateSell, DateSend, account, Price, Status, id, review }) => ({
+        ({
+          item,
+          DateSell,
+          DateSend,
+          account,
+          Price,
+          Status,
+          id,
+          review,
+          DeliveryPrice,
+          TaxPrice,
+        }) => ({
           id_transaction: id,
           ...item,
           DateSell: new Date(DateSell),
           DateSend: DateSend,
-          
+          DeliveryPrice,
           Price: item.Price,
-          Price_Fees: Price - item.Price,
+          Price_Fees: TaxPrice,
           review,
-          buyerAccount:account,
+          buyerAccount: account,
           Status,
         })
       );
@@ -84,17 +96,39 @@ export default (state = initialValues, action) => {
         count: payload.count,
         msg: payload.msg,
       };
+    case REMOVE_ITEM:
+      const filterArray = state.items.filter((item)=>{
+        return item.id !== payload
+      })
+
+      return {
+        ...state,
+        items:[...filterArray]
+      }
+     
     case FETCH_MYPURCHASE:
       const purchaseArray = payload.items.map(
-        ({ item, DateSell, DateSend, account, Price, Status, id, review }) => ({
+        ({
+          item,
+          DateSell,
+          DateSend,
+          account,
+          Price,
+          Status,
+          id,
+          review,
+          DeliveryPrice,
+          TaxPrice,
+        }) => ({
           id_transaction: id,
           ...item,
           DateSell: new Date(DateSell),
           DateSend: DateSend,
-          review,
-          buyerAccount:account,
+          DeliveryPrice,
           Price: item.Price,
-          Price_Fees: Price - item.Price,
+          Price_Fees: TaxPrice,
+          review,
+          buyerAccount: account,
           Status,
         })
       );
@@ -161,16 +195,13 @@ export default (state = initialValues, action) => {
         };
       }
     case REMOVE_NOTIFICATION_MYFRIPS:
-      
-      if (_.find(state[payload.obj], {id:payload.id})) {
+      if (_.find(state[payload.obj], { id: payload.id })) {
         const removedItems = _.remove(state[payload.obj], (item) => {
           return item.id !== payload.id;
         });
         return {
           ...state,
-          [payload.obj]:[...removedItems]
-          
-
+          [payload.obj]: [...removedItems],
         };
       }
     // eslint-disable-next-line no-fallthrough
@@ -179,7 +210,7 @@ export default (state = initialValues, action) => {
         ...state,
         propositionNotification: [...payload?.resultsProposition],
         sellNotification: [...payload?.resultsSell],
-        purchaseNotifcation:[...payload?.resultsPurchase]
+        purchaseNotifcation: [...payload?.resultsPurchase],
       };
     case STATUS_PROPOSITION:
       return {

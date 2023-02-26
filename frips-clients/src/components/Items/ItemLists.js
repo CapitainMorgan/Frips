@@ -275,7 +275,7 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
       justifyContent="center"
     >
       <Box width={"100%"}>
-        {success  ? (
+        {success ? (
           <Snackbar
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             open={open}
@@ -299,21 +299,22 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
             classes={classes}
             favorite={favorite}
           />
-                    <Box height={"1vh"} />
+          <Box height={"1vh"} />
 
           {mobile ? (
             <Box
-            alignItems={"center"}
-            justifyContent="center"
-            display={"flex"}
-            onClick={() => {
-                  navigate("/items/allNewItems");
-                }}
-            style={{
-              backgroundColor: "#f5f6f7",
-              borderRadius: 5,
-              opacity: 0.6,
-            }}
+              alignItems={"center"}
+              justifyContent="center"
+              display={"flex"}
+              height={100}
+              onClick={() => {
+                navigate("/items/allNewItems");
+              }}
+              style={{
+                backgroundColor: "white",
+                borderRadius: 5,
+                cursor: "pointer",
+              }}
             >
               <Typography style={{ color: "black", fontSize: 20 }}>
                 Afficher plus

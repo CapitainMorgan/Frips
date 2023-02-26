@@ -4,7 +4,6 @@ const auth = require("../middleware/auth");
 
 const { PrismaClient } = require("@prisma/client");
 const _ = require("lodash");
-const { sendEmailMessage } = require("../email/sendEmailMessage");
 const { account, item, chat, message, pricepropose } = new PrismaClient();
 
 router.post("/", auth, async (req, res) => {
@@ -153,7 +152,6 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
       if (newMessage.length > 0) {
         res.sendStatus(403);
       } else {
-        await sendEmailMessage(id, id_Receiver, id_Chat, id_Item, PricePropose);
         await pricepropose.upsert({
           where: {
             id_Account_id_Item: {
@@ -188,7 +186,6 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
         return res.status(200).json("message send");
       }
     } else {
-      await sendEmailMessage(id, id_Receiver, id_Chat);
 
       await message.create({
         data: {

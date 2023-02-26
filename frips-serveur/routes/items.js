@@ -251,6 +251,7 @@ router.get("/", async (req, res) => {
 router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
   const { id } = req.user;
   const { id_Item } = req.params;
+  console.log(id_Item)
   try {
     const findUser = await item.findUnique({
       where: {
@@ -536,6 +537,17 @@ const filterCatalogue = (Catalogue) => {
     },
   };
 };
+
+const findSearchQuery = (Search) =>{
+  const arraySearch = []
+  Search.map((item)=>{
+    arraySearch.push({Name:{
+      contains:item.Name
+    }})
+  })
+  console.log(...arraySearch)
+  return arraySearch
+}
 const isFilter = (filter) => {
   const {
     newCatalogue,
@@ -543,9 +555,11 @@ const isFilter = (filter) => {
     newEtat,
     newMarque,
     Price,
+    Search,
     itemsId,
     newTaille,
   } = filter;
+  
 
   if (
     newCatalogue.length !== 0 ||
@@ -554,7 +568,8 @@ const isFilter = (filter) => {
     newMarque.length !== 0 ||
     newTaille.length !== 0 ||
     Price[0] !== 0 ||
-    Price[1] !== null
+    Price[1] !== null || 
+    Search.length !==0
   ) {
     return {
       OR: [
@@ -571,6 +586,8 @@ const isFilter = (filter) => {
         filterCatalogue(newCatalogue),
 
         priceRange(Price),
+        ...findSearchQuery(Search)
+
       ],
     };
   } else return;
@@ -674,9 +691,9 @@ router.post("/pagination", async (req, res) => {
       },
 
       orderBy: [isSorted(sortedBy?.id), { DatePuplication: "desc" }],
-      skip: 5 * (number - 1),
+      skip: 15 * (number - 1),
 
-      take: 5,
+      take: 15,
     });
 
     res.status(200).json({ items: Item, count: count });
@@ -809,17 +826,10 @@ router.get("/Id_of_MyFavorite", auth, async (req, res) => {
 router.post("/proposition", auth, async (req, res) => {
   const { Price, idItem } = req.body;
   const { id } = req.user;
-
-
-  console.log(req.body)
-
-  console.log(id);
-  console.log(Price)
-  console.log(idItem)
   const DatePuplication = await new Date();
 
   try {
-    await pricepropose.create({
+    const data = await pricepropose.create({
       data:{
         Price:parseFloat(Price),
         SendDate:DatePuplication ,
@@ -827,6 +837,7 @@ router.post("/proposition", auth, async (req, res) => {
         id_Item:id
       }
     })
+    res.status(200).json(data)
   } catch (error) {
     console.log(error);
     res.status(500).json("Server error");

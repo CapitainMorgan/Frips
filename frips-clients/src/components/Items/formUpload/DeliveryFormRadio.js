@@ -7,6 +7,8 @@ import {
   Radio,
   RadioGroup,
   Typography,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import { RadioButtonCheckedRounded } from "@material-ui/icons";
 import _ from "lodash";
@@ -57,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
 const DeliveryFormRadio = ({
   field,
   form,
-  mobile,
   size,
   setSize,
   ...props
@@ -66,7 +67,9 @@ const DeliveryFormRadio = ({
   const DeliveryInfo = useSelector(
     (state) => state.itemInfo.itemInfo?.infoDelivery
   );
-
+  
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   if(DeliveryInfo?.length===0)return;
 
@@ -106,7 +109,7 @@ const DeliveryFormRadio = ({
               {Boolean(item.Price) ? `${ item.Price} CHF` : "gratuit"}
             </Typography>
           </Box>
-          <Radio
+          {!mobile ? <Radio
             className={classes.checkBox}
             style={{ backgroundColor: "transparent" }}
             checked={_.includes(form.values.Delivery, item.id)}
@@ -114,7 +117,7 @@ const DeliveryFormRadio = ({
             disableFocusRipple
             disableRipple
             disableTouchRipple
-          />
+          />:null}
         </Box>
       );
     });

@@ -3,16 +3,14 @@ var postmark = require("postmark");
 const { emailSell } = require("./emailSell");
 var client = new postmark.ServerClient("d93b1c93-5749-402d-b378-89913946617f");
 
-const sendEmailNewUser = async (Pseudo,Email) => {
+const sendEmailNewUser = async () => {
     try {
       
-     
-
     client.sendEmail({
       "From": "noreply@myfrips.ch",
       "To": "noreply@myfrips.ch",
       "Subject": "Confirmation d'inscription à MyFrips",
-      "HtmlBody": emailSell("mathieu"),
+      "HtmlBody": emailUser("mathieu"),
       "MessageStream": "smtp-test"
     });
   

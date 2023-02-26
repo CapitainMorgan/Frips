@@ -223,6 +223,12 @@ const DisplayCatalogue = ({
   const theme = useTheme();
   const history = useNavigate();
 
+  useEffect(()=>{
+    return () =>{
+      dispatch({type:"RESTORE"})
+    }
+  },[])
+
   useEffect(() => {
     if (itemInfo && !infoLoading) {
       setTypeOfFilter([
@@ -330,13 +336,12 @@ const DisplayCatalogue = ({
           </Box>
         ) : null}
 
-        <Box height={"10vh"} />
 
         <Box className={classes.GridSytem}>{renderedItems}</Box>
 
         <Box className={classes.PaginationBox}>
           <MyPaginate
-            pageCount={Math.ceil(count / 5)}
+            pageCount={Math.ceil(count / 15)}
             onPageChange={handleChange}
             pageRangeDisplayed={!mobile ? 2 : 1}
             forcePage={pagination - 1}
@@ -345,7 +350,7 @@ const DisplayCatalogue = ({
               <ArrowForwardIosIcon
                 style={{
                   color:
-                    pagination !== Math.ceil(count / 5)
+                    pagination !== Math.ceil(count /15)
                       ? "rgba(130, 160, 194, 1)"
                       : "grey",
                 }}

@@ -149,6 +149,15 @@ const renderDeliveryStep = ({ DateSend,review,Status }) => {
     );
   }
 };
+const typeOfDelivery = (price) =>{
+  if(price===7){
+    return "Livraison Poste Standard"
+  }
+  if(price===9){
+    return "Livraison Poste Rapide"
+  }
+  return "Livraison en main-propre"
+}
 
 const renderedItem = (classes, state, history) => {
   return state.map((item, index) => {
@@ -234,7 +243,7 @@ const renderedItem = (classes, state, history) => {
                 justifyContent={"center"}
                 alignItems="center"
               >
-                <Typography>{item?.item_fees[0]?.fees?.Name}</Typography>
+                <Typography>{typeOfDelivery(item.Price)}</Typography>
               </Box>
             </Box>
             <Box

@@ -31,12 +31,24 @@ const DetailAddress = ({buyerAccount}) =>{
   )
 }
 
+const typeOfDelivery = (price) =>{
+  if(price===7){
+    return "Livraison Poste Standard"
+  }
+  if(price===9){
+    return "Livraison Poste Rapide"
+  }
+  return "Livraison en main-propre"
+}
+
 const DetailsDelivery = ({
   item,
   buyerAccount,
   account,
   classes,
 }) => {
+
+  
   const { Firstname, Lastname } = account;
   const { City, NPA, Street, NumStreet } = account?.address;
   return (
@@ -71,14 +83,14 @@ const DetailsDelivery = ({
                   {item?.Price}.-
                 </Typography>
                 <Typography style={{ fontSize: 15 }}>
-                  {item?.item_fees[0]?.fees?.Price}.-
+                  {item?.DeliveryPrice}.-
                 </Typography>
                 <Typography style={{ fontSize: 15 }}>
                   {item?.Price_Fees}.-
                 </Typography>
                 <Typography style={{ fontSize: 17, fontWeight: 720 }}>
                   {item?.Price +
-                    item?.item_fees[0]?.fees?.Price +
+                    item?.DeliveryPrice +
                     item?.Price_Fees}
                   CHF
                 </Typography>
@@ -95,7 +107,7 @@ const DetailsDelivery = ({
             <Box marginLeft={10} display={"flex"}>
               <Box display={"flex"} flexDirection={"column"}>
                 <Typography style={{ fontSize: 17, fontWeight: 700 }}>
-                  {item?.item_fees[0]?.fees?.Name}
+                  {typeOfDelivery(item.DeliveryPrice)}
                 </Typography>
               </Box>
             </Box>

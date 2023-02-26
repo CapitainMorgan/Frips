@@ -32,7 +32,6 @@ const validationSchema = yup.object().shape({
 
 const renderTextField = (control, errors, initialValue) => {
   return Object.keys(initialValue).map((item) => {
-    console.log(item)
     return (
       <Box marginTop={3} display="flex" alignItems={"center"}>
         <Box width={"50%"}>
@@ -65,7 +64,6 @@ const ModalAdress = ({
   Lastname,
 }) => {
   const dispatch = useDispatch();
-  console.log(Firstname)
   const initialValue = {
     Prenom: Firstname,
     Nom: Lastname,
@@ -75,7 +73,6 @@ const ModalAdress = ({
     Numero: address.NumStreet,
   };
 
-  console.log(initialValue)
   const {
     control,
     register,

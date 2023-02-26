@@ -49,7 +49,6 @@ const TextFieldLogin = (props) => {
     )
   }
   else{
-    console.log(props.value)
     return (
       <TextField
         name={props.name}

@@ -57,6 +57,7 @@ const renderedItem = (classes) => {
           <Box display="flex" position="relative">
             <CardActionArea style={{ width: "100%", height: "100%" }}>
               <img
+                alt={images[index]}
                 src={images[index]}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />

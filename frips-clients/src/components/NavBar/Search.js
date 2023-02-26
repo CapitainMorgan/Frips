@@ -112,6 +112,8 @@ const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
     suggestionArray.push(WOMAN_ID.Name);
     suggestionArray.push(MAN_ID.Name);
   }
+  suggestionArray.push(`rechercher "${currentText}"`);
+
 
 
   return suggestionArray;

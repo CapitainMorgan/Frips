@@ -1,4 +1,4 @@
-const emailConfirmationSend = () => {
+const emailConfirmationSend = ({}) => {
     return `
     <html>
   <head>

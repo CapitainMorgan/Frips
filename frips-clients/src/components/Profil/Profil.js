@@ -3,13 +3,8 @@ import {
   Box,
   Button,
   Dialog,
-  Divider,
-  Input,
-  makeStyles,
-  MenuItem,
-  Select,
-  Slider,
-  Typography,
+  Divider, makeStyles, Slider,
+  Typography
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useEffect, useRef, useState } from "react";
@@ -75,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       height: "80vh",
       width: "auto",
-      padding:5,
+      padding: 5,
     },
   },
   formContainer: {
@@ -376,7 +371,7 @@ const UserProfile = () => {
               </Box>
               <Box display={"flex"} flexDirection="column" flexGrow={1}>
                 <Typography
-                  style={{ fontSize: 16,fontWeight:600}}
+                  style={{ fontSize: 16, fontWeight: 600 }}
                 >{`${state?.Firstname} ${state?.Lastname}`}</Typography>
                 <Typography
                   style={{ fontSize: 16 }}

@@ -19,6 +19,7 @@ import {
   ERROR,
   ERROR_ITEM,
   ERROR_MESSAGE,
+  ERROR_PAYMENT_PAGE,
   FETCH_FILTER,
   FETCH_INFO_ITEM,
   FETCH_ITEM,
@@ -45,6 +46,7 @@ import {
   HANDLE_CLICK_FORPROPOSE,
   HANDLE_SECOND_PAGE,
   INFO_ITEM,
+  ISRESERVED,
   LOADING_FETCH_ITEM,
   LOADING_ITEM,
   LOADING_PAYMENT,
@@ -70,8 +72,10 @@ import {
   REGISTER_SUCCESS,
   REMOVE_FAVORITE,
   REMOVE_FILTER,
+  REMOVE_ITEM,
   REMOVE_NOTIFICATION_MYFRIPS,
   RESET_ERROR,
+  RESET_PAYMENT,
   REVIEW,
   SEARCH,
   SEND_DATE,
@@ -123,16 +127,14 @@ export const setSocket = (socket) => async (dispatch, getState) => {
   }
 };
 
-export const itemViewed = (id) => async (dispatch,getState) => {
-  const auth = getState().auth.user
-  alert(id)
-  console.log(auth)
+export const itemViewed = (id) => async (dispatch, getState) => {
+  const auth = getState().auth.user;
   try {
-    if(auth){
+    if (auth) {
       await axiosInstance.post("/api/items/view", { id }, config);
     }
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -233,9 +235,9 @@ export const logout = (history) => (dispatch) => {
 ////ITEM/////
 
 export const createItem =
-  (formValues, images, history,setIsLoading) => async (dispatch, getState) => {
+  (formValues, images, history, setIsLoading) => async (dispatch, getState) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       let formData = new FormData();
       for (const key in formValues) {
         if (key === "image") {
@@ -251,15 +253,15 @@ export const createItem =
           formData.append(key, formValues[key]);
         }
       }
-      
+
       const response = await axiosInstance.post("/api/items", formData);
 
       dispatch({ type: CREATE_ITEM, payload: response.data });
-      setIsLoading(false)
+      setIsLoading(false);
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: true });
-     // history("/")
+      // history("/")
     } catch (error) {
-      dispatch({type:ERROR_ITEM,payload:true})
+      dispatch({ type: ERROR_ITEM, payload: true });
 
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: false });
     }
@@ -384,9 +386,9 @@ export const editItem = (id, formValues) => async (dispatch) => {
 };
 
 export const editItemSend =
-  (formValues, images, history, id,setIsLoading) => async (dispatch) => {
+  (formValues, images, history, id, setIsLoading) => async (dispatch) => {
     try {
-      setIsLoading(true)
+      setIsLoading(true);
       let formData = new FormData();
       for (const key in formValues) {
         if (key === "image") {
@@ -406,9 +408,9 @@ export const editItemSend =
       formData.append("id_Item", id);
 
       const response = await axiosInstance.post("/api/edit", formData);
-      setIsLoading(false)
+      setIsLoading(false);
     } catch (error) {
-      dispatch({type:ERROR_ITEM,payload:true})
+      dispatch({ type: ERROR_ITEM, payload: true });
       console.log(error);
     }
   };
@@ -550,27 +552,29 @@ export const getUnReadNotification = () => async (dispatch) => {
       `/api/conversation/unReadNotification`
     );
     dispatch({ type: "UNREAD_NOTIFICATION", payload: data.conversation });
-    dispatch({ type: GET_NOTIFICATION, payload: {resultsSell:data.resultsSell,resultsPurchase:[],resultsProposition:[]} });
-
-
-    
+    dispatch({
+      type: GET_NOTIFICATION,
+      payload: {
+        resultsSell: data.resultsSell,
+        resultsPurchase: [],
+        resultsProposition: [],
+      },
+    });
   } catch (error) {
     console.log(error);
   }
 };
 
 export const removeNotificationMyFrips =
-  (obj,id) => async (dispatch, getState) => {
-
+  (obj, id) => async (dispatch, getState) => {
     try {
-      
-      dispatch({ type: REMOVE_NOTIFICATION_MYFRIPS, payload: {obj,id} });
+      dispatch({ type: REMOVE_NOTIFICATION_MYFRIPS, payload: { obj, id } });
     } catch (error) {
       console.log(error);
     }
   };
 
-  export const handleNotificaiton =
+export const handleNotificaiton =
   (notification) => async (dispatch, getState) => {
     const notif = getState().notification.unReadNotification;
     const conversations = getState().messageReducer.conversations;
@@ -585,14 +589,11 @@ export const removeNotificationMyFrips =
 
       updateConv.message[0] = notification;
 
-
       const sortedArray = _.orderBy(
         conversations,
         (obj) => _.get(obj, "message[0].Date_Houre"),
         "desc"
       );
-
-      console.log(sortedArray);
 
       dispatch({ type: "UPDATE_MESSAGE", payload: sortedArray });
     } catch (error) {
@@ -693,6 +694,7 @@ export const deleteItem = (id_Item) => async (dispatch, getState) => {
       `/api/items/deleteItem/${id_Item}`,
       config
     );
+    dispatch({type:REMOVE_ITEM,payload:id_Item})
   } catch (error) {
     console.log(error);
   }
@@ -721,34 +723,32 @@ const updateItemsList = (key, getState) => {
       return getState().items.items;
   }
 };
-export const addFavorite = (id, fromFavorite) => async (dispatch, getState) => {
-  const items = updateItemsList(fromFavorite, getState);
+export const addFavorite =
+  (id, fromFavorite, isFromItem) => async (dispatch, getState) => {
+    const addId = { id };
 
-  const config = {
-    headers: {
-      "Content-Type": "application/json",
-    },
-  };
-  const addId = { id };
+    try {
+      if (!isFromItem) {
+        const items = updateItemsList(fromFavorite, getState);
 
-  try {
-    for (const [index, val] of items.entries()) {
-      if (val.id === id) {
-        val._count.favorit = val._count.favorit + 1;
-        break;
+        for (const [index, val] of items.entries()) {
+          if (val.id === id) {
+            val._count.favorit = val._count.favorit + 1;
+            break;
+          }
+        }
+        dispatch({ type: ADD_FAVORITE, payload: { id_Item: id } });
       }
-    }
-    dispatch({ type: ADD_FAVORITE, payload: { id_Item: id } });
 
-    await axiosInstance.post(
-      `/api/items/favorit`,
-      JSON.stringify(addId),
-      config
-    );
-  } catch (error) {
-    console.log(error);
-  }
-};
+      await axiosInstance.post(
+        `/api/items/favorit`,
+        JSON.stringify(addId),
+        config
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const removeFavorite =
   (id, fromFavorite) => async (dispatch, getState) => {
@@ -846,15 +846,17 @@ export const paginationForFilter = () => async (dispatch, getState) => {
   let itemsId = [];
   let newTaille = [];
 
+  console.log(Search)
+
   if (
     AllFilter.Catalogue.length !== 0 ||
     AllFilter.Couleur.length !== 0 ||
     AllFilter.Marque.length !== 0 ||
     AllFilter.Etat.length !== 0 ||
-    AllFilter.Taille.length !== 0
+    AllFilter.Taille.length !== 0 
   ) {
     Catalogue.forEach((element) => {
-      newCatalogue.push(element.id);
+      newCatalogue.push(element?.id);
     });
     Couleur.forEach((element) => {
       newCouleur.push(element.id);
@@ -880,6 +882,7 @@ export const paginationForFilter = () => async (dispatch, getState) => {
       newEtat,
       Price,
       itemsId,
+      Search,
       newTaille,
       sortedBy,
     });
@@ -908,11 +911,23 @@ export const addFilterFromSearch =
     } else if (string === "Homme") {
       dispatch(addToFilter(MAN_ID, "Catalogue"));
     } else {
-      const splitArray = string.split(/\b(?:a|the|was|\s)+\b/i);
-
       try {
-        dispatch({ type: "RESTORE" });
-        if (findElement) {
+
+        if (string.includes("rechercher")) {
+          let count = 0
+          string
+            .replace("rechercher ", "")
+            .replace(/"/g, "")
+            .split(/\b(?:a|the|was|\s)+\b/i)
+            .map((strArray) => {
+              dispatch(
+                addToFilter({ Name: strArray.replace(/\s*$/, ""),id:1304+count }, "Search")
+              );
+              count+=1
+            });
+        } else {
+          const splitArray = string.split(/\b(?:a|the|was|\s)+\b/i);
+
           splitArray.forEach((element) => {
             if (_.find(array[1], { Name: element })) {
               dispatch(
@@ -925,8 +940,10 @@ export const addFilterFromSearch =
               );
             }
           });
-          history(`/filter`);
         }
+        history(`/filter`);
+
+
       } catch (error) {
         console.log(error);
       }
@@ -949,7 +966,6 @@ export const succeedPayment =
         id_Account,
         id_Fees,
       });
-      navigate(data, { replace: true });
       dispatch({ type: "PAYMENT_SUCCESS" });
     } catch (error) {}
   };
@@ -1011,9 +1027,39 @@ export const fetchPaymentInfo =
       dispatch({ type: PAYMENT_INFO, payload: data });
       dispatch({ type: PAYMENT_INFO_SUCCESS_FETCH });
     } catch (error) {
-      dispatch({ type: PAYMENT_FAILED });
+      dispatch({ type: ERROR_PAYMENT_PAGE, payload: error.response.data });
     }
   };
+
+export const checkIfDisponible = (idItem) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: LOADING_PAYMENT });
+
+    const { data } = await axiosInstance.post(
+      "/api/paymentIntent/isReserved",
+      { idItem },
+      config
+    );
+    console.log(data);
+    dispatch({ type: ISRESERVED, payload: data });
+    dispatch({ type: PAYMENT_INFO_SUCCESS_FETCH });
+  } catch (error) {
+    dispatch({ type: ERROR_PAYMENT_PAGE, payload: error.response.data });
+  }
+};
+
+export const cleanUpPayment = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: RESET_PAYMENT });
+
+    await axiosInstance.post("/api/paymentIntent/reserved", {
+      idItem: id,
+      isRerseved: true,
+    });
+  } catch (error) {
+    dispatch({ type: ERROR_PAYMENT_PAGE, payload: error.response.data });
+  }
+};
 
 export const fetchPaymentIntent =
   (idItem, id_Fees, isFromProposition) => async (dispatch, getState) => {
@@ -1063,19 +1109,20 @@ export const requestPayment = (id) => async (dispatch, getState) => {
 
 export const updateAddress = (address) => async (dispatch, getState) => {
   try {
-    const { Rue, Numero, Localite, NPA,Prenom,Nom } = address;
-    
-    const newAddress = {Street:Rue, NumStreet:Numero, City:Localite, NPA,}
+    const { Rue, Numero, Localite, NPA, Prenom, Nom } = address;
 
-    
-   
+    const newAddress = { Street: Rue, NumStreet: Numero, City: Localite, NPA };
+
     const { data } = await axiosInstance.post(
       "/api/members/updateAddress",
       address,
       config
     );
 
-    dispatch({ type: CHANGE_ADDRESS, payload: {newAddress,Firstname:Prenom,Lastname:Nom} });
+    dispatch({
+      type: CHANGE_ADDRESS,
+      payload: { newAddress, Firstname: Prenom, Lastname: Nom },
+    });
   } catch (error) {
     dispatch({ type: PAYMENT_FAILED });
   }
@@ -1117,13 +1164,13 @@ export const changeStep =
         config
       );
       dispatch({ type: type, payload: id });
-      if(type===DELIVERY){
-        dispatch(removeNotificationMyFrips("sellNotification",id_transaction))
+      if (type === DELIVERY) {
+        dispatch(removeNotificationMyFrips("sellNotification", id_transaction));
       }
-      if(type===RECEIVED){
-        alert("here")
-        dispatch(removeNotificationMyFrips("purchaseNotification",id_transaction))
-
+      if (type === RECEIVED) {
+        dispatch(
+          removeNotificationMyFrips("purchaseNotification", id_transaction)
+        );
       }
     } catch (error) {
       console.log(error);
@@ -1169,7 +1216,7 @@ export const sendStatusProposition =
       );
 
       dispatch({ type: STATUS_PROPOSITION, payload: items });
-      dispatch(removeNotificationMyFrips("propositionNotification",id))
+      dispatch(removeNotificationMyFrips("propositionNotification", id));
     } catch (error) {
       console.log(error);
     }
@@ -1205,24 +1252,22 @@ export const setReview =
     }
   };
 
-export const fetchMySellId =
-  (id) => async (dispatch, getState) => {
-    try {
-      dispatch({ type: "LOADING_MYFRIPS" });
+export const fetchMySellId = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: "LOADING_MYFRIPS" });
 
-      const { data } = await axiosInstance.get(
-        `/api/members/mySell/${id}`,
-        config
-      );
-      dispatch({ type: FETCH_MYSELLBYID, payload: data });
-      dispatch({ type: "SUCCESS_FETCH_MYFRIPS" });
+    const { data } = await axiosInstance.get(
+      `/api/members/mySell/${id}`,
+      config
+    );
+    dispatch({ type: FETCH_MYSELLBYID, payload: data });
+    dispatch({ type: "SUCCESS_FETCH_MYFRIPS" });
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  export const fetchMyPurchaseId =
+export const fetchMyPurchaseId =
   (note, id_transaction) => async (dispatch, getState) => {
     try {
       const { data } = await axiosInstance.post(
@@ -1234,4 +1279,4 @@ export const fetchMySellId =
     } catch (error) {
       console.log(error);
     }
-  }; 
+  };

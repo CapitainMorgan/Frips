@@ -76,7 +76,6 @@ const Adress = ({ addresse }) => {
           handleClickOpen();
         }}
       >
-
         <Box flexGrow={1}>
           <Typography style={{ fontSize: 16 }}>
             Changer votre adresse de livraison ?

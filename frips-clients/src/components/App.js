@@ -42,12 +42,11 @@ import MyFavorite from "./Profil/MyFavorite";
 import MyFrips from "./Profil/MyFrips/MyFrips";
 import NotificationComponent from "./Profil/NotificationComponent";
 import "./App.css";
-import StripeContainer from "./Checkout/StripeContainer";
 import StatusPaymentComponent from "./Checkout/StatusPaymentComponent";
-import CheckOutComponent from "./Checkout/CheckOutComponent";
 import MemberProfile from "./Profil/MyFrips/Members/MemberProfile";
 import API_ENDPOINT from "../api/url";
 import MySellById from "./Profil/MyFrips/MySell/MySellById";
+import CheckOutComponent from "./Checkout/CheckOutComponent";
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
@@ -178,7 +177,6 @@ const App = () => {
                 exact
                 element={<ConditionGeneral />}
               />
-              <Route path="/Aide/vendre" exact element={<Sell />} />
               <Route path="/Aide" exact element={<Aide />} />
               <Route path="*" element={<PageNotFound />} />
               <Route path="/PageIntrouvable" element={<PageNotFound />} />

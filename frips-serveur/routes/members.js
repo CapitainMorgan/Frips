@@ -239,6 +239,9 @@ router.post("/mySell", auth, async (req, res) => {
             DeliveryDetails: true,
           },
         },
+        DeliveryPrice:true,
+        TaxPrice:true,
+
 
 
         DateSell: true,
@@ -348,6 +351,8 @@ router.get("/mySell/:id_Item", auth, async (req, res) => {
             DeliveryDetails: true,
           },
         },
+        DeliveryPrice:true,
+        TaxPrice:true,
 
 
         DateSell: true,
@@ -822,6 +827,8 @@ router.post("/MyPurchase", auth, async (req, res) => {
         },
 
         id: true,
+        DeliveryPrice:true,
+        TaxPrice:true,
 
         Price: true,
         Status: true,
@@ -869,7 +876,6 @@ router.post("/StatusProposition", auth, async (req, res) => {
   const { id } = req.user;
   const { id_Item, approved, id_Account } = req.body;
 
-  console.log("here");
   try {
     const propose = await pricepropose.update({
       where: {
@@ -884,7 +890,6 @@ router.post("/StatusProposition", auth, async (req, res) => {
       },
     });
 
-    console.log(propose);
 
     res.sendStatus(200);
   } catch (error) {

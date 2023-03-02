@@ -349,9 +349,10 @@ router.post("/succeed", auth, async (req, res) => {
         },
       });
     }
+    logger.info("POST /payment/succeed user " + req.user.id + " item " + idItem );
     res.status(200).json(`/payment/${idItem}/paymentStatus`);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /payment/succeed", error);
     res.status(500).json("Servor error");
   }
 });

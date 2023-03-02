@@ -167,6 +167,7 @@ const ItemPreview = (props) => {
                 classes={classes}
                 review={singleItem.review}
                 myAccount={myAccount}
+                favorite={favorite}
               />
             </Box>
             <Box  height={"10vh"} width={"100%"}></Box>

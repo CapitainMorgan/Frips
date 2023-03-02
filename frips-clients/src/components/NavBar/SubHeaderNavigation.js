@@ -63,6 +63,7 @@ const SubHeaderNavigation = ({ category, transformStringToUrl, name }) => {
 
   let secondQuery = "/" + Catalogue[category].subitems[indexItem]?.Name;
 
+
   const handleClick = (e) => {
     setAnchor(e.currentTarget);
   };
@@ -142,6 +143,8 @@ const SubHeaderNavigation = ({ category, transformStringToUrl, name }) => {
                           onClick={(e) => {
                             thirdQuery = "/" + transformStringToUrl(item.Name);
                             handleClickAway(e);
+                            console.log(`/${name}` + secondQuery + thirdQuery)
+
                             history(`/${name}` + secondQuery + thirdQuery);
                           }}
                         >

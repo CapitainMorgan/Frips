@@ -17,6 +17,7 @@ import RegroupByDate from "./RegroupByDate";
 
 import { connect } from "react-redux";
 import newMessage from "./newMessage";
+import Div100vh from "react-div-100vh";
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 65,
@@ -35,7 +36,6 @@ const useStyles = makeStyles((theme) => ({
     flex: 3,
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-      height: "100%",
     },
   },
 

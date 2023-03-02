@@ -5,24 +5,24 @@ import { Link, useNavigate } from "react-router-dom";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
 
-const TaskSuccess = ({ error,isLoading }) => {
+const TaskSuccess = ({ error, isLoading,edit }) => {
   const navigate = useNavigate();
-  
-  
 
-  if(isLoading){
-    return <Box
-    style={{ backgroundColor: "#F5f5f3" }}
-    height="100vh"
-    width="100%"
-    display="flex"
-    justifyContent="center"
-    alignItems="center"
-  >
-    <CircularProgress size={100} />
-  </Box>
+  if (isLoading) {
+    return (
+      <Box
+        style={{ backgroundColor: "#F5f5f3" }}
+        height="100vh"
+        width="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CircularProgress size={100} />
+      </Box>
+    );
   }
-  if (!error &&!isLoading) {
+  if (!error && !isLoading) {
     return (
       <Box
         display={"flex"}
@@ -35,7 +35,7 @@ const TaskSuccess = ({ error,isLoading }) => {
       >
         <CheckCircleIcon style={{ color: "#4AA05F", fontSize: 80 }} />
         <Typography style={{ fontSize: 16 }}>
-          Tâche effectuée avec succès
+          {edit ? "Article changé avec succès" : "Article ajouté avec succès"}
         </Typography>
         <Button
           style={{ width: "auto", marginTop: 5 }}
@@ -50,15 +50,15 @@ const TaskSuccess = ({ error,isLoading }) => {
   } else {
     <Box
       display={"flex"}
-        flexDirection={"column"}
-        justifyContent="center"
-        height="100vh"
-        style={{ backgroundColor: "#F5f5f3" }}
-        flexGrow={1}
-        alignItems={"center"}
+      flexDirection={"column"}
+      justifyContent="center"
+      height="100vh"
+      style={{ backgroundColor: "#F5f5f3" }}
+      flexGrow={1}
+      alignItems={"center"}
     >
       <ErrorIcon style={{ color: "#DD3437", fontSize: 80 }} />
-      <Typography>Il semblerait que la tâche a échouée</Typography>
+      <Typography> Oups il y a eu un problème</Typography>
       <Box display={"flex"}>
         <Button
           style={{ width: "100%", marginTop: 5 }}

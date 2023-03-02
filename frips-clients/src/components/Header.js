@@ -21,6 +21,8 @@ import { Button } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
 import { logout } from "../actions";
+import { IoShirtSharp } from "react-icons/io5";
+import { GiLargeDress } from "react-icons/gi";
 
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -129,6 +131,7 @@ const useStyles = makeStyles((theme) => ({
   BoxItem: {
     height: 50,
     minHeight: 50,
+    width:"100%",
     fontSize: 16,
     color: "rgb(117,117,117)",
     fontFamily: "Helvetica",
@@ -154,8 +157,9 @@ const Header = ({ onSearchSubmit }) => {
   const unReadNotification = useSelector(
     (state) => state.notification.unReadNotification
   );
- const  sellNotification = useSelector(
-    (state) => state.myFrips.sellNotification);
+  const sellNotification = useSelector(
+    (state) => state.myFrips.sellNotification
+  );
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const isAuth = (handleClose) => {
@@ -246,7 +250,7 @@ const Header = ({ onSearchSubmit }) => {
       >
         Mes Annonces
       </MenuItem>
-      
+
       {isAuth(handleMenuDesktop)}
     </Menu>
   );
@@ -299,7 +303,9 @@ const Header = ({ onSearchSubmit }) => {
               Catégorie
             </Typography>
           </Box>
-          <Box>
+          <Box display={"flex"} alignItems="center" flexGrow={1}>
+          <GiLargeDress color="#82A0C2" size={20} />
+
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
@@ -307,8 +313,12 @@ const Header = ({ onSearchSubmit }) => {
                 handleMobileMenuClose();
               }}
             >
+            
               Femme
             </MenuItem>
+          </Box>
+          <Box display={"flex"} alignItems="center">
+          <IoShirtSharp color="#82A0C2" size={20} />
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
@@ -487,6 +497,7 @@ const Header = ({ onSearchSubmit }) => {
               paddingRight={2}
               onClick={() => {
                 history("/");
+                handleMobileMenuClose();
               }}
             >
               <Typography className={classes.Logo}>
@@ -518,7 +529,7 @@ const Header = ({ onSearchSubmit }) => {
                       </Box>
                     ) : null}
 
-                    <Box marginLeft={2}/>
+                    <Box marginLeft={2} />
                     <Button
                       onClick={() => history("/items/new")}
                       variant="contained"
@@ -538,8 +549,11 @@ const Header = ({ onSearchSubmit }) => {
                           history("/members/myFrips/mySell");
                         }}
                       >
-                        <Badge badgeContent={sellNotification?.length} color="secondary">
-                          <MdOutlineAttachMoney  size={25} />
+                        <Badge
+                          badgeContent={sellNotification?.length}
+                          color="secondary"
+                        >
+                          <MdOutlineAttachMoney size={25} />
                         </Badge>
                       </IconButton>
                       <IconButton
@@ -608,7 +622,10 @@ const Header = ({ onSearchSubmit }) => {
                       history("/members/myFrips/mySell");
                     }}
                   >
-                    <Badge badgeContent={sellNotification?.length} color="secondary">
+                    <Badge
+                      badgeContent={sellNotification?.length}
+                      color="secondary"
+                    >
                       <MdOutlineAttachMoney size={25} />
                     </Badge>
                   </IconButton>

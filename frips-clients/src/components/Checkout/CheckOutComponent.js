@@ -6,15 +6,20 @@ import {
   Typography
 } from "@material-ui/core";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { useNavigate, useParams,useCon, useLocation } from "react-router-dom";
-import { fetchPaymentInfo, fetchPaymentIntent } from "../../actions";
-import axiosInstance from "../../api/api";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import {
+  cleanUpPayment,
+  fetchPaymentInfo,
+  fetchPaymentIntent
+} from "../../actions";
 import API_ENDPOINT from "../../api/url";
 import Adress from "./Adress";
 import DeliveryMethod from "./DeliveryMethod";
+import StatusPaymentComponent from "./StatusPaymentComponent";
 import StripeContainer from "./StripeContainer";
+import withCheckIfDisponible from "./withCheckIfDisponible";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -122,45 +127,74 @@ const renderFees = (id) => {
     return 0;
   }
 };
-const CheckOut = ({ loading, cs, item, idAccount,myAddress }) => {
+const CheckOut = ({
+  loading,
+  cs,
+  item,
+  idAccount,
+  myAddress,
+  error,
+  successed,
+  failed,
+  isDisponible,
+}) => {
   const classes = useStyles();
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [loadingPayment, setloadinPayment] = useState(false);
-  const state = useLocation();
-
-
+  const hasProposition = useLocation();
+  const history = useNavigate();
+  const isMounted = useRef(false);
 
   let { id } = useParams();
   id = parseInt(id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (!item && !loading) {
-      dispatch(fetchPaymentInfo(id,state?.isFrom));
-    }
-  }, [dispatch, item, loading]);
 
   useEffect(() => {
-    async function fetchData(isRerseved) {
-      await axiosInstance.post("/api/paymentIntent/reserved", {
-        idItem: id,
-        isRerseved: isRerseved,
-      });
-    }
-    fetchData(true);
-
+    isMounted.current = true;
     return () => {
-      fetchData(false);
+      if (isMounted.current && hasProposition.pathname === `/payment/${id}`) {
+
+        dispatch(cleanUpPayment(id));
+      }
+    };
+  }, [hasProposition.pathname, dispatch, id]);
+
+  useEffect(() => {
+    return () => {
+      isMounted.current = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!item && !loading && isDisponible) {
+      dispatch(fetchPaymentInfo(id, hasProposition.state?.isFrom));
+    }
+  }, [dispatch, item, loading, isDisponible]);
+
+  useEffect(() => {
+    const TIMEOUT_DURATION = 10 * 60 * 1000; // 10 minutes in milliseconds
+    const timer = setTimeout(() => {
+      dispatch(cleanUpPayment(id));
+      navigate("/"); // replace with your redirect URL
+    }, TIMEOUT_DURATION);
+    return () => {
+      clearTimeout(timer);
     };
   }, []);
 
   useEffect(() => {
     if (Boolean(selectedDelivery)) {
-      dispatch(fetchPaymentIntent(id, selectedDelivery,state?.isFrom));
+      dispatch(
+        fetchPaymentIntent(id, selectedDelivery, hasProposition.state?.isFrom)
+      );
     }
   }, [dispatch, selectedDelivery]);
 
+  if (successed !== null || failed !== null) {
+    return <StatusPaymentComponent />;
+  }
   if (!item) {
     return (
       <Box
@@ -176,7 +210,7 @@ const CheckOut = ({ loading, cs, item, idAccount,myAddress }) => {
   } else {
     return (
       <Box style={{ backgroundColor: "#F5f5f3" }} width={"100%"}>
-        <Box height={60}/>
+        <Box height={60} />
         <Box
           width={1000}
           margin="auto"
@@ -244,20 +278,22 @@ const CheckOut = ({ loading, cs, item, idAccount,myAddress }) => {
                 </Typography>
               </Box>
               <Box height={5} />
-              
+
               <Box display="flex" alignItems="center">
                 <Adress addresse={myAddress} />
               </Box>
             </Box>
             <Box height={40} />
 
-            {Boolean(selectedDelivery) && Boolean(cs) ? <StripeContainer
-              classes={classes}
-              loadingPayment={loadingPayment}
-              setloadinPayment={setloadinPayment}
-              id_Item={item.id}
-              selectedId={selectedDelivery}
-            />:null}
+            {Boolean(selectedDelivery) && Boolean(cs) ? (
+              <StripeContainer
+                classes={classes}
+                loadingPayment={loadingPayment}
+                setloadinPayment={setloadinPayment}
+                id_Item={item.id}
+                selectedId={selectedDelivery}
+              />
+            ) : null}
           </Box>
 
           <Box width={"30%"} className={classes.floatContentInfomrationdiv}>
@@ -316,7 +352,10 @@ const CheckOut = ({ loading, cs, item, idAccount,myAddress }) => {
                   </div>
                 </Box>
                 <Box className={classes.ContentInformationItem}>
-                  {customRound(item.Price * 0.07)} CHF
+                  {customRound(item.Price * 0.07) - item.Price <= 1
+                    ? customRound(item.Price + 1) - item.Price
+                    : customRound(item.Price * 0.07) - item.Price}{" "}
+                  CHF
                 </Box>
               </Box>
 
@@ -356,8 +395,12 @@ const mapStateToProps = (state) => ({
   cs: state.payment.clientSecret,
   loading: state.payment.loading,
   idAccount: state.auth.user.id,
-  myAddress:state.auth.user,
+  myAddress: state.auth.user,
   item: state.payment.item,
+  isDisponible: state.payment.isDisponible,
+  error: state.payment.error,
+  successed: state.payment.successed,
+  failed: state.payment.failed,
 });
 
-export default connect(mapStateToProps)(CheckOut);
+export default withCheckIfDisponible(connect(mapStateToProps)(CheckOut));

@@ -26,7 +26,7 @@ const renderChips = (filterType, classes, dispatch) => {
       return (
         <Chip
           style={{ fontSize: 16 }}
-          label={`De ${value.value} CHF`}
+          label={`De ${value?.value} CHF`}
           className={classes.chip}
           onDelete={() => {
             dispatch(removeToFilter(value));
@@ -38,7 +38,7 @@ const renderChips = (filterType, classes, dispatch) => {
       return (
         <Chip
           style={{ fontSize: 16 }}
-          label={`A ${value.value} CHF`}
+          label={`A ${value?.value} CHF`}
           className={classes.chip}
           onDelete={() => {
             dispatch(removeToFilter(value));
@@ -49,7 +49,7 @@ const renderChips = (filterType, classes, dispatch) => {
       return (
         <Chip
           style={{ fontSize: 16 }}
-          label={value.Name}
+          label={value?.Name}
           className={classes.chip}
           onDelete={() => {
             dispatch(removeToFilter(value));

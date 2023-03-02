@@ -142,6 +142,16 @@ const renderDeliveryStep = ({ DateSend, review }, classes) => {
   }
 };
 
+const typeOfDelivery = (price) =>{
+  if(price===7){
+    return "Livraison Poste Standard"
+  }
+  if(price===9){
+    return "Livraison Poste Rapide"
+  }
+  return "Livraison en main-propre"
+}
+
 const renderedItem = (classes, state, history, dispatch) => {
   return state.map((item, index) => {
     const { account } = item;
@@ -198,7 +208,7 @@ const renderedItem = (classes, state, history, dispatch) => {
               </Typography>
 
               <Box flexGrow={1} className={classes.menus}>
-                <Typography>{item?.item_fees[0]?.fees?.Name}</Typography>
+                <Typography>{typeOfDelivery(item.DeliveryPrice)}</Typography>
               </Box>
             </Box>
             <Box className={classes.menus}>

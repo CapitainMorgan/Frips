@@ -195,6 +195,8 @@ const ItemForm = ({
     window.scrollTo(0, 0);
   }, []);
 
+  
+
   useEffect(() => {
     if (!Boolean(itemInfo) && !loading) {
       dispatch(getItemCreationInfo());
@@ -220,8 +222,8 @@ const ItemForm = ({
     }
   };
 
-  if(isLoading &&mobile){
-    return <TaskSuccess error={error} isLoading={isLoading} />
+  if(isLoading && mobile){
+    return <TaskSuccess edit={edit} error={error} isLoading={isLoading} />
   }
   if (
     (Object.keys(initialValues)?.length === 0 && loading) ||

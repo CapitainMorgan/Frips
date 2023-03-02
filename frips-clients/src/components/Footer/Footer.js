@@ -3,7 +3,6 @@ import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import Logo from "../../img/Logo.png";
 export const Footer = () => {
   const history = useNavigate();
   return (

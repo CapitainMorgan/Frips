@@ -1,4 +1,6 @@
-const email = (url, profile, item, pricepropose,id_Chat) => {
+const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
+  console.log(Boolean(item))
+
   return `
   <html lang="fr">
   <head>
@@ -146,7 +148,7 @@ const email = (url, profile, item, pricepropose,id_Chat) => {
                                   Bonjour ${profile.Firstname}
                                 </p>
                                
-                                ${content(profile, pricepropose)}
+                                ${content(pricepropose,sender)}
                                 ${Boolean(item) ? `
                                 
                                 <table
@@ -329,7 +331,7 @@ const typeMessage = (price) => {
   }
 };
 
-const content = (sender, pricepropose) => {
+const content = (pricepropose,sender) => {
   if (pricepropose) {
     return `
   <p style="
@@ -340,7 +342,7 @@ const content = (sender, pricepropose) => {
 ">Tu viens de recevoir une offre intéressante sur l'un de tes produits de la part de ${sender.Pseudo} sur myfrips.ch ! On voulait te tenir informé(e) de cette opportunité sans tarder.</p>
 
 <p style="font-size: 17px; line-height: 24px; margin: 16px 0; text-align: left;">
-    <span style="font-weight: bold;">${profile.Pseudo}</span> a proposé une offre de <span style="font-weight: bold;">${pricepropose} CHF</span> pour ton annonce, et nous voulions nous assurer que tu ne passes pas à côté de cette formidable opportunité.
+    <span style="font-weight: bold;">${sender.Pseudo}</span> a proposé une offre de <span style="font-weight: bold;">${pricepropose} CHF</span> pour ton annonce, et nous voulions nous assurer que tu ne passes pas à côté de cette formidable opportunité.
 </p>
 
 
@@ -357,7 +359,7 @@ line-height: 24px;
 margin: 16px 0;
 font-weight: bold;
 text-align: left;
-"> N'oublie pas que tu peux toujours contacter ${profile.Pseudo} pour clarifier toute question ou détail avant de prendre une décision. </p>
+"> N'oublie pas que tu peux toujours contacter ${sender.Pseudo} pour clarifier toute question ou détail avant de prendre une décision. </p>
 
 <p style="
 font-size: 17px;
@@ -413,4 +415,4 @@ text-align: left;
   }
 };
 
-module.exports = email;
+module.exports = {emailMessage};

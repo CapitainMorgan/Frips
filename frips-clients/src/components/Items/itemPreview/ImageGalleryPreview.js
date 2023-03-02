@@ -57,6 +57,8 @@ const gridImage = (images, handleClickOpen, setIndex, classes) => {
           }}
         >
           <img
+          
+            alt={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[1].image}`}
             src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[1].image}`}
             className={classes.PointCursorPicture}
           ></img>

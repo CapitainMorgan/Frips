@@ -31,7 +31,6 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
   const [id,subId]= size
 
 
-  console.log(size)
 
   
   const renderedStateClothes = arraySize[id]?.subitems[subId]?.subitems.map(

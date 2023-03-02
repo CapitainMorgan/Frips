@@ -30,7 +30,7 @@ const DialogPreviewProduct = ({
   if (!images[0].image) {
     return null;
   }
- 
+
   return (
     <div>
       <Dialog open={open}>
@@ -91,6 +91,7 @@ const DialogPreviewProduct = ({
           </Box>
 
           <img
+            alt={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
             src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           ></img>

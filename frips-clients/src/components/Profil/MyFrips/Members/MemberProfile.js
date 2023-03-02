@@ -199,11 +199,11 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
     );
   }
 
-  if (!loading && items.length === 0 && count === 0 ) {
+  if (!loading && items.length === 0 && count === 0 && !account) {
 
     return (
       <Box
-        minHeight={300}
+        minHeight={"100vh"}
         display="flex"
         flexDirection={"column"}
         justifyContent={"center"}
@@ -213,6 +213,8 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
       </Box>
     );
   }
+
+
 
   else{
     return (

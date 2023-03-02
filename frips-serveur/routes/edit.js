@@ -78,11 +78,9 @@ router.get("/:idItem", auth, async (req, res) => {
       },
     });
 
-    console.log(item[0].item_color[0]);
-
     res.status(200).json(item[0]);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /:idItem " + error);
     res.status(500).json("Server error");
   }
 });
@@ -271,7 +269,7 @@ router.post("/", auth, upload, async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("POST / " + error);
     res.status(500).json("Server error");
   }
 });

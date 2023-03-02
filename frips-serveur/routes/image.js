@@ -58,6 +58,7 @@ router.post("/", upload.any(), async (req, res) => {
         id: req.body.id[0],
       },
     });
+    logger.error("POST / " + error);
     res.status(500).json("Server error");
   }
 });

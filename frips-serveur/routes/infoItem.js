@@ -63,6 +63,7 @@ router.get("/search", async (req, res) => {
 
     res.status(200).json(infoObject);
   } catch (error) {
+    logger.error("GET api/infoItem/search"+ error)
     res.status(500).json("Server error");
   }
 });
@@ -121,7 +122,7 @@ router.get("/info", async (req, res) => {
 
     res.status(200).json(infoObject);
   } catch (error) {
-    console.log(error)
+    logger.error("GET api/infoItem/info"+ error)
     res.status(500).json("Server error");
   }
 });

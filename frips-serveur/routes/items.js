@@ -7,6 +7,12 @@ let fs = require("fs-extra");
 const path = require("path"); // path for cut the file extension
 const { PrismaClient } = require("@prisma/client");
 const { similarProduct } = require("./logicFunction/logicSimilarProduct");
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { items: { type: "file", filename: "items.log" } },
+  categories: { default: { appenders: ["items"], level: "error" } },
+});
+var logger = log4js.getLogger("items");
 
 const { item, image, nbview, favorit, brand, review, pricepropose } =
   new PrismaClient();
@@ -32,7 +38,6 @@ const colorLengthFunction = (Color) => {
       },
     };
   } else {
-    console.log("ici");
 
     return {
       create: {
@@ -87,9 +92,7 @@ router.post("/", auth, upload, async (req, res) => {
     Delivery = Delivery.split(",").map(Number);
   }
 
-  console.log(Color);
-
-  console.log(Delivery);
+  
 
   try {
     const exist = await brand.upsert({
@@ -175,10 +178,10 @@ router.post("/", auth, upload, async (req, res) => {
         },
       });
     }
-
+    logger.info("POST / : " + Item.id);
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("POST / : " + error);
     await item.delete({
       where: {
         id: Item.id,
@@ -191,7 +194,6 @@ router.post("/", auth, upload, async (req, res) => {
 // @route   Post api/items
 // @desc    post one item
 // @acces    Private
-
 router.get("/", async (req, res) => {
   try {
     const Item = await item.findMany({
@@ -241,7 +243,7 @@ router.get("/", async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET / : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -262,12 +264,14 @@ router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
           id: parseFloat(id_Item),
         },
       });
+      logger.info("DELETE / : " + deleted.id + " by user " + id);
       res.sendStatus(200);
     } else {
+      logger.warn("DELETE / : " + "not authorized action by user " + id + " on item " + id_Item);
       res.status(401).send({ msg: "Action non-autorisée" });
     }
   } catch (error) {
-    console.log(error);
+    logger.error("DELETE / : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -308,7 +312,7 @@ router.post("/ItemForPorpose", async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /ItemForPorpose : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -350,7 +354,7 @@ router.get("/auth", auth, async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /auth : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -411,7 +415,7 @@ router.get("/filterCataloguePagination", async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /filterCataloguePagination : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -701,7 +705,7 @@ router.post("/pagination", async (req, res) => {
 
     res.status(200).json({ items: Item, count: count });
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/pagination" + error);
     res.status(500).json("Server error");
   }
 });
@@ -746,7 +750,7 @@ router.post("/more", async (req, res) => {
     });
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/more" + error);
     res.status(500).json("Server error");
   }
 });
@@ -803,7 +807,7 @@ router.get("/new", async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /api/item/new" + error);
     res.status(500).json("Server error");
   }
 });
@@ -821,7 +825,7 @@ router.get("/Id_of_MyFavorite", auth, async (req, res) => {
 
     res.status(200).json(favoriteIDs);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /api/item/Id_of_MyFavorite" + error);
     res.status(500).json("Server error");
   }
 });
@@ -840,9 +844,11 @@ router.post("/proposition", auth, async (req, res) => {
         id_Item: idItem,
       },
     });
+    logger.info("Price proposition send by " + id + " for item " + idItem + "")
+
     res.status(200).json(data);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/proposition" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1027,7 +1033,7 @@ router.get("/:id", async (req, res) => {
     };
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /api/item/:id" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1066,7 +1072,7 @@ router.post("/favorit", auth, async (req, res) => {
       res.status(200).json("ok");
     }
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/favorit" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1090,7 +1096,7 @@ router.post("/view", auth, async (req, res) => {
     });
     res.status(200).json("viewed");
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/view" + error);
     res.status(500).json("Serveur error");
   }
 });
@@ -1108,10 +1114,10 @@ router.delete("/favorit", auth, async (req, res) => {
         item: true,
       },
     });
-
+    logger.info("DELETE /api/item/favorit by " + req.user.id );
     res.status(200).json("ok");
   } catch (error) {
-    console.log(error);
+    logger.error("DELETE /api/item/favorit" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1179,7 +1185,7 @@ router.post("/favorit/all", auth, async (req, res) => {
 
     res.status(200).json({ items: Item, count });
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/favorit/all" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1236,7 +1242,7 @@ router.post("/search", auth, async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/search" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1326,7 +1332,7 @@ router.post("/search", auth, async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/search" + error);
     res.status(500).json("Server error");
   }
 });

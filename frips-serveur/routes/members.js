@@ -7,6 +7,12 @@ const multer = require("multer");
 const { nanoid } = require("nanoid");
 let fs = require("fs-extra");
 const path = require("path"); // path for cut the file extension
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { members: { type: "file", filename: "members.log" } },
+  categories: { default: { appenders: ["members"], level: "error" } },
+});
+var logger = log4js.getLogger("members");
 
 const {
   item,
@@ -106,10 +112,10 @@ router.post("/myProfile", auth, upload, async (req, res) => {
         confidencial: false,
       },
     });
-
+    logger.info("POST /myProfile of" + id );
     res.status(200).json(changeProfileImage.image);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /myProfile", error);
     res.status(500).json("Serveur error");
   }
 });
@@ -139,9 +145,10 @@ router.post("/updateAddress", auth, async (req, res) => {
         address: true,
       },
     });
+    logger.info("POST /updateAddress of" + id );
     res.status(200).json(address);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /updateAddress", error);
     res.status(500).json("Serveur error");
   }
 });
@@ -295,8 +302,8 @@ router.post("/mySell", auth, async (req, res) => {
       res.status(200).json({ items: mySell, count: countMySell, msg: "" });
     }
   } catch (error) {
+    logger.error("POST /mySell", error);
     res.status(500).json("Servor Error");
-    console.log(error);
   }
 });
 
@@ -444,8 +451,8 @@ router.get("/myProposition/:id_Item", auth, async (req, res) => {
     }
 
   } catch (error) {
+    logger.error("GET /mySell/:id_Item", error);
     res.status(500).json("Servor Error");
-    console.log(error);
   }
 });
 
@@ -534,7 +541,7 @@ router.post("/myFrips", auth, async (req, res) => {
       res.status(200).json({ items: MyFrips, count, msg: "" });
     }
   } catch (error) {
-    console.log(error);
+    logger.error("POST /myFrips", error);
     res.status(500).json("Serveur error");
   }
 });
@@ -600,7 +607,7 @@ router.get("/myFripsNotifications", auth, async (req, res) => {
 
     res.status(200).json({ resultsSell, resultsProposition, resultsPurchase });
   } catch (error) {
-    console.log(error);
+    logger.error("GET /myFripsNotifications", error);
     res.status(500).json("Serveur error");
   }
 });
@@ -703,7 +710,7 @@ router.post("/MyProposition", auth, async (req, res) => {
 
     res.status(200).json({ items: MyProposition, count });
   } catch (error) {
-    console.log(error);
+    logger.error("POST /MyProposition", error);
     res.status(500).json("Serveur error");
   }
 });
@@ -725,8 +732,8 @@ router.post("/Delivery", auth, async (req, res) => {
 
     res.sendStatus(200);
   } catch (error) {
+    logger.error("POST /Delivery", error);
     res.status(500).json("Servor Error");
-    console.log(error);
   }
 });
 
@@ -744,10 +751,11 @@ router.post("/Rewiew", auth, async (req, res) => {
         Text: null,
       },
     });
+    logger.info("POST /Rewiew", "Review created on transaction " + id_transaction);
     res.sendStatus(200);
   } catch (error) {
+    logger.error("POST /Rewiew", error);
     res.status(500).json("Servor Error");
-    console.log(error);
   }
 });
 
@@ -764,11 +772,11 @@ router.post("/Received", auth, async (req, res) => {
         Status: "reçu",
       },
     });
-
+    logger.info("POST /Received", "Transaction " + id_transaction + " received");
     res.sendStatus(200);
   } catch (error) {
+    logger.error("POST /Received", error);
     res.status(500).json("Servor Error");
-    console.log(error);
   }
 });
 
@@ -908,8 +916,8 @@ router.post("/MyPurchase", auth, async (req, res) => {
         .json({ items: MyPurchase, count: countMyPurchase, msg: "" });
     }
   } catch (error) {
+    logger.error("POST /MyPurchase", error);
     res.status(500).json("Servor Error");
-    console.log(error);
   }
 });
 
@@ -933,8 +941,8 @@ router.post("/StatusProposition", auth, async (req, res) => {
 
     res.sendStatus(200);
   } catch (error) {
+    logger.error("POST /StatusProposition", error);
     res.status(500).json("Servor Error");
-    console.log(error);
   }
 });
 
@@ -1030,7 +1038,7 @@ router.post("/user/:name", auth, async (req, res) => {
       userAccount: { ...userAccount, review: _avg?.Note },
     });
   } catch (error) {
-    console.log(error);
+    logger.error("POST /:name", error);
     res.status(500).json("Serveur error");
   }
 });

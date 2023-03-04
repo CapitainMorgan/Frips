@@ -1,5 +1,11 @@
 const express = require("express");
 const router = express.Router();
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { infoItem: { type: "file", filename: "infoItem.log" } },
+  categories: { default: { appenders: ["infoItem"], level: "error" } },
+});
+var logger = log4js.getLogger("infoItem");
 
 const { PrismaClient } = require("@prisma/client");
 
@@ -57,6 +63,7 @@ router.get("/search", async (req, res) => {
 
     res.status(200).json(infoObject);
   } catch (error) {
+    logger.error("GET api/infoItem/search"+ error)
     res.status(500).json("Server error");
   }
 });
@@ -115,7 +122,7 @@ router.get("/info", async (req, res) => {
 
     res.status(200).json(infoObject);
   } catch (error) {
-    console.log(error)
+    logger.error("GET api/infoItem/info"+ error)
     res.status(500).json("Server error");
   }
 });

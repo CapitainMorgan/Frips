@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { edit: { type: "file", filename: "edit.log" } },
+  categories: { default: { appenders: ["edit"], level: "error" } },
+});
+var logger = log4js.getLogger("edit");
 
 const { PrismaClient } = require("@prisma/client");
 const multer = require("multer");
@@ -72,11 +78,9 @@ router.get("/:idItem", auth, async (req, res) => {
       },
     });
 
-    console.log(item[0].item_color[0]);
-
     res.status(200).json(item[0]);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /:idItem " + error);
     res.status(500).json("Server error");
   }
 });
@@ -265,7 +269,7 @@ router.post("/", auth, upload, async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("POST / " + error);
     res.status(500).json("Server error");
   }
 });

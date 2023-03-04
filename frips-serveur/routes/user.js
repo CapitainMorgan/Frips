@@ -8,6 +8,13 @@ const { PrismaClient } = require("@prisma/client");
 
 const { account } = new PrismaClient();
 
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { user: { type: "file", filename: "user.log" } },
+  categories: { default: { appenders: ["user"], level: "error" } },
+});
+var logger = log4js.getLogger("user");
+
 // @route   POST api/users
 // @desc    Register user
 // @acces    Public
@@ -35,23 +42,26 @@ router.post("/checkUser", async (req, res) => {
 
     if (user || email) {
       if (user && email) {
+        logger.info("Pseudo and email already used" + Pseudo + " " + Email)
         res
           .status(400)
           .json({ msg: "Ce pseudo et ce mail sont déjà utilisés" });
       } else if (user) {
+        logger.info("Pseudo already used" + Pseudo)
         res.status(400).json({ msg: "Ce pseudo est déjà utilisé" });
       } else {
+        logger.info("Email already used" + Email)
         res.status(400).json({ msg: "Ce mail est déjà utilisé" });
       }
     }
     else{
+      logger.info("Pseudo and email available" + Pseudo + " " + Email)
       res.status(200).json({ msg: "ok" });
-
     }
 
 
   } catch (error) {
-    console.log(error);
+    logger.error("POST /checkUser" + error)
     res.status(500).send("Serveur error");
   }
 });
@@ -96,12 +106,15 @@ router.post("/", async (req, res) => {
 
     if (user || email) {
       if (user && email) {
+        logger.info("Pseudo and email already used" + Pseudo + " " + Email)
         res
           .status(400)
           .json({ msg: "Ce pseudo et ce mail sont déjà utilisés" });
       } else if (user) {
+        logger.info("Pseudo already used" + Pseudo)
         res.status(400).json({ msg: "Ce pseudo est déjà utilisé" });
       } else {
+        logger.info("Email already used" + Email)
         res.status(400).json({ msg: "Ce mail est déjà utilisé" });
       }
     } else {
@@ -130,13 +143,14 @@ router.post("/", async (req, res) => {
           id: newUser.id,
         },
       };
-
+      
       jwt.sign(
         payload,
         config.get("jwtSecret"),
         { expiresIn: 360000 },
         (err, token) => {
           if (err) throw err;
+          logger.info("New user created" + Pseudo + " " + Email)
           res.json({ token });
         }
       );
@@ -144,7 +158,7 @@ router.post("/", async (req, res) => {
 
     //encrypt password
   } catch (error) {
-    console.log(error);
+    logger.error("POST /" + error)
     res.status(500).send("Serveur error");
   }
 });

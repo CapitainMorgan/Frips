@@ -119,10 +119,8 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     background: "transparent",
     outline: "none",
-
     userSelect: "none",
     msTouchSelect: "none",
-
     WebkitUserSelect: "none",
 
     WebkitTapHighlightColor: "transparent",

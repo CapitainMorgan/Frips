@@ -143,7 +143,6 @@ const SubHeaderNavigation = ({ category, transformStringToUrl, name }) => {
                           onClick={(e) => {
                             thirdQuery = "/" + transformStringToUrl(item.Name);
                             handleClickAway(e);
-                            console.log(`/${name}` + secondQuery + thirdQuery)
 
                             history(`/${name}` + secondQuery + thirdQuery);
                           }}

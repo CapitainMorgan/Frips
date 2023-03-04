@@ -58,13 +58,13 @@ const typeOfEmail = (type, information, args) => {
   }
 };
 
-const sendEmail = async (id_Receiver, type, next, args) => {
+const sendEmail = async (id_Receiver,id_Sender, type, next, args) => {
   try {
-    const information = await searchInformation(id_Receiver, type, args);
+    const information = await searchInformation(id_Receiver,id_Sender, type, args);
     
     client.sendEmail(typeOfEmail(type, information, args),(error,result)=>{
-        console.log(error)
-        if(!error){
+        console.log(error,result)
+        if(result){
         next()
         }
         else{

@@ -35,7 +35,7 @@ const notify = (notification) => {
 
       <Box width={"100%"} justifyContent={"center"} display="flex">
         <Typography>
-          {`Pseudo t'as envoyé un nouveau `}
+          {`${notification.Pseudo} t'as envoyé un nouveau `}
           <Link
             to={`/member/message/${notification.id_Chat}`}
             style={{ color: "#82A0C2" }}
@@ -59,7 +59,7 @@ const NotificationComponent = ({ notification ,mobile}) => {
   return (
     <div>
       <ToastContainer
-        autoClose={2000}
+        autoClose={false}
         newestOnTop={true}
         style={{
           width: "30%",

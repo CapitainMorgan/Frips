@@ -143,11 +143,14 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
                     },
                   },
                 },
+                id:id_Item
               },
             },
           },
         },
       });
+
+
 
       if (newMessage.length > 0) {
         res.sendStatus(403);
@@ -310,13 +313,11 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
       },
     });
 
-    console.log(convExist)
-    console.log(req.user.id)
+
     if (
       (convExist[0]?.id_Account_1 !== req.user.id &&
       convExist[0]?.id_Account_2 !== req.user.id )
     ) {
-      console.log("ici")
       res.status(400);
     }
 
@@ -418,7 +419,7 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
   try {
     const isUserInConv = await chat.findMany({
       where: {
-        id_Chat: parseInt(id),
+        id: parseInt(id),
         OR: [
           {
             id_Account_1: req.user.id,
@@ -428,7 +429,6 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
       },
     });
 
-    console.log(isUserInConv);
 
     if (isUserInConv.length === 0) {
       res.status(400);

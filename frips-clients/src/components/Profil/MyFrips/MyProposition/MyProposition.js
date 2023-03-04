@@ -18,11 +18,11 @@ import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
-import { changeMyFripsPagination, fetchMyfrips } from "../../../actions";
-import { FETCH_PROPOSITION } from "../../../actions/type";
-import API_ENDPOINT from "../../../api/url";
-import MyPaginate from "../../Footer/PaginationComponent";
-import DeleteModal from "./DeleteModal";
+import { changeMyFripsPagination, fetchMyfrips } from "../../../../actions";
+import { FETCH_PROPOSITION } from "../../../../actions/type";
+import API_ENDPOINT from "../../../../api/url";
+import MyPaginate from "../../../Footer/PaginationComponent";
+import DeleteModal from "../DeleteModal";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -150,6 +150,8 @@ const renderStatus = (id, Approve, dateApprove, history,id_proposition) => {
     );
   }
 };
+
+
 const renderedItem = (classes, items, history, handleClick, setNavigation) => {
   return items.map((item, index) => {
     return (

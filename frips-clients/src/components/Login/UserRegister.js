@@ -1,9 +1,5 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Box,
-  Button,
-  makeStyles, Typography
-} from "@material-ui/core";
+import { Box, Button, makeStyles, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
@@ -16,6 +12,9 @@ import StepTextError from "../Items/formUpload/errorText";
 import CostumStepper from "./CostumStepper";
 import FirsStep from "./FirsStep";
 import SecondStep from "./SecondStep";
+
+
+
 const useStyles = makeStyles((theme) => ({
   formContainer: {
     boxSizing: "border-box",
@@ -32,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
   BoxShadow: {
     boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
     backgroundColor: "white",
-    width:500,
+    width: 500,
     [theme.breakpoints.down("sm")]: {
       width: "auto",
 
@@ -58,7 +57,6 @@ const initialValue = {
     Jour: "",
     Rue: "",
     Numero: "",
-    IBAN: "",
   },
 };
 
@@ -125,30 +123,14 @@ const validationSchema = yup.object().shape({
       .string("Entrez un  numéro")
       .matches(/^[0-9]*$/, "Veuillez seulement utiliser des nombres")
       .required("Un numéro est requis"),
-    IBAN: yup.string().matches(/CH\d{2}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{4}[ ]\d{1}|CH\d{19}/,"Veuillez entrer un IBAN valide").required("Un IBAN est requis")
   }),
 });
-/*     dispatch(register(values, from, history));
- */
 
-const validateEmail = (email) => {
-  var re = /\S+@\S+\.\S+/;
-  return re.test(email);
-};
+
 function getSteps() {
   return ["Créer un profile", "Valider ses informations personnels"];
 }
-const check = async (Email, Pseudo, dispatch) => {
-  axiosInstance
-    .post("/api/user/checkUser", { Email: Email, Pseudo: Pseudo })
-    .then(() => {})
-    .catch((error) => {
-      dispatch({
-        type: REGISTER_FAILURE,
-        payload: error.response.data,
-      });
-    });
-};
+
 
 export const Register = () => {
   const dispatch = useDispatch();
@@ -207,13 +189,11 @@ export const Register = () => {
   const error = useSelector((state) => state.auth.error);
   const history = useNavigate();
 
-
-
-  useEffect(()=>{
-    return () =>{
-      dispatch({type:RESET_ERROR})
-    }
-  },[])
+  useEffect(() => {
+    return () => {
+      dispatch({ type: RESET_ERROR });
+    };
+  }, []);
 
   const handleNext = async () => {
     const results = await trigger([
@@ -226,7 +206,6 @@ export const Register = () => {
       dispatch(userIfExist(getValues().step1, setActiveStep, activeStep));
     }
   };
-
 
   const handleBack = () => {
     setActiveStep((prevActiveStep) => prevActiveStep - 1);
@@ -242,7 +221,6 @@ export const Register = () => {
 
   const onSubmit = (values) => {
     dispatch(registerUser(values, from, history));
-
   };
 
   return (
@@ -258,7 +236,6 @@ export const Register = () => {
         <Box height={"5vh"} />
 
         <Box
-          
           className={classes.BoxShadow}
           display="flex"
           flexDirection="column"
@@ -275,14 +252,13 @@ export const Register = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             {renderStepper(activeStep)}
-           
 
             {error ? (
               <Box marginTop={3}>
                 <StepTextError text={error?.msg} />
               </Box>
             ) : null}
-            {activeStep === steps.length-1 ? (
+            {activeStep === steps.length - 1 ? (
               <Box marginTop={5} width={"100%"}>
                 <Button
                   style={{ width: "100%", height: 50 }}

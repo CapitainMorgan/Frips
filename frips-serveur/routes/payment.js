@@ -201,7 +201,7 @@ router.post("/reserved", auth, async (req, res) => {
   try {
     await item.update({
       where: {
-        id: idItem,
+        id: parseInt(idItem),
       },
       data: {
         Disponibility: true,

@@ -6,10 +6,13 @@ import { Navigate, Outlet, useLocation } from "react-router-dom";
 const PrivateRoute = () => {
   let location = useLocation();
   const auth = useSelector((state) => state.auth);
-  const { isAuthenticated, loading } = auth;
+  const { isAuthenticated, loading,user } = auth;
   if (loading) {
     return null;
   }
+
+
+
   return isAuthenticated && !loading ? (
     <Outlet />
   ) : (

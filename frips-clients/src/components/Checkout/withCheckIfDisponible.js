@@ -22,12 +22,14 @@ const withCheckIfDisponible = (WrappedComponent) => {
 
     useEffect(() => {
       dispatch(checkIfDisponible(parseInt(id)));
+      return () => {
+        dispatch(cleanUpPayment(id));
+      };
     }, [dispatch, id]);
 
 
 
-
-    if ((loading && !isDisponible)) {
+    if (loading && !isDisponible) {
       return (
         <Box
           height="100vh"
@@ -41,18 +43,20 @@ const withCheckIfDisponible = (WrappedComponent) => {
       );
     }
 
-    if ((!loading && !isDisponible)|| msg) {
-      return(
+    if ((!loading && !isDisponible) ) {
+      return (
         <Box
-        minHeight={"100%"}
-        display="flex"
-        flexDirection={"column"}
-        justifyContent={"center"}
-        alignItems="center"
-      >
-        <Typography style={{ fontSize: 16 }}>L'article a été vendu</Typography>
-      </Box>
-      )
+          minHeight={"100vh"}
+          display="flex"
+          flexDirection={"column"}
+          justifyContent={"center"}
+          alignItems="center"
+        >
+          <Typography style={{ fontSize: 16 }}>
+            L'article a été vendu
+          </Typography>
+        </Box>
+      );
     }
 
     return <WrappedComponent {...props} />;

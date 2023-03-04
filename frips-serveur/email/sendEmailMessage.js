@@ -20,7 +20,6 @@ const checkIfShouldSend = async (id, id_Item, chat_id) => {
     },
   });
 
-  console.log(didUserSendMessage)
   if (didUserSendMessage.length === 0) return;
 
   else if (id && id_Item) {

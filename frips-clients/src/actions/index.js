@@ -29,6 +29,7 @@ import {
   FETCH_MYFAVORITE,
   FETCH_MYFAVORITEIDs,
   FETCH_MYFRIPS,
+  FETCH_MYPROPOSITIONID,
   FETCH_MYSELLBYID,
   FETCH_NEW_ITEMS,
   FETCH_NEW_ITEM_TYPE,
@@ -846,7 +847,6 @@ export const paginationForFilter = () => async (dispatch, getState) => {
   let itemsId = [];
   let newTaille = [];
 
-  console.log(Search)
 
   if (
     AllFilter.Catalogue.length !== 0 ||
@@ -1040,7 +1040,6 @@ export const checkIfDisponible = (idItem) => async (dispatch, getState) => {
       { idItem },
       config
     );
-    console.log(data);
     dispatch({ type: ISRESERVED, payload: data });
     dispatch({ type: PAYMENT_INFO_SUCCESS_FETCH });
   } catch (error) {
@@ -1128,17 +1127,18 @@ export const updateAddress = (address) => async (dispatch, getState) => {
   }
 };
 
-export const changeIban = (address) => async (dispatch, getState) => {
+export const changeIban = (IBAN,from,history) => async (dispatch, getState) => {
   try {
     const { data } = await axiosInstance.post(
-      "/api/members/updateIban",
-      address,
+      "/api/members/IBAN",
+      {IBAN},
       config
     );
 
     dispatch({ type: CHANGE_IBAN, payload: data });
+    history(from)
   } catch (error) {
-    dispatch({ type: PAYMENT_FAILED });
+    console.log(error)
   }
 };
 
@@ -1227,7 +1227,7 @@ export const fetchMembersInfo =
     try {
       dispatch({ type: MEMBERS_LOADING });
       const { data } = await axiosInstance.post(
-        `/api/members/${name}`,
+        `/api/members/user/${name}`,
         { number: pagination },
         config
       );
@@ -1261,6 +1261,21 @@ export const fetchMySellId = (id) => async (dispatch, getState) => {
       config
     );
     dispatch({ type: FETCH_MYSELLBYID, payload: data });
+    dispatch({ type: "SUCCESS_FETCH_MYFRIPS" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchMyPropositionId = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: "LOADING_MYFRIPS" });
+
+    const { data } = await axiosInstance.get(
+      `/api/members/myProposition/${id}`,
+      config
+    );
+    dispatch({ type: FETCH_MYPROPOSITIONID, payload: data });
     dispatch({ type: "SUCCESS_FETCH_MYFRIPS" });
   } catch (error) {
     console.log(error);

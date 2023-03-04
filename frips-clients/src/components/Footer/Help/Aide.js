@@ -1,8 +1,4 @@
-import {
-    Box, Dialog,
-    makeStyles,
-    Typography
-} from "@material-ui/core";
+import { Box, Dialog, makeStyles, Typography } from "@material-ui/core";
 import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions";
@@ -36,7 +32,6 @@ const useStyles = makeStyles((theme) => ({
   },
   Dialog: {
     width: 350,
-    height: 500,
     [theme.breakpoints.down("sm")]: {
       height: 500,
       width: "auto",
@@ -76,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
 export const Aide = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const history = useNavigate();
+  const history = useNavigate()
   const handleClick = (e) => {
     setOpen(true);
   };
@@ -111,7 +106,10 @@ export const Aide = () => {
             <Box
               position="relative"
               className={classes.ItemAide}
-              onClick={() => history("/Aide/urAccount")}
+              onClick={() =>{
+                alert("here")
+                history("/aide/accountInfo")
+              }}
             >
               <Box
                 margin="auto"
@@ -168,7 +166,7 @@ export const Aide = () => {
                     height={"100%"}
                   >
                     <Typography style={{ fontSize: "1.2em" }}>
-                      Comment Changer son mot de passe ou utilisateur ? Modifier
+                      Comment changer son mot de passe ou utilisateur ? Modifier
                       sa photo de profil ? Ajouter une adresse de livraison ?
                     </Typography>
                   </Box>
@@ -231,7 +229,8 @@ export const Aide = () => {
                 >
                   <Box marginTop={1} paddingLeft={2} paddingRight={2}>
                     <Typography style={{ fontSize: "1.2em" }}>
-                      Le paiement est-il sécurisé ? Pourquoi j'ai des frais ?
+                      Le paiement est-il sécurisé ? Pourquoi j'ai des frais ? Je
+                      n'ai pas reçu mon paiement pourquoi ?
                     </Typography>
                   </Box>
                 </Box>
@@ -299,8 +298,8 @@ export const Aide = () => {
                     paddingRight
                   >
                     <Typography style={{ fontSize: "1.2em" }}>
-                      Comment vendre rapidement ? Comment créer une réduction ?
-                      Comment bien présenter des produits ?
+                      Comment vendre rapidement ? Comment bien présenter des
+                      produits ?
                     </Typography>
                   </Box>
                 </Box>
@@ -312,7 +311,7 @@ export const Aide = () => {
             <Box
               position="relative"
               className={classes.ItemAide}
-              onClick={() => history("/Aide/acheter")}
+              onClick={() => history("/aide/buyInfo")}
             >
               <Box
                 margin="auto"
@@ -382,6 +381,7 @@ export const Aide = () => {
               className={classes.Dialog}
               display="flex"
               flexDirection="column"
+              padding={6}
             >
               <Box position="absolute" top={0} right={0} padding={2}>
                 <IconButton
@@ -393,53 +393,7 @@ export const Aide = () => {
                 </IconButton>
               </Box>
 
-              <Box padding={3}>
-                <Box marginTop={5}>
-                  <Typography>
-                    Tu as un problème ou tu souhaites nous joindre pour x raison
-                    pas de soucis nous sommes là pour toi !
-                  </Typography>
-                </Box>
-                <Box marginTop={2}>
-                  <Typography>
-                    Tu peux nous joindre sur nos réseaux ci-dessous
-                  </Typography>
-                </Box>
-
-                <Box marginTop={2} display="flex" justifyContent="center">
-                  <Box>
-                    <IconButton>
-                      <InstagramIcon style={{ fontSize: "1.8em" }} />{" "}
-                    </IconButton>
-                  </Box>
-                  <Box>
-                    <IconButton>
-                      <FacebookIcon style={{ fontSize: "1.8em" }} />{" "}
-                    </IconButton>
-                  </Box>
-                </Box>
-                <Box marginTop={2}>
-                  <Box>
-                    <Typography>
-                      Tu peux aussi nous joindre sur via cette adresse mail
-                    </Typography>
-                  </Box>
-                  <Box display="flex" justifyContent="center" marginTop={2}>
-                    <Typography style={{ fontSize: "2em", color: "blue" }}>
-                      wati@gmail.com
-                    </Typography>
-                  </Box>
-                </Box>
-
-                <Box marginTop={2}>
-                  <Box>
-                    <Typography>
-                      Nous prenons vraiment le temps de répondre à toute
-                      question donc n'hésite pas
-                    </Typography>
-                  </Box>
-                </Box>
-              </Box>
+              <Box marginTop={5}></Box>
             </Box>
           </Dialog>
         </Box>

@@ -1,5 +1,4 @@
 const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
-  console.log(Boolean(item))
 
   return `
   <html lang="fr">

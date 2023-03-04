@@ -48,8 +48,6 @@ const FailComponent = ({id,navigate}) => {
 
 const StatusPaymentComponent = ({ successed, failed, item }) => {
   const navigate = useNavigate()
- 
-
   return (
     <Box
       style={{ backgroundColor: "#F5f5f3" }}

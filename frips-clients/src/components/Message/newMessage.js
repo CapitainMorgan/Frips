@@ -29,6 +29,8 @@ import API_ENDPOINT from "../../api/url";
 import PricePropose from "../Checkout/PricePropose";
 import MessageComponent from "./renderMessageComponent";
 import { AiOutlineSend } from "react-icons/ai";
+import { Alert } from "@material-ui/lab";
+import ErrorModalMessage from "./ErrorModalMessage";
 
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
@@ -51,13 +53,13 @@ const useStyles = makeStyles((theme) => ({
       width: "100%",
     },
   },
-  textfield:{
-    width:"70%",
-    margin:"auto",
+  textfield: {
+    width: "70%",
+    margin: "auto",
     [theme.breakpoints.down("sm")]: {
       height: "100%",
       width: "100%",
-      margin:0
+      margin: 0,
     },
   },
 
@@ -82,10 +84,10 @@ const useStyles = makeStyles((theme) => ({
   },
   container: {
     flexGrow: 1,
-    marginBottom:"5vh",
+    marginBottom: "5vh",
     [theme.breakpoints.down("sm")]: {
       flexGrow: 1,
-      marginBottom:0,
+      marginBottom: 0,
       height: "calc(100vh - 98px)",
     },
   },
@@ -95,9 +97,7 @@ const useStyles = makeStyles((theme) => ({
       height: 0,
     },
   },
-  page:{
-    
-  }
+  page: {},
 }));
 
 const renderProfileName = (Profile, userId) => {
@@ -137,6 +137,40 @@ const id_Receiver = (Profile, userId) => {
   }
 };
 
+const swissArrayNumber = ["076", "077", "078", "079"];
+
+function isSwissPhoneNumber(inputString) {
+  const regex = /(\d+)/g;
+  const numbers = inputString.match(regex);
+  if (!numbers) {
+    return false;
+  }
+  for (let i = 0; i < numbers.length; i++) {
+    const number = numbers[i];
+    if (
+      number.length >= 2 &&
+      ["076", "077", "078", "079", "0076", "0077", "0078", "0079","07","07","07"].includes(
+        number.slice(0, 3)
+      )
+    ) {
+      return true;
+    }
+  }
+  return false;
+}
+
+function checkString(inputString, setCheckForbiddenAction) {
+  
+  const regexLinks = /((https?:\/\/|www\.)[^\s]+)/g; // regex to match URLs
+
+  const regexForbiddenWords =
+    /(fb|facebook|insta|instagram|snap|snapchat|whatsapp|telegram|email|@|mon num|téléphone|tel|phone)/i; // regex to match forbidden words
+  return !(
+    regexLinks.test(inputString) || regexForbiddenWords.test(inputString) || isSwissPhoneNumber(inputString)
+  );
+}
+
+
 const Conversation = ({
   conv,
   loading,
@@ -155,16 +189,21 @@ const Conversation = ({
   const [isBottom, setIsBottom] = useState(true);
   const [isAccepted, setIsAccepted] = useState(false);
   const [anchorEl, setAnchorEl] = useState(false);
+  const [showWarning, setShowWarning] = useState(false);
+  const [error, setError] = useState(false);
+  const [checkForbiddenAction, setCheckForbiddenAction] = useState({
+    arrayMessage: [],
+    digitsArray: [],
+  });
+
   const history = useNavigate();
   const fromItem = useLocation().state;
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-
-  useEffect(()=>{
-    window.scrollTo(0,document.body.scrollHeight)
-
-  },[])
+  useEffect(() => {
+    window.scrollTo(0, document.body.scrollHeight);
+  }, []);
 
 
   const handleClick = () => {
@@ -174,9 +213,12 @@ const Conversation = ({
     dispatch({ type: ERROR_MESSAGE, payload: null });
     setAnchorEl(false);
   };
-  
 
   useEffect(() => {
+    if (socket && !socket?.connected) {
+      console.log("Socket is not connected. Attempting to reconnect...");
+      socket.connect();
+    }
     if (socket?.connected) {
       socket.emit("join room", id);
 
@@ -190,13 +232,25 @@ const Conversation = ({
         socket.off("message received");
         socket.off("new message");
       };
+    } else {
+     
     }
-  }, [socket]);
+  }, [socket?.connected,dispatch,id]);
 
   useEffect(() => {
-    if (!Number.isNaN(id)) {
+    if (error) {
       dispatch(getConv(id));
       dispatch(readMessage(id));
+    }
+  }, [error]);
+
+ 
+
+  useEffect(() => {
+    if (!Number.isNaN(id) || error) {
+      dispatch(getConv(id));
+      dispatch(readMessage(id));
+      setError(false);
     }
   }, [dispatch, id]);
 
@@ -232,9 +286,14 @@ const Conversation = ({
   }
 
   return (
-    <Box style={{ backgroundColor: "#F5f5f3" }} className={classes.page} >
+    <Box style={{ backgroundColor: "#F5f5f3" }} className={classes.page}>
       <Box className={classes.Divider} />
+
       <Box className={classes.container}>
+        <ErrorModalMessage
+          warning={showWarning}
+          setShowWarning={setShowWarning}
+        />
         {anchorEl ? (
           <PricePropose
             item={fromItem}
@@ -248,6 +307,7 @@ const Conversation = ({
             handleClickAway={handleClickAway}
             itemId={fromItem.id}
             itemPrice={fromItem.Price}
+            Pseudo={renderProfileName(Profile, userId)}
           />
         ) : null}
         <Box
@@ -262,10 +322,8 @@ const Conversation = ({
             className={classes.MenuSetting}
             display="flex"
             alignItems="center"
-            
           >
             <Avatar
-            
               alt={renderProfilImage(Profile, userId)}
               style={{ border: 2, borderColor: "black" }}
               src={`${API_ENDPOINT}/imageProfile/${renderProfileNumber(
@@ -276,8 +334,6 @@ const Conversation = ({
             <Typography style={{ fontSize: "1.2em", marginLeft: 5 }}>
               {renderProfileName(Profile, userId)}
             </Typography>
-            
-            
           </Box>
           <Divider />
 
@@ -398,87 +454,105 @@ const Conversation = ({
               className={classes.textfield}
               type="submit"
               onKeyPress={(e) => {
-                if (e.key === "Enter" && Message.text.trim()) {
-                  if (socket?.connected) {
-                    dispatch(
-                      sendMessage(
-                        Message.text,
-                        Message.chat_id,
-                        id_Receiver(Profile, userId),
-                        userId,
-                        null,
-                        null
-                      )
-                    );
-                    setMessage({ text: "", chat_id: id, id });
+                if (!checkString(Message.text.trim(),setCheckForbiddenAction) && e.key === "Enter") {
+                  setShowWarning(true);
+                  setMessage({ text: "", chat_id: id });
+                } else {
+                  if (e.key === "Enter" && Message.text.trim()) {
+                    if (socket?.connected) {
+                      dispatch(
+                        sendMessage(
+                          Message.text,
+                          Message.chat_id,
+                          id_Receiver(Profile, userId),
+                          userId,
+                          null,
+                          null
+                        )
+                      );
+                      setMessage({ text: "", chat_id: id, id });
 
-                    const data = {
-                      Message,
-                      id_Sender: userId,
-                      id_Receiver: id_Receiver(Profile, userId),
-                      id: id,
-                      Profile: [
-                        Profile.Profile2.ProfileNumber,
-                        Profile.Profile1.ProfileNumber,
-                      ],
-                      date: new Date(),
-                      item: null,
-                      Price: null,
-                      imageSender: imageSender?.image ? imageSender : null,
-                    };
+                      const data = {
+                        Message,
+                        id_Sender: userId,
+                        id_Receiver: id_Receiver(Profile, userId),
+                        id: id,
+                        Profile: [
+                          Profile.Profile2.ProfileNumber,
+                          Profile.Profile1.ProfileNumber,
+                        ],
+                        date: new Date(),
+                        item: null,
+                        Price: null,
+                        imageSender: imageSender?.image ? imageSender : null,
+                        Pseudo:renderProfileName(Profile, userId)
 
-                    socket.emit("new message", data);
+                      };
+
+                      socket.emit("new message", data);
+                    }
+                    e.preventDefault();
                   }
-                  e.preventDefault();
                 }
               }}
               value={Message.text}
               multiline={true}
               onChange={onChange}
-             
               InputProps={{
                 style: { fontSize: 16, maxHeight: "5vh" },
 
-            endAdornment: (
-              <InputAdornment onClick={(e)=>{
-                if(Message.text.trim()){
-                  if (socket?.connected) {
-                    dispatch(
-                      sendMessage(
-                        Message.text,
-                        Message.chat_id,
-                        id_Receiver(Profile, userId),
-                        userId,
-                        null,
-                        null
-                      )
-                    );
-                    setMessage({ text: "", chat_id: id, id });
+                endAdornment: (
+                  <InputAdornment
+                    onClick={(e) => {
+                      if (!checkString(Message.text) && e.key === "Enter") {
+                        setShowWarning(true);
+                        setMessage({ text: "", chat_id: id });
+                      } else {
+                        if (Message.text.trim()) {
+                          if (socket?.connected) {
+                            dispatch(
+                              sendMessage(
+                                Message.text,
+                                Message.chat_id,
+                                id_Receiver(Profile, userId),
+                                userId,
+                                null,
+                                null
+                              )
+                            );
+                            setMessage({ text: "", chat_id: id, id });
 
-                    const data = {
-                      Message,
-                      id_Sender: userId,
-                      id_Receiver: id_Receiver(Profile, userId),
-                      id: id,
-                      Profile: [
-                        Profile.Profile2.ProfileNumber,
-                        Profile.Profile1.ProfileNumber,
-                      ],
-                      date: new Date(),
-                      item: null,
-                      Price: null,
-                      imageSender: imageSender?.image ? imageSender : null,
-                    };
+                            const data = {
+                              Message,
+                              id_Sender: userId,
+                              id_Receiver: id_Receiver(Profile, userId),
+                              id: id,
+                              Profile: [
+                                Profile.Profile2.ProfileNumber,
+                                Profile.Profile1.ProfileNumber,
+                              ],
+                              date: new Date(),
+                              item: null,
+                              Price: null,
+                              imageSender: imageSender?.image
+                                ? imageSender
+                                : null,
+                               Pseudo:renderProfileName(Profile, userId)
+                            };
 
-                    socket.emit("new message", data);
-                  }
-                  e.preventDefault();
-                }
-              }} position="end" className={classes.pointer}>
-                <AiOutlineSend size={20} color="#4C6A8C" />
-              </InputAdornment>
-            ),
-          }}
+                            socket.emit("new message", data);
+                          }
+                          e.preventDefault();
+                        }
+                      }
+                    }}
+                    position="end"
+                    className={classes.pointer}
+                  >
+                    <AiOutlineSend size={20} color="#4C6A8C" />
+                  </InputAdornment>
+                ),
+              }}
             />
           </Box>
         </Box>

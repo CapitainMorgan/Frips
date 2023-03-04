@@ -1,7 +1,8 @@
 import {
-  Box, CircularProgress,
+  Box,
+  CircularProgress,
   makeStyles,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { isNumber } from "lodash";
 import React, { useEffect, useState } from "react";
@@ -110,12 +111,12 @@ const ItemPreview = (props) => {
   const dispatch = useDispatch();
   let singleItem = useSelector((state) => state.items.UniqueItem);
   let loading = useSelector((state) => state.items.loading);
-  const myAccount = useSelector(state => state.auth.user)
+  const myAccount = useSelector((state) => state.auth.user);
   let favorite = useSelector((state) => state.favoriteReducers.favoritIds);
   const location = useLocation();
 
   useEffect(() => {
-    if(isNumber(id)){
+    if (isNumber(id)) {
       dispatch(fetchItem(id));
       dispatch(idFavorite());
       dispatch(itemViewed(id));
@@ -170,7 +171,7 @@ const ItemPreview = (props) => {
                 favorite={favorite}
               />
             </Box>
-            <Box  height={"10vh"} width={"100%"}></Box>
+            <Box height={"10vh"} width={"100%"}></Box>
 
             <Box className={classes.ArticleProfil}>
               <ItemProfil

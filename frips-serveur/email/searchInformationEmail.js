@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 
-const { account, item, chat ,transaction} = new PrismaClient();
+const { account, item, chat, transaction } = new PrismaClient();
 
 const checkIfShouldSend = async (
   id_Receiver,
@@ -14,18 +14,20 @@ const checkIfShouldSend = async (
           AND: [
             { id_Sender: id_Sender },
             {
-              Date_Houre: {
-                lte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
-              },
+              AND: [
+                {
+                  Date_Houre: {
+                    gte: new Date(new Date().getTime() - 24 * 60 * 60 * 2000),
+                  },
+                  Text: { not: { equals: null } },
+                },
+              ],
             },
-            { id_Item: { equals: id_Item } },
           ],
         },
       },
     },
   });
-
-  console.log(didUserSendMessage);
 
   if (id_Sender && id_Item) {
     const findUserItem = await account.findUnique({
@@ -125,21 +127,21 @@ const bill = async (id_Receiver, { id_Item }) => {
               },
             },
           },
-          Size:true,
-          item_brand:{
-            select:{
-                brand:{
-                    select:{
-                        Name:true
-                    }
-                }
-            }
+          Size: true,
+          item_brand: {
+            select: {
+              brand: {
+                select: {
+                  Name: true,
+                },
+              },
+            },
           },
 
           DeliveryDetails: true,
         },
       },
-      id:true,
+      id: true,
 
       DateSell: true,
       DateSend: true,
@@ -159,28 +161,29 @@ const bill = async (id_Receiver, { id_Item }) => {
     },
   });
 
-
   const transactionInfo = {
     Price: mySellItem.Price,
-    Price_Fees:mySellItem.Price - mySellItem.item.Price,
-    PriceDelivery:7,
+    Price_Fees: mySellItem.Price - mySellItem.item.Price,
+    PriceDelivery: 7,
     DateSell: new Date(mySellItem.DateSell),
     id_transaction: mySellItem.id,
-
   };
 
-  
-  return {buyerAccount: mySellItem.account,soldItem:mySellItem.item,transactionInfo};
+  return {
+    buyerAccount: mySellItem.account,
+    soldItem: mySellItem.item,
+    transactionInfo,
+  };
 };
 
-const typeOfEmail = async (type, id_Receiver, args) => {
+const typeOfEmail = async (type, id_Receiver,id_Sender, args) => {
   switch (type) {
     case "Welcome":
       return await findUserNameEmail(id_Receiver);
     case "NewMessage":
       const infoReceiver = await checkIfShouldSend(id_Receiver, args);
       const SenderPseudo = await account.findUnique({
-        where: { id: id_Receiver },
+        where: { id: id_Sender },
         select: {
           Pseudo: true,
           image: {
@@ -205,10 +208,10 @@ const typeOfEmail = async (type, id_Receiver, args) => {
   }
 };
 
-const searchInformation = async (id_Receiver, type, args) => {
+const searchInformation = async (id_Receiver,id_Sender, type, args) => {
   try {
     console.log(args);
-    const information = await typeOfEmail(type, id_Receiver, args);
+    const information = await typeOfEmail(type, id_Receiver,id_Sender, args);
 
     if (!Boolean(information)) return;
 

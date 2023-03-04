@@ -14,7 +14,7 @@ const PageNotFound = () => {
         flexDirection={"column"}
     >
       <Typography style={{ fontSize: 20 }}>
-        Erreur 404 il semblerait que cettte page n'existe pas
+        Erreur 404 il semblerait que cette page n'existe pas
       </Typography>
       <Link to={"/"}>
         <Typography>Retourner au menu</Typography>

@@ -23,7 +23,7 @@ export const Footer = () => {
           </MenuItem>
         </Box>
         <Box>
-          <MenuItem onClick={() => history("/Aide")}>Aide</MenuItem>
+          <MenuItem onClick={() => history("/aide")}>Aide</MenuItem>
         </Box>
         
         <Box>

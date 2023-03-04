@@ -159,11 +159,14 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
                     },
                   },
                 },
+                id:id_Item
               },
             },
           },
         },
       });
+
+
 
       if (newMessage.length > 0) {
         res.sendStatus(403);
@@ -436,7 +439,7 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
   try {
     const isUserInConv = await chat.findMany({
       where: {
-        id_Chat: parseInt(id),
+        id: parseInt(id),
         OR: [
           {
             id_Account_1: req.user.id,

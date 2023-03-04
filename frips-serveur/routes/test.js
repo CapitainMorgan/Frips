@@ -32,10 +32,10 @@ router.post("/", async (req, res) => {
 router.post("/s", async (req, res,next) => {
   const count = 0
   try {
-    
-    await sendEmail(1,"NewMessage",next,{id_Item:1})
 
+    await sendEmail(2,1,"NewMessage",next,{id_Item:1,pricepropose:12,id_Chat:1})
 
+    res.status(200).json("ok")
   } catch (error) {
     console.log(error);
     res.status(500).json("Server error");

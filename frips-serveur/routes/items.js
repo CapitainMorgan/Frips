@@ -14,7 +14,8 @@ log4js.configure({
 });
 var logger = log4js.getLogger("items");
 
-const { item, image, nbview, favorit, brand ,review,pricepropose} =new PrismaClient();
+const { item, image, nbview, favorit, brand, review, pricepropose } =
+  new PrismaClient();
 
 // @route   Post api/items
 // @desc    post one item
@@ -89,7 +90,9 @@ router.post("/", auth, upload, async (req, res) => {
 
   if (!Array.isArray(Delivery)) {
     Delivery = Delivery.split(",").map(Number);
-  }  
+  }
+
+  
 
   try {
     const exist = await brand.upsert({
@@ -140,7 +143,6 @@ router.post("/", auth, upload, async (req, res) => {
             };
           }),
         },
-       
 
         id_ItemCondition: State,
         item_brand: {
@@ -249,7 +251,6 @@ router.get("/", async (req, res) => {
 router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
   const { id } = req.user;
   const { id_Item } = req.params;
-  console.log(id_Item)
   try {
     const findUser = await item.findUnique({
       where: {
@@ -538,16 +539,23 @@ const filterCatalogue = (Catalogue) => {
   };
 };
 
-const findSearchQuery = (Search) =>{
-  const arraySearch = []
-  Search.map((item)=>{
-    arraySearch.push({Name:{
-      contains:item.Name
-    }})
-  })
-  console.log(...arraySearch)
-  return arraySearch
-}
+const findSearchQuery = (Search) => {
+  const arraySearch = [];
+  Search.map((item) => {
+    arraySearch.push({
+      Name: {
+        contains: item.Name,
+      },
+    });
+    arraySearch.push({
+      Description:{
+        contains: item.Name
+      }
+    })
+  });
+  console.log(...arraySearch);
+  return arraySearch;
+};
 const isFilter = (filter) => {
   const {
     newCatalogue,
@@ -559,7 +567,6 @@ const isFilter = (filter) => {
     itemsId,
     newTaille,
   } = filter;
-  
 
   if (
     newCatalogue.length !== 0 ||
@@ -568,8 +575,8 @@ const isFilter = (filter) => {
     newMarque.length !== 0 ||
     newTaille.length !== 0 ||
     Price[0] !== 0 ||
-    Price[1] !== null || 
-    Search.length !==0
+    Price[1] !== null ||
+    Search.length !== 0
   ) {
     return {
       OR: [
@@ -586,8 +593,7 @@ const isFilter = (filter) => {
         filterCatalogue(newCatalogue),
 
         priceRange(Price),
-        ...findSearchQuery(Search)
-
+        ...findSearchQuery(Search),
       ],
     };
   } else return;
@@ -616,23 +622,24 @@ router.post("/pagination", async (req, res) => {
     sortedBy,
   } = req.body;
 
+  console.log(...findSearchQuery(req.body.Search));
+
   try {
     const count = await item.count({
-      where:{
-        OR:isFilter(req.body),
+      where: {
+        OR: isFilter(req.body),
         transaction: {
           none: {},
         },
-      }
+      },
     });
 
     const Item = await item.findMany({
-      where:{
-        OR:isFilter(req.body),
+      where: {
+        OR: isFilter(req.body),
         transaction: {
           none: {},
         },
-        
       },
       include: {
         image: {
@@ -830,15 +837,16 @@ router.post("/proposition", auth, async (req, res) => {
 
   try {
     const data = await pricepropose.create({
-      data:{
-        Price:parseFloat(Price),
-        SendDate:DatePuplication ,
-        id_Account:id,
-        id_Item:id
-      }
-    })
+      data: {
+        Price: parseFloat(Price),
+        SendDate: DatePuplication,
+        id_Account: id,
+        id_Item: idItem,
+      },
+    });
     logger.info("Price proposition send by " + id + " for item " + idItem + "")
-    res.status(200).json(data)
+
+    res.status(200).json(data);
   } catch (error) {
     logger.error("POST /api/item/proposition" + error);
     res.status(500).json("Server error");
@@ -947,17 +955,15 @@ router.get("/:id", async (req, res) => {
           },
         },
       },
-
     });
-   const {_avg} =  await review.aggregate({
-      where:{
-        id_Account:Item.account.id
+    const { _avg } = await review.aggregate({
+      where: {
+        id_Account: Item.account.id,
       },
-      _avg:{
-        Note:true
-      }
-    })
-
+      _avg: {
+        Note: true,
+      },
+    });
 
     const userItem = await item.findMany({
       where: {
@@ -1019,12 +1025,11 @@ router.get("/:id", async (req, res) => {
       Item.item_category[0].category.id
     );
 
-
     Item = {
       ...Item,
       userItem,
       findedSimilarProduct,
-      review:_avg?.Note
+      review: _avg?.Note,
     };
     res.status(200).json(Item);
   } catch (error) {

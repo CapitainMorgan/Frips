@@ -1,9 +1,7 @@
-import { Box, Typography } from "@material-ui/core";
-import { ErrorMessage, Field } from "formik";
+import { Box } from "@material-ui/core";
 import React from "react";
 import { Controller } from "react-hook-form";
 import StepTextError from "../Items/formUpload/errorText";
-import TextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "./TextFieldLogin";
 
 const SecondStep = ({ control, errors }) => {

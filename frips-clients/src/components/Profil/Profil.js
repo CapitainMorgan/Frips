@@ -100,7 +100,6 @@ const UserProfile = () => {
   const editor = useRef(null);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [canton, setCanton] = useState("");
   const [openChange, setOpenChange] = useState(false);
   const state = useSelector((state) => state.auth.user);
 

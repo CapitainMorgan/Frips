@@ -65,6 +65,7 @@ const PaymentForm = ({
       dispatch({ type: PAYMENT_FAILED });
       navigate(`/payment/${idItem}/paymentStatus`, { replace: true });
     } else {
+      
       dispatch(succeedPayment(idItem, cs, idAccount, navigate,selectedId));
     }
   };

@@ -18,10 +18,8 @@ model account {
   Description                          String?           @db.VarChar(255)
   Firstname                            String?           @db.VarChar(255)
   TelNumber                            String?           @unique(map: "TelNumber") @db.VarChar(50)
-  BirthDate                            DateTime          @db.DateTime(0)
-  AccountStatus                        Int?              @default(0)
-  id_Address                           Int
-  address                              address           @relation(fields: [id_Address], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "account_ibfk_1")
+  id_Address                           Int?
+  address                              address?          @relation(fields: [id_Address], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "account_ibfk_1")
   achievment_user                      achievment_user[]
   chat_accountTochat_id_Account_1      chat[]            @relation("accountTochat_id_Account_1")
   chat_accountTochat_id_Account_2      chat[]            @relation("accountTochat_id_Account_2")
@@ -30,12 +28,11 @@ model account {
   item                                 item[]
   message_accountTomessage_id_Receiver message[]         @relation("accountTomessage_id_Receiver")
   message_accountTomessage_id_Sender   message[]         @relation("accountTomessage_id_Sender")
-  nbview                               nbview[]
   pricepropose                         pricepropose[]
   review                               review[]
-  transaction                          transaction[]
+  sell                                 sell[]
 
-  @@index([id_Address], map: "id_Address")
+  @@index([id_Address], map: "account_ibfk_1")
 }
 
 model achievement {
@@ -73,17 +70,14 @@ model moderator {
 }
 
 model review {
-  id             Int         @id @default(autoincrement())
-  Date_Houre     DateTime    @db.DateTime(0)
-  Note           Int
-  Text           String?     @db.VarChar(255)
-  id_Account     Int
-  id_Transaction Int
-  account        account     @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_1")
-  transaction    transaction @relation(fields: [id_Transaction], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_2")
+  id         Int      @id @default(autoincrement())
+  Date_Houre DateTime @db.DateTime(0)
+  Note       Int
+  Text       String?  @db.VarChar(255)
+  id_Account Int
+  account    account  @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "review_ibfk_1")
 
-  @@index([id_Account], map: "id_Account")
-  @@index([id_Transaction], map: "id_Transaction")
+  @@index([id_Account], map: "review_ibfk_1")
 }
 
 model category {
@@ -124,8 +118,8 @@ model chat {
   account_accountTochat_id_Account_2 account   @relation("accountTochat_id_Account_2", fields: [id_Account_2], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "chat_ibfk_2")
   message                            message[]
 
-  @@index([id_Account_1], map: "id_Account_1")
-  @@index([id_Account_2], map: "id_Account_2")
+  @@index([id_Account_1], map: "chat_ibfk_1")
+  @@index([id_Account_2], map: "chat_ibfk_2")
 }
 
 model achievment_user {
@@ -135,7 +129,7 @@ model achievment_user {
   achievement    achievement @relation(fields: [id_Achievement], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "achievment_user_ibfk_2")
 
   @@id([id_Account, id_Achievement])
-  @@index([id_Achievement], map: "id_Achievement")
+  @@index([id_Achievement], map: "achievment_user_ibfk_2")
 }
 
 model category_category {
@@ -145,29 +139,28 @@ model category_category {
   category_categoryTocategory_category_id_Parent category @relation("categoryTocategory_category_id_Parent", fields: [id_Parent], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "category_category_ibfk_1")
 
   @@id([id_Parent, id_Child])
-  @@index([id_Child], map: "id_Child")
+  @@index([id_Child], map: "category_category_ibfk_2")
 }
 
 model favorit {
   id_Account Int
   id_Item    Int
   account    account @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "favorit_ibfk_1")
-  item       item    @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "favorit_ibfk_2")
+  item       item    @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "favorit_ibfk_2")
 
   @@id([id_Account, id_Item])
-  @@index([id_Item], map: "id_Item")
+  @@index([id_Item], map: "favorit_ibfk_2")
 }
 
 model image {
-  id           Int      @id @default(autoincrement())
-  image        String   @db.VarChar(255)
-  confidencial Boolean
-  id_Item      Int?
-  id_Account   Int?     @unique(map: "id_Account")
-  account      account? @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "image_ibfk_2")
-  item         item?    @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "image_ibfk_1")
+  id         Int      @id @default(autoincrement())
+  image      String   @db.VarChar(255)
+  id_Item    Int?
+  id_Account Int?     @unique(map: "id_Account")
+  account    account? @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "image_ibfk_2")
+  item       item?    @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "image_ibfk_1")
 
-  @@index([id_Item], map: "id_Item")
+  @@index([id_Item], map: "image_ibfk_1")
 }
 
 model item {
@@ -175,14 +168,12 @@ model item {
   Description      String?         @db.VarChar(255)
   Name             String?         @db.VarChar(50)
   Size             String?         @db.VarChar(50)
-  DeliveryDetails  String?         @db.VarChar(255)
   DatePuplication  DateTime        @db.DateTime(0)
   Price            Float
   CurrentAuction   Boolean
-  Disponibility    Boolean
-  Verified         Boolean
   id_Seller        Int
   id_ItemCondition Int
+  NbView           Int?
   itemcondition    itemcondition   @relation(fields: [id_ItemCondition], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_ibfk_2")
   account          account         @relation(fields: [id_Seller], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_ibfk_1")
   favorit          favorit[]
@@ -192,73 +183,71 @@ model item {
   item_color       item_color[]
   item_fees        item_fees[]
   message          message[]
-  nbview           nbview[]
   pricepropose     pricepropose[]
   report           report[]
-  transaction      transaction[]
+  sell             sell[]
 
-  @@index([id_ItemCondition], map: "id_ItemCondition")
-  @@index([id_Seller], map: "id_Seller")
+  @@index([id_Seller], map: "item_ibfk_1")
+  @@index([id_ItemCondition], map: "item_ibfk_2")
 }
 
 model item_brand {
   id_Item  Int
   id_Brand Int
   brand    brand @relation(fields: [id_Brand], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_brand_ibfk_2")
-  item     item  @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "item_brand_ibfk_1")
+  item     item  @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_brand_ibfk_1")
 
   @@id([id_Item, id_Brand])
-  @@index([id_Brand], map: "id_Brand")
+  @@index([id_Brand], map: "item_brand_ibfk_2")
 }
 
 model item_category {
   id_Item     Int
   id_Category Int
   category    category @relation(fields: [id_Category], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_category_ibfk_2")
-  item        item     @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "item_category_ibfk_1")
+  item        item     @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_category_ibfk_1")
 
   @@id([id_Item, id_Category])
-  @@index([id_Category], map: "id_Category")
+  @@index([id_Category], map: "item_category_ibfk_2")
 }
 
 model item_color {
   id_Item  Int
   id_Color Int
   color    color @relation(fields: [id_Color], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_color_ibfk_2")
-  item     item  @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "item_color_ibfk_1")
+  item     item  @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_color_ibfk_1")
 
   @@id([id_Item, id_Color])
-  @@index([id_Color], map: "id_Color")
+  @@index([id_Color], map: "item_color_ibfk_2")
 }
 
 model item_fees {
   id_Item Int
   id_Fees Int
   fees    fees @relation(fields: [id_Fees], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_fees_ibfk_2")
-  item    item @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "item_fees_ibfk_1")
+  item    item @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "item_fees_ibfk_1")
 
   @@id([id_Item, id_Fees])
-  @@index([id_Fees], map: "id_Fees")
+  @@index([id_Fees], map: "item_fees_ibfk_2")
 }
 
 model message {
   id                                   Int      @id @default(autoincrement())
   Text                                 String?  @db.VarChar(255)
   Date_Houre                           DateTime @db.DateTime(0)
-  Unread                               Boolean
   id_Sender                            Int
   id_Receiver                          Int
   id_Chat                              Int
   id_Item                              Int?
   chat                                 chat     @relation(fields: [id_Chat], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_3")
-  item                                 item?    @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "message_ibfk_4")
+  item                                 item?    @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_4")
   account_accountTomessage_id_Receiver account  @relation("accountTomessage_id_Receiver", fields: [id_Receiver], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_2")
   account_accountTomessage_id_Sender   account  @relation("accountTomessage_id_Sender", fields: [id_Sender], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "message_ibfk_1")
 
-  @@index([id_Chat], map: "id_Chat")
-  @@index([id_Item], map: "id_Item")
-  @@index([id_Receiver], map: "id_Receiver")
-  @@index([id_Sender], map: "id_Sender")
+  @@index([id_Sender], map: "message_ibfk_1")
+  @@index([id_Receiver], map: "message_ibfk_2")
+  @@index([id_Chat], map: "message_ibfk_3")
+  @@index([id_Item], map: "message_ibfk_4")
 }
 
 model report {
@@ -266,51 +255,35 @@ model report {
   Date_Houre DateTime @db.DateTime(0)
   Text       String   @db.VarChar(255)
   id_Item    Int
-  item       item     @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "report_ibfk_1")
+  item       item     @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "report_ibfk_1")
 
-  @@index([id_Item], map: "id_Item")
+  @@index([id_Item], map: "report_ibfk_1")
 }
 
 model pricepropose {
   id_Account  Int
   id_Item     Int
   Price       Float
-  Approve     Boolean?
-  SendDate    DateTime  @db.DateTime(0)
+  Approve     Boolean
   dateApprove DateTime? @db.DateTime(0)
   account     account   @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "pricepropose_ibfk_1")
-  item        item      @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "pricepropose_ibfk_2")
+  item        item      @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "pricepropose_ibfk_2")
 
   @@id([id_Account, id_Item])
-  @@index([id_Item], map: "id_Item")
+  @@index([id_Item], map: "pricepropose_ibfk_2")
 }
 
-model nbview {
+model sell {
   id_Account Int
+  Price      Float?
+  Protection Float?
+  DateSell   DateTime  @db.DateTime(0)
+  Statement  String?   @db.VarChar(50)
+  DateSend   DateTime? @db.DateTime(0)
   id_Item    Int
-  account    account @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "nbview_ibfk_1")
-  item       item    @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "nbview_ibfk_2")
+  account    account   @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "sell_ibfk_1")
+  item       item      @relation(fields: [id_Item], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "sell_ibfk_2")
 
   @@id([id_Account, id_Item])
-  @@index([id_Item], map: "id_Item")
-}
-
-model transaction {
-  id               Int       @id @default(autoincrement())
-  id_Account       Int
-  Price            Float?
-  Protection       Float?
-  DateSell         DateTime  @db.DateTime(0)
-  Status           String?   @db.VarChar(50)
-  DateSend         DateTime? @db.DateTime(0)
-  StripeIdentifier String?   @db.VarChar(255)
-  id_Item          Int
-  TaxPrice         Float?
-  DeliveryPrice    Float?
-  account          account   @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "transaction_ibfk_1")
-  item             item      @relation(fields: [id_Item], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "transaction_ibfk_2")
-  review           review[]
-
-  @@index([id_Item], map: "id_Item")
-  @@index([id_Account], map: "id_Account")
+  @@index([id_Item], map: "sell_ibfk_2")
 }

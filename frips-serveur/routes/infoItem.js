@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const log4js = require("log4js");
-log4js.configure({
-  appenders: { infoItem: { type: "file", filename: "infoItem.log" } },
-  categories: { default: { appenders: ["infoItem"], level: "error" } },
-});
+
 var logger = log4js.getLogger("infoItem");
 
 const { PrismaClient } = require("@prisma/client");

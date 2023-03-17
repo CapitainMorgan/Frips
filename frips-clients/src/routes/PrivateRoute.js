@@ -11,8 +11,6 @@ const PrivateRoute = () => {
     return null;
   }
 
-
-
   return isAuthenticated && !loading ? (
     <Outlet />
   ) : (

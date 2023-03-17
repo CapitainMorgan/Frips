@@ -88,7 +88,6 @@ const ItemInformation = ({ state, classes, review, myAccount, favorite }) => {
             {state.Price} CHF
           </Typography>
         </Box>
-       
 
         <Box display="flex" marginTop={2}>
           <Box className={classes.ContentInformationItem}>
@@ -158,13 +157,12 @@ const ItemInformation = ({ state, classes, review, myAccount, favorite }) => {
                 })}
           </Box>
         </Box>
-        
 
         <Divider style={{ marginTop: 5 }} />
         <Box marginTop={2}>
           <Box height={"100%"}>
             <Box display="inline-block" lineHeight={2}>
-              <Typography style={{ fontSize: 17, color: "#999998"}}>
+              <Typography style={{ fontSize: 17, color: "#999998" }}>
                 Nom
               </Typography>
             </Box>
@@ -224,7 +222,11 @@ const ItemInformation = ({ state, classes, review, myAccount, favorite }) => {
               variant="outlined"
               color="primary"
               onClick={() => {
-                handleClick();
+                if (!Boolean(myAccount)) {
+                  history("/signup");
+                } else {
+                  handleClick();
+                }
               }}
             >
               Faire une offre
@@ -244,10 +246,14 @@ const ItemInformation = ({ state, classes, review, myAccount, favorite }) => {
             variant="outlined"
             style={{ width: "100%", marginTop: 5 }}
             onClick={() => {
-              if (_.some(favorite, { id_Item: state.id })) {
-                dispatch(removeFavorite(state.id, null,false));
+              if (Boolean(myAccount)) {
+                if (_.some(favorite, { id_Item: state.id })) {
+                  dispatch(removeFavorite(state.id, null, false));
+                } else {
+                  dispatch(addFavorite(state.id, null, false));
+                }
               } else {
-                dispatch(addFavorite(state.id, null,false));
+                history("/signup");
               }
             }}
           >

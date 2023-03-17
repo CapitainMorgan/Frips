@@ -16,7 +16,7 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineStar } from "react-icons/ai";
 import { TbTruckDelivery } from "react-icons/tb";
 import { useDispatch } from "react-redux";
-import { changeStep, review } from "../../../../actions";
+import { changeStep } from "../../../../actions";
 import { DELIVERY } from "../../../../actions/type";
 import DetailsDelivery from "./DetailsDelivery";
 import RatingComponent from "./RatingComponent";

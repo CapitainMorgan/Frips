@@ -5,15 +5,10 @@ import {
   CardActionArea,
   CircularProgress,
   makeStyles,
-  Typography,
+  Typography
 } from "@material-ui/core";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";

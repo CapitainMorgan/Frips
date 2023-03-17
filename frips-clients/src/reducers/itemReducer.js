@@ -120,6 +120,9 @@ export default (state = initialValues, action) => {
       return {
         ...state,
         UniqueItem: [],
+        initialValues: {},
+        imageBlob: [],
+        editItemPage: null,
       };
 
     default:

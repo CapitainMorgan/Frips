@@ -1,77 +1,63 @@
 import {
   Box,
-  Checkbox,
-  FormControlLabel,
   makeStyles,
-  MenuItem,
   Radio,
-  RadioGroup,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
-import { RadioButtonCheckedRounded } from "@material-ui/icons";
 import _ from "lodash";
-import React, { useState } from "react";
+import React from "react";
 import { useSelector } from "react-redux";
 
-
-
 const useStyles = makeStyles((theme) => ({
-    pointer: {
-        cursor: "pointer",
-      },
-      BoxItem: (props) => ({
-        "&:hover": {
-          background: props.hoverColor,
-        },
-        display: "flex",
-        alignItems: "center",
-        position: "relative",
-        cursor: "pointer",
-    
-      }),
-      Typography: {
-        fontWeight: 500,
-        fontSize: 16,
-      },
-    
-      checkBox: {
-        position: "absolute",
-        "&:hover": {
-          background: "transparent",
-        },
-        right: 0,
-        top: 0,
-      },
-    DeliveryBox: {
-      display: "flex",
-      width: "100%",
-  
-      [theme.breakpoints.down("sm")]: {
-        width: "100%",
-        display:"flex",
-        flexDirection:"column"
-      },
+  pointer: {
+    cursor: "pointer",
+  },
+  BoxItem: (props) => ({
+    "&:hover": {
+      background: props.hoverColor,
     },
-  }));
+    display: "flex",
+    alignItems: "center",
+    position: "relative",
+    cursor: "pointer",
+  }),
+  Typography: {
+    fontWeight: 500,
+    fontSize: 16,
+  },
 
-const DeliveryFormRadio = ({
-  field,
-  form,
-  size,
-  setSize,
-  ...props
-}) => {
+  checkBox: {
+    position: "absolute",
+    "&:hover": {
+      background: "transparent",
+    },
+    right: 0,
+    top: 0,
+  },
+  DeliveryBox: {
+    display: "flex",
+    width: "100%",
+
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      display: "flex",
+      flexDirection: "column",
+    },
+  },
+}));
+
+const DeliveryFormRadio = ({ field, form, size, setSize, ...props }) => {
   const classes = useStyles();
   const DeliveryInfo = useSelector(
     (state) => state.itemInfo.itemInfo?.infoDelivery
   );
-  
+
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-  if(DeliveryInfo?.length===0)return;
+  if (DeliveryInfo?.length === 0) return;
 
   const renderDeliveryMethods = (arrayDelivery) => {
     return arrayDelivery?.map((item) => {
@@ -101,29 +87,43 @@ const DeliveryFormRadio = ({
             }
           }}
         >
-          <Box display={"flex"} >
+          <Box display={"flex"}>
             <Typography className={classes.Typography}>{item.Name}</Typography>
           </Box>
-          <Box marginLeft={2} display="flex" alignItems={"center"} flexDirection="column">
-            <Typography style={{  fontWeight: 700}} className={classes.Typography}>
-              {Boolean(item.Price) ? `${ item.Price} CHF` : "gratuit"}
+          <Box
+            marginLeft={2}
+            display="flex"
+            alignItems={"center"}
+            flexDirection="column"
+          >
+            <Typography
+              style={{ fontWeight: 700 }}
+              className={classes.Typography}
+            >
+              {Boolean(item.Price) ? `${item.Price} CHF` : "gratuit"}
             </Typography>
           </Box>
-          {!mobile ? <Radio
-            className={classes.checkBox}
-            style={{ backgroundColor: "transparent" }}
-            checked={_.includes(form.values.Delivery, item.id)}
-            color="primary"
-            disableFocusRipple
-            disableRipple
-            disableTouchRipple
-          />:null}
+          {!mobile ? (
+            <Radio
+              className={classes.checkBox}
+              style={{ backgroundColor: "transparent" }}
+              checked={_.includes(form.values.Delivery, item.id)}
+              color="primary"
+              disableFocusRipple
+              disableRipple
+              disableTouchRipple
+            />
+          ) : null}
         </Box>
       );
     });
   };
 
-  return <Box className={classes.DeliveryBox}>{renderDeliveryMethods(DeliveryInfo)}</Box>;
+  return (
+    <Box className={classes.DeliveryBox}>
+      {renderDeliveryMethods(DeliveryInfo)}
+    </Box>
+  );
 };
 
 export default DeliveryFormRadio;

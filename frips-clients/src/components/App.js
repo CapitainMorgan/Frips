@@ -48,16 +48,17 @@ import RegisterSeller from "./Profil/RegisterSeller";
 import ConditionGeneral from "./Footer/Help/ConditionGeneral";
 import Aide from "./Footer/Help/Aide";
 import MyPropositionById from "./Profil/MyFrips/MyProposition/MyPropositionById";
-import { PaymentInfo } from "./Footer/Help/PaymentInfo";
 import SellInfo from "./Footer/Help/SellInfo";
 import BuyInfo from "./Footer/Help/BuyInfo";
 import AccountInfo from "./Footer/Help/AccountInfo";
+import PaymentInfo from "./Footer/Help/PaymentInfo";
+import Dashboard from "../admin/Dashboard";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
-const socket = io(API_ENDPOINT, { reconnection: true,autoConnect:true, });
+const socket = io(API_ENDPOINT, { reconnection: true,autoConnect:true });
 
 const App = () => {
   const [notification, setNotification] = useState(null);
@@ -198,6 +199,10 @@ const App = () => {
                 exact
                 element={<ConditionGeneral />}
               />
+                 <Route
+                  path="/admin"
+                  element={<Dashboard />}
+                />
               <Route path="/aide" element={<Aide />} />
               <Route path="/aide/paymentInfo" element={<PaymentInfo />} />
               <Route path="/aide/sellInfo" element={<SellInfo />} />

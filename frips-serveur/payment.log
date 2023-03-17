@@ -1,0 +1,937 @@
+[2023-03-05T16:23:18.456] [ERROR] auth - Authentification denied token invalide
+[2023-03-05T16:23:18.469] [ERROR] auth - Authentification denied token invalide
+[2023-03-05T16:23:19.851] [ERROR] auth - Authentification denied token invalide
+[2023-03-05T16:23:19.852] [ERROR] auth - Authentification denied token invalide
+[2023-03-05T16:26:00.107] [ERROR] conversation - POST /conversation/MyConversation/:idError: 
+Invalid `chat.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\conversation.js:441:37
+
+  438 const { number } = req.body;
+  439 
+  440 try {
+→ 441   const isUserInConv = await chat.findMany({
+          where: {
+            id: NaN,
+                ~~~
+            OR: [
+              {
+                id_Account_1: 2,
+                id_Account_2: 2
+              }
+            ]
+          }
+        })
+
+Argument id: Got invalid value NaN on prisma.findManychat. Provided Float, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+[2023-03-05T16:28:18.966] [ERROR] conversation - POST /conversation/MyConversation/:idError: 
+Invalid `chat.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\conversation.js:441:37
+
+  438 const { number } = req.body;
+  439 
+  440 try {
+→ 441   const isUserInConv = await chat.findMany({
+          where: {
+            id: NaN,
+                ~~~
+            OR: [
+              {
+                id_Account_1: 2,
+                id_Account_2: 2
+              }
+            ]
+          }
+        })
+
+Argument id: Got invalid value NaN on prisma.findManychat. Provided Float, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+[2023-03-11T10:22:32.215] [ERROR] auth - Authentification denied token invalide
+[2023-03-11T10:22:32.254] [ERROR] auth - Authentification denied token invalide
+[2023-03-11T10:22:32.257] [ERROR] auth - Authentification denied token invalide
+[2023-03-11T10:22:32.264] [ERROR] auth - Authentification denied token invalide
+[2023-03-11T10:30:12.007] [ERROR] auth - Authentification denied token invalide
+[2023-03-11T11:48:58.856] [ERROR] conversation - POST /conversation/myConversation/newMessageReferenceError: next is not defined
+[2023-03-11T11:49:26.515] [ERROR] conversation - POST /conversation/myConversation/newMessageReferenceError: next is not defined
+[2023-03-11T11:56:45.428] [ERROR] conversation - POST /conversation/MyConversation/:idError: 
+Invalid `chat.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\conversation.js:464:37
+
+  461 const { number } = req.body;
+  462 
+  463 try {
+→ 464   const isUserInConv = await chat.findMany({
+          where: {
+            id: NaN,
+                ~~~
+            OR: [
+              {
+                id_Account_1: 2,
+                id_Account_2: 2
+              }
+            ]
+          }
+        })
+
+Argument id: Got invalid value NaN on prisma.findManychat. Provided Float, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+[2023-03-11T11:58:31.237] [ERROR] conversation - POST /conversation/MyConversation/:idError: 
+Invalid `chat.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\conversation.js:465:37
+
+  462 const { number } = req.body;
+  463 
+  464 try {
+→ 465   const isUserInConv = await chat.findMany({
+          where: {
+            id: NaN,
+                ~~~
+            OR: [
+              {
+                id_Account_1: 2,
+                id_Account_2: 2
+              }
+            ]
+          }
+        })
+
+Argument id: Got invalid value NaN on prisma.findManychat. Provided Float, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+[2023-03-11T11:59:14.553] [ERROR] conversation - POST /conversation/MyConversation/:idError: 
+Invalid `chat.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\conversation.js:465:37
+
+  462 const { number } = req.body;
+  463 
+  464 try {
+→ 465   const isUserInConv = await chat.findMany({
+          where: {
+            id: NaN,
+                ~~~
+            OR: [
+              {
+                id_Account_1: 2,
+                id_Account_2: 2
+              }
+            ]
+          }
+        })
+
+Argument id: Got invalid value NaN on prisma.findManychat. Provided Float, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+[2023-03-11T11:59:28.342] [ERROR] conversation - POST /conversation/MyConversation/:idError: 
+Invalid `chat.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\conversation.js:465:37
+
+  462 const { number } = req.body;
+  463 
+  464 try {
+→ 465   const isUserInConv = await chat.findMany({
+          where: {
+            id: NaN,
+                ~~~
+            OR: [
+              {
+                id_Account_1: 2,
+                id_Account_2: 2
+              }
+            ]
+          }
+        })
+
+Argument id: Got invalid value NaN on prisma.findManychat. Provided Float, expected IntFilter or Int:
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+type IntFilter {
+  equals?: Int
+  in?: List<Int>
+  notIn?: List<Int>
+  lt?: Int
+  lte?: Int
+  gt?: Int
+  gte?: Int
+  not?: Int | NestedIntFilter
+}
+
+
+[2023-03-11T13:12:17.424] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    OR: {
+      OR: [
+        {
+          id_ItemCondition: {
+            in: []
+          }
+        },
+        {
+          Size: {
+            in: []
+          }
+        },
+        {
+          item_color: {
+            some: {
+              id_Color: {
+                in: []
+              }
+            }
+          }
+        },
+        {
+          item_brand: {
+            some: {
+              id_Brand: {
+                in: []
+              }
+            }
+          }
+        },
+        {
+          item_category: {
+            some: {
+              OR: [
+                {
+                  id_Category: {
+                    in: [
+                      null,
+                      61
+                    ]
+                    ~~~~~~~
+                  }
+                },
+                {
+                  category: {
+                    OR: [
+                    ~~
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            category_categoryTocategory_category_id_Parent: {
+                              category_category_categoryTocategory_category_id_Child: {
+                                some: {
+                                  id_Parent: {
+                                    in: [
+                                      null,
+                                      61
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            id_Parent: {
+                              in: [
+                                null,
+                                61
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            category_categoryTocategory_category_id_Parent: {
+                              category_category_categoryTocategory_category_id_Child: {
+                                some: {
+                                  category_categoryTocategory_category_id_Parent: {
+                                    category_category_categoryTocategory_category_id_Child: {
+                                      some: {
+                                        id_Parent: {
+                                          in: [
+                                            null,
+                                            61
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            category_categoryTocategory_category_id_Parent: {
+                              category_category_categoryTocategory_category_id_Child: {
+                                some: {
+                                  category_categoryTocategory_category_id_Parent: {
+                                    category_category_categoryTocategory_category_id_Child: {
+                                      some: {
+                                        category_categoryTocategory_category_id_Parent: {
+                                          category_category_categoryTocategory_category_id_Child: {
+                                            some: {
+                                              id_Parent: {
+                                                in: [
+                                                  null,
+                                                  61
+                                                ]
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        undefined
+      ]
+    },
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  null,
+  61
+]
+on prisma.aggregateitem. Provided List<null | Int>, expected List<Int>.
+Unknown arg `OR` in where.OR.0.OR.4.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-03-11T13:14:08.880] [ERROR] auth - Authentification denied token invalide
+[2023-03-11T13:14:08.885] [ERROR] auth - Authentification denied token invalide
+[2023-03-11T13:14:08.949] [ERROR] auth - Authentification denied token invalide
+[2023-03-11T13:14:08.951] [ERROR] auth - Authentification denied token invalide
+[2023-03-12T11:05:52.751] [ERROR] items - POST / : TypeError [ERR_INVALID_ARG_TYPE]: The "data" argument must be of type string or an instance of Buffer, TypedArray, or DataView. Received undefined
+[2023-03-12T11:12:35.248] [ERROR] items - POST / : ReferenceError: zs9n0TibeNDR0KgHLHiWj is not defined
+[2023-03-12T11:13:57.160] [ERROR] items - POST / : ReferenceError: zs9n0TibeNDR0KgHLHiWj is not defined
+[2023-03-12T15:12:47.042] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:01.132] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:01.346] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:01.957] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:02.358] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:06.657] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:07.190] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:08.358] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:29.251] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:29.268] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:29.277] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:29.295] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:29.734] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:30.377] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:30.730] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:30.908] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:31.454] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:31.566] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:31.827] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:32.062] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:32.159] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:32.396] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T15:13:32.478] [ERROR] members - POST /myProfile ReferenceError: directory is not defined
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:87:17
+    at Layer.handle [as handle_request] (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\layer.js:95:5)
+    at next (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\express\lib\router\route.js:137:13)
+    at Array.<anonymous> (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\multer\lib\make-middleware.js:53:37)
+    at listener (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:169:15)
+    at onFinish (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\on-finished\index.js:100:5)
+    at callback (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:55:10)
+    at IncomingMessage.onevent (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\ee-first\index.js:93:5)
+    at IncomingMessage.emit (events.js:327:22)
+    at endReadableNT (_stream_readable.js:1327:12)
+[2023-03-12T19:12:10.661] [ERROR] members - POST /StatusProposition PrismaClientKnownRequestError: 
+Invalid `pricepropose.update()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:937:40
+
+   934 const { id_Item, approved, id_Account } = req.body;
+   935 
+   936 try {
+→  937   const propose = await pricepropose.update(
+  An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:937:21 {
+  code: 'P2025',
+  clientVersion: '3.15.2',
+  meta: { cause: 'Record to update not found.' }
+}
+[2023-03-12T19:12:11.191] [ERROR] members - POST /StatusProposition PrismaClientKnownRequestError: 
+Invalid `pricepropose.update()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:937:40
+
+   934 const { id_Item, approved, id_Account } = req.body;
+   935 
+   936 try {
+→  937   const propose = await pricepropose.update(
+  An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:937:21 {
+  code: 'P2025',
+  clientVersion: '3.15.2',
+  meta: { cause: 'Record to update not found.' }
+}
+[2023-03-12T19:12:11.217] [ERROR] members - POST /StatusProposition PrismaClientKnownRequestError: 
+Invalid `pricepropose.update()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:937:40
+
+   934 const { id_Item, approved, id_Account } = req.body;
+   935 
+   936 try {
+→  937   const propose = await pricepropose.update(
+  An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:937:21 {
+  code: 'P2025',
+  clientVersion: '3.15.2',
+  meta: { cause: 'Record to update not found.' }
+}
+[2023-03-12T19:12:11.413] [ERROR] members - POST /StatusProposition PrismaClientKnownRequestError: 
+Invalid `pricepropose.update()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:937:40
+
+   934 const { id_Item, approved, id_Account } = req.body;
+   935 
+   936 try {
+→  937   const propose = await pricepropose.update(
+  An operation failed because it depends on one or more records that were required but not found. Record to update not found.
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:937:21 {
+  code: 'P2025',
+  clientVersion: '3.15.2',
+  meta: { cause: 'Record to update not found.' }
+}
+[2023-03-12T19:13:27.838] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    OR: {
+      OR: [
+        {
+          id_ItemCondition: {
+            in: []
+          }
+        },
+        {
+          Size: {
+            in: []
+          }
+        },
+        {
+          item_color: {
+            some: {
+              id_Color: {
+                in: []
+              }
+            }
+          }
+        },
+        {
+          item_brand: {
+            some: {
+              id_Brand: {
+                in: []
+              }
+            }
+          }
+        },
+        {
+          item_category: {
+            some: {
+              OR: [
+                {
+                  id_Category: {
+                    in: [
+                      null
+                    ]
+                    ~~~~~~
+                  }
+                },
+                {
+                  category: {
+                    OR: [
+                    ~~
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            category_categoryTocategory_category_id_Parent: {
+                              category_category_categoryTocategory_category_id_Child: {
+                                some: {
+                                  id_Parent: {
+                                    in: [
+                                      null
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            id_Parent: {
+                              in: [
+                                null
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            category_categoryTocategory_category_id_Parent: {
+                              category_category_categoryTocategory_category_id_Child: {
+                                some: {
+                                  category_categoryTocategory_category_id_Parent: {
+                                    category_category_categoryTocategory_category_id_Child: {
+                                      some: {
+                                        id_Parent: {
+                                          in: [
+                                            null
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            category_categoryTocategory_category_id_Parent: {
+                              category_category_categoryTocategory_category_id_Child: {
+                                some: {
+                                  category_categoryTocategory_category_id_Parent: {
+                                    category_category_categoryTocategory_category_id_Child: {
+                                      some: {
+                                        category_categoryTocategory_category_id_Parent: {
+                                          category_category_categoryTocategory_category_id_Child: {
+                                            some: {
+                                              id_Parent: {
+                                                in: [
+                                                  null
+                                                ]
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        undefined
+      ]
+    },
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  null
+]
+on prisma.aggregateitem. Provided List<null>, expected List<Int>.
+Unknown arg `OR` in where.OR.0.OR.4.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-03-15T10:08:07.579] [ERROR] auth - Authentification denied token invalide
+[2023-03-15T10:08:07.594] [ERROR] auth - Authentification denied token invalide
+[2023-03-15T10:08:07.857] [ERROR] auth - Authentification denied token invalide
+[2023-03-15T10:08:07.861] [ERROR] auth - Authentification denied token invalide
+[2023-03-15T10:10:24.383] [ERROR] auth - Authentification denied token invalide
+[2023-03-15T10:10:24.384] [ERROR] auth - Authentification denied token invalide

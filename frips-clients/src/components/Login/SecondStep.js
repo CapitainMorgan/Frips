@@ -146,19 +146,7 @@ const SecondStep = ({ control, errors }) => {
           <StepTextError text={errors?.step2?.Localite?.message} />
         </Box>
       </Box>
-      <Box marginTop={3}>
-      <Controller
-            name="step2.IBAN"
-            control={control}
-            render={({ field }) => {
-              return (
-                <TextFieldLogin {...{ ...field, placeholder: "IBAN" }} />
-              );
-            }}
-          />
-
-          <StepTextError text={errors?.step2?.IBAN?.message} />
-      </Box>
+      
     </React.Fragment>
   );
 };

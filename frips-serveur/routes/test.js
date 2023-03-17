@@ -6,7 +6,7 @@ const { JSDOM } = require("jsdom");
 
 const { PrismaClient } = require("@prisma/client");
 const { sendEmail } = require("../email/sendEmail");
-const { account, item, category_category, brand, chat, message } =
+const { account, item, category_category, brand, chat, message ,transaction} =
   new PrismaClient();
 
 // @route   POST api/users
@@ -21,9 +21,15 @@ const createHTMLElement = (html) => {
 router.post("/", async (req, res) => {
   const test = "nike air force"
   try {
-     
-     console.log(items)
-    res.status(200).json(items)
+    const tr = await transaction.aggregate({
+      _sum:{
+          TaxPrice:true
+      },
+      
+      
+  })
+
+    res.status(200).json(tr)
   } catch (error) {
     console.log(error);
     res.status(500).json("Server error");
@@ -32,8 +38,7 @@ router.post("/", async (req, res) => {
 router.post("/s", async (req, res,next) => {
   const count = 0
   try {
-
-    await sendEmail(2,1,"NewMessage",next,{id_Item:1,pricepropose:12,id_Chat:1})
+    sendEmail(1,"Sell",next,{id_Item:1})
 
     res.status(200).json("ok")
   } catch (error) {

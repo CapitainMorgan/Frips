@@ -13,11 +13,7 @@ import React, { useEffect } from "react";
 import { TiWarning } from "react-icons/ti";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import {
-  changeMyFripsPagination,
-  fetchMyfrips,
-  removeNotificationMyFrips,
-} from "../../../../actions";
+import { changeMyFripsPagination, fetchMyfrips } from "../../../../actions";
 import { FETCH_MYSELL } from "../../../../actions/type";
 import API_ENDPOINT from "../../../../api/url";
 import MyPaginate from "../../../Footer/PaginationComponent";
@@ -84,8 +80,20 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       display: "flex",
       flexDirection: "column",
+      width: "100%",
     },
   },
+  deliveryCategory: {
+    display: "flex",
+    flexDirection: "column",
+    width: "50%",
+    maxWidth: "50%",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+
+    },
+  },
+
   send: {
     display: "flex",
     alignItems: "center",
@@ -142,15 +150,15 @@ const renderDeliveryStep = ({ DateSend, review }, classes) => {
   }
 };
 
-const typeOfDelivery = (price) =>{
-  if(price===7){
-    return "Livraison Poste Standard"
+const typeOfDelivery = (price) => {
+  if (price === 7) {
+    return "Livraison Poste Standard";
   }
-  if(price===9){
-    return "Livraison Poste Rapide"
+  if (price === 9) {
+    return "Livraison Poste Rapide";
   }
-  return "Livraison en main-propre"
-}
+  return "Livraison en main-propre";
+};
 
 const renderedItem = (classes, state, history, dispatch) => {
   return state.map((item, index) => {

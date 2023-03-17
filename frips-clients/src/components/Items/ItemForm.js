@@ -14,7 +14,7 @@ import AddIcon from "@material-ui/icons/Add";
 import { ErrorMessage, Field, Form, Formik } from "formik";
 import { useState } from "react";
 import Dropzone from "react-dropzone";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { createItem, editItemSend, getItemCreationInfo } from "../../actions";
 import BrandForm from "./formUpload/BrandForm";
 import ColorForm from "./formUpload/colorForm";
@@ -25,6 +25,7 @@ import StateForm from "./formUpload/stateForm";
 import { useTheme } from "@material-ui/core/styles";
 import * as yup from "yup";
 
+import { connect } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import ImageBox from "./DND/SortableGrid";
 import {
@@ -32,9 +33,9 @@ import {
   CostumTextField,
   CostumTextFieldDescription,
 } from "./formUpload/costumTextfield";
-import { connect } from "react-redux";
 import DeliveryFormRadio from "./formUpload/DeliveryFormRadio";
 import TaskSuccess from "./TaskSuccess";
+import { RESET_ITEM } from "../../actions/type";
 
 const useStyles = makeStyles((theme) => ({
   boxForm: {
@@ -195,7 +196,12 @@ const ItemForm = ({
     window.scrollTo(0, 0);
   }, []);
 
-  
+
+  useEffect(()=>{
+    return () =>{
+      dispatch({type:RESET_ITEM})
+    }
+  },[])
 
   useEffect(() => {
     if (!Boolean(itemInfo) && !loading) {
@@ -222,8 +228,8 @@ const ItemForm = ({
     }
   };
 
-  if(isLoading && mobile){
-    return <TaskSuccess edit={edit} error={error} isLoading={isLoading} />
+  if (isLoading && mobile) {
+    return <TaskSuccess edit={edit} error={error} isLoading={isLoading} />;
   }
   if (
     (Object.keys(initialValues)?.length === 0 && loading) ||

@@ -8,6 +8,9 @@ const path = require("path"); // path for cut the file extension
 const { PrismaClient } = require("@prisma/client");
 const { similarProduct } = require("./logicFunction/logicSimilarProduct");
 const log4js = require("log4js");
+const { sendEmail } = require("../email/sendEmail");
+const sharp = require("sharp");
+
 log4js.configure({
   appenders: { items: { type: "file", filename: "items.log" } },
   categories: { default: { appenders: ["items"], level: "error" } },
@@ -25,7 +28,6 @@ const upload = multer().any();
 
 const colorLengthFunction = (Color) => {
   const [firstColor, SecondColor] = Color;
-  console.log(Color);
 
   if (Color.length == 2) {
     return {
@@ -38,7 +40,6 @@ const colorLengthFunction = (Color) => {
       },
     };
   } else {
-
     return {
       create: {
         data: {
@@ -91,8 +92,6 @@ router.post("/", auth, upload, async (req, res) => {
   if (!Array.isArray(Delivery)) {
     Delivery = Delivery.split(",").map(Number);
   }
-
-  
 
   try {
     const exist = await brand.upsert({
@@ -159,22 +158,22 @@ router.post("/", auth, upload, async (req, res) => {
 
     for (let index = 0; index < req.files.length; index++) {
       let id = nanoid();
-      fs.writeFileSync(
-        path.join(
-          "./",
-          pathDir,
-          `${id}` + path.extname(req.files[index].originalname)
-        ),
-        req.files[index].buffer,
-        "UTF8"
+        fs.writeFileSync(
+          path.join("./", pathDir, `${id}` + ".jpeg"),
+          await sharp(req.files[index].buffer)
+            .resize({ width: 1000, height: 1000 })
+            .jpeg({ quality: 75 })
+            .toBuffer()
+        
       );
+      
       await image.create({
         data: {
           id_Item: Item.id,
 
           confidencial: false,
 
-          image: `${id}` + path.extname(req.files[index].originalname),
+          image: `${id}` + ".jpeg",
         },
       });
     }
@@ -267,7 +266,13 @@ router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
       logger.info("DELETE / : " + deleted.id + " by user " + id);
       res.sendStatus(200);
     } else {
-      logger.warn("DELETE / : " + "not authorized action by user " + id + " on item " + id_Item);
+      logger.warn(
+        "DELETE / : " +
+          "not authorized action by user " +
+          id +
+          " on item " +
+          id_Item
+      );
       res.status(401).send({ msg: "Action non-autorisée" });
     }
   } catch (error) {
@@ -548,12 +553,11 @@ const findSearchQuery = (Search) => {
       },
     });
     arraySearch.push({
-      Description:{
-        contains: item.Name
-      }
-    })
+      Description: {
+        contains: item.Name,
+      },
+    });
   });
-  console.log(...arraySearch);
   return arraySearch;
 };
 const isFilter = (filter) => {
@@ -621,8 +625,6 @@ router.post("/pagination", async (req, res) => {
     itemsId,
     sortedBy,
   } = req.body;
-
-  console.log(...findSearchQuery(req.body.Search));
 
   try {
     const count = await item.count({
@@ -801,8 +803,11 @@ router.get("/new", async (req, res) => {
           },
         },
       },
-
-      take: -5,
+      orderBy: [
+        { nbview: { _count: "desc" } },
+        { favorit: { _count: "desc" } },
+      ],
+      take: 5,
     });
 
     res.status(200).json(Item);
@@ -843,10 +848,21 @@ router.post("/proposition", auth, async (req, res) => {
         id_Account: id,
         id_Item: idItem,
       },
+      include: {
+        account: {
+          select: {
+            id: true,
+          },
+        },
+      },
     });
-    logger.info("Price proposition send by " + id + " for item " + idItem + "")
-
+    logger.info("Price proposition send by " + id + " for item " + idItem + "");
     res.status(200).json(data);
+    sendEmail(data.account.id, "ReceivedOffer", {
+      id_Item: idItem,
+      pricepropose: parseFloat(Price),
+      id_Sender: id,
+    });
   } catch (error) {
     logger.error("POST /api/item/proposition" + error);
     res.status(500).json("Server error");
@@ -1114,7 +1130,7 @@ router.delete("/favorit", auth, async (req, res) => {
         item: true,
       },
     });
-    logger.info("DELETE /api/item/favorit by " + req.user.id );
+    logger.info("DELETE /api/item/favorit by " + req.user.id);
     res.status(200).json("ok");
   } catch (error) {
     logger.error("DELETE /api/item/favorit" + error);

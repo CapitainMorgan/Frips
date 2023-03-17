@@ -149,9 +149,19 @@ function isSwissPhoneNumber(inputString) {
     const number = numbers[i];
     if (
       number.length >= 2 &&
-      ["076", "077", "078", "079", "0076", "0077", "0078", "0079","07","07","07"].includes(
-        number.slice(0, 3)
-      )
+      [
+        "076",
+        "077",
+        "078",
+        "079",
+        "0076",
+        "0077",
+        "0078",
+        "0079",
+        "07",
+        "07",
+        "07",
+      ].includes(number.slice(0, 3))
     ) {
       return true;
     }
@@ -160,16 +170,16 @@ function isSwissPhoneNumber(inputString) {
 }
 
 function checkString(inputString, setCheckForbiddenAction) {
-  
   const regexLinks = /((https?:\/\/|www\.)[^\s]+)/g; // regex to match URLs
 
   const regexForbiddenWords =
     /(fb|facebook|insta|instagram|snap|snapchat|whatsapp|telegram|email|@|mon num|téléphone|tel|phone)/i; // regex to match forbidden words
   return !(
-    regexLinks.test(inputString) || regexForbiddenWords.test(inputString) || isSwissPhoneNumber(inputString)
+    regexLinks.test(inputString) ||
+    regexForbiddenWords.test(inputString) ||
+    isSwissPhoneNumber(inputString)
   );
 }
-
 
 const Conversation = ({
   conv,
@@ -205,7 +215,6 @@ const Conversation = ({
     window.scrollTo(0, document.body.scrollHeight);
   }, []);
 
-
   const handleClick = () => {
     setAnchorEl(true);
   };
@@ -233,9 +242,8 @@ const Conversation = ({
         socket.off("new message");
       };
     } else {
-     
     }
-  }, [socket?.connected,dispatch,id]);
+  }, [socket?.connected, dispatch, id]);
 
   useEffect(() => {
     if (error) {
@@ -243,8 +251,6 @@ const Conversation = ({
       dispatch(readMessage(id));
     }
   }, [error]);
-
- 
 
   useEffect(() => {
     if (!Number.isNaN(id) || error) {
@@ -454,7 +460,9 @@ const Conversation = ({
               className={classes.textfield}
               type="submit"
               onKeyPress={(e) => {
-                if (!checkString(Message.text.trim(),setCheckForbiddenAction) && e.key === "Enter") {
+                if (
+                  !checkString(Message.text.trim(), setCheckForbiddenAction)
+                ) {
                   setShowWarning(true);
                   setMessage({ text: "", chat_id: id });
                 } else {
@@ -485,8 +493,7 @@ const Conversation = ({
                         item: null,
                         Price: null,
                         imageSender: imageSender?.image ? imageSender : null,
-                        Pseudo:renderProfileName(Profile, userId)
-
+                        Pseudo: renderProfileName(Profile, userId),
                       };
 
                       socket.emit("new message", data);
@@ -504,7 +511,12 @@ const Conversation = ({
                 endAdornment: (
                   <InputAdornment
                     onClick={(e) => {
-                      if (!checkString(Message.text) && e.key === "Enter") {
+                      if (
+                        !checkString(
+                          Message.text.trim(),
+                          setCheckForbiddenAction
+                        )
+                      ) {
                         setShowWarning(true);
                         setMessage({ text: "", chat_id: id });
                       } else {
@@ -537,7 +549,7 @@ const Conversation = ({
                               imageSender: imageSender?.image
                                 ? imageSender
                                 : null,
-                               Pseudo:renderProfileName(Profile, userId)
+                              Pseudo: renderProfileName(Profile, userId),
                             };
 
                             socket.emit("new message", data);

@@ -695,7 +695,7 @@ export const deleteItem = (id_Item) => async (dispatch, getState) => {
       `/api/items/deleteItem/${id_Item}`,
       config
     );
-    dispatch({type:REMOVE_ITEM,payload:id_Item})
+    dispatch({ type: REMOVE_ITEM, payload: id_Item });
   } catch (error) {
     console.log(error);
   }
@@ -847,13 +847,12 @@ export const paginationForFilter = () => async (dispatch, getState) => {
   let itemsId = [];
   let newTaille = [];
 
-
   if (
     AllFilter.Catalogue.length !== 0 ||
     AllFilter.Couleur.length !== 0 ||
     AllFilter.Marque.length !== 0 ||
     AllFilter.Etat.length !== 0 ||
-    AllFilter.Taille.length !== 0 
+    AllFilter.Taille.length !== 0
   ) {
     Catalogue.forEach((element) => {
       newCatalogue.push(element?.id);
@@ -912,22 +911,35 @@ export const addFilterFromSearch =
       dispatch(addToFilter(MAN_ID, "Catalogue"));
     } else {
       try {
-
         if (string.includes("rechercher")) {
-          let count = 0
+          let count = 0;
           string
             .replace("rechercher ", "")
             .replace(/"/g, "")
             .split(/\b(?:a|the|was|\s)+\b/i)
             .map((strArray) => {
               dispatch(
-                addToFilter({ Name: strArray.replace(/\s*$/, ""),id:1304+count }, "Search")
+                addToFilter(
+                  { Name: strArray.replace(/\s*$/, ""), id: 1304 + count },
+                  "Search"
+                )
               );
-              count+=1
+              count += 1;
             });
         } else {
-          const splitArray = string.split(/\b(?:a|the|was|\s)+\b/i);
+          let splitArray = string.match(
+            /^(Louis Vuitton|Marc Jacobs|Michael Kors|Ralph Lauren|The North Face|Tommy Hilfiger|Victoria's Secret|Calvin Klein|Sans marque)\s(.*)$/i
+          );
+          splitArray = splitArray
+            ? [splitArray[1], splitArray[2]]
+            : string.includes("Sans marque")
+            ? ["Sans marque", string.replace("Sans marque", "").trim()]
+            : [
+                string.split(" ")[0],
+                string.split(" ").slice(1).join(" ").trim(),
+              ];
 
+          console.log(splitArray);
           splitArray.forEach((element) => {
             if (_.find(array[1], { Name: element })) {
               dispatch(
@@ -941,9 +953,8 @@ export const addFilterFromSearch =
             }
           });
         }
+
         history(`/filter`);
-
-
       } catch (error) {
         console.log(error);
       }
@@ -1127,20 +1138,21 @@ export const updateAddress = (address) => async (dispatch, getState) => {
   }
 };
 
-export const changeIban = (IBAN,from,history) => async (dispatch, getState) => {
-  try {
-    const { data } = await axiosInstance.post(
-      "/api/members/IBAN",
-      {IBAN},
-      config
-    );
+export const changeIban =
+  (IBAN, from, history) => async (dispatch, getState) => {
+    try {
+      const { data } = await axiosInstance.post(
+        "/api/members/IBAN",
+        { IBAN },
+        config
+      );
 
-    dispatch({ type: CHANGE_IBAN, payload: data });
-    history(from)
-  } catch (error) {
-    console.log(error)
-  }
-};
+      dispatch({ type: CHANGE_IBAN, payload: data });
+      history(from);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const getNotificationsMyFrips = () => async (dispatch, getState) => {
   try {

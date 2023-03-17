@@ -3,14 +3,12 @@ import AccountBoxIcon from "@material-ui/icons/AccountBox";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import EmojiEmotionsIcon from "@material-ui/icons/EmojiEmotions";
 import PaymentIcon from "@material-ui/icons/Payment";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Fab, IconButton } from "@material-ui/core";
 import AddShoppingCartIcon from "@material-ui/icons/AddShoppingCart";
 import CloseIcon from "@material-ui/icons/Close";
-import FacebookIcon from "@material-ui/icons/Facebook";
 import HelpIcon from "@material-ui/icons/Help";
-import InstagramIcon from "@material-ui/icons/Instagram";
 import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -71,14 +69,18 @@ const useStyles = makeStyles((theme) => ({
 export const Aide = () => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const history = useNavigate()
-  const handleClick = (e) => {
+  const history = useNavigate();
+  const handleClick = () => {
     setOpen(true);
   };
 
-  const SelectableItem = (e) => {
-    setOpen(false);
-  };
+  useEffect(() => {
+    window.scrollTo(0,0)
+  
+  
+  },[])
+  
+
   return (
     <Box width={"100%"} height={"100%"} style={{ backgroundColor: "#F5f5f3" }}>
       <Box height={50} />
@@ -106,9 +108,8 @@ export const Aide = () => {
             <Box
               position="relative"
               className={classes.ItemAide}
-              onClick={() =>{
-                alert("here")
-                history("/aide/accountInfo")
+              onClick={() => {
+                history("/aide/accountInfo");
               }}
             >
               <Box
@@ -179,7 +180,7 @@ export const Aide = () => {
             <Box
               position="relative"
               className={classes.ItemAide}
-              onClick={() => history("/Aide/paiement")}
+              onClick={() => history("/aide/paymentInfo")}
             >
               <Box
                 margin="auto"
@@ -242,7 +243,7 @@ export const Aide = () => {
             <Box
               position="relative"
               className={classes.ItemAide}
-              onClick={() => history("/Aide/vendre")}
+              onClick={() => history("/aide/sellInfo")}
             >
               <Box
                 margin="auto"
@@ -393,7 +394,21 @@ export const Aide = () => {
                 </IconButton>
               </Box>
 
-              <Box marginTop={5}></Box>
+              <Box marginTop={5}>
+                <Typography variant="body1">
+                  Si vous rencontrez des problèmes ou si vous avez des
+                  questions, n'hésitez pas à nous contacter. Vous pouvez nous
+                  joindre via nos comptes de réseaux sociaux listés ci-dessous
+                  ou par e-mail à{" "}
+                  <a href={"mailto:contact@myfrips.ch"}>contact@myfrips.ch</a>
+                  .
+                  <br />
+                  <br />
+                  Nous sommes fiers de prendre le temps de répondre à chaque
+                  demande et de fournir une assistance professionnelle, alors
+                  n'hésitez pas à nous contacter.
+                </Typography>
+              </Box>
             </Box>
           </Dialog>
         </Box>

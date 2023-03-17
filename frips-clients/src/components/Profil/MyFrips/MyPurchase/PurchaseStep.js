@@ -219,9 +219,12 @@ const PurchaseStep = ({ item, account, id, classesSell, buyerAccount }) => {
               item.DateSend
             ).format("LLL")}`}
           </Typography>
-        ) : null}
+        ) : <Typography>
+            en cours d'envoi
+            
+          </Typography>}
         <Button
-          disabled={Boolean(item.Status)}
+          disabled={Boolean(item.Status) || !Boolean(item.DateSend)}
           onClick={() => {
             dispatch(changeStep(id, RECEIVED, item.id_transaction, "Received"));
             setindex(index + 1);

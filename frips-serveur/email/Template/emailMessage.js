@@ -111,7 +111,7 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
                       </tr>
                     </tbody>
                   </table>`
-                      : ""
+                      : "<br/>"
                   }
                   <table
                     style="padding-bottom: 20px"

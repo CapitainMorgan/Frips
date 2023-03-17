@@ -1,5 +1,12 @@
 import {
-    Box, Checkbox, ClickAwayListener, ListItemIcon, makeStyles, MenuItem, Popper, Typography
+  Box,
+  Checkbox,
+  ClickAwayListener,
+  ListItemIcon,
+  makeStyles,
+  MenuItem,
+  Popper,
+  Typography,
 } from "@material-ui/core";
 import KeyboardArrowDownIcon from "@material-ui/icons/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@material-ui/icons/KeyboardArrowUp";
@@ -11,6 +18,7 @@ import _ from "lodash";
 import CostumCatalogueComponent from "./CostumCatalogueComponent";
 import CostumPriceComponent from "./CostumPriceComponent";
 import SizeFilter from "./SizeFilter";
+import BrandFilter from "./BrandFilter";
 
 const useStyles = makeStyles((theme) => ({
   BoxShadow: {
@@ -37,23 +45,23 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const idsAll = [997, 998, 999];
 const renderCatalogueCategorie = (
   infoItems,
   classes,
   dispatch,
   label,
-  filter
+  filter,
+  handleClickAway
 ) => {
   if (label === "Price") {
     return <CostumPriceComponent label={label} />;
   }
 
   if (label === "Catalogue") {
-    return <CostumCatalogueComponent label={label} filter={filter} />;
+    return <CostumCatalogueComponent close={handleClickAway} label={label} filter={filter} />;
   }
   if (label === "Taille") {
-    return <SizeFilter filter={filter} label={label}/>;
+    return <SizeFilter close={handleClickAway}  filter={filter} label={label} />;
   }
 
   if (label === "sortedBy") {
@@ -64,8 +72,11 @@ const renderCatalogueCategorie = (
           onClick={() => {
             if (filter?.sortedBy === item) {
               dispatch(removeToFilter(item));
+
             } else {
               dispatch(addToFilter(item, label));
+              handleClickAway()
+
             }
           }}
         >
@@ -84,7 +95,10 @@ const renderCatalogueCategorie = (
     });
   }
 
-  ///Sale teube oublie ap
+  if(label ==="Marque"){
+    return <BrandFilter close={handleClickAway} infoItems={infoItems} classes={classes} filter={filter} label={label} />
+  }
+
   return infoItems.map((item, index) => {
     return (
       <MenuItem
@@ -92,8 +106,11 @@ const renderCatalogueCategorie = (
         onClick={() => {
           if (_.includes(filter[label], item)) {
             dispatch(removeToFilter(item));
+
           } else {
             dispatch(addToFilter(item, label));
+            handleClickAway()
+
           }
         }}
       >
@@ -112,17 +129,16 @@ const renderCatalogueCategorie = (
   });
 };
 
-const renderLabel = (label) =>{
-  if(label==="Price"){
-    return "Prix"
+const renderLabel = (label) => {
+  if (label === "Price") {
+    return "Prix";
   }
-  if(label ==="sortedBy"){
-    return "Trier par"
+  if (label === "sortedBy") {
+    return "Trier par";
+  } else {
+    return label;
   }
-  else{
-    return label
-  }
-}
+};
 
 const CostumPopper = ({ item }) => {
   const { label, array } = item;
@@ -140,7 +156,7 @@ const CostumPopper = ({ item }) => {
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClickAway} >
+    <ClickAwayListener onClickAway={handleClickAway}>
       <Box
         className={classes.hover}
         border={1}
@@ -161,9 +177,7 @@ const CostumPopper = ({ item }) => {
         }}
       >
         <MenuItem onClick={handleClick}>
-          <Typography style={{ fontSize: 16 }}>
-            {renderLabel(label)}
-          </Typography>
+          <Typography style={{ fontSize: 16 }}>{renderLabel(label)}</Typography>
           <ListItemIcon style={{ paddingLeft: 0, minWidth: 0 }}>
             {Anchor ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </ListItemIcon>
@@ -182,7 +196,7 @@ const CostumPopper = ({ item }) => {
           open={Boolean(Anchor)}
         >
           <Box className={classes.BoxShadow}>
-            {renderCatalogueCategorie(array, classes, dispatch, label, filter)}
+            {renderCatalogueCategorie(array, classes, dispatch, label, filter,handleClickAway)}
           </Box>
         </Popper>
       </Box>

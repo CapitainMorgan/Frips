@@ -48,22 +48,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/* let regex;
-const filterArray = subArray.filter((el, index) => {
-  return array2.some((filter) => {
-    regex = new RegExp(`\\b${filter}`, "i");
 
-    return regex.test(el.Name);
-  });
-})
 
-return filterArray*/
 const options = {
   includeScore: true,
   keys: ["Name"],
   threshold: 0.1,
 };
 const matchValueSearch = (array1, searchArray) => {
+  console.log(searchArray)
   const array = array1.map((subArray, index) => {
     const filterArray = new Fuse(subArray, options).search(
       { $or: searchArray },
@@ -112,6 +105,8 @@ const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
     suggestionArray.push(WOMAN_ID.Name);
     suggestionArray.push(MAN_ID.Name);
   }
+
+  console.log(suggestionArray)
   suggestionArray.push(`rechercher "${currentText}"`);
 
 

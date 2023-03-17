@@ -146,10 +146,12 @@ const emailBill = (buyerProfile, item, transaction) => {
                 transaction.Price
               }</p>
               <p style="font-size:14px;line-height:24px;margin:0">${
-                transaction.Price_Fees
+                transaction.PriceDelivery
+
               }</p>
               <p style="font-size:14px;line-height:24px;margin:0">${
-                transaction.PriceDelivery
+                transaction.Price_Fees
+
               }</p>
             </td>
             </td>

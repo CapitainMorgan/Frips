@@ -7,7 +7,10 @@ const multer = require("multer");
 const { nanoid } = require("nanoid");
 let fs = require("fs-extra");
 const path = require("path"); // path for cut the file extension
+const sharp = require("sharp")
 const log4js = require("log4js");
+const { sendEmail } = require("../email/sendEmail");
+
 log4js.configure({
   appenders: { members: { type: "file", filename: "members.log" } },
   categories: { default: { appenders: ["members"], level: "error" } },
@@ -18,9 +21,6 @@ const {
   item,
   account,
   image,
-  message,
-  sell,
-
   pricepropose,
   transaction,
   review,
@@ -85,6 +85,11 @@ router.post("/myProfile", auth, upload, async (req, res) => {
   const { id } = req.user;
   try {
     let pathDir = `public/imageProfile/${id}`;
+
+    fs.emptyDir(pathDir, err => {
+      if (err) throw err;
+      console.log(`Successfully deleted everything inside ${pathDir}`);
+    })
     fs.mkdirsSync(pathDir);
 
     let idImage = nanoid();
@@ -92,10 +97,12 @@ router.post("/myProfile", auth, upload, async (req, res) => {
       path.join(
         "./",
         pathDir,
-        `${idImage}` + path.extname(req.file.originalname)
+        `${idImage}` + ".jpeg"
       ),
-      req.file.buffer,
-      "UTF8"
+      await sharp(req.file.buffer)
+      .resize({ width: 400, height: 400 })
+      .jpeg({ quality: 75 })
+      .toBuffer(),
     );
 
     const changeProfileImage = await image.upsert({
@@ -104,15 +111,15 @@ router.post("/myProfile", auth, upload, async (req, res) => {
       },
       create: {
         id_Account: id,
-        image: `${idImage}` + path.extname(req.file.originalname),
+        image: `${idImage}` + ".jpeg",
         confidencial: false,
       },
       update: {
-        image: `${idImage}` + path.extname(req.file.originalname),
+        image: `${idImage}` + ".jpeg",
         confidencial: false,
       },
     });
-    logger.info("POST /myProfile of" + id );
+    logger.info("POST /myProfile of" + id);
     res.status(200).json(changeProfileImage.image);
   } catch (error) {
     logger.error("POST /myProfile", error);
@@ -123,7 +130,6 @@ router.post("/myProfile", auth, upload, async (req, res) => {
 router.post("/updateAddress", auth, async (req, res) => {
   const { id } = req.user;
   const { Rue, Numero, Localite, NPA, Prenom, Nom } = req.body;
-  console.log(req.body);
   try {
     const { address } = await account.update({
       where: {
@@ -145,7 +151,7 @@ router.post("/updateAddress", auth, async (req, res) => {
         address: true,
       },
     });
-    logger.info("POST /updateAddress of" + id );
+    logger.info("POST /updateAddress of" + id);
     res.status(200).json(address);
   } catch (error) {
     logger.error("POST /updateAddress", error);
@@ -395,64 +401,6 @@ router.get("/mySell/:id_Item", auth, async (req, res) => {
   } catch (error) {
     res.status(500).json("Servor Error");
     console.log(error);
-  }
-});
-
-router.get("/myProposition/:id_Item", auth, async (req, res) => {
-  const { id } = req.user;
-  const { id_Item } = req.params;
-
-  try {
-    const MyProposition = await pricepropose.findUnique({
-      where: {
-        id_Account_id_Item: {
-          id_Account: id,
-          id_Item: parseInt(id_Item),
-        },
-      },
-      select: {
-        item: {
-          select: {
-            image: {
-              take: 1,
-            },
-            Price: true,
-            id: true,
-            Size: true,
-            Name: true,
-            item_brand: {
-              select: {
-                brand: {
-                  select: {
-                    Name: true,
-                  },
-                },
-              },
-            },
-          },
-        },
-        dateApprove: true,
-        Approve: true,
-        SendDate: true,
-        Price: true,
-        id_Account: true,
-      },
-    });
-
-    if (
-      MyProposition.dateApprove >
-      new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
-    ) {
-      res.status(200).json(MyProposition);
-
-    }
-    else{
-      res.status(400).json("Article plus disponible")
-    }
-
-  } catch (error) {
-    logger.error("GET /mySell/:id_Item", error);
-    res.status(500).json("Servor Error");
   }
 });
 
@@ -715,6 +663,61 @@ router.post("/MyProposition", auth, async (req, res) => {
   }
 });
 
+router.get("/myProposition/:id_Item", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_Item } = req.params;
+
+  try {
+    const MyProposition = await pricepropose.findUnique({
+      where: {
+        id_Account_id_Item: {
+          id_Account: id,
+          id_Item: parseInt(id_Item),
+        },
+      },
+      select: {
+        item: {
+          select: {
+            image: {
+              take: 1,
+            },
+            Price: true,
+            id: true,
+            Size: true,
+            Name: true,
+            item_brand: {
+              select: {
+                brand: {
+                  select: {
+                    Name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        dateApprove: true,
+        Approve: true,
+        SendDate: true,
+        Price: true,
+        id_Account: true,
+      },
+    });
+
+    if (
+      MyProposition.dateApprove >
+      new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+    ) {
+      res.status(200).json(MyProposition);
+    } else {
+      res.status(400).json("Article plus disponible");
+    }
+  } catch (error) {
+    logger.error("GET /mySell/:id_Item", error);
+    res.status(500).json("Servor Error");
+  }
+});
+
 router.post("/Delivery", auth, async (req, res) => {
   const { id } = req.user;
   const { id_transaction } = req.body;
@@ -751,7 +754,10 @@ router.post("/Rewiew", auth, async (req, res) => {
         Text: null,
       },
     });
-    logger.info("POST /Rewiew", "Review created on transaction " + id_transaction);
+    logger.info(
+      "POST /Rewiew",
+      "Review created on transaction " + id_transaction
+    );
     res.sendStatus(200);
   } catch (error) {
     logger.error("POST /Rewiew", error);
@@ -772,7 +778,10 @@ router.post("/Received", auth, async (req, res) => {
         Status: "reçu",
       },
     });
-    logger.info("POST /Received", "Transaction " + id_transaction + " received");
+    logger.info(
+      "POST /Received",
+      "Transaction " + id_transaction + " received"
+    );
     res.sendStatus(200);
   } catch (error) {
     logger.error("POST /Received", error);
@@ -922,7 +931,6 @@ router.post("/MyPurchase", auth, async (req, res) => {
 });
 
 router.post("/StatusProposition", auth, async (req, res) => {
-  const { id } = req.user;
   const { id_Item, approved, id_Account } = req.body;
 
   try {
@@ -940,6 +948,9 @@ router.post("/StatusProposition", auth, async (req, res) => {
     });
 
     res.sendStatus(200);
+    if(approved){
+      sendEmail(id_Account,"AcceptedOffer")
+    }
   } catch (error) {
     logger.error("POST /StatusProposition", error);
     res.status(500).json("Servor Error");
@@ -1047,7 +1058,6 @@ router.post("/IBAN", auth, async (req, res) => {
   const { id } = req.user;
   const { IBAN } = req.body;
 
-  console.log(req.body);
   try {
     const Account = await account.update({
       where: {

@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 
-const { account, item, chat, transaction } = new PrismaClient();
+const { account, item, chat, transaction,pricepropose } = new PrismaClient();
 
 const checkIfShouldSend = async (
   id_Receiver,
@@ -28,6 +28,10 @@ const checkIfShouldSend = async (
       },
     },
   });
+
+  if (didUserSendMessage.length !== 0) {
+    return;
+  }
 
   if (id_Sender && id_Item) {
     const findUserItem = await account.findUnique({
@@ -99,13 +103,12 @@ const findUserNameEmail = async (id_Receiver) => {
   return findUserNameEmail;
 };
 
-const bill = async (id_Receiver, { id_Item }) => {
+const bill = async (id_Receiver, { id_Item, id_Buyer }) => {
+  console.log(id_Buyer, id_Item);
   let mySellItem = await transaction.findFirst({
     where: {
       id_Item: parseInt(id_Item),
-      item: {
-        id_Seller: id_Receiver,
-      },
+      id_Account: id_Buyer,
     },
     select: {
       item: {
@@ -155,6 +158,8 @@ const bill = async (id_Receiver, { id_Item }) => {
           Email: true,
         },
       },
+      TaxPrice: true,
+      DeliveryPrice: true,
 
       Price: true,
       Status: true,
@@ -163,8 +168,8 @@ const bill = async (id_Receiver, { id_Item }) => {
 
   const transactionInfo = {
     Price: mySellItem.Price,
-    Price_Fees: mySellItem.Price - mySellItem.item.Price,
-    PriceDelivery: 7,
+    Price_Fees: mySellItem.TaxPrice,
+    PriceDelivery: mySellItem.DeliveryPrice,
     DateSell: new Date(mySellItem.DateSell),
     id_transaction: mySellItem.id,
   };
@@ -176,14 +181,66 @@ const bill = async (id_Receiver, { id_Item }) => {
   };
 };
 
-const typeOfEmail = async (type, id_Receiver,id_Sender, args) => {
+const offer = async (id_Receiver, { id_Sender, id_Item }) => {
+  const ifAlreadyHaveSomeProposition = await pricepropose.count({
+    where:{
+      id_Item,
+      SendDate: {
+        gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+      },
+    }
+  }) 
+
+  console.log(ifAlreadyHaveSomeProposition,id_Item)
+
+  const findUserItem = await account.findUnique({
+    where: {
+      id: id_Receiver,
+    },
+    select: {
+      Pseudo: true,
+      image: {
+        select: {
+          image: true,
+        },
+      },
+      Firstname: true,
+      Email: true,
+      id:true
+    },
+  });
+
+  const itemForEmail = await item.findUnique({
+    where: {
+      id: id_Item,
+    },
+    select: {
+      image: {
+        select: {
+          image: true,
+        },
+        take: 1,
+      },
+      Name: true,
+      Size: true,
+      id: true,
+    },
+  });
+
+
+
+  return { findUserItem,itemForEmail };
+};
+
+const typeOfEmail = async (type, id_Receiver, args) => {
+  let infoReceiver
   switch (type) {
     case "Welcome":
       return await findUserNameEmail(id_Receiver);
     case "NewMessage":
-      const infoReceiver = await checkIfShouldSend(id_Receiver, args);
+       infoReceiver = await checkIfShouldSend(id_Receiver, args);
       const SenderPseudo = await account.findUnique({
-        where: { id: id_Sender },
+        where: { id: args?.id_Sender },
         select: {
           Pseudo: true,
           image: {
@@ -191,27 +248,51 @@ const typeOfEmail = async (type, id_Receiver,id_Sender, args) => {
               image: true,
             },
           },
+          id:true
         },
+        
       });
-      console.log(infoReceiver);
-      return { SenderPseudo, ...infoReceiver };
 
-      break;
+    
+      return { SenderPseudo, ...infoReceiver };
 
     case "Sell":
       return await findUserNameEmail(id_Receiver);
 
     case "Bill":
       return await bill(id_Receiver, args);
+    case "ReceivedOffer":
+      infoReceiver = await offer(id_Receiver, args);
+      const senderInfo = await account.findUnique({
+        where: { id: args.id_Sender },
+        select: {
+          Pseudo: true,
+          image: {
+            select: {
+              image: true,
+            },
+          },
+          id:true
+        },
+        
+      });
+      if(!Boolean(infoReceiver)){
+        return;
+      }
+
+      return {...infoReceiver,senderInfo};
+    
+    case "AcceptedOffer":
+      return await findUserNameEmail(id_Receiver);
+   
     default:
       break;
   }
 };
 
-const searchInformation = async (id_Receiver,id_Sender, type, args) => {
+const searchInformation = async (id_Receiver, type, args) => {
   try {
-    console.log(args);
-    const information = await typeOfEmail(type, id_Receiver,id_Sender, args);
+    const information = await typeOfEmail(type, id_Receiver, args);
 
     if (!Boolean(information)) return;
 

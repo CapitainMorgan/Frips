@@ -97,7 +97,7 @@ CREATE TABLE account(
    UNIQUE(Email),
    UNIQUE(Pseudo),
    UNIQUE(TelNumber),
-   FOREIGN KEY(id_PartnerShip) REFERENCES partnership(id)
+   FOREIGN KEY(id_PartnerShip) REFERENCES partnership(id),
    FOREIGN KEY(id_Address) REFERENCES address(id)
 );
 

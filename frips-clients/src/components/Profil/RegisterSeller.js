@@ -53,11 +53,10 @@ const validationSchema = yup.object().shape({
     .required("Un IBAN est requis"),
 });
 
-
-
 export const RegisterSeller = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const [iban, setIban] = useState("");
 
   const {
     control,
@@ -71,23 +70,24 @@ export const RegisterSeller = () => {
     resolver: yupResolver(validationSchema),
     defaultValues: initialValue,
   });
-  const history = useNavigate()
+  const history = useNavigate();
   let location = useLocation();
 
   let { from } = location.state || { from: { pathname: "/" } };
 
-  const formatIBAN = (value) => {
-    // Remove all spaces from the value
-    const formattedValue = value.replace(/\s/g, "");
-
-    // Insert a space after every fourth character
-    return formattedValue.replace(/(.{4})/g, "$1 ");
+  const handleChange = (event) => {
+    console.log(event.target.value);
+    const input = event.target.value.replace(/\s/g, "");
+    let formatted = input.match(/.{1,4}/g)?.join(" ");
+    console.log(formatted,input)
+    if (formatted && input.length > 4 && input.length % 4 === 0) {
+      formatted += "";
+    }
+    return formatted || "";
   };
 
-
-
   const onSubmit = (values) => {
-    dispatch(changeIban(values.IBAN, from,history));
+    dispatch(changeIban(values.IBAN, from, history));
   };
 
   return (
@@ -119,38 +119,12 @@ export const RegisterSeller = () => {
                 name="IBAN"
                 control={control}
                 render={({ field: { onChange, value } }) => {
-                  const formattedValue = formatIBAN(value);
-
                   return (
                     <TextFieldLogin
                       placeholder="IBAN"
-                      value={formatIBAN(value)}
+                      value={value}
                       onChange={(e) => {
-                        const unformattedValue = e.target.value.replace(
-                          /\s/g,
-                          ""
-                        );
-                        onChange(formatIBAN(unformattedValue));
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === "Backspace") {
-                          const unformattedValue = value.replace(/\s/g, "");
-                          const cursorPosition = e.target.selectionStart;
-                          if (cursorPosition % 5 === 0) {
-                            e.preventDefault();
-                            const newCursorPosition = cursorPosition - 1;
-                            onChange(
-                              formatIBAN(
-                                unformattedValue.substring(
-                                  0,
-                                  newCursorPosition
-                                ) + unformattedValue.substring(cursorPosition)
-                              )
-                            );
-                            e.target.selectionStart = newCursorPosition;
-                            e.target.selectionEnd = newCursorPosition;
-                          }
-                        }
+                        onChange(handleChange(e));
                       }}
                     />
                   );

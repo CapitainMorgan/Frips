@@ -37,7 +37,8 @@ router.get("/", auth, async (req, res) => {
           },
         },
         IBAN:true,
-        address:true
+        address:true,
+        
       },
     });
     logger.info("user " + req.user.id + " GET /auth")

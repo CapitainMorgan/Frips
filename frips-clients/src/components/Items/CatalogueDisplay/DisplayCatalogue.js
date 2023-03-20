@@ -32,7 +32,7 @@ import API_ENDPOINT from "../../../api/url";
 import MyPaginate from "../../Footer/PaginationComponent";
 import { arraySize, Catalogue } from "../staticItems/staticItemName";
 import CostumChips from "./CostumChips";
-import RenderChipsComponents from "./renderChipsComponents";
+import RenderChipsComponents from "./RenderChipsComponent";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {

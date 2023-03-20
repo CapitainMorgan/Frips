@@ -258,7 +258,6 @@ router.post("/isReserved", auth, async (req, res) => {
         Disponibility: false,
       },
     });
-    console.log(Disponibility);
 
     if (Disponibility) {
       res.status(200).json(Disponibility);

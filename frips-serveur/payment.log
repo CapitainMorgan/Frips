@@ -935,3 +935,336 @@ type CategoryRelationFilter {
 [2023-03-15T10:08:07.861] [ERROR] auth - Authentification denied token invalide
 [2023-03-15T10:10:24.383] [ERROR] auth - Authentification denied token invalide
 [2023-03-15T10:10:24.384] [ERROR] auth - Authentification denied token invalide
+[2023-03-18T11:26:34.862] [ERROR] members - POST /MyPurchase ReferenceError: filter is not defined
+    at constructQueryOrderByMyPurchase (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:823:48)
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:907:16
+[2023-03-18T11:26:34.897] [ERROR] members - POST /MyPurchase ReferenceError: filter is not defined
+    at constructQueryOrderByMyPurchase (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:823:48)
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:907:16
+[2023-03-18T11:26:35.718] [ERROR] members - POST /MyPurchase ReferenceError: filter is not defined
+    at constructQueryOrderByMyPurchase (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:823:48)
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:907:16
+[2023-03-18T11:26:35.756] [ERROR] members - POST /MyPurchase ReferenceError: filter is not defined
+    at constructQueryOrderByMyPurchase (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:823:48)
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:907:16
+[2023-03-18T11:26:36.604] [ERROR] members - POST /MyPurchase ReferenceError: filter is not defined
+    at constructQueryOrderByMyPurchase (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:823:48)
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:907:16
+[2023-03-18T11:26:37.888] [ERROR] members - POST /MyPurchase ReferenceError: filter is not defined
+    at constructQueryOrderByMyPurchase (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:823:48)
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:907:16
+[2023-03-18T11:26:38.476] [ERROR] members - POST /MyPurchase ReferenceError: filter is not defined
+    at constructQueryOrderByMyPurchase (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:823:48)
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:907:16
+[2023-03-18T11:26:38.511] [ERROR] members - POST /MyPurchase ReferenceError: filter is not defined
+    at constructQueryOrderByMyPurchase (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:823:48)
+    at C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:907:16
+[2023-03-18T11:28:48.782] [ERROR] members - POST /MyPurchase PrismaClientKnownRequestError: 
+Invalid `prisma.transaction.count()` invocation:
+
+
+  Failed to validate the query: `Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)` at `Query.aggregatetransaction.where.transactionWhereInput.OR`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:832:29 {
+  code: 'P2009',
+  clientVersion: '3.15.2',
+  meta: {
+    query_validation_error: 'Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)',
+    query_position: 'Query.aggregatetransaction.where.transactionWhereInput.OR'
+  }
+}
+[2023-03-18T11:28:50.035] [ERROR] members - POST /MyPurchase PrismaClientKnownRequestError: 
+Invalid `prisma.transaction.count()` invocation:
+
+
+  Failed to validate the query: `Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)` at `Query.aggregatetransaction.where.transactionWhereInput.OR`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:832:29 {
+  code: 'P2009',
+  clientVersion: '3.15.2',
+  meta: {
+    query_validation_error: 'Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)',
+    query_position: 'Query.aggregatetransaction.where.transactionWhereInput.OR'
+  }
+}
+[2023-03-18T11:29:37.788] [ERROR] members - POST /MyPurchase PrismaClientKnownRequestError: 
+Invalid `prisma.transaction.count()` invocation:
+
+
+  Failed to validate the query: `Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)` at `Query.aggregatetransaction.where.transactionWhereInput.OR`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:832:29 {
+  code: 'P2009',
+  clientVersion: '3.15.2',
+  meta: {
+    query_validation_error: 'Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)',
+    query_position: 'Query.aggregatetransaction.where.transactionWhereInput.OR'
+  }
+}
+[2023-03-18T11:29:39.520] [ERROR] members - POST /MyPurchase PrismaClientKnownRequestError: 
+Invalid `prisma.transaction.count()` invocation:
+
+
+  Failed to validate the query: `Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)` at `Query.aggregatetransaction.where.transactionWhereInput.OR`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:832:29 {
+  code: 'P2009',
+  clientVersion: '3.15.2',
+  meta: {
+    query_validation_error: 'Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)',
+    query_position: 'Query.aggregatetransaction.where.transactionWhereInput.OR'
+  }
+}
+[2023-03-18T11:29:42.539] [ERROR] members - POST /MyPurchase PrismaClientKnownRequestError: 
+Invalid `prisma.transaction.count()` invocation:
+
+
+  Failed to validate the query: `Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)` at `Query.aggregatetransaction.where.transactionWhereInput.OR`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:832:29 {
+  code: 'P2009',
+  clientVersion: '3.15.2',
+  meta: {
+    query_validation_error: 'Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)',
+    query_position: 'Query.aggregatetransaction.where.transactionWhereInput.OR'
+  }
+}
+[2023-03-18T11:29:43.249] [ERROR] members - POST /MyPurchase PrismaClientKnownRequestError: 
+Invalid `prisma.transaction.count()` invocation:
+
+
+  Failed to validate the query: `Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)` at `Query.aggregatetransaction.where.transactionWhereInput.OR`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:832:29 {
+  code: 'P2009',
+  clientVersion: '3.15.2',
+  meta: {
+    query_validation_error: 'Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)',
+    query_position: 'Query.aggregatetransaction.where.transactionWhereInput.OR'
+  }
+}
+[2023-03-18T11:29:48.608] [ERROR] members - POST /MyPurchase PrismaClientKnownRequestError: 
+Invalid `prisma.transaction.count()` invocation:
+
+
+  Failed to validate the query: `Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)` at `Query.aggregatetransaction.where.transactionWhereInput.OR`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:832:29 {
+  code: 'P2009',
+  clientVersion: '3.15.2',
+  meta: {
+    query_validation_error: 'Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)',
+    query_position: 'Query.aggregatetransaction.where.transactionWhereInput.OR'
+  }
+}
+[2023-03-18T11:29:48.624] [ERROR] members - POST /MyPurchase PrismaClientKnownRequestError: 
+Invalid `prisma.transaction.count()` invocation:
+
+
+  Failed to validate the query: `Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)` at `Query.aggregatetransaction.where.transactionWhereInput.OR`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:832:29 {
+  code: 'P2009',
+  clientVersion: '3.15.2',
+  meta: {
+    query_validation_error: 'Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)',
+    query_position: 'Query.aggregatetransaction.where.transactionWhereInput.OR'
+  }
+}
+[2023-03-18T11:29:48.633] [ERROR] members - POST /MyPurchase PrismaClientKnownRequestError: 
+Invalid `prisma.transaction.count()` invocation:
+
+
+  Failed to validate the query: `Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)` at `Query.aggregatetransaction.where.transactionWhereInput.OR`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\members.js:832:29 {
+  code: 'P2009',
+  clientVersion: '3.15.2',
+  meta: {
+    query_validation_error: 'Value types mismatch. Have: Boolean(true), want: Object(transactionWhereInput)',
+    query_position: 'Query.aggregatetransaction.where.transactionWhereInput.OR'
+  }
+}
+[2023-03-18T14:03:20.246] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    OR: {
+      OR: [
+        {
+          id_ItemCondition: {
+            in: []
+          }
+        },
+        {
+          Size: {
+            in: []
+          }
+        },
+        {
+          item_color: {
+            some: {
+              id_Color: {
+                in: []
+              }
+            }
+          }
+        },
+        {
+          item_brand: {
+            some: {
+              id_Brand: {
+                in: []
+              }
+            }
+          }
+        },
+        {
+          item_category: {
+            some: {
+              OR: [
+                {
+                  id_Category: {
+                    in: [
+                      null
+                    ]
+                    ~~~~~~
+                  }
+                },
+                {
+                  category: {
+                    OR: [
+                    ~~
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            category_categoryTocategory_category_id_Parent: {
+                              category_category_categoryTocategory_category_id_Child: {
+                                some: {
+                                  id_Parent: {
+                                    in: [
+                                      null
+                                    ]
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            id_Parent: {
+                              in: [
+                                null
+                              ]
+                            }
+                          }
+                        }
+                      },
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            category_categoryTocategory_category_id_Parent: {
+                              category_category_categoryTocategory_category_id_Child: {
+                                some: {
+                                  category_categoryTocategory_category_id_Parent: {
+                                    category_category_categoryTocategory_category_id_Child: {
+                                      some: {
+                                        id_Parent: {
+                                          in: [
+                                            null
+                                          ]
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      },
+                      {
+                        category_category_categoryTocategory_category_id_Child: {
+                          some: {
+                            category_categoryTocategory_category_id_Parent: {
+                              category_category_categoryTocategory_category_id_Child: {
+                                some: {
+                                  category_categoryTocategory_category_id_Parent: {
+                                    category_category_categoryTocategory_category_id_Child: {
+                                      some: {
+                                        category_categoryTocategory_category_id_Parent: {
+                                          category_category_categoryTocategory_category_id_Child: {
+                                            some: {
+                                              id_Parent: {
+                                                in: [
+                                                  null
+                                                ]
+                                              }
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              ]
+            }
+          }
+        },
+        undefined
+      ]
+    },
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  null
+]
+on prisma.aggregateitem. Provided List<null>, expected List<Int>.
+Unknown arg `OR` in where.OR.0.OR.4.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-03-19T15:30:28.465] [ERROR] auth - Authentification denied token invalide
+[2023-03-19T15:30:28.477] [ERROR] auth - Authentification denied token invalide
+[2023-03-19T15:30:28.592] [ERROR] auth - Authentification denied token invalide
+[2023-03-19T15:30:28.595] [ERROR] auth - Authentification denied token invalide
+[2023-03-19T15:30:33.831] [ERROR] auth - POST /authError: Illegal arguments: string, undefined
+[2023-03-20T23:50:25.772] [ERROR] items - POST /api/item/paginationTypeError: priceRange(...) is not iterable (cannot read property undefined)
+[2023-03-20T23:50:31.926] [ERROR] items - POST /api/item/paginationTypeError: priceRange(...) is not iterable (cannot read property undefined)
+[2023-03-20T23:50:39.820] [ERROR] items - POST /api/item/paginationTypeError: priceRange(...) is not iterable (cannot read property undefined)

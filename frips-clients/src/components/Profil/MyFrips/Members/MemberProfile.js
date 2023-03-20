@@ -3,13 +3,13 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardHeader,
   CircularProgress,
   Divider,
   IconButton,
-  makeStyles, Typography,
+  makeStyles,
+  Typography,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
@@ -20,7 +20,9 @@ import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
 import {
-  addFavorite, fetchMembersInfo, removeFavorite
+  addFavorite,
+  fetchMembersInfo,
+  removeFavorite,
 } from "../../../../actions";
 import API_ENDPOINT from "../../../../api/url";
 import MyPaginate from "../../../Footer/PaginationComponent";
@@ -59,7 +61,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: "repeat(5,20%)",
     width: "100%",
     position: "relative",
-    padding:3,
+    padding: 3,
 
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -78,10 +80,9 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
     return (
       <Box width={"100%"} height={"100%"} padding={1} key={index}>
         <Card className={classes.BoxOneItem}>
-        <Box
+          <Box
             display={"flex"}
             alignItems="center"
-            
             marginBottom={2}
             width="100%"
           >
@@ -101,7 +102,7 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
             </IconButton>
             <Typography
               style={{
-                wordBreak:"break-all"
+                wordBreak: "break-all",
               }}
             >
               {item.account.Pseudo}
@@ -171,10 +172,9 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
     setPagination(selected + 1);
   };
 
-
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!loading && items.length === 0 && !Boolean(count) &&!account) {
+    if (!loading && items.length === 0 && !Boolean(count) && !account) {
       dispatch(fetchMembersInfo(name, pagination));
     }
   }, [dispatch, loading]);
@@ -200,7 +200,6 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
   }
 
   if (!loading && items.length === 0 && count === 0 && !account) {
-
     return (
       <Box
         minHeight={"100vh"}
@@ -212,11 +211,7 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
         <Typography style={{ fontSize: 16 }}>{"aucun utilisateur"}</Typography>
       </Box>
     );
-  }
-
-
-
-  else{
+  } else {
     return (
       <Box
         width={"100%"}
@@ -224,7 +219,7 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
         position="relative"
       >
         <Box height={"10vh"} />
-  
+
         <Box className={classes.floatContentArticle}>
           <Box
             display={"flex"}
@@ -234,9 +229,9 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
             alignItems="center"
           >
             <Avatar
-            onClick={()=>{
-              navigate(`/member/${account?.Pseudo}`)
-            }}
+              onClick={() => {
+                navigate(`/member/${account?.Pseudo}`);
+              }}
               alt={`${account?.Pseudo}`}
               src={`${API_ENDPOINT}/imageProfile/${account?.id}/${account?.image?.image}`}
               className={classes.large}
@@ -244,8 +239,8 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
             <InformationProfile account={account} items={items} />
           </Box>
           <Divider />
-  
-          <Box  className={classes.GridSytem} minHeight={300}>
+
+          <Box className={classes.GridSytem} minHeight={300}>
             {renderedItem(items, classes, favorite, dispatch, navigate)}
           </Box>
           <Box className={classes.PaginationBox}>

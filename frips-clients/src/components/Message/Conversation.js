@@ -134,7 +134,7 @@ const UserMessage = (messages, classes, history, idUser) => {
                     <Box display={"flex"}>
                       <AttachMoneyIcon style={{ color: "#228D57" }} />
                       <Typography style={{ fontSize: 16 }}>
-                        Tu as une proposition d'offre ?
+                        Proposition
                       </Typography>
                       <AttachMoneyIcon style={{ color: "#228D57" }} />
                     </Box>

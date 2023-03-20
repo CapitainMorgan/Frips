@@ -55,6 +55,7 @@ const TextFieldLogin = (props) => {
         onBlur={props.onBlur}
         onChange={props.onChange}
         onKeyDown={props.onKeyDown}
+        onKeyPress={props.onKeyPress}
         placeholder={props.placeholder}
         value={props.value}
         ref={null}

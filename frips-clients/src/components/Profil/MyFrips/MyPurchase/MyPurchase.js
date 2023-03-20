@@ -77,10 +77,20 @@ const useStyles = makeStyles((theme) => ({
   },
   delivery: {
     display: "flex",
-
     [theme.breakpoints.down("sm")]: {
       display: "flex",
       flexDirection: "column",
+      width: "100%",
+    },
+  },
+  deliveryCategory: {
+    display: "flex",
+    flexDirection: "column",
+    width: "50%",
+    maxWidth: "50%",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+
     },
   },
   send: {
@@ -195,103 +205,56 @@ const renderedItem = (classes, state, history) => {
                 />
               </CardActionArea>
             </Box>
-            <Box
-              padding={2}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+
+            <Box padding={2} className={classes.details}>
               <Typography style={{ wordBreak: "break-word" }} color="primary">
-                {item.Name}
+                {item?.Name}
               </Typography>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>Vendu à </Typography>
 
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 15 }}>
-                  {account.Pseudo}
+                  {account?.Pseudo}
                 </Typography>
               </Box>
             </Box>
 
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>
                 Type de Livraison
               </Typography>
 
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
-                <Typography>{typeOfDelivery(item.Price)}</Typography>
+              <Box flexGrow={1} className={classes.menus}>
+                <Typography>{typeOfDelivery(item.DeliveryPrice)}</Typography>
               </Box>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>Prix</Typography>
 
-              <Box
-                padding={2}
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
-                <Typography style={{ fontSize: 16, fontWeight: 550 }}>
+              <Box flexGrow={1} className={classes.menus}>
+                <Typography style={{ fontSize: 16, fontWeight: 600 }}>
                   {item.Price} CHF
                 </Typography>
               </Box>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>Status</Typography>
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 15 }}>
-                  {renderDeliveryStep(item)}
+                  {renderDeliveryStep(item, classes)}
                 </Typography>
               </Box>
             </Box>
           </Box>
           <PurchaseStep
-            buyerAccount={buyerAccount}
             classesSell={classes}
             item={item}
             id={item.id}
             account={account}
+            buyerAccount={buyerAccount}
           />
         </Card>
       </Box>

@@ -31,6 +31,7 @@ import {
 } from "../../actions";
 import { SUCCESS_CREATION_ITEM } from "../../actions/type";
 import API_ENDPOINT from "../../api/url";
+import TopBusiness from "./FirstPage/TopBusiness";
 import DisplayMain from "./logicItems/displayImageMain";
 import DisplayNewItems from "./logicItems/displayNewItems";
 
@@ -203,7 +204,14 @@ function TransitionUp(props) {
   return <Slide {...props} direction="left" />;
 }
 
-const ItemList = ({ loading, items, loaded, success, favorite }) => {
+const ItemList = ({
+  loading,
+  items,
+  loaded,
+  success,
+  favorite,
+  topBusiness,
+}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [Page, setPage] = useState(2);
@@ -214,11 +222,11 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-  }, [location]);
+  }, [location.pathname]);
 
   useEffect(() => {
     if (!loading && items.length === 0) {
-      dispatch(fetchItems());
+      dispatch(fetchItems(mobile, mobile));
       dispatch(idFavorite());
     }
   }, [dispatch, loading, location]);
@@ -253,7 +261,7 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
     dispatch({ type: SUCCESS_CREATION_ITEM, payload: false });
   };
 
-  if (loading) {
+  if (loading && items.length === 0) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -294,34 +302,26 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
         <Box className={classes.floatContentArticle}>
           <Box height={"5vh"} />
           {Image}
+          <Box height={"5vh"} />
+          <TopBusiness
+            favorite={favorite}
+            loading={loading}
+            mobile={mobile}
+            accountTop={topBusiness}
+          />
+          <Box height={"10vh"} />
+
           <DisplayNewItems
             mobile={mobile}
             classes={classes}
             favorite={favorite}
           />
-          <Box height={"1vh"} />
+          <Box height={"5vh"} />
 
-          {mobile ? (
-            <Box
-              alignItems={"center"}
-              justifyContent="center"
-              display={"flex"}
-              height={100}
-              onClick={() => {
-                navigate("/items/allNewItems");
-              }}
-              style={{
-                backgroundColor: "white",
-                borderRadius: 5,
-                cursor: "pointer",
-              }}
-            >
-              <Typography style={{ color: "black", fontSize: 20 }}>
-                Afficher plus
-              </Typography>
-            </Box>
-          ) : null}
-          <Box height={"5vh"} width={"100%"} />
+          <Box padding={1.5} display={"flex"} alignItems="center">
+        <Typography style={{fontSize:18,fontWeight:550}}>Articles</Typography>
+        </Box>
+          <Box height={"1vh"} width={"100%"} />
 
           <InfiniteScroll
             style={{ width: "100%" }}
@@ -343,7 +343,7 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
             <Box className={classes.GridSytem}>{renderedItems}</Box>
           </InfiniteScroll>
         </Box>
-        )
+        
       </Box>
     </Box>
   );
@@ -354,6 +354,7 @@ const mapStateToProps = (state) => ({
   loading: state.items.loading,
   loaded: state.items.loaded,
   favorite: state.favoriteReducers.favoritIds,
+  topBusiness: state.items.topBusiness,
   success: state.items.successCreationItem,
 });
 

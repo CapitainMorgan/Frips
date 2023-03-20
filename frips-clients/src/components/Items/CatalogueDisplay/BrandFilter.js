@@ -1,21 +1,15 @@
-import Fuse from "fuse.js";
 import {
   Box,
-  Checkbox,
-  IconButton,
-  makeStyles,
-  MenuItem,
+  Checkbox, MenuItem,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
-import ArrowBackIcon from "@material-ui/icons/ArrowBack";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
+import Fuse from "fuse.js";
 import _ from "lodash";
 import React, { useEffect, useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { addToFilter, removeToFilter } from "../../../actions";
-import { arraySize } from "../staticItems/staticItemName";
 
 const options = {
   includeScore: true,

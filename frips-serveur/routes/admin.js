@@ -21,9 +21,16 @@ tomorrow.setDate(today.getDate() + 1);
 router.post("/",auth,async (req, res) => {
     
     const tr = transaction.aggregate({
-        _avg:{
-            TaxPrice:true
+        sum:{
+            TaxPrice:true,
+
         },
+        where:{
+            DateSell:{
+                gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+            }
+        }
+        
         
         
     })

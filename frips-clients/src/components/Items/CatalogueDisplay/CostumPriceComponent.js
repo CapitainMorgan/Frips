@@ -62,6 +62,17 @@ const CostumPriceComponent = ({ label }) => {
                 );
               }
             }}
+            onKeyPress={(e) => {
+              if (
+                !isNaN(e.target.value) &&
+                e.target.value !== "" &&
+                e.key === "Enter"
+              ) {
+                dispatch(
+                  addToFilter({ value: e.target.value, De: true }, label)
+                );
+              }
+            }}
           />
         </Box>
       </Box>
@@ -74,7 +85,18 @@ const CostumPriceComponent = ({ label }) => {
             inputProps={{ style: { fontSize: 18 } }}
             placeholder="CHF"
             onBlur={(e) => {
-              if (!isNaN(e.target.value)) {
+              if (!isNaN(e.target.value) && e.target.value !== "") {
+                dispatch(
+                  addToFilter({ value: e.target.value, A: true }, label)
+                );
+              }
+            }}
+            onKeyPress={(e) => {
+              if (
+                !isNaN(e.target.value) &&
+                e.target.value !== "" &&
+                e.key === "Enter"
+              ) {
                 dispatch(
                   addToFilter({ value: e.target.value, A: true }, label)
                 );

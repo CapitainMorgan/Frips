@@ -245,16 +245,20 @@ export default (state = initialValues, action) => {
       };
 
     case DELIVERY:
+
       const updatedData = state.sell.map((item) => {
         if (item.id === payload) {
           return { ...item, DateSend: new Date() };
         }
         return item;
       });
-
+      const sellNotif = state.sellNotification.filter(item =>{
+        return item.id !== payload
+      })
       return {
         ...state,
         sell: [...updatedData],
+        sellNotification:[...sellNotif]
       };
 
     case RECEIVED:

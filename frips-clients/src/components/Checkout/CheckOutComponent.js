@@ -142,7 +142,6 @@ const CheckOut = ({
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [loadingPayment, setloadinPayment] = useState(false);
   const hasProposition = useLocation();
-  const history = useNavigate();
   const isMounted = useRef(false);
   const [showInfo, setShowInfo] = useState(false);
 
@@ -353,16 +352,18 @@ const CheckOut = ({
                   <Typography className={classes.TypographyText}>
                     Frais
                   </Typography>
-                  
-                  <Typography  style={{marginLeft:5}}>en savoir plus</Typography>
+
+                  <Typography style={{ marginLeft: 5 }}>
+                    en savoir plus
+                  </Typography>
                   <HelpOutlineIcon
-                    style={{ height: "0.85em", width: "0.85em" ,marginLeft:5}}
+                    style={{ height: "0.85em", width: "0.85em", marginLeft: 5 }}
                   />
                 </Box>
                 <Box className={classes.ContentInformationItem}>
-                  {customRound(item.Price * 0.07) - item.Price <= 1
+                  {customRound(item.Price * 1.07) - item.Price <= 1
                     ? customRound(item.Price + 1) - item.Price
-                    : customRound(item.Price * 0.07) - item.Price}{" "}
+                    : customRound(item.Price * 1.07) - item.Price}
                   CHF
                 </Box>
               </Box>

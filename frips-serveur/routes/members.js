@@ -177,6 +177,9 @@ const constructQueryMySell = (whereFilter) => {
       arrayWhere.push({ DateSend: { not: { equals: null } } });
     }
   });
+  if(arrayWhere.length==0){
+    return;
+  }
   return arrayWhere;
 };
 
@@ -793,16 +796,19 @@ const constructQueryMyPurchase = (whereFilter) => {
   const arrayWhere = [];
 
   if (whereFilter.length === 0) {
-    return;
+    return ;
   }
   whereFilter.map((item) => {
-    if (item === 12) {
+    if (item === 13) {
       arrayWhere.push({ Status: { equals: null } });
     }
-    if (item === 13) {
+    if (item === 12) {
       arrayWhere.push({ Status: { not: { equals: null } } });
     }
   });
+  if(arrayWhere.length==0){
+    return;
+  }
   return arrayWhere;
 };
 
@@ -810,7 +816,7 @@ const constructQueryOrderByMyPurchase = (whereFilter) => {
   const arrayWhere = [];
 
   if (whereFilter.length === 0) {
-    return [{ Status: "asc" }];
+    return;
   }
   whereFilter.map((item) => {
     if (item === 14) {

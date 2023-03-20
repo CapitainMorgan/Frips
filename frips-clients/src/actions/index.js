@@ -33,6 +33,7 @@ import {
   FETCH_MYSELLBYID,
   FETCH_NEW_ITEMS,
   FETCH_NEW_ITEM_TYPE,
+  FETCH_TOP_BUSINESS,
   GENERATE_CONV,
   GET_ALL_CONV,
   GET_CONV,
@@ -260,7 +261,7 @@ export const createItem =
       dispatch({ type: CREATE_ITEM, payload: response.data });
       setIsLoading(false);
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: true });
-      // history("/")
+      history("/")
     } catch (error) {
       dispatch({ type: ERROR_ITEM, payload: true });
 
@@ -269,7 +270,7 @@ export const createItem =
     //
   };
 
-export const fetchItems = (fromHome) => async (dispatch, getState) => {
+export const fetchItems = (fromHome,mobile) => async (dispatch, getState) => {
   const loading = getState().items.loading;
 
   try {
@@ -277,11 +278,23 @@ export const fetchItems = (fromHome) => async (dispatch, getState) => {
     dispatch({ type: LOADING_FETCH_ITEM });
     dispatch({ type: FETCH_ITEMS, payload: data });
     dispatch(fetchNewItems());
+    dispatch(fetchTopBusiness(mobile))
 
     dispatch({ type: SUCCESS_FETCH_ITEM });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 };
 
+
+export const fetchTopBusiness = (mobile) => async (dispatch, getState) => {
+  try {
+    const { data } = await axiosInstance.post("/api/items/topBusiness",{mobile},config);
+    dispatch({ type: FETCH_TOP_BUSINESS, payload: data });
+  } catch (error) {
+    console.log(error)
+  }
+}
 export const fetchNewItems = () => async (dispatch, getState) => {
   try {
     const { data } = await axiosInstance.get("/api/items/new");
@@ -939,7 +952,6 @@ export const addFilterFromSearch =
                 string.split(" ").slice(1).join(" ").trim(),
               ];
 
-          console.log(splitArray);
           splitArray.forEach((element) => {
             if (_.find(array[1], { Name: element })) {
               dispatch(

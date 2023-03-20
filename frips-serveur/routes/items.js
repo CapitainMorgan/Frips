@@ -17,7 +17,7 @@ log4js.configure({
 });
 var logger = log4js.getLogger("items");
 
-const { item, image, nbview, favorit, brand, review, pricepropose } =
+const { item, image, nbview, favorit, brand, review, pricepropose, account } =
   new PrismaClient();
 
 // @route   Post api/items
@@ -158,15 +158,14 @@ router.post("/", auth, upload, async (req, res) => {
 
     for (let index = 0; index < req.files.length; index++) {
       let id = nanoid();
-        fs.writeFileSync(
-          path.join("./", pathDir, `${id}` + ".jpeg"),
-          await sharp(req.files[index].buffer)
-            .resize({ width: 1000, height: 1000 })
-            .jpeg({ quality: 75 })
-            .toBuffer()
-        
+      fs.writeFileSync(
+        path.join("./", pathDir, `${id}` + ".jpeg"),
+        await sharp(req.files[index].buffer)
+          .resize({ width: 1000, height: 1000 })
+          .jpeg({ quality: 75 })
+          .toBuffer()
       );
-      
+
       await image.create({
         data: {
           id_Item: Item.id,
@@ -560,6 +559,8 @@ const findSearchQuery = (Search) => {
   });
   return arraySearch;
 };
+
+
 const isFilter = (filter) => {
   const {
     newCatalogue,
@@ -578,15 +579,12 @@ const isFilter = (filter) => {
     newEtat.length !== 0 ||
     newMarque.length !== 0 ||
     newTaille.length !== 0 ||
-    Price[0] !== 0 ||
-    Price[1] !== null ||
+    Boolean(Price[0]) ||
+    Boolean(Price[1]) ||
     Search.length !== 0
   ) {
     return {
-      OR: [
-        { id_ItemCondition: { in: newEtat } },
-        { Size: { in: newTaille } },
-        { item_color: { some: { id_Color: { in: newCouleur } } } },
+      AND: [
         {
           item_brand: {
             some: {
@@ -595,10 +593,14 @@ const isFilter = (filter) => {
           },
         },
         filterCatalogue(newCatalogue),
+        { id_ItemCondition: { in: newEtat } },
+        { Size: { in: newTaille } },
+        { item_color: { some: { id_Color: { in: newCouleur } } } },
 
         priceRange(Price),
         ...findSearchQuery(Search),
       ],
+      
     };
   } else return;
 };
@@ -714,7 +716,7 @@ router.post("/pagination", async (req, res) => {
 
 router.post("/more", async (req, res) => {
   const { number } = req.body;
-
+  console.log(number);
   try {
     const Item = await item.findMany({
       include: {
@@ -748,7 +750,7 @@ router.post("/more", async (req, res) => {
         DatePuplication: "desc",
       },
       take: 10,
-      skip: 10 * number,
+      skip: 10 * (number - 1),
     });
     res.status(200).json(Item);
   } catch (error) {
@@ -807,10 +809,84 @@ router.get("/new", async (req, res) => {
         { nbview: { _count: "desc" } },
         { favorit: { _count: "desc" } },
       ],
-      take: 5,
+      take: 4,
     });
 
     res.status(200).json(Item);
+  } catch (error) {
+    logger.error("GET /api/item/new" + error);
+    res.status(500).json("Server error");
+  }
+});
+
+router.post("/topBusiness", async (req, res) => {
+  const { mobile } = req.body;
+  try {
+    const Item = await account.findMany({
+      where: {
+        item: {
+          every: {
+            transaction: {
+              none: {},
+            },
+          },
+        },
+        id: 2,
+      },
+      select: {
+        item: {
+          include: {
+            image: {
+              take: 1,
+            },
+            item_brand: {
+              select: {
+                brand: true,
+              },
+            },
+            item_color: {
+              select: {
+                color: {
+                  select: {
+                    Name: true,
+                  },
+                },
+              },
+            },
+            itemcondition: {
+              select: {
+                Name: true,
+              },
+            },
+
+            _count: {
+              select: {
+                favorit: true,
+              },
+            },
+          },
+          orderBy: [
+            { nbview: { _count: "desc" } },
+            { favorit: { _count: "desc" } },
+          ],
+          take: mobile ? 6 : 5,
+        },
+        image: true,
+        Pseudo: true,
+        id: true,
+      },
+    });
+    const { _avg } = await review.aggregate({
+      where: {
+        id_Account: 2,
+      },
+      _avg: {
+        Note: true,
+      },
+    });
+
+
+    res.status(200).json({...Item[0],_avg});
   } catch (error) {
     logger.error("GET /api/item/new" + error);
     res.status(500).json("Server error");

@@ -1,5 +1,4 @@
 const emailSell = (profile,id) => {
-  console.log(profile)
 
   return `
   <!DOCTYPE html>

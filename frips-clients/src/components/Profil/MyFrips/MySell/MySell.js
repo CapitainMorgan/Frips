@@ -74,9 +74,9 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 8,
     },
   },
+  
   delivery: {
     display: "flex",
-
     [theme.breakpoints.down("sm")]: {
       display: "flex",
       flexDirection: "column",

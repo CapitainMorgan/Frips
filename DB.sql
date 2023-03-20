@@ -18,6 +18,7 @@ CREATE TABLE moderator(
    Email VARCHAR(255) NOT NULL,
    Password VARCHAR(60) NOT NULL,
    Pseudo VARCHAR(50) NOT NULL,
+   LastConnection DATETIME NOT NULL,
    PRIMARY KEY(id),
    UNIQUE(Email),
    UNIQUE(Pseudo)
@@ -70,6 +71,12 @@ CREATE TABLE fees(
    PRIMARY KEY(id)
 );
 
+CREATE TABLE partnership(
+   id INT AUTO_INCREMENT,
+   Name VARCHAR(255) NOT NULL,
+   PRIMARY KEY(id)
+);   
+
 CREATE TABLE account(
    id INT AUTO_INCREMENT,
    Email VARCHAR(255) NOT NULL,
@@ -83,13 +90,17 @@ CREATE TABLE account(
    TelNumber VARCHAR(50),
    BirthDate DATETIME NOT NULL,
    AccountStatus INT DEFAULT 0,
+   LastConnection DATETIME NOT NULL,
    id_Address INT NOT NULL,
+   id_PartnerShip INT,
    PRIMARY KEY(id),
    UNIQUE(Email),
    UNIQUE(Pseudo),
    UNIQUE(TelNumber),
+   FOREIGN KEY(id_PartnerShip) REFERENCES partnership(id)
    FOREIGN KEY(id_Address) REFERENCES address(id)
 );
+
 
 CREATE TABLE chat(
    id INT AUTO_INCREMENT,
@@ -110,6 +121,7 @@ CREATE TABLE item(
    Price DOUBLE NOT NULL,
    CurrentAuction BOOL NOT NULL,
    Disponibility BOOL NOT NULL,
+   IsReservedTime DATETIME,
    Verified BOOL NOT NULL,
    id_Seller INT NOT NULL,
    id_ItemCondition INT NOT NULL,
@@ -193,6 +205,7 @@ CREATE TABLE transaction(
    Protection DOUBLE,
    DateSell DATETIME NOT NULL,
    Status VARCHAR(50),
+   IsPaid BOOL,
    DateSend DATETIME,
    StripeIdentifier VARCHAR(255),
    id_Item INT NOT NULL,

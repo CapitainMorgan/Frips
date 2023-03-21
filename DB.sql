@@ -18,7 +18,7 @@ CREATE TABLE moderator(
    Email VARCHAR(255) NOT NULL,
    Password VARCHAR(60) NOT NULL,
    Pseudo VARCHAR(50) NOT NULL,
-   LastConnection DATETIME NOT NULL,
+   LastConnection DATETIME,
    PRIMARY KEY(id),
    UNIQUE(Email),
    UNIQUE(Pseudo)
@@ -90,7 +90,7 @@ CREATE TABLE account(
    TelNumber VARCHAR(50),
    BirthDate DATETIME NOT NULL,
    AccountStatus INT DEFAULT 0,
-   LastConnection DATETIME NOT NULL,
+   LastConnection DATETIME,
    id_Address INT NOT NULL,
    id_PartnerShip INT,
    PRIMARY KEY(id),

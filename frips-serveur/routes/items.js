@@ -584,7 +584,7 @@ const isFilter = (filter) => {
     Search.length !== 0
   ) {
     return {
-      AND: [
+      OR: [
         {
           item_brand: {
             some: {
@@ -825,7 +825,7 @@ router.post("/topBusiness", async (req, res) => {
     const Item = await account.findMany({
       where: {
         item: {
-          every: {
+          some: {
             transaction: {
               none: {},
             },

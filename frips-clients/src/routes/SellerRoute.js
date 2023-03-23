@@ -12,7 +12,7 @@ const SellerRoute = () => {
   }
 
 
-  return isAuthenticated && !loading && !Boolean(user?.IBAN) ? (
+  return isAuthenticated && !loading && Boolean(user?.IBAN) ? (
     <Outlet />
   ) : (
     <Navigate to="/member/register/Seller" state={{ from: location }} replace />

@@ -155,26 +155,26 @@ const renderedItem = (state, classes, favorite, dispatch, history, mobile) => {
             </Box>
           </Card>
         </Box>
-      ) :  
-            <Box
-              alignItems={"center"}
-              justifyContent="center"
-              display={"flex"}
-              height={100}
-              onClick={() => {
-                history("/items/allNewItems");
-              }}
-              style={{
-                backgroundColor: "white",
-                borderRadius: 5,
-                cursor: "pointer",
-              }}
-            >
-              <Typography style={{ color: "black", fontSize: 20 }}>
-                Afficher plus
-              </Typography>
-            </Box>
-      }
+      ) : (
+        <Box
+          alignItems={"center"}
+          justifyContent="center"
+          display={"flex"}
+          height={100}
+          onClick={() => {
+            history("/items/allNewItems");
+          }}
+          style={{
+            backgroundColor: "white",
+            borderRadius: 5,
+            cursor: "pointer",
+          }}
+        >
+          <Typography style={{ color: "black", fontSize: 20 }}>
+            Afficher plus
+          </Typography>
+        </Box>
+      )}
     </React.Fragment>
   );
 };
@@ -191,18 +191,19 @@ const DisplayNewItems = ({ classes, favorite, loading }) => {
     return renderedItem(items, classes, favorite, dispatch, history, mobile);
   }, [items, favorite, loading, mobile]);
 
-  if (items.length!==0 && !loading) {
+  if (items.length !== 0 && !loading) {
     return (
-      <Box style={{ display: "flex", flexDirection: "column" }} >
+      <Box style={{ display: "flex", flexDirection: "column" }}>
         <Box padding={1.5} display={"flex"} alignItems="center">
-        <Typography style={{fontSize:18,fontWeight:550}}>Nouveau articles</Typography>
+          <Typography style={{ fontSize: 18, fontWeight: 550 }}>
+            Nouveau articles
+          </Typography>
         </Box>
-       
         <Box className={classes.GridSytem}>{renderedItems}</Box>
       </Box>
-    )
+    );
   }
-  return <></>
+  return <></>;
 };
 
 const mapStateToProps = (state) => ({

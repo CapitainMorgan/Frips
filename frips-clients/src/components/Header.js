@@ -237,7 +237,7 @@ const Header = ({ onSearchSubmit }) => {
           handleMenuDesktop();
         }}
       >
-        Mon profile
+        Mon profil
       </MenuItem>
       <MenuItem
         className={classes.BoxItem}

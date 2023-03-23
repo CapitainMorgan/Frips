@@ -1268,3 +1268,556 @@ type CategoryRelationFilter {
 [2023-03-20T23:50:25.772] [ERROR] items - POST /api/item/paginationTypeError: priceRange(...) is not iterable (cannot read property undefined)
 [2023-03-20T23:50:31.926] [ERROR] items - POST /api/item/paginationTypeError: priceRange(...) is not iterable (cannot read property undefined)
 [2023-03-20T23:50:39.820] [ERROR] items - POST /api/item/paginationTypeError: priceRange(...) is not iterable (cannot read property undefined)
+[2023-03-21T09:57:16.463] [ERROR] items - GET /api/item/newError: 
+Invalid `account.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\items.js:825:32
+
+   822 router.post("/topBusiness", async (req, res) => {
+   823   const { mobile } = req.body;
+   824   try {
+→  825     const Item = await account.findMany({
+             where: {
+               item: {
+                 every: {
+                   transaction: {
+                     none: {
+                       DateSell: {
+                         not: {
+                           equals: null
+                                   ~~~~
+                         }
+                       }
+                     }
+                   }
+                 }
+               },
+               id: 2
+             },
+             select: {
+               item: {
+                 include: {
+                   image: {
+                     take: 1
+                   },
+                   item_brand: {
+                     select: {
+                       brand: true
+                     }
+                   },
+                   item_color: {
+                     select: {
+                       color: {
+                         select: {
+                           Name: true
+                         }
+                       }
+                     }
+                   },
+                   itemcondition: {
+                     select: {
+                       Name: true
+                     }
+                   },
+                   _count: {
+                     select: {
+                       favorit: true
+                     }
+                   }
+                 },
+                 orderBy: [
+                   {
+                     nbview: {
+                       _count: 'desc'
+                     }
+                   },
+                   {
+                     favorit: {
+                       _count: 'desc'
+                     }
+                   }
+                 ],
+                 take: 5
+               },
+               image: true,
+               Pseudo: true,
+               id: true
+             }
+           })
+
+Argument equals for where.item.every.transaction.none.DateSell.not.equals must not be null. Please use undefined instead.
+
+
+[2023-03-21T09:57:25.515] [ERROR] items - GET /api/item/newError: 
+Invalid `account.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\items.js:825:32
+
+   822 router.post("/topBusiness", async (req, res) => {
+   823   const { mobile } = req.body;
+   824   try {
+→  825     const Item = await account.findMany({
+             where: {
+               item: {
+                 every: {
+                   transaction: {
+                     none: {
+                       DateSell: {
+                         not: {
+                           equals: null
+                                   ~~~~
+                         }
+                       }
+                     }
+                   }
+                 }
+               },
+               id: 2
+             },
+             select: {
+               item: {
+                 include: {
+                   image: {
+                     take: 1
+                   },
+                   item_brand: {
+                     select: {
+                       brand: true
+                     }
+                   },
+                   item_color: {
+                     select: {
+                       color: {
+                         select: {
+                           Name: true
+                         }
+                       }
+                     }
+                   },
+                   itemcondition: {
+                     select: {
+                       Name: true
+                     }
+                   },
+                   _count: {
+                     select: {
+                       favorit: true
+                     }
+                   }
+                 },
+                 orderBy: [
+                   {
+                     nbview: {
+                       _count: 'desc'
+                     }
+                   },
+                   {
+                     favorit: {
+                       _count: 'desc'
+                     }
+                   }
+                 ],
+                 take: 5
+               },
+               image: true,
+               Pseudo: true,
+               id: true
+             }
+           })
+
+Argument equals for where.item.every.transaction.none.DateSell.not.equals must not be null. Please use undefined instead.
+
+
+[2023-03-21T09:58:16.456] [ERROR] items - GET /api/item/newError: 
+Invalid `account.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\items.js:825:32
+
+   822 router.post("/topBusiness", async (req, res) => {
+   823   const { mobile } = req.body;
+   824   try {
+→  825     const Item = await account.findMany({
+             where: {
+               item: {
+                 every: {
+                   transaction: {
+                     none: {
+                       DateSell: {
+                         not: {
+                           equals: null
+                                   ~~~~
+                         }
+                       }
+                     }
+                   }
+                 }
+               },
+               id: 2
+             },
+             select: {
+               item: {
+                 include: {
+                   image: {
+                     take: 1
+                   },
+                   item_brand: {
+                     select: {
+                       brand: true
+                     }
+                   },
+                   item_color: {
+                     select: {
+                       color: {
+                         select: {
+                           Name: true
+                         }
+                       }
+                     }
+                   },
+                   itemcondition: {
+                     select: {
+                       Name: true
+                     }
+                   },
+                   _count: {
+                     select: {
+                       favorit: true
+                     }
+                   }
+                 },
+                 orderBy: [
+                   {
+                     nbview: {
+                       _count: 'desc'
+                     }
+                   },
+                   {
+                     favorit: {
+                       _count: 'desc'
+                     }
+                   }
+                 ],
+                 take: 5
+               },
+               image: true,
+               Pseudo: true,
+               id: true
+             }
+           })
+
+Argument equals for where.item.every.transaction.none.DateSell.not.equals must not be null. Please use undefined instead.
+
+
+[2023-03-21T09:58:25.627] [ERROR] items - GET /api/item/newError: 
+Invalid `account.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\items.js:825:32
+
+   822 router.post("/topBusiness", async (req, res) => {
+   823   const { mobile } = req.body;
+   824   try {
+→  825     const Item = await account.findMany({
+             where: {
+               item: {
+                 every: {
+                   transaction: {
+                     none: {
+                       DateSell: {
+                         not: {
+                           equals: null
+                                   ~~~~
+                         }
+                       }
+                     }
+                   }
+                 }
+               },
+               id: 2
+             },
+             select: {
+               item: {
+                 include: {
+                   image: {
+                     take: 1
+                   },
+                   item_brand: {
+                     select: {
+                       brand: true
+                     }
+                   },
+                   item_color: {
+                     select: {
+                       color: {
+                         select: {
+                           Name: true
+                         }
+                       }
+                     }
+                   },
+                   itemcondition: {
+                     select: {
+                       Name: true
+                     }
+                   },
+                   _count: {
+                     select: {
+                       favorit: true
+                     }
+                   }
+                 },
+                 orderBy: [
+                   {
+                     nbview: {
+                       _count: 'desc'
+                     }
+                   },
+                   {
+                     favorit: {
+                       _count: 'desc'
+                     }
+                   }
+                 ],
+                 take: 5
+               },
+               image: true,
+               Pseudo: true,
+               id: true
+             }
+           })
+
+Argument equals for where.item.every.transaction.none.DateSell.not.equals must not be null. Please use undefined instead.
+
+
+[2023-03-21T09:58:30.914] [ERROR] items - GET /api/item/newError: 
+Invalid `account.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\items.js:825:32
+
+   822 router.post("/topBusiness", async (req, res) => {
+   823   const { mobile } = req.body;
+   824   try {
+→  825     const Item = await account.findMany({
+             where: {
+               item: {
+                 every: {
+                   transaction: {
+                     none: {
+                       DateSell: {
+                         not: {
+                           equals: null
+                                   ~~~~
+                         }
+                       }
+                     }
+                   }
+                 }
+               },
+               id: 2
+             },
+             select: {
+               item: {
+                 include: {
+                   image: {
+                     take: 1
+                   },
+                   item_brand: {
+                     select: {
+                       brand: true
+                     }
+                   },
+                   item_color: {
+                     select: {
+                       color: {
+                         select: {
+                           Name: true
+                         }
+                       }
+                     }
+                   },
+                   itemcondition: {
+                     select: {
+                       Name: true
+                     }
+                   },
+                   _count: {
+                     select: {
+                       favorit: true
+                     }
+                   }
+                 },
+                 orderBy: [
+                   {
+                     nbview: {
+                       _count: 'desc'
+                     }
+                   },
+                   {
+                     favorit: {
+                       _count: 'desc'
+                     }
+                   }
+                 ],
+                 take: 5
+               },
+               image: true,
+               Pseudo: true,
+               id: true
+             }
+           })
+
+Argument equals for where.item.every.transaction.none.DateSell.not.equals must not be null. Please use undefined instead.
+
+
+[2023-03-21T09:58:50.899] [ERROR] items - GET /api/item/newError: 
+Invalid `account.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\items.js:825:32
+
+   822 router.post("/topBusiness", async (req, res) => {
+   823   const { mobile } = req.body;
+   824   try {
+→  825     const Item = await account.findMany({
+             where: {
+               item: {
+                 every: {
+                   transaction: {
+                     none: {
+                       DateSell: {
+                         not: {
+                           equals: null
+                                   ~~~~
+                         }
+                       }
+                     }
+                   }
+                 }
+               },
+               id: 2
+             },
+             select: {
+               item: {
+                 include: {
+                   image: {
+                     take: 1
+                   },
+                   item_brand: {
+                     select: {
+                       brand: true
+                     }
+                   },
+                   item_color: {
+                     select: {
+                       color: {
+                         select: {
+                           Name: true
+                         }
+                       }
+                     }
+                   },
+                   itemcondition: {
+                     select: {
+                       Name: true
+                     }
+                   },
+                   _count: {
+                     select: {
+                       favorit: true
+                     }
+                   }
+                 },
+                 orderBy: [
+                   {
+                     nbview: {
+                       _count: 'desc'
+                     }
+                   },
+                   {
+                     favorit: {
+                       _count: 'desc'
+                     }
+                   }
+                 ],
+                 take: 5
+               },
+               image: true,
+               Pseudo: true,
+               id: true
+             }
+           })
+
+Argument equals for where.item.every.transaction.none.DateSell.not.equals must not be null. Please use undefined instead.
+
+
+[2023-03-21T09:59:05.699] [ERROR] items - GET /api/item/newError: 
+Invalid `account.findMany()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\items.js:825:32
+
+   822 router.post("/topBusiness", async (req, res) => {
+   823   const { mobile } = req.body;
+   824   try {
+→  825     const Item = await account.findMany({
+             where: {
+               item: {
+                 every: {
+                   transaction: {
+                     none: {
+                       DateSell: {
+                         not: {
+                           equals: null
+                                   ~~~~
+                         }
+                       }
+                     }
+                   }
+                 }
+               },
+               id: 2
+             },
+             select: {
+               item: {
+                 include: {
+                   image: {
+                     take: 1
+                   },
+                   item_brand: {
+                     select: {
+                       brand: true
+                     }
+                   },
+                   item_color: {
+                     select: {
+                       color: {
+                         select: {
+                           Name: true
+                         }
+                       }
+                     }
+                   },
+                   itemcondition: {
+                     select: {
+                       Name: true
+                     }
+                   },
+                   _count: {
+                     select: {
+                       favorit: true
+                     }
+                   }
+                 },
+                 orderBy: [
+                   {
+                     nbview: {
+                       _count: 'desc'
+                     }
+                   },
+                   {
+                     favorit: {
+                       _count: 'desc'
+                     }
+                   }
+                 ],
+                 take: 5
+               },
+               image: true,
+               Pseudo: true,
+               id: true
+             }
+           })
+
+Argument equals for where.item.every.transaction.none.DateSell.not.equals must not be null. Please use undefined instead.
+
+

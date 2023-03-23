@@ -1,11 +1,9 @@
 import {
   Box,
   Checkbox,
-  ClickAwayListener,
-  ListItemIcon,
-  MenuItem,
+  ClickAwayListener, MenuItem,
   Popper,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { FaFilter } from "react-icons/fa";

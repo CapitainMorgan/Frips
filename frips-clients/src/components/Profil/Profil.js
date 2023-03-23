@@ -176,7 +176,7 @@ const UserProfile = () => {
             className={classes.MenuSetting}
           >
             <Typography className={classes.Header}>
-              Détails du profile
+              Détails du profil
             </Typography>
           </Box>
           <Box padding={2} className={classes.FormLittleBox}>

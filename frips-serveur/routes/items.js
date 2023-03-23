@@ -560,7 +560,6 @@ const findSearchQuery = (Search) => {
   return arraySearch;
 };
 
-
 const isFilter = (filter) => {
   const {
     newCatalogue,
@@ -584,7 +583,7 @@ const isFilter = (filter) => {
     Search.length !== 0
   ) {
     return {
-      AND: [
+      OR: [
         {
           item_brand: {
             some: {
@@ -600,7 +599,6 @@ const isFilter = (filter) => {
         priceRange(Price),
         ...findSearchQuery(Search),
       ],
-      
     };
   } else return;
 };
@@ -825,13 +823,13 @@ router.post("/topBusiness", async (req, res) => {
     const Item = await account.findMany({
       where: {
         item: {
-          every: {
+          some: {
             transaction: {
               none: {},
             },
           },
         },
-        id: 2,
+        id: 1,
       },
       select: {
         item: {
@@ -878,15 +876,16 @@ router.post("/topBusiness", async (req, res) => {
     });
     const { _avg } = await review.aggregate({
       where: {
-        id_Account: 2,
+        id_Account: 1,
       },
       _avg: {
         Note: true,
       },
     });
 
+    console.log(Item, _avg);
 
-    res.status(200).json({...Item[0],_avg});
+    res.status(200).json({ ...Item[0], _avg });
   } catch (error) {
     logger.error("GET /api/item/new" + error);
     res.status(500).json("Server error");

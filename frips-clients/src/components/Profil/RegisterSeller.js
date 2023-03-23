@@ -76,10 +76,9 @@ export const RegisterSeller = () => {
   let { from } = location.state || { from: { pathname: "/" } };
 
   const handleChange = (event) => {
-    console.log(event.target.value);
     const input = event.target.value.replace(/\s/g, "");
     let formatted = input.match(/.{1,4}/g)?.join(" ");
-    console.log(formatted,input)
+    
     if (formatted && input.length > 4 && input.length % 4 === 0) {
       formatted += "";
     }

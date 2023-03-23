@@ -196,7 +196,7 @@ const TopBusiness = ({ favorite, loading, mobile, accountTop }) => {
       <Box style={{ display: "flex", flexDirection: "column" }}>
         <Box padding={1.5} display={"flex"} alignItems="center">
           <Typography style={{ fontSize: 18, fontWeight: 550 }}>
-            Top fripperie
+            Top friperie
           </Typography>
           <AiFillFire size={20} />
         </Box>

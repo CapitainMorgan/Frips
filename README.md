@@ -13,6 +13,6 @@ Pour contribuer il faut :
 - Aller sur https://github.com/CapitainMorgan/Frips/pulls -> Appuier sur le bouton "New pull request" -> Choisir la branche de la fonctionnalité dans la liste "compare" -> et créer la pull request.
 - Après m'informer qu'une pull request à été faite pour que je l'ajoute à la branche main
 
-Ne pas hesiter de me pauser la question si on est pas sur de qqch. 
+Ne pas hesiter de me poser la question si on est pas sur de qqch. 
 
 

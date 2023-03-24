@@ -21,7 +21,7 @@ export const Catalogue = [
 
         subitems: [
           {
-            Upid: 2,
+            upId: 2,
 
             type: "list",
 
@@ -29,27 +29,27 @@ export const Catalogue = [
             id: 3,
             subitems: [
               {
-                Upid: 3,
+                upId: 3,
                 type: "list",
                 Name: "Manteaux",
                 id: 4,
                 subitems: [
                   {
-                    Upid: 4,
+                    upId: 4,
                     sizeType: 0,
                     Name: "Parkas",
 
                     id: 5,
                   },
                   {
-                    Upid: 4,
+                    upId: 4,
                     sizeType: 0,
                     Name: "Manteaux longs",
 
                     id: 6,
                   },
                   {
-                    Upid: 4,
+                    upId: 4,
 
                     sizeType: 0,
                     Name: "Manteaux d'hivers",
@@ -59,7 +59,7 @@ export const Catalogue = [
                 ],
               },
               {
-                Upid: 3,
+                upId: 3,
 
                 type: "list",
                 Name: "Vestes",
@@ -67,38 +67,38 @@ export const Catalogue = [
                 subitems: [
                   {
                     id: 10,
-                    Upid: 9,
+                    upId: 9,
                     Name: "Blouson aviateur",
                     sizeType: 0,
                   },
                   {
                     id: 11,
                     Name: "Vestes en jean",
-                    Upid: 9,
+                    upId: 9,
                     sizeType: 0,
                   },
                   {
                     id: 12,
                     Name: "Vestes en cuir ",
-                    Upid: 9,
+                    upId: 9,
                     sizeType: 0,
                   },
                   {
                     id: 13,
                     Name: "Vestes légères",
-                    Upid: 9,
+                    upId: 9,
                     sizeType: 0,
                   },
                   {
                     id: 14,
                     Name: "Vestes polaires",
-                    Upid: 9,
+                    upId: 9,
                     sizeType: 0,
                   },
                 ],
               },
               {
-                Upid: 3,
+                upId: 3,
                 Name: "Manteaux & vestes",
 
                 id: 15,
@@ -107,7 +107,7 @@ export const Catalogue = [
             ],
           },
           {
-            Upid: 2,
+            upId: 2,
 
             type: "list",
             Name: "Sweats & sweats à capuche",
@@ -118,74 +118,74 @@ export const Catalogue = [
                 id: 17,
                 sizeType: 0,
                 Name: "Sweats à capuche",
-                Upid: 16,
+                upId: 16,
               },
               {
                 id: 18,
                 type: "list",
-                Upid: 16,
+                upId: 16,
                 Name: "Sweats & sweats à capuche",
                 subitems: [
                   {
                     id: 19,
                     Name: "Pulls col V",
-                    Upid: 18,
+                    upId: 18,
                     sizeType: 0,
                   },
                   {
                     id: 20,
                     Name: "Pulls col roulé",
-                    Upid: 18,
+                    upId: 18,
                     sizeType: 0,
                   },
                   {
                     id: 21,
                     Name: "Sweats longs",
-                    Upid: 18,
+                    upId: 18,
                     sizeType: 0,
                   },
                   {
                     id: 22,
                     Name: "Pulls d'hiver",
-                    Upid: 18,
+                    upId: 18,
                     sizeType: 0,
                   },
                   {
                     id: 23,
                     Name: "Autres sweats",
-                    Upid: 18,
+                    upId: 18,
                     sizeType: 0,
                   },
                 ],
               },
               {
                 id: 25,
-                Upid: 16,
+                upId: 16,
                 Name: "Autres Sweats & pull-overs",
               },
             ],
           },
           {
-            Upid: 2,
+            upId: 2,
             Name: "Blazers & tailleurs",
 
             type: "list",
             id: 26,
             subitems: [
               {
-                Upid: 26,
+                upId: 26,
                 Name: "Blazers",
                 id: 27,
                 sizeType: 0,
               },
               {
-                Upid: 26,
+                upId: 26,
                 Name: "Ensemble tailler/pantalon",
                 id: 28,
                 sizeType: 0,
               },
               {
-                Upid: 26,
+                upId: 26,
                 Name: "Blazers & tailleurs",
                 id: 29,
                 sizeType: 0,
@@ -193,69 +193,69 @@ export const Catalogue = [
             ],
           },
           {
-            Upid: 2,
+            upId: 2,
             Name: "Robes",
 
             type: "list",
             id: 30,
             subitems: [
               {
-                Upid: 30,
+                upId: 30,
                 id: 31,
                 Name: "Robes courtes",
                 sizeType: 0,
               },
               {
-                Upid: 30,
+                upId: 30,
                 id: 32,
                 Name: "Robes longues",
                 sizeType: 0,
               },
               {
-                Upid: 30,
+                upId: 30,
                 Name: "Robes d'été",
                 id: 33,
                 sizeType: 0,
               },
               {
-                Upid: 30,
+                upId: 30,
                 id: 34,
                 Name: "Robes d'hiver",
                 sizeType: 0,
               },
               {
-                Upid: 30,
+                upId: 30,
                 id: 35,
                 Name: "Robes chics",
                 sizeType: 0,
               },
               {
-                Upid: 30,
+                upId: 30,
                 id: 36,
                 Name: "Robes sans bretelles",
                 sizeType: 0,
               },
               {
-                Upid: 30,
+                upId: 30,
                 id: 36,
                 Name: "Robes sans bretelles",
                 sizeType: 0,
               },
 
               {
-                Upid: 30,
+                upId: 30,
                 id: 37,
                 Name: "Robes de soirée",
                 sizeType: 0,
               },
               {
-                Upid: 30,
+                upId: 30,
                 id: 38,
                 Name: "Robes de mariée",
                 sizeType: 0,
               },
               {
-                Upid: 30,
+                upId: 30,
                 id: 39,
                 Name: "Autres robes",
                 sizeType: 0,
@@ -263,49 +263,49 @@ export const Catalogue = [
             ],
           },
           {
-            Upid: 2,
+            upId: 2,
             Name: "Jupes",
             type: "list",
             id: 40,
             subitems: [
               {
-                Upid: 40,
+                upId: 40,
                 id: 41,
                 Name: "Mini-jupes",
                 sizeType: 0,
               },
               {
-                Upid: 40,
+                upId: 40,
                 id: 42,
                 Name: "Jupes mi-longues",
                 sizeType: 0,
               },
               {
-                Upid: 40,
+                upId: 40,
                 id: 43,
                 Name: "Jupes longues",
                 sizeType: 0,
               },
               {
-                Upid: 40,
+                upId: 40,
                 id: 44,
                 Name: "Jupes taille haute",
                 sizeType: 0,
               },
               {
-                Upid: 40,
+                upId: 40,
                 id: 45,
                 Name: "Jupes tulipes",
                 sizeType: 0,
               },
               {
-                Upid: 40,
+                upId: 40,
                 id: 46,
                 Name: "Jupes patineuses",
                 sizeType: 0,
               },
               {
-                Upid: 40,
+                upId: 40,
                 id: 47,
                 Name: "Jupes patineuses",
                 sizeType: 0,
@@ -313,43 +313,43 @@ export const Catalogue = [
             ],
           },
           {
-            Upid: 2,
-            Name: "Haut et T-shirts",
+            upId: 2,
+            Name: "Hauts & T-shirts",
             type: "list",
             id: 48,
             subitems: [
               {
-                Upid: 48,
+                upId: 48,
                 Name: "Chemises",
                 id: 49,
                 sizeType: 0,
               },
               {
-                Upid: 48,
+                upId: 48,
                 Name: "Blouses",
                 id: 50,
                 sizeType: 0,
               },
               {
-                Upid: 48,
+                upId: 48,
                 Name: "T-shirts",
                 id: 51,
                 sizeType: 0,
               },
               {
-                Upid: 48,
+                upId: 48,
                 Name: "Débardeurs",
                 id: 52,
                 sizeType: 0,
               },
               {
-                Upid: 48,
+                upId: 48,
                 Name: "Tuniques",
                 id: 53,
                 sizeType: 0,
               },
               {
-                Upid: 48,
+                upId: 48,
                 Name: "Tops courts",
                 id: 53,
                 sizeType: 0,
@@ -357,44 +357,44 @@ export const Catalogue = [
             ],
           },
           {
-            Upid: 2,
+            upId: 2,
             Name: "Pantalons & leggings",
 
             type: "list",
             id: 56,
             subitems: [
               {
-                Upid: 56,
+                upId: 56,
                 Name: "Pantalons skinny",
                 id: 57,
                 sizeType: 0,
               },
               {
-                Upid: 56,
+                upId: 56,
                 Name: "Pantalons en cuir",
                 id: 58,
                 sizeType: 0,
               },
               {
-                Upid: 56,
+                upId: 56,
                 Name: "Pantalons droits",
                 id: 59,
                 sizeType: 0,
               },
               {
-                Upid: 56,
+                upId: 56,
                 Name: "Leggings",
                 id: 60,
                 sizeType: 0,
               },
               {
-                Upid: 56,
+                upId: 56,
                 Name: "Pantalons skinny",
                 id: 60,
                 sizeType: 0,
               },
               {
-                Upid: 56,
+                upId: 56,
                 Name: "Sarouels",
                 id: 61,
                 sizeType: 0,
@@ -412,40 +412,35 @@ export const Catalogue = [
                 Name: "Shorts taille haute",
                 id: 63,
                 sizeType: 0,
-
               },
               {
                 upId: 63,
                 Name: "Shorts taille basse",
                 id: 64,
                 sizeType: 0,
-
               },
               {
                 upId: 63,
                 Name: "Shorts en jeans",
                 id: 65,
                 sizeType: 0,
-
               },
               {
                 upId: 63,
                 Name: "Shorts en cuir",
                 id: 66,
                 sizeType: 0,
-
               },
               {
                 upId: 63,
                 Name: "Shorts cargo",
                 id: 67,
                 sizeType: 0,
-
               },
             ],
           },
           {
-            Upid: 2,
+            upId: 2,
             Name: "Maillots de bain",
             id: 68,
             type: "list",
@@ -455,7 +450,6 @@ export const Catalogue = [
                 Name: "Une pièce",
                 id: 69,
                 sizeType: 0,
-
               },
               {
                 upId: 68,
@@ -468,7 +462,7 @@ export const Catalogue = [
           },
 
           {
-            Upid: 2,
+            upId: 2,
             Name: "Autres vêtements",
             sizeType: 0,
 
@@ -477,7 +471,7 @@ export const Catalogue = [
         ],
       },
       {
-        Upid: 1,
+        upId: 1,
 
         type: "list",
         id: 73,
@@ -530,7 +524,7 @@ export const Catalogue = [
         ],
       },
       {
-        Upid: 1,
+        upId: 1,
 
         type: "list",
         Name: "Sacs",
@@ -540,60 +534,321 @@ export const Catalogue = [
             Name: "Sacs à main",
             id: 82,
             upId: 81,
-            siteType:2,
+            sizeType: 2,
           },
           {
             Name: "Sacs en bandoulière",
             id: 83,
             upId: 81,
-            siteType: 2,
+            sizeType: 2,
           },
           {
             Name: "Sacs à dos",
             id: 84,
             upId: 81,
-            siteType: 2,
+            sizeType: 2,
           },
           {
             Name: "Pochette",
             id: 85,
             upId: 81,
-            siteType: 2,
+            sizeType: 2,
           },
           {
             Name: "Sacs banane",
             id: 86,
             upId: 81,
-            siteType: 2,
+            sizeType: 2,
           },
           {
             Name: "Sacs de sport",
             id: 87,
             upId: 81,
-            siteType: 2,
+            sizeType: 2,
           },
           {
             Name: "Autres sacs",
             id: 88,
             upId: 81,
-            siteType: 2,
+            sizeType: 2,
           },
         ],
       },
     ],
   },
   {
-    id: 100,
+    id: 104,
     Name: "Homme",
     type: "list",
+    number: "H",
     subitems: [
       {
-        id: 101,
-        Name: "test",
+        upId: 104,
+        id: 105,
+        Name: "Vêtements",
+        type: "list",
+        subitems: [
+          {
+            upId: 105,
+            id: 106,
+            type: "list",
+            Name: "Jeans",
+            subitems: [
+              {
+                upId: 106,
+                id: 107,
+                Name: "Jeans troués",
+                sizeType: 0,
+              },
+              {
+                upId: 106,
+                id: 108,
+                Name: "Jeans skinny",
+                sizeType: 0,
+              },
+              {
+                upId: 106,
+                id: 109,
+                Name: "Jeans slim",
+                sizeType: 0,
+              },
+              {
+                upId: 106,
+                id: 110,
+                Name: "Jeans coupes droites",
+                sizeType: 0,
+              },
+            ],
+          },
+          {
+            upId: 105,
+            id: 111,
+            type: "list",
+            Name: "Manteaux & Vestes",
+            subitems: [
+              {
+                upId: 111,
+                id: 112,
+                Name: "Manteaux",
+                type: "list",
+                subitems: [
+                  {
+                    upId: 112,
+                    id: 113,
+                    Name: "Imperméables",
+                    sizeType: 0,
+                  },
+                  {
+                    upId: 112,
+                    id: 114,
+                    Name: "Trench-coats",
+                    sizeType: 0,
+                  },
+                  {
+                    upId: 112,
+                    id: 115,
+                    Name: "Duffle-coats",
+                    sizeType: 0,
+                  },
+                  {
+                    upId: 112,
+                    id: 116,
+                    Name: "Cabans",
+                    sizeType: 0,
+                  },
+                  {
+                    upId: 112,
+                    id: 117,
+                    Name: "Parkas",
+                    sizeType: 0,
+                  },
+                  {
+                    upId: 112,
+                    id: 118,
+                    Name: "Manteaux en laine",
+                    sizeType: 0,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            upId: 105,
+            id: 119,
+            Name: "Vestes",
+            type: "list",
+            subitems: [
+              {
+                upId: 119,
+                id: 120,
+                Name: "Vestes en jean",
+                sizeType: 0,
+              },
+              {
+                upId: 119,
+                id: 121,
+                Name: "Vestes en cuir",
+                sizeType: 0,
+              },
+              {
+                upId: 119,
+                id: 122,
+                Name: "Vestes légères",
+                sizeType: 0,
+              },
+              {
+                upId: 119,
+                id: 123,
+                Name: "Vestes harrington ",
+                sizeType: 0,
+              },
+              {
+                upId: 119,
+                id: 124,
+                Name: "Vestes en duvet",
+                sizeType: 0,
+              },
+              {
+                upId: 119,
+                id: 125,
+                Name: "Vestes polaires",
+                sizeType: 0,
+              },
+              {
+                upId: 119,
+                id: 126,
+                Name: "Autres",
+                sizeType: 0,
+              },
+            ],
+          },
+          {
+            upId: 105,
+            id: 127,
+            Name: "Hauts & T-shirts",
+            sizeType: 0,
+          },
+          {
+            upId: 105,
+            id: 128,
+            type: "list",
+            Name: "Sweats & Pulls",
+            subitems: [
+              {
+                upId: 128,
+                id: 129,
+                Name: "Sweats",
+                sizeType: 0,
+              },
+            ],
+          },
+          {
+            upId: 105,
+            id: 130,
+            type: "list",
+            Name: "Pantalons",
+            subitems: [
+              {
+                upId: 130,
+                id: 131,
+                Name: "Jogging",
+                sizeType: 0,
+              },
+              {
+                upId: 130,
+                id: 132,
+                Name: "Pantalons skinny",
+                sizeType: 0,
+              },
+              {
+                upId: 130,
+                id: 133,
+                Name: "Pantacourts",
+                sizeType: 0,
+              },
+              {
+                upId: 130,
+                id: 134,
+                Name: "Pantalons de costume",
+                sizeType: 0,
+              },
+              {
+                upId: 130,
+                id: 135,
+                Name: "Pantalons à jambes larges",
+                sizeType: 0,
+              },
+            ],
+          },
+          {
+            upId: 105,
+            id: 136,
+            type: "list",
+            Name: "Shorts",
+            subitems: [
+              {
+                upId: 136,
+                id: 137,
+                Name: "Shorts cargo",
+                sizeType: 0,
+              },
+              {
+                upId: 136,
+                id: 138,
+                Name: "Shorts chino",
+                sizeType: 0,
+              },
+              {
+                upId: 136,
+                id: 139,
+                Name: "Shorts en jean",
+                sizeType: 0,
+              },
+            ],
+          },
+          {
+            upId: 105,
+            id: 140,
+            type: "list",
+            Name: "Vêtements de sports",
+            subitems: [
+              {
+                upId: 140,
+                id: 141,
+                Name: "Survêtements",
+                sizeType: 0,
+              },
+              {
+                upId: 140,
+                id: 142,
+                Name: "Shorts de sport",
+                sizeType: 0,
+              },
+              {
+                upId: 140,
+                id: 143,
+                Name: "Hauts & T-shirts",
+                sizeType: 0,
+              },
+            ],
+          },
+          {
+            upId: 105,
+            id: 144,
+            Name: "Maillots de bain ",
+            sizeType: 0,
+          },
+          {
+            upId: 105,
+            id: 145,
+            type: "list",
+            Name: "Autres vêtements",
+            sizeType: 0,
+          },
+        ],
       },
     ],
   },
-  //HOMME HERE///
 ];
 
 export const arraySize = [
@@ -635,7 +890,7 @@ export const arraySize = [
       },
       {
         id: 2,
-        Name: "Chassaures",
+        Name: "Chaussures",
 
         subitems: [
           {
@@ -733,119 +988,159 @@ export const arraySize = [
     ],
   },
   {
-    idNavigation: 2,
     Name: "Homme",
     type: "list",
-    id: "Homme",
+    id: 104,
 
     subitems: [
-      {
-        id: 2,
-        subitems: [
-          {
-            Name: "36",
-            plain: true,
-          },
-          {
-            Name: "37",
-            plain: true,
-          },
-          {
-            Name: "38",
-            plain: true,
-          },
-          {
-            Name: "39",
-            plain: true,
-          },
-          {
-            Name: "40",
-            plain: true,
-          },
-          {
-            Name: "41",
-            plain: true,
-          },
-          {
-            Name: "42",
-            plain: true,
-          },
-          {
-            Name: "43",
-            plain: true,
-          },
-          {
-            Name: "44",
-            plain: true,
-          },
-          {
-            Name: "45",
-            plain: true,
-          },
-          {
-            Name: "46",
-            plain: true,
-          },
-
-          {
-            Name: "36.5",
-          },
-          {
-            Name: "37.5",
-          },
-          {
-            Name: "38.5",
-          },
-          {
-            Name: "39.5",
-          },
-          {
-            Name: "40.5",
-          },
-          {
-            Name: "41.5",
-          },
-          {
-            Name: "42.5",
-          },
-          {
-            Name: "43.5",
-          },
-          {
-            Name: "44.5",
-          },
-          {
-            Name: "45.5",
-          },
-          {
-            Name: "46.5",
-          },
-
-          {
-            Name: "Autres",
-          },
-        ],
-      },
       {
         id: 1,
         subitems: [
           {
             Name: "XS",
+            id: "XS",
           },
           {
             Name: "S",
+            id: "S",
           },
           {
             Name: "M",
+            id: "M",
           },
           {
             Name: "L",
+            id: "L",
           },
           {
             Name: "Xl",
+            id: "XL",
+          },
+          {
+            Name: "XXL",
+            id: "XXl",
+          },
+          {
+            Name: "Oversized",
+            id: "Oversized",
           },
           {
             Name: "Autres",
+            id: "Autres",
+          },
+        ],
+      },
+      {
+        id: 2,
+
+        Name: "Chaussures",
+
+        subitems: [
+          {
+            Name: "36",
+            id: "36",
+            plain: true,
+          },
+          {
+            Name: "37",
+            id: "37",
+            plain: true,
+          },
+          {
+            Name: "38",
+            id: "38",
+            plain: true,
+          },
+          {
+            Name: "39",
+            id: "39",
+
+            plain: true,
+          },
+          {
+            Name: "40",
+            id: "40",
+            plain: true,
+          },
+          {
+            Name: "41",
+            id: "41",
+            plain: true,
+          },
+          {
+            Name: "42",
+            id: "42",
+            plain: true,
+          },
+          {
+            Name: "43",
+            id: "43",
+            plain: true,
+          },
+          {
+            Name: "44",
+            id: "44",
+            plain: true,
+          },
+          {
+            Name: "45",
+            id: "45",
+            plain: true,
+          },
+          {
+            Name: "46",
+            id: "46",
+            plain: true,
+          },
+
+          {
+            Name: "36.5",
+            id: "36.5",
+          },
+          {
+            Name: "37.5",
+            id: "37.5",
+          },
+          {
+            Name: "38.5",
+            id: "38.5",
+          },
+          {
+            Name: "39.5",
+            id: "39.5",
+          },
+          {
+            Name: "40.5",
+            id: "40.5",
+          },
+          {
+            Name: "41.5",
+            id: "41.5",
+          },
+          {
+            Name: "42.5",
+            id: "42.5",
+          },
+          {
+            Name: "43.5",
+            id: "43.5",
+          },
+          {
+            Name: "44.5",
+            id: "44.5",
+          },
+          {
+            Name: "45.5",
+            id: "45.5",
+          },
+          {
+            Name: "46.5",
+            id: "46.5",
+          },
+
+          {
+            Name: "Autres",
+            id: "Autres",
           },
         ],
       },

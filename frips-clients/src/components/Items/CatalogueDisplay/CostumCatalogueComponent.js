@@ -75,7 +75,7 @@ const navigation = (depth, navigationValue) => {
       return navigationValue[0];
   }
 };
-const CostumCatalogueComponent = ({ label, filter }) => {
+const CostumCatalogueComponent = ({ label, filter,close }) => {
   const classes = useStyles();
   const [navigationValue, setNavigationValue] = useState([Catalogue]);
   const [depth, setDepth] = useState(0);
@@ -102,52 +102,56 @@ const CostumCatalogueComponent = ({ label, filter }) => {
           </Typography>
         </Box>
       ) : null}
-      <MenuItem
-        className={classes.ItemBox}
-        onClick={() => {
-          if (
-            Boolean(
-              _.find(filter["Catalogue"], {
-                id: navigationValue[depth].id,
-                Name: navigationValue[depth].Name,
-              })
-            )
-          ) {
-            dispatch(
-              removeToFilter({
-                id: navigationValue[depth].id,
-                Name: navigationValue[depth].Name,
-              })
-            );
-          } else {
-            dispatch(
-              addToFilter(
-                {
+      {depth !== 0 ? (
+        <MenuItem
+          className={classes.ItemBox}
+          onClick={() => {
+            if (
+              Boolean(
+                _.find(filter["Catalogue"], {
                   id: navigationValue[depth].id,
                   Name: navigationValue[depth].Name,
-                },
-                "Catalogue"
+                })
               )
-            );
-          }
-        }}
-      >
-        <Typography style={{ fontSize: 18 }}>Tous</Typography>
-        <Checkbox
-          className={classes.checkBox}
-          style={{ backgroundColor: "transparent" }}
-          checked={Boolean(
-            _.find(filter[label], {
-              id: navigationValue[depth].id,
-              Name: navigationValue[depth].Name,
-            })
-          )}
-          color="primary"
-          disableFocusRipple
-          disableRipple
-          disableTouchRipple
-        ></Checkbox>
-      </MenuItem>
+            ) {
+              dispatch(
+                removeToFilter({
+                  id: navigationValue[depth].id,
+                  Name: navigationValue[depth].Name,
+                })
+              );
+            } else {
+              dispatch(
+                addToFilter(
+                  {
+                    id: navigationValue[depth].id,
+                    Name: navigationValue[depth].Name,
+                  },
+                  "Catalogue"
+                )
+              );
+              close()
+
+            }
+          }}
+        >
+          <Typography style={{ fontSize: 18 }}>Tous</Typography>
+          <Checkbox
+            className={classes.checkBox}
+            style={{ backgroundColor: "transparent" }}
+            checked={Boolean(
+              _.find(filter[label], {
+                id: navigationValue[depth].id,
+                Name: navigationValue[depth].Name,
+              })
+            )}
+            color="primary"
+            disableFocusRipple
+            disableRipple
+            disableTouchRipple
+          ></Checkbox>
+        </MenuItem>
+      ) : null}
       {navigation(depth, navigationValue).map((item, index) => {
         return (
           <MenuItem

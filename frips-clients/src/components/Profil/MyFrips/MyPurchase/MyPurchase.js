@@ -9,16 +9,16 @@ import {
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { BiPackage } from "react-icons/bi";
+import { TiWarning } from "react-icons/ti";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { changeMyFripsPagination, fetchMyfrips } from "../../../../actions";
-import { FETCH_MYPURCHASE, FETCH_MYSELL } from "../../../../actions/type";
-import { TiWarning } from "react-icons/ti";
-import DeliveryStep from "../MySell/DeliveryStep";
+import { FETCH_MYPURCHASE } from "../../../../actions/type";
+import API_ENDPOINT from "../../../../api/url";
 import MyPaginate from "../../../Footer/PaginationComponent";
 import PurchaseStep from "./PurchaseStep";
-
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -77,10 +77,20 @@ const useStyles = makeStyles((theme) => ({
   },
   delivery: {
     display: "flex",
-
     [theme.breakpoints.down("sm")]: {
       display: "flex",
       flexDirection: "column",
+      width: "100%",
+    },
+  },
+  deliveryCategory: {
+    display: "flex",
+    flexDirection: "column",
+    width: "50%",
+    maxWidth: "50%",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+
     },
   },
   send: {
@@ -97,33 +107,75 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const renderDeliveryStep = ({ DateSend }) => {
+const renderDeliveryStep = ({ DateSend, review, Status }) => {
   if (!DateSend) {
     return (
       <Badge overlap="circle">
         <Box display={"flex"} alignItems="center">
           <Typography style={{ fontSize: 16 }} component="span" color="inherit">
-            <TiWarning color="#dc3545 " size={"1.7em"} />A livrer
+            <TiWarning color="#dc3545 " size={"1.7em"} />
+            en cours d'envoi
           </Typography>
         </Box>
       </Badge>
     );
-  } else {
+  }
+  if (DateSend && !Status) {
     return (
-      <Badge
-        badgeContent={
-          <Typography component="span" color="inherit">
-            Laisser une Review
+      <Badge overlap="circle">
+        <Box display={"flex"} alignItems="center">
+          <Typography style={{ fontSize: 16 }} component="span" color="inherit">
+            <BiPackage color="#82A0C2 " size={"1.7em"} />
+            envoie en transit
           </Typography>
-        }
-      ></Badge>
+        </Box>
+      </Badge>
     );
   }
+
+  if (DateSend && Boolean(review[0]?.Note)) {
+    return (
+      <Typography
+        style={{
+          borderRadius: 5,
+          padding: 5,
+          fontSize: 16,
+          border: "1px solid rgb(80, 220, 100)",
+          backgroundColor: "rgba(80, 220, 100,0.2)",
+        }}
+      >
+        Terminé
+      </Typography>
+    );
+  } else {
+    return (
+      <Typography
+        style={{
+          borderRadius: 5,
+          padding: 5,
+          fontSize: 18,
+        }}
+      >
+        Laisser une review
+      </Typography>
+    );
+  }
+};
+const typeOfDelivery = (price) => {
+  if (price === 7) {
+    return "Livraison Poste Standard";
+  }
+  if (price === 9) {
+    return "Livraison Poste Rapide";
+  }
+  return "Livraison en main-propre";
 };
 
 const renderedItem = (classes, state, history) => {
   return state.map((item, index) => {
     const { account } = item;
+    const { buyerAccount } = item;
+
     return (
       <Box
         width={"100%"}
@@ -144,7 +196,7 @@ const renderedItem = (classes, state, history) => {
               >
                 <img
                   alt={state[index].image[0].id_Item}
-                  src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                  src={`${API_ENDPOINT}/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -153,109 +205,57 @@ const renderedItem = (classes, state, history) => {
                 />
               </CardActionArea>
             </Box>
-            <Box
-              padding={2}
-              style={{
-                display: "flex",
-                flexDirection: "column",
-                justifyContent: "center",
-                alignItems: "center",
-              }}
-            >
+
+            <Box padding={2} className={classes.details}>
               <Typography style={{ wordBreak: "break-word" }} color="primary">
-                {item.Name}
+                {item?.Name}
               </Typography>
-              <Box
-                style={{
-                  display: "flex",
-                  flexDirection: "column",
-                  marginTop: 1,
-                }}
-              >
-                <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                  {item.Price} CHF
-                </Typography>
-                <Typography>{item.Size}</Typography>
-              </Box>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>Vendu à </Typography>
 
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 15 }}>
-                  {account.Pseudo}
+                  {account?.Pseudo}
                 </Typography>
               </Box>
             </Box>
 
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>
                 Type de Livraison
               </Typography>
 
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
-                <Typography>{"dsa"}</Typography>
+              <Box flexGrow={1} className={classes.menus}>
+                <Typography>{typeOfDelivery(item.DeliveryPrice)}</Typography>
               </Box>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>Prix</Typography>
 
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                  {item.Price}
+                  {item.Price} CHF
                 </Typography>
               </Box>
             </Box>
-            <Box
-              display={"flex"}
-              flexDirection={"column"}
-              justifyContent="center"
-              alignItems={"center"}
-            >
+            <Box className={classes.menus}>
               <Typography style={{ fontSize: 15 }}>Status</Typography>
-              <Box
-                flexGrow={1}
-                display="flex"
-                justifyContent={"center"}
-                alignItems="center"
-              >
+              <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 15 }}>
-                  {renderDeliveryStep(item)}
+                  {renderDeliveryStep(item, classes)}
                 </Typography>
               </Box>
             </Box>
           </Box>
-          <PurchaseStep classesSell={classes} item={item} id={item.id} account={account} />
+          <PurchaseStep
+            classesSell={classes}
+            item={item}
+            id={item.id}
+            account={account}
+            buyerAccount={buyerAccount}
+          />
         </Card>
       </Box>
     );
@@ -273,7 +273,7 @@ const MyPurchase = ({
 }) => {
   const history = useNavigate();
   const dispatch = useDispatch();
-  const classes = useStyles()
+  const classes = useStyles();
   const handleChange = ({ selected }) => {
     dispatch(changeMyFripsPagination(selected + 1));
   };
@@ -322,11 +322,7 @@ const MyPurchase = ({
         justifyContent={"center"}
         alignItems="center"
       >
-        <Typography style={{ fontSize: 16 }}>
-          {msg}
-        </Typography>
-        
-
+        <Typography style={{ fontSize: 16 }}>{msg}</Typography>
       </Box>
     );
   }
@@ -372,7 +368,6 @@ const mapStateToProps = (state) => ({
   filterMyFrips: state.myFrips.filter,
   count: state.myFrips.count,
   msg: state.myFrips.msg,
-
 });
 
 export default connect(mapStateToProps)(MyPurchase);

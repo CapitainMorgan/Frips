@@ -1,11 +1,20 @@
+const fs = require("fs");
+
+let sslOptions = {
+   key: fs.readFileSync('api.myfrips.ch-2023-02-13.key'),
+   cert: fs.readFileSync('api.myfrips.ch-2023-02-13.crt')
+};
+
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 5000;
 const helmet = require("helmet");
 const path = require("path");
 const http = require("http");
+const https = require("https");
 const cors = require("cors");
-const server = http.createServer(app);
+const server = https.createServer(sslOptions,app);
+//const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",
@@ -18,6 +27,7 @@ const { PrismaClient } = require("@prisma/client");
 let onlineUsers = [];
 
 const prisma = new PrismaClient();
+const { account, item, category_category, brand, chat, message } = prisma;
 
 app.use(cors());
 app.use(express.json({ extended: false }));
@@ -66,11 +76,17 @@ try {
       console.log("new room joined");
       socket.join(room);
     });
-    socket.on("new message", (newMessage) => {
-      const { id, id_Receiver, chat_id, item, Price } = newMessage;
+    socket.on("new message", async (newMessage) => {
+      const { id, id_Receiver, chat_id, item, Price,Pseudo } = newMessage;
       const user = getUser(id_Receiver);
+      const rooms = io.sockets.adapter.rooms.get(id);
+
+      console.log(newMessage)
+
       try {
-        if (io.sockets.adapter.rooms.get(id)?.has(user?.socketId)) {
+        if (!user && !rooms) {
+          return;
+        } else if (io.sockets.adapter.rooms.get(id).has(user?.socketId)) {
           socket.to(id).emit("message received", {
             id_Sender: newMessage.id_Sender,
             id_Receiver: newMessage.id_Receiver,
@@ -87,7 +103,7 @@ try {
                       Price: parseFloat(Price),
                       SendDate: new Date(),
                       Approve: null,
-                      id_Account:id_Sender,
+                      id_Account: id_Sender,
                       dateApprove: null,
                     },
                   ],
@@ -106,6 +122,7 @@ try {
             id_Chat: newMessage.id,
             Unread: true,
             newMessage: true,
+            Pseudo
           });
         }
       } catch (error) {
@@ -125,6 +142,7 @@ try {
 
       removeUser(socket.id);
     });
+ 
   });
 } catch (error) {
   console.log(error);

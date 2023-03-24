@@ -40,26 +40,26 @@ export const navigationCatalogue = (
               disableRipple
               disableTouchRipple
             >
-              {" "}
               <ChevronRightIcon style={{ fontSize: 25 }} />{" "}
             </IconButton>
           </MenuItem>
         </Box>
       );
     } else {
+
       return (
         <Box>
           <MenuItem
             className={classes.BoxItem}
             key={index}
             onClick={() => {
-              console.log(item)
               if (!Number.isNaN(item.sizeType)) {
 
                 setSize(oldArray => [...oldArray, item.sizeType]);
               }
               form.setFieldValue("Catalogue", item.id);
               setNavigationValue([]);
+              form.setFieldValue("Size","")
               SelectableItem();
             }}
           >

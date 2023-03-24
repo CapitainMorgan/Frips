@@ -1,21 +1,22 @@
 import {
-    Box,
-    Button,
-    IconButton,
-    InputAdornment,
-    makeStyles,
-    TextField,
-    Typography
+  Box,
+  Button,
+  IconButton,
+  InputAdornment,
+  makeStyles,
+  TextField,
+  Typography
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
 import { Field, Form, Formik } from "formik";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 import { login } from "../../actions";
+import { RESET_ERROR } from "../../actions/type";
 import TextError from "../Items/formUpload/errorText";
-import CostumStepper from "./CostumStepper";
 const useStyles = makeStyles((theme) => ({
   formContainer: {
     boxSizing: "border-box",
@@ -136,6 +137,14 @@ export const LoginPage = () => {
   const [showPassword, setshowPassword] = useState(false);
   const error = useSelector((state) => state.auth.error);
 
+
+  useEffect(()=>{
+    return () =>{
+      dispatch({type:RESET_ERROR})
+    }
+  },[])
+
+
   const onSubmit = (values) => {
     dispatch(login(values, from, history));
   };
@@ -194,7 +203,7 @@ export const LoginPage = () => {
 
                     {error ? (
                       <Box marginTop={3}>
-                        <TextError error={error} />
+                        <TextError text={error.msg} />
                       </Box>
                     ) : null}
                     <Box marginTop={3} width={"100%"}>
@@ -225,6 +234,14 @@ export const LoginPage = () => {
                 );
               }}
             </Formik>
+            <Box marginTop={5} width={"100%"} display="flex">
+              <Typography
+                style={{ fontSize: 15, paddingLeft: 5 }}
+                color="primary"
+              >
+                <Link to="/signup">créer un compte ?</Link>
+              </Typography>
+            </Box>
           </Box>
         </Box>
       </Box>

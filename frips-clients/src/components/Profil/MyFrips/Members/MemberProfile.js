@@ -3,35 +3,29 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardHeader,
   CircularProgress,
   Divider,
   IconButton,
   makeStyles,
-  Slide,
-  Snackbar,
   Typography,
   useMediaQuery,
   useTheme,
 } from "@material-ui/core";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import { Alert } from "@material-ui/lab";
 import _ from "lodash";
-import React, { useEffect, useMemo, useState } from "react";
-import InfiniteScroll from "react-infinite-scroll-component";
+import React, { useEffect, useState } from "react";
 import { connect, useDispatch } from "react-redux";
-import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import {
   addFavorite,
-  changeMyFripsPagination,
   fetchMembersInfo,
-  idFavorite,
   removeFavorite,
 } from "../../../../actions";
+import API_ENDPOINT from "../../../../api/url";
 import MyPaginate from "../../../Footer/PaginationComponent";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import InformationProfile from "./InformationProfile";
 
 const useStyles = makeStyles((theme) => ({
@@ -67,6 +61,7 @@ const useStyles = makeStyles((theme) => ({
     gridTemplateColumns: "repeat(5,20%)",
     width: "100%",
     position: "relative",
+    padding: 3,
 
     [theme.breakpoints.down("sm")]: {
       width: "100%",
@@ -85,21 +80,34 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
     return (
       <Box width={"100%"} height={"100%"} padding={1} key={index}>
         <Card className={classes.BoxOneItem}>
-          <CardHeader
-            avatar={
-                <Avatar
-                  alt={`${item.account.Pseudo}`}
-                  src={`/imageProfile/${item.account.id}/${item.account?.image?.image}`}
-                />
-            }
-            titleTypographyProps={{
-              style: {
-                fontSize: 14,
-                color: "#4D4D4D",
-              },
-            }}
-            title={item.account.Pseudo}
-          />
+          <Box
+            display={"flex"}
+            alignItems="center"
+            marginBottom={2}
+            width="100%"
+          >
+            <IconButton
+              onClick={() => {
+                navigate(`/member/${item.account.Pseudo}`);
+              }}
+            >
+              <Avatar
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                  cursor: "pointer",
+                }}
+                alt={`${item.account.Pseudo}`}
+                src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+              />
+            </IconButton>
+            <Typography
+              style={{
+                wordBreak: "break-all",
+              }}
+            >
+              {item.account.Pseudo}
+            </Typography>
+          </Box>
           <Box>
             <CardActionArea
               style={{ width: "100%", height: 300 }}
@@ -108,8 +116,8 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
               }}
             >
               <img
-                alt={`/images/${state[index].id}/${state[index].image[0].image}`}
-                src={`/images/${state[index].id}/${state[index].image[0].image}`}
+                alt={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
+                src={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </CardActionArea>
@@ -161,15 +169,12 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const handleChange = ({ selected }) => {
-    console.log(selected);
     setPagination(selected + 1);
   };
 
-  console.log(!account);
-
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!loading && items.length === 0 && !Boolean(count) &&!account) {
+    if (!loading && items.length === 0 && !Boolean(count) && !account) {
       dispatch(fetchMembersInfo(name, pagination));
     }
   }, [dispatch, loading]);
@@ -194,22 +199,19 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
     );
   }
 
-  if (!loading && items.length === 0 && count === 0 ) {
-
+  if (!loading && items.length === 0 && count === 0 && !account) {
     return (
       <Box
-        minHeight={300}
+        minHeight={"100vh"}
         display="flex"
         flexDirection={"column"}
         justifyContent={"center"}
         alignItems="center"
       >
-        <Typography style={{ fontSize: 16 }}>{""}</Typography>
+        <Typography style={{ fontSize: 16 }}>{"aucun utilisateur"}</Typography>
       </Box>
     );
-  }
-
-  else{
+  } else {
     return (
       <Box
         width={"100%"}
@@ -217,7 +219,7 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
         position="relative"
       >
         <Box height={"10vh"} />
-  
+
         <Box className={classes.floatContentArticle}>
           <Box
             display={"flex"}
@@ -227,18 +229,18 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
             alignItems="center"
           >
             <Avatar
-            onClick={()=>{
-              navigate(`/member/${account?.Pseudo}`)
-            }}
+              onClick={() => {
+                navigate(`/member/${account?.Pseudo}`);
+              }}
               alt={`${account?.Pseudo}`}
-              src={`/imageProfile/${account?.id}/${account?.image?.image}`}
+              src={`${API_ENDPOINT}/imageProfile/${account?.id}/${account?.image?.image}`}
               className={classes.large}
             />
             <InformationProfile account={account} items={items} />
           </Box>
           <Divider />
-  
-          <Box padding={3} className={classes.GridSytem} minHeight={300}>
+
+          <Box className={classes.GridSytem} minHeight={300}>
             {renderedItem(items, classes, favorite, dispatch, navigate)}
           </Box>
           <Box className={classes.PaginationBox}>

@@ -1,21 +1,20 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import {
-  Box,
-  Button,
-  makeStyles, Typography
-} from "@material-ui/core";
-import axios from "axios";
-import React, { useState } from "react";
+import { Box, Button, makeStyles, Typography } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { registerUser, userIfExist } from "../../actions";
-import { REGISTER_FAILURE } from "../../actions/type";
+import { REGISTER_FAILURE, RESET_ERROR } from "../../actions/type";
+import axiosInstance from "../../api/api";
 import StepTextError from "../Items/formUpload/errorText";
 import CostumStepper from "./CostumStepper";
 import FirsStep from "./FirsStep";
 import SecondStep from "./SecondStep";
+
+
+
 const useStyles = makeStyles((theme) => ({
   formContainer: {
     boxSizing: "border-box",
@@ -32,6 +31,13 @@ const useStyles = makeStyles((theme) => ({
   BoxShadow: {
     boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
     backgroundColor: "white",
+    width: 500,
+    [theme.breakpoints.down("sm")]: {
+      width: "auto",
+
+      left: "auto",
+      right: "auto",
+    },
   },
 }));
 
@@ -51,7 +57,6 @@ const initialValue = {
     Jour: "",
     Rue: "",
     Numero: "",
-    IBAN: "",
   },
 };
 
@@ -118,32 +123,14 @@ const validationSchema = yup.object().shape({
       .string("Entrez un  numéro")
       .matches(/^[0-9]*$/, "Veuillez seulement utiliser des nombres")
       .required("Un numéro est requis"),
-    IBAN: yup
-      .string("Un IBAN est requis")
-      .required("Un IBAN est requis pour recevoir vos paiements"),
   }),
 });
-/*     dispatch(register(values, from, history));
- */
 
-const validateEmail = (email) => {
-  var re = /\S+@\S+\.\S+/;
-  return re.test(email);
-};
+
 function getSteps() {
   return ["Créer un profile", "Valider ses informations personnels"];
 }
-const check = async (Email, Pseudo, dispatch) => {
-  axios
-    .post("/api/user/checkUser", { Email: Email, Pseudo: Pseudo })
-    .then(() => {})
-    .catch((error) => {
-      dispatch({
-        type: REGISTER_FAILURE,
-        payload: error.response.data,
-      });
-    });
-};
+
 
 export const Register = () => {
   const dispatch = useDispatch();
@@ -166,7 +153,6 @@ export const Register = () => {
     defaultValues: initialValue,
   });
   const pseudo = watch("step1.Pseudo"); // you can also target specific fields by their names
-  console.log(pseudo);
 
   const { Email, Pseudo, Password } = getValues().step1;
 
@@ -180,6 +166,8 @@ export const Register = () => {
             onSubmit={onSubmit}
             getValues={getValues}
             errors={errors}
+            showPassword={showPassword}
+            setshowPassword={setshowPassword}
           />
         );
       case 1:
@@ -200,9 +188,14 @@ export const Register = () => {
 
   const error = useSelector((state) => state.auth.error);
   const history = useNavigate();
+
+  useEffect(() => {
+    return () => {
+      dispatch({ type: RESET_ERROR });
+    };
+  }, []);
+
   const handleNext = async () => {
-    console.log(getValues().step1);
-    console.log(validateEmail(Email));
     const results = await trigger([
       "step1.Email",
       "step1.Pseudo",
@@ -227,9 +220,7 @@ export const Register = () => {
   let { from } = location.state || { from: { pathname: "/" } };
 
   const onSubmit = (values) => {
-    console.log(values)
     dispatch(registerUser(values, from, history));
-
   };
 
   return (
@@ -245,10 +236,10 @@ export const Register = () => {
         <Box height={"5vh"} />
 
         <Box
-          width={500}
           className={classes.BoxShadow}
           display="flex"
           flexDirection="column"
+          marginBottom={10}
           padding={3}
         >
           <CostumStepper activeStep={activeStep} steps={steps} />
@@ -261,23 +252,13 @@ export const Register = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             {renderStepper(activeStep)}
-            <Button
-              style={{ width: "100%", height: 50 }}
-              variant="contained"
-              color="primary"
-              type="submit"
-            >
-              <Typography style={{ fontSize: 14, color: "white" }}>
-                S'inscrire
-              </Typography>
-            </Button>
 
             {error ? (
               <Box marginTop={3}>
                 <StepTextError text={error?.msg} />
               </Box>
             ) : null}
-            {activeStep === steps.length ? (
+            {activeStep === steps.length - 1 ? (
               <Box marginTop={5} width={"100%"}>
                 <Button
                   style={{ width: "100%", height: 50 }}
@@ -324,21 +305,6 @@ export const Register = () => {
           </form>
         </Box>
       </Box>
-      <div>
-        {activeStep === steps.length ? (
-          <div>
-            <Typography className={classes.instructions}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Reset
-            </Button>
-            <Button onClick={handleReset} className={classes.button}>
-              Valider
-            </Button>
-          </div>
-        ) : null}
-      </div>
     </Box>
   );
 };

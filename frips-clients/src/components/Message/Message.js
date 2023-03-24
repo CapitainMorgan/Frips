@@ -7,6 +7,7 @@ import "moment/locale/fr";
 import ProposeMessage from "./ProposeMessage";
 import { useDispatch } from "react-redux";
 import { sendDateProposition } from "../../actions";
+import API_ENDPOINT from "../../api/url";
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
     height: 30,
@@ -54,7 +55,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const offerReceiver = (item, dispatch) => {
-  console.log(item.pricepropose);
   if (
     item?.pricepropose[0].SendDate &&
     item?.pricepropose[0].Approve === null && 
@@ -65,7 +65,7 @@ const offerReceiver = (item, dispatch) => {
         <div style={{ flexGrow: 1, padding: 5 }}>
           <Button
             onClick={() => {
-              dispatch(sendDateProposition(item.id, new Date(),true,!item?.pricepropose[0].id_Account))
+              dispatch(sendDateProposition(item.id, new Date(),true,item?.pricepropose[0]?.id_Account))
             }}
             style={{ backgroundColor: "white", width: "100%" }}
           >
@@ -75,7 +75,7 @@ const offerReceiver = (item, dispatch) => {
         <div style={{ flexGrow: 1, padding: 5 }}>
           <Button
             onClick={() => {
-              dispatch(sendDateProposition(item.id, null,false,!item?.pricepropose[0].id_Account));
+              dispatch(sendDateProposition(item.id, null,false,item?.pricepropose[0]?.id_Account));
             }}
             style={{ backgroundColor: "white", width: "100%" }}
           >
@@ -180,8 +180,8 @@ const Message = ({
               >
                 <Box height={150} width={150}>
                   <img
-                    alt={`/images/${item.id}/${item.image[0].image}`}
-                    src={`/images/${item.id}/${item.image[0].image}`}
+                    alt={`${API_ENDPOINT}/images/${item.id}/${item.image[0].image}`}
+                    src={`${API_ENDPOINT}/images/${item.id}/${item.image[0].image}`}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -295,8 +295,8 @@ const Message = ({
               >
                 <Box height={150} width={150}>
                   <img
-                    alt={`/images/${item.id}/${item.image[0].image}`}
-                    src={`/images/${item.id}/${item.image[0].image}`}
+                    alt={`${API_ENDPOINT}/images/${item.id}/${item.image[0].image}`}
+                    src={`${API_ENDPOINT}/images/${item.id}/${item.image[0].image}`}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -347,7 +347,7 @@ const Message = ({
           ref={index === 0 ? setRef : null}
         >
           <Avatar
-            src={`/imageProfile/${image.ProfileNumber}/${image.imageProfile}`}
+            src={`${API_ENDPOINT}/imageProfile/${image.ProfileNumber}/${image.imageProfile}`}
             style={{ marginRight: 10 }}
           />
 

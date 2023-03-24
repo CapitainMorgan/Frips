@@ -1,12 +1,11 @@
 import React, { useState } from "react";
 
-import { Box, Checkbox, Dialog, Divider, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
+import { Box, Checkbox, ClickAwayListener, Dialog, Divider, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import { arraySize, renderArraySize } from "../staticItems/staticItemName";
 
 import CloseIcon from "@material-ui/icons/Close";
-import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyle = makeStyles((theme) => ({
   checkBox: {
@@ -21,8 +20,8 @@ const useStyle = makeStyles((theme) => ({
     fontSize: 16,
   },
   Dialog: {
-    width: 300,
-    height: "auto",
+    width: "80vw",
+    height: "80vh",
   },
 }));
 
@@ -30,6 +29,8 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
   const classes = useStyle();
   const [anchorEl, setAnchorEl] = useState(null);
   const [id,subId]= size
+
+
 
   
   const renderedStateClothes = arraySize[id]?.subitems[subId]?.subitems.map(

@@ -1,11 +1,23 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { conversation: { type: "file", filename: "conversation.log" } },
+  categories: { default: { appenders: ["conversation"], level: "error" } },
+});
+var logger = log4js.getLogger("conversation");
 
 const { PrismaClient } = require("@prisma/client");
-
+const _ = require("lodash");
+const { sendEmail } = require("../email/sendEmail");
 const { account, item, chat, message, pricepropose } = new PrismaClient();
 
+/**
+ * @route   POST api/conversation
+ * @desc    get conversation
+ * @acces   Private (need token)
+ */
 router.post("/", auth, async (req, res) => {
   let id_item = parseInt(req.body.id);
   const { id } = req.user;
@@ -13,7 +25,7 @@ router.post("/", auth, async (req, res) => {
   try {
     const id_Receiver = await item.findUnique({
       where: {
-        id: parseInt(id_item),
+        id: id_item,
       },
       select: {
         account: {
@@ -110,23 +122,33 @@ router.post("/", auth, async (req, res) => {
         message: create.message,
         id: create.id,
       };
-
+      logger.info(
+        "Conversation created between " +
+          id +
+          " and " +
+          id_Receiver.account.id +
+          ""
+      );
       res.status(200).json(test);
     }
   } catch (error) {
+    logger.error("POST /conversation" + error);
     res.status(500).send("Serveur error");
   }
 });
 
+/**
+ * @route   POST api/conversation/myConversation
+ * @desc    get new message
+ */
 router.post("/myConversation/newMessage", auth, async (req, res) => {
   const id_Chat = req.body.chat_id;
   const text = req.body.Text;
   const { id } = req.user;
   const { id_Item } = req.body;
   const PricePropose = req.body.Price;
-  console.log(pricepropose);
-  console.log(id_Item);
-  console.log(req.body);
+  const { id_Receiver } = req.body;
+
   try {
     if (id_Item && PricePropose) {
       const { message: newMessage } = await chat.findUnique({
@@ -144,6 +166,7 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
                     },
                   },
                 },
+                id: id_Item,
               },
             },
           },
@@ -153,7 +176,6 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
       if (newMessage.length > 0) {
         res.sendStatus(403);
       } else {
-        console.log("passed");
         await pricepropose.upsert({
           where: {
             id_Account_id_Item: {
@@ -185,10 +207,23 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
             id_Item: Boolean(id_Item) ? id_Item : null,
           },
         });
-        return res.status(200).json("message send");
+        logger.info(
+          "Message (PricePropose) send between " +
+            id +
+            " and " +
+            id_Receiver +
+            ""
+        );
+        res.status(200).json("message send");
+        await sendEmail(id_Receiver, "NewMessage", {
+          id_Sender: id,
+          id_Item: id_Item,
+          pricepropose: PricePropose,
+          id_Chat,
+        });
       }
     } else {
-      const msg = await message.create({
+      await message.create({
         data: {
           Unread: true,
           Text: text,
@@ -199,10 +234,14 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
           id_Item: Boolean(id_Item) ? id_Item : null,
         },
       });
+
+      logger.info("Message send between " + id + " and " + id_Receiver + "");
       res.status(200).json("message send");
+      await sendEmail(id_Receiver, "NewMessage",{id_Sender:id,id_Chat});
+
     }
   } catch (error) {
-    console.log(error);
+    logger.error("POST /conversation/myConversation/newMessage" + error);
     res.status(500).send("Serveur error");
   }
 });
@@ -221,10 +260,12 @@ router.put("/updateMessage", auth, async (req, res) => {
         Unread: false,
       },
     });
-
+    logger.info(
+      "Message read between " + id + " and " + id_Chat + "by " + id + ""
+    );
     res.status(200).json("Messages updates");
   } catch (error) {
-    console.log(error);
+    logger.error("PUT /conversation/updateMessage" + error);
     res.status(500).json("Serveur Error");
   }
 });
@@ -247,9 +288,26 @@ router.get("/unReadNotification", auth, async (req, res) => {
         id: true,
       },
     });
-    res.status(200).json(conversation);
+
+    const resultsSell = await item.findMany({
+      where: {
+        id_Seller: id,
+        transaction: {
+          some: {
+            DateSend: {
+              equals: null,
+            },
+          },
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    res.status(200).json({ conversation, resultsSell });
   } catch (error) {
-    console.log(error);
+    logger.error("GET /conversation/unReadNotification" + error);
     res.status(500).json("Serveur Erreur");
   }
 });
@@ -275,110 +333,157 @@ router.get("/MyConversation/lastMessage/:id", auth, async (req, res) => {
 
     res.status(200).json(test);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /conversation/MyConversation/lastMessage/:id" + error);
     res.status(500).send("Serveur error");
   }
 });
 
 router.get("/MyConversation/:id", auth, async (req, res) => {
   const { id } = req.params;
-  console.log("conversation");
 
   try {
-    const messageNumber = await message.count({
-      where: {
-        id_Chat: parseInt(id),
-      },
-    });
-
-    const conv = await chat.findUnique({
+    const convExist = await chat.findMany({
       where: {
         id: parseInt(id),
       },
       select: {
-        message: {
-          orderBy: { Date_Houre: "desc" },
-
-          take: 20,
-          include: {
-            item: {
-              select: {
-                image: {
-                  take: 1,
-                },
-                Price: true,
-                id: true,
-                pricepropose: {
-                  select: {
-                    Price: true,
-                    id_Account: true,
-                    dateApprove: true,
-                    Approve: true,
-                    id_Item: true,
-                    SendDate: true,
-                  },
-                  orderBy: {
-                    Price: "desc",
-                  },
-                  take: 1,
-                },
-              },
-            },
-          },
-        },
-        account_accountTochat_id_Account_2: {
-          select: {
-            Pseudo: true,
-            id: true,
-            image: {
-              select: {
-                image: true,
-              },
-            },
-          },
-        },
-        account_accountTochat_id_Account_1: {
-          select: {
-            Pseudo: true,
-            id: true,
-            image: {
-              select: {
-                image: true,
-              },
-            },
-          },
-        },
+        id_Account_1: true,
+        id_Account_2: true,
       },
     });
 
-    const data = {
-      Profile: {
-        id: conv.account_accountTochat_id_Account_1.id,
-        Pseudo: conv.account_accountTochat_id_Account_1.Pseudo,
-        image: conv.account_accountTochat_id_Account_1.image?.image,
-      },
-      Profile1: {
-        id: conv.account_accountTochat_id_Account_2.id,
-        Pseudo: conv.account_accountTochat_id_Account_2.Pseudo,
-        image: conv.account_accountTochat_id_Account_2.image?.image,
-      },
+    if (
+      convExist[0]?.id_Account_1 !== req.user.id &&
+      convExist[0]?.id_Account_2 !== req.user.id
+    ) {
+      logger.warn(
+        "GET /conversation/MyConversation/:id" +
+          "Unauthorized by " +
+          req.user.id +
+          ""
+      );
+      res.status(400);
+    } else {
+      const messageNumber = await message.count({
+        where: {
+          id_Chat: parseInt(id),
+        },
+      });
 
-      message: conv.message,
+      const conv = await chat.findUnique({
+        where: {
+          id: parseInt(id),
+        },
+        select: {
+          message: {
+            orderBy: { Date_Houre: "desc" },
 
-      messageNumber,
-    };
+            take: 20,
+            include: {
+              item: {
+                select: {
+                  image: {
+                    take: 1,
+                  },
+                  Price: true,
+                  id: true,
+                  pricepropose: {
+                    select: {
+                      Price: true,
+                      id_Account: true,
+                      dateApprove: true,
+                      Approve: true,
+                      id_Item: true,
+                      SendDate: true,
+                    },
+                    orderBy: {
+                      Price: "desc",
+                    },
+                    take: 1,
+                  },
+                },
+              },
+            },
+          },
+          account_accountTochat_id_Account_2: {
+            select: {
+              Pseudo: true,
+              id: true,
+              image: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+          account_accountTochat_id_Account_1: {
+            select: {
+              Pseudo: true,
+              id: true,
+              image: {
+                select: {
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      });
 
-    res.status(200).json(data);
+      const data = {
+        Profile: {
+          id: conv.account_accountTochat_id_Account_1.id,
+          Pseudo: conv.account_accountTochat_id_Account_1.Pseudo,
+          image: conv.account_accountTochat_id_Account_1.image?.image,
+        },
+        Profile1: {
+          id: conv.account_accountTochat_id_Account_2.id,
+          Pseudo: conv.account_accountTochat_id_Account_2.Pseudo,
+          image: conv.account_accountTochat_id_Account_2.image?.image,
+        },
+
+        message: conv.message,
+
+        messageNumber,
+      };
+      logger.info(
+        "GET /conversation/MyConversation/:id" + "by " + req.user.id + ""
+      );
+      res.status(200).json(data);
+    }
   } catch (error) {
-    console.log(error);
+    logger.error("GET /conversation/MyConversation/:id" + error);
     res.status(500).send("Serveur error");
   }
 });
+
 router.post("/MyConversation/:id", auth, async (req, res) => {
   const { id } = req.params;
   const { number } = req.body;
 
   try {
+    const isUserInConv = await chat.findMany({
+      where: {
+        id: parseInt(id),
+        OR: [
+          {
+            id_Account_1: req.user.id,
+            id_Account_2: req.user.id,
+          },
+        ],
+      },
+    });
+
+    if (isUserInConv.length === 0) {
+      logger.warn(
+        "POST /conversation/MyConversation/:id" +
+          "Unauthorized by " +
+          req.user.id +
+          ""
+      );
+      res.status(400);
+    }
+
     const conv = await chat.findUnique({
       where: {
         id: parseInt(id),
@@ -417,10 +522,9 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
     const convMessage = {
       message: conv.message,
     };
-
     res.status(200).json(convMessage);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /conversation/MyConversation/:id" + error);
     res.status(500).send("Serveur error");
   }
 });
@@ -465,6 +569,7 @@ router.get("/myConversation", auth, async (req, res) => {
         ],
       },
     });
+
     let myConversation = await chat.findMany({
       where: {
         OR: [
@@ -504,9 +609,11 @@ router.get("/myConversation", auth, async (req, res) => {
       select: {
         message: {
           take: 1,
-          orderBy: {
-            Date_Houre: "desc",
-          },
+          orderBy: [
+            {
+              Date_Houre: "desc",
+            },
+          ],
         },
 
         id: true,
@@ -515,19 +622,47 @@ router.get("/myConversation", auth, async (req, res) => {
           select: {
             Pseudo: true,
             id: true,
+            image: {
+              select: {
+                image: true,
+              },
+            },
           },
         },
         account_accountTochat_id_Account_1: {
           select: {
             Pseudo: true,
             id: true,
+            image: {
+              select: {
+                image: true,
+              },
+            },
           },
         },
       },
     });
-    res.status(200).json({ myConversation, count });
+
+    const unreadMessages = myConversation.filter((m) => {
+      return m.message[0].Unread && m.message[0].id_Sender !== id;
+    });
+    const readMessages = myConversation.filter((m) => {
+      return !m.message[0].Unread || m.message[0].id_Sender === id;
+    });
+
+    const sortedUnreadMessages = unreadMessages.sort(
+      (a, b) =>
+        new Date(b.message[0].Date_Houre) - new Date(a.message[0].Date_Houre)
+    );
+    const sortedReadMessages = readMessages.sort(
+      (a, b) =>
+        new Date(b.message[0].Date_Houre) - new Date(a.message[0].Date_Houre)
+    );
+    const sortedMessages = [...sortedUnreadMessages, ...sortedReadMessages];
+
+    res.status(200).json({ myConversation: sortedMessages, count });
   } catch (error) {
-    console.log(error);
+    logger.error("GET /conversation/myConversation" + error);
     res.status(500).send("Serveur error : conversation");
   }
 });

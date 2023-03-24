@@ -1,8 +1,16 @@
 import {
-    AUTH_ERROR, CHANGE_ADDRESS, IMAGE_CHANGE, LOGIN_FAIL,
-    LOGIN_SUCCES,
-    LOGOUT, REGISTER_FAILURE,
-    REGISTER_SUCCESS, RESET_ERROR, SOCKET, USER_LOADED
+  AUTH_ERROR,
+  CHANGE_ADDRESS,
+  CHANGE_IBAN,
+  IMAGE_CHANGE,
+  LOGIN_FAIL,
+  LOGIN_SUCCES,
+  LOGOUT,
+  REGISTER_FAILURE,
+  REGISTER_SUCCESS,
+  RESET_ERROR,
+  SOCKET,
+  USER_LOADED,
 } from "../actions/type";
 
 const initialState = {
@@ -26,7 +34,7 @@ export default (state = initialState, action) => {
         error: null,
         user: payload,
       };
-    
+
     case REGISTER_SUCCESS:
     case LOGIN_SUCCES:
       localStorage.setItem("token", payload.token);
@@ -61,32 +69,41 @@ export default (state = initialState, action) => {
     case IMAGE_CHANGE:
       return {
         ...state,
-        user:{
+        user: {
           ...state.user,
-          image:{
-            image:payload
-          }
-        }
-      }  
-      case CHANGE_ADDRESS:
+          image: {
+            image: payload,
+          },
+        },
+      };
+    case CHANGE_ADDRESS:
       return {
         ...state,
-        user:{
+        user: {
           ...state.user,
-          address:payload
-        }
-      }  
+          address: payload.newAddress,
+          Firstname: payload.Firstname,
+          Lastname: payload.Lastname,
+        },
+      };
     case SOCKET:
       return {
         ...state,
         socket: payload,
       };
-
-      case RESET_ERROR:
-        return {
-          ...state,
-          error:null
-        }
+    case CHANGE_IBAN:
+      return {
+        ...state,
+        user: {
+          ...state.user,
+          IBAN: payload,
+        },
+      };
+    case RESET_ERROR:
+      return {
+        ...state,
+        error: null,
+      };
 
     default:
       return state;

@@ -3,19 +3,15 @@ import {
   Box,
   Button,
   Dialog,
-  Divider,
-  Input,
-  makeStyles,
-  MenuItem,
-  Select,
-  Slider,
-  Typography,
+  Divider, makeStyles, Slider,
+  Typography
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useEffect, useRef, useState } from "react";
 import ReactAvatarEditor from "react-avatar-editor";
 import { useDispatch, useSelector } from "react-redux";
 import { changeImageProfile } from "../../actions";
+import API_ENDPOINT from "../../api/url";
 import ModalAdress from "./ModalAdress";
 
 const useStyles = makeStyles((theme) => ({
@@ -69,11 +65,12 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     display: "flex",
     flexDirection: "column",
-    padding: 5,
+    padding: 15,
 
     [theme.breakpoints.down("sm")]: {
       height: "80vh",
       width: "auto",
+      padding: 5,
     },
   },
   formContainer: {
@@ -91,7 +88,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const transformIBAN = (string) => {
-  if(!string)return ""
+  if (!string) return "";
   let spacedString = "";
   for (let i = 0; i < string.length; i += 4) {
     spacedString += string.substr(i, 4) + " ";
@@ -103,7 +100,6 @@ const UserProfile = () => {
   const editor = useRef(null);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [canton, setCanton] = useState("");
   const [openChange, setOpenChange] = useState(false);
   const state = useSelector((state) => state.auth.user);
 
@@ -138,7 +134,6 @@ const UserProfile = () => {
   }, []);
 
   const handleScale = (e, value) => {
-    console.log(value);
     const scale = parseFloat(value);
     setSelectedImage({ ...selectedImage, scale: scale });
   };
@@ -181,7 +176,7 @@ const UserProfile = () => {
             className={classes.MenuSetting}
           >
             <Typography className={classes.Header}>
-              Détails du profile
+              Détails du profil
             </Typography>
           </Box>
           <Box padding={2} className={classes.FormLittleBox}>
@@ -199,7 +194,7 @@ const UserProfile = () => {
                   boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
                 }}
                 alt={`${state.Pseudo}`}
-                src={`/imageProfile/${state.id}/${state.image?.image}`}
+                src={`${API_ENDPOINT}/imageProfile/${state.id}/${state.image?.image}`}
               />
 
               <Button
@@ -282,7 +277,6 @@ const UserProfile = () => {
                           style={{ width: "100%" }}
                           onClick={() => {
                             const canvas = editor.current.getImage();
-                            console.log(editor.current);
 
                             canvas.toBlob(function (blob) {
                               const file = new File(
@@ -336,21 +330,6 @@ const UserProfile = () => {
             </Box>
           </Box>
           <Divider />
-          <Box className={classes.FormLittleBox} padding={2}>
-            <Box className={classes.SubFormLittleBox}>
-              <Box padding={3}>
-                <Typography>Mot de passe</Typography>
-              </Box>
-            </Box>
-
-            <Box className={classes.SubFormLittleBox} justifyContent="flex-end">
-              <Button variant="contained" color="primary">
-                Changer
-              </Button>
-            </Box>
-          </Box>
-
-          <Divider />
 
           <Box className={classes.FormLittleBox} padding={2}>
             <Box className={classes.SubFormLittleBox}>
@@ -358,9 +337,7 @@ const UserProfile = () => {
                 <Typography>IBAN</Typography>
               </Box>
               <Box padding={3} display="flex">
-                <Typography>
-                  {transformIBAN(state?.IBAN)}
-                </Typography>
+                <Typography>{transformIBAN(state?.IBAN)}</Typography>
               </Box>
             </Box>
 
@@ -386,18 +363,21 @@ const UserProfile = () => {
             </Typography>
           </Box>
 
-          <Box className={classes.FormLittleBox} padding={2}>
+          <Box className={classes.FormLittleBox} padding={5}>
             <Box className={classes.SubFormLittleBox}>
-              <Box padding={3} display="flex">
+              <Box padding={3} display="flex" justifyContent={"center"}>
                 <Typography style={{ paddingRight: 5 }}>Adresse</Typography>
               </Box>
               <Box display={"flex"} flexDirection="column" flexGrow={1}>
+                <Typography
+                  style={{ fontSize: 16, fontWeight: 600 }}
+                >{`${state?.Firstname} ${state?.Lastname}`}</Typography>
                 <Typography
                   style={{ fontSize: 16 }}
                 >{`${state?.address?.Street} ${state?.address?.NumStreet}`}</Typography>
                 <Typography
                   style={{ fontSize: 16 }}
-                >{`${state?.address?.NPA} ${state?.address?.City}`}</Typography>
+                >{`${state?.address?.City} ${state?.address?.NPA}`}</Typography>
               </Box>
             </Box>
 
@@ -415,6 +395,8 @@ const UserProfile = () => {
             open={open}
             classes={classes}
             address={state?.address}
+            Firstname={state?.Firstname}
+            Lastname={state?.Lastname}
             handleClose={handleClose}
           />
         </Box>

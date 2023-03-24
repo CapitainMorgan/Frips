@@ -5,6 +5,7 @@ import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import React from "react";
 
 import CloseIcon from "@material-ui/icons/Close";
+import API_ENDPOINT from "../../../api/url";
 
 const useStyles = makeStyles((theme) => ({
   Dialog: {
@@ -29,8 +30,7 @@ const DialogPreviewProduct = ({
   if (!images[0].image) {
     return null;
   }
-  console.log(index);
-  console.log(open);
+
   return (
     <div>
       <Dialog open={open}>
@@ -79,7 +79,6 @@ const DialogPreviewProduct = ({
               style={{ backgroundColor: "transparent", color: "white" }}
               onClick={() => {
                 if (index === 0) {
-                  console.log(index);
                   setIndex(images.length - 1);
                 } else {
                   setIndex(index - 1);
@@ -92,7 +91,8 @@ const DialogPreviewProduct = ({
           </Box>
 
           <img
-            src={`/images/${images[0].id_Item}/${images[index].image}`}
+            alt={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
+            src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
             style={{ width: "100%", height: "100%", objectFit: "cover" }}
           ></img>
         </Box>

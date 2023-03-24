@@ -5,6 +5,7 @@ import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import API_ENDPOINT from "../../api/url";
 
 const useStyles = makeStyles((theme) => ({
   progressBarStyle: {
@@ -18,7 +19,6 @@ const clearWaitingQueue = () => {
 };
 
 const notify = (notification) => {
-  console.log(notification);
   toast.info(
     <Box fontSize={16} display="flex" alignItems={"center"}>
       <Box
@@ -28,14 +28,14 @@ const notify = (notification) => {
         justifyContent={"center"}
       >
         <Avatar
-          alt={`${notification.Pseudo}`}
-          src={`/imageProfile/${notification.id_Sender}/${notification.imageSender?.image}`}
+          alt={`${API_ENDPOINT}/${notification.Pseudo}`}
+          src={`${API_ENDPOINT}/imageProfile/${notification.id_Sender}/${notification.imageSender?.image}`}
         />
       </Box>
 
       <Box width={"100%"} justifyContent={"center"} display="flex">
         <Typography>
-          {`Pseudo t'as envoyé un nouveau `}
+          {`${notification.Pseudo} t'as envoyé un nouveau `}
           <Link
             to={`/member/message/${notification.id_Chat}`}
             style={{ color: "#82A0C2" }}
@@ -48,19 +48,18 @@ const notify = (notification) => {
   );
 };
 
-const NotificationComponent = ({ notification }) => {
+const NotificationComponent = ({ notification ,mobile}) => {
   const classes = useStyles();
-  console.log(notification);
 
   useEffect(() => {
-    if (notification !== null) {
+    if (notification !== null &&!mobile) {
       notify(notification);
     }
   }, [notification]);
   return (
     <div>
       <ToastContainer
-        autoClose={2000}
+        autoClose={false}
         newestOnTop={true}
         style={{
           width: "30%",

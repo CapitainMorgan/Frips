@@ -1,6 +1,7 @@
 import {
   alpha,
   Box,
+  ClickAwayListener,
   MenuItem,
   Popper,
   Typography
@@ -13,7 +14,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addFilterFromSearch, getInfoSearch } from "../../actions";
-import ClickAwayListener from "../SpecialComponent/ClickAwayListener";
 const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
@@ -48,17 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/* let regex;
-const filterArray = subArray.filter((el, index) => {
-  return array2.some((filter) => {
-    regex = new RegExp(`\\b${filter}`, "i");
 
-    return regex.test(el.Name);
-  });
-})
-console.log(filterArray)
-console.log(matchSorter(filterArray,))
-return filterArray*/
+
 const options = {
   includeScore: true,
   keys: ["Name"],
@@ -79,7 +70,6 @@ const WOMAN_ID = { Name: "Femme", id: 1 };
 const MAN_ID = { Name: "Homme", id: 101 };
 
 const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
-  console.log(arrays);
 
   const [arrayBrand, arrayCategory] = arrays;
   const suggestionArray = [];
@@ -116,6 +106,8 @@ const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
   }
 
   suggestionArray.push(`rechercher "${currentText}"`);
+
+
 
   return suggestionArray;
 };
@@ -205,9 +197,6 @@ const Search = ({ SearchInfo, loading ,loadingFilter}) => {
         <SearchIcon />
       </div>
         <InputBase
-          onClick={() => {
-            console.log(term);
-          }}
           ref={menuRef}
           spellCheck="false"
           style={{ zIndex: 1400 }}

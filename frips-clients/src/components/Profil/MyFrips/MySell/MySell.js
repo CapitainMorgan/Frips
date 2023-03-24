@@ -15,6 +15,7 @@ import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { changeMyFripsPagination, fetchMyfrips } from "../../../../actions";
 import { FETCH_MYSELL } from "../../../../actions/type";
+import API_ENDPOINT from "../../../../api/url";
 import MyPaginate from "../../../Footer/PaginationComponent";
 import DeliveryStep from "./DeliveryStep";
 
@@ -73,14 +74,26 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 8,
     },
   },
+  
   delivery: {
     display: "flex",
-
     [theme.breakpoints.down("sm")]: {
       display: "flex",
       flexDirection: "column",
+      width: "100%",
     },
   },
+  deliveryCategory: {
+    display: "flex",
+    flexDirection: "column",
+    width: "50%",
+    maxWidth: "50%",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+
+    },
+  },
+
   send: {
     display: "flex",
     alignItems: "center",
@@ -95,7 +108,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const renderDeliveryStep = ({ DateSend }, classes) => {
+const renderDeliveryStep = ({ DateSend, review }, classes) => {
   if (!DateSend) {
     return (
       <Badge className={classes.menus} overlap="circle">
@@ -106,18 +119,51 @@ const renderDeliveryStep = ({ DateSend }, classes) => {
         </Box>
       </Badge>
     );
+  }
+
+  if (DateSend && Boolean(review[0]?.Note)) {
+    return (
+      <Typography
+        style={{
+          borderRadius: 5,
+          padding: 5,
+          fontSize: 16,
+          border: "1px solid rgb(80, 220, 100)",
+          backgroundColor: "rgba(80, 220, 100,0.2)",
+        }}
+      >
+        Terminé
+      </Typography>
+    );
   } else {
     return (
-      <Typography component="span" color="inherit">
-        Laisser une Review
+      <Typography
+        style={{
+          borderRadius: 5,
+          padding: 5,
+          fontSize: 18,
+        }}
+      >
+        Laisser une review
       </Typography>
     );
   }
 };
 
-const renderedItem = (classes, state, history) => {
+const typeOfDelivery = (price) => {
+  if (price === 7) {
+    return "Livraison Poste Standard";
+  }
+  if (price === 9) {
+    return "Livraison Poste Rapide";
+  }
+  return "Livraison en main-propre";
+};
+
+const renderedItem = (classes, state, history, dispatch) => {
   return state.map((item, index) => {
     const { account } = item;
+    const { buyerAccount } = item;
     return (
       <Box
         width={"100%"}
@@ -138,7 +184,7 @@ const renderedItem = (classes, state, history) => {
               >
                 <img
                   alt={state[index].image[0].id_Item}
-                  src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                  src={`${API_ENDPOINT}/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
                   style={{
                     width: "100%",
                     height: "100%",
@@ -150,10 +196,7 @@ const renderedItem = (classes, state, history) => {
 
             <Box padding={2} className={classes.details}>
               <Typography style={{ wordBreak: "break-word" }} color="primary">
-                {item.Name}
-              </Typography>
-              <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                {item.Price} CHF
+                {item?.Name}
               </Typography>
             </Box>
 
@@ -162,7 +205,7 @@ const renderedItem = (classes, state, history) => {
 
               <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 15 }}>
-                  {account.Pseudo}
+                  {account?.Pseudo}
                 </Typography>
               </Box>
             </Box>
@@ -173,7 +216,7 @@ const renderedItem = (classes, state, history) => {
               </Typography>
 
               <Box flexGrow={1} className={classes.menus}>
-                <Typography>{"dsa"}</Typography>
+                <Typography>{typeOfDelivery(item.DeliveryPrice)}</Typography>
               </Box>
             </Box>
             <Box className={classes.menus}>
@@ -181,7 +224,7 @@ const renderedItem = (classes, state, history) => {
 
               <Box flexGrow={1} className={classes.menus}>
                 <Typography style={{ fontSize: 16, fontWeight: 600 }}>
-                  {item.Price}
+                  {item.Price} CHF
                 </Typography>
               </Box>
             </Box>
@@ -199,6 +242,7 @@ const renderedItem = (classes, state, history) => {
             item={item}
             id={item.id}
             account={account}
+            buyerAccount={buyerAccount}
           />
         </Card>
       </Box>
@@ -231,6 +275,7 @@ const MySell = ({
       dispatch({ type: "RESET_FILTER_MYFRIPS" });
     };
   }, [dispatch]);
+
   useEffect(() => {
     if (!loading && items.length === 0 && Boolean(count)) {
       dispatch(fetchMyfrips(`/api/members/mySell`, FETCH_MYSELL));
@@ -311,6 +356,7 @@ const mapStateToProps = (state) => ({
   filterMyFrips: state.myFrips.filter,
   count: state.myFrips.count,
   msg: state.myFrips.msg,
+  myaccount: state.auth.user,
 });
 
 export default connect(mapStateToProps)(MySell);

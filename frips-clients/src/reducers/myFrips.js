@@ -4,12 +4,15 @@ import {
   CHANGE_PAGINATION_MYFRIPS,
   DELIVERY,
   FETCH_MYFRIPS,
+  FETCH_MYPROPOSITIONID,
   FETCH_MYPURCHASE,
   FETCH_MYSELL,
+  FETCH_MYSELLBYID,
   FETCH_PROPOSITION,
   GET_NOTIFICATION,
   LOADING_MYFRIPS,
   RECEIVED,
+  REMOVE_ITEM,
   REMOVE_NOTIFICATION_MYFRIPS,
   RESET_FILTER_MYFRIPS,
   REVIEW,
@@ -22,10 +25,15 @@ const initialValues = {
   items: [],
   delivery: [],
   proposition: [],
+  propositionId:null,
   sell: [],
+  sellId:null,
+  item: null,
   purchase: [],
+  purchaseId:null,
   filter: [],
   sellNotification: [],
+  purchaseNotification: [],
   propositionNotification: [],
   pagination: 1,
   msg: "",
@@ -41,20 +49,48 @@ export default (state = initialValues, action) => {
         ...state,
         items: payload.items,
         count: payload.count,
+        msg: payload.msg,
+      };
+    case FETCH_MYSELLBYID:
+      return {
+        ...state,
+        item: {
+          id_transaction: payload.id,
+          ...payload.item,
+          DateSell: new Date(payload.DateSell),
+          DateSend: payload.DateSend,
+
+          Price: payload.Price,
+          Price_Fees: payload.item.Price - payload.Price,
+          review: payload.review,
+          buyerAccount: payload.account,
+          Status: payload.Status,
+        },
       };
 
     case FETCH_MYSELL:
       const sellArray = payload.items.map(
-        ({ item, DateSell, DateSend, account, Price, Status, id, review }) => ({
+        ({
+          item,
+          DateSell,
+          DateSend,
+          account,
+          Price,
+          Status,
+          id,
+          review,
+          DeliveryPrice,
+          TaxPrice,
+        }) => ({
           id_transaction: id,
           ...item,
           DateSell: new Date(DateSell),
           DateSend: DateSend,
-          account,
+          DeliveryPrice,
           Price: item.Price,
-          Price_Fees: Price - item.Price,
+          Price_Fees: TaxPrice,
           review,
-
+          buyerAccount: account,
           Status,
         })
       );
@@ -64,18 +100,39 @@ export default (state = initialValues, action) => {
         count: payload.count,
         msg: payload.msg,
       };
+    case REMOVE_ITEM:
+      const filterArray = state.items.filter((item)=>{
+        return item.id !== payload
+      })
+
+      return {
+        ...state,
+        items:[...filterArray]
+      }
+     
     case FETCH_MYPURCHASE:
       const purchaseArray = payload.items.map(
-        ({ item, DateSell, DateSend, account, Price, Status, id, review }) => ({
+        ({
+          item,
+          DateSell,
+          DateSend,
+          account,
+          Price,
+          Status,
+          id,
+          review,
+          DeliveryPrice,
+          TaxPrice,
+        }) => ({
           id_transaction: id,
           ...item,
           DateSell: new Date(DateSell),
           DateSend: DateSend,
-          review,
-
-          account,
+          DeliveryPrice,
           Price: item.Price,
-          Price_Fees: Price - item.Price,
+          Price_Fees: TaxPrice,
+          review,
+          buyerAccount: account,
           Status,
         })
       );
@@ -111,6 +168,20 @@ export default (state = initialValues, action) => {
         proposition: [...propositionArray],
         count: payload.count,
       };
+
+      case FETCH_MYPROPOSITIONID:
+        return {
+          ...state,
+          propositionId:{
+            ...payload.item,
+          pricepropose: payload.Price,
+          dateApprove:payload.dateApprove,
+          SendDate:payload.SendDate,
+          id_Account:payload.id_Account,
+          review:payload.review,
+          Approve:payload.Approve,
+          }
+        }
     case CHANGE_PAGINATION_MYFRIPS:
       return {
         ...state,
@@ -142,21 +213,22 @@ export default (state = initialValues, action) => {
         };
       }
     case REMOVE_NOTIFICATION_MYFRIPS:
-      if (_.includes(state.propositionNotification, payload)) {
-        const removedItems = _.remove(state.propositionNotification, (id) => {
-          return id !== payload;
+      if (_.find(state[payload.obj], { id: payload.id })) {
+        const removedItems = _.remove(state[payload.obj], (item) => {
+          return item.id !== payload.id;
         });
         return {
           ...state,
-          propositionNotification: [...removedItems],
+          [payload.obj]: [...removedItems],
         };
       }
     // eslint-disable-next-line no-fallthrough
     case GET_NOTIFICATION:
       return {
         ...state,
-        propositionNotification: [...payload.resultsProposition],
-        sellNotification: [...payload.resultsSell],
+        propositionNotification: [...payload?.resultsProposition],
+        sellNotification: [...payload?.resultsSell],
+        purchaseNotifcation: [...payload?.resultsPurchase],
       };
     case STATUS_PROPOSITION:
       return {
@@ -173,22 +245,26 @@ export default (state = initialValues, action) => {
       };
 
     case DELIVERY:
+
       const updatedData = state.sell.map((item) => {
         if (item.id === payload) {
           return { ...item, DateSend: new Date() };
         }
         return item;
       });
-
+      const sellNotif = state.sellNotification.filter(item =>{
+        return item.id !== payload
+      })
       return {
         ...state,
         sell: [...updatedData],
+        sellNotification:[...sellNotif]
       };
 
     case RECEIVED:
-      const updatedDataReceived = state.sell.map((item) => {
+      const updatedDataReceived = state.purchase.map((item) => {
         if (item.id === payload) {
-          return { ...item, Status: "envoyé" };
+          return { ...item, Status: "reçu" };
         }
         return item;
       });

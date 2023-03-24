@@ -1,12 +1,13 @@
 import {
-    Box,
-    CircularProgress,
-    makeStyles,
-    Typography
+  Box,
+  CircularProgress,
+  makeStyles,
+  Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
+import API_ENDPOINT from "../../../api/url";
 import DialogPreviewProduct from "./DialogProductPreview";
 const useStyles = makeStyles((theme) => ({
   floatContentInfomrationdiv: {
@@ -56,7 +57,9 @@ const gridImage = (images, handleClickOpen, setIndex, classes) => {
           }}
         >
           <img
-            src={`/images/${images[0].id_Item}/${images[1].image}`}
+          
+            alt={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[1].image}`}
+            src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[1].image}`}
             className={classes.PointCursorPicture}
           ></img>
         </Box>
@@ -85,7 +88,7 @@ const gridImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
-              src={`/images/${images[0].id_Item}/${images[1].image}`}
+              src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[1].image}`}
               style={{
                 width: "100%",
                 height: "100%",
@@ -104,7 +107,7 @@ const gridImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
-              src={`/images/${images[0].id_Item}/${images[2].image}`}
+              src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[2].image}`}
               style={{
                 width: "100%",
                 height: "100%",
@@ -123,7 +126,7 @@ const gridImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
-              src={`/images/${images[0].id_Item}/${images[3].image}`}
+              src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[3].image}`}
               style={{
                 width: "100%",
                 height: "100%",
@@ -166,7 +169,7 @@ const MapReceivedImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
-              src={`/images/${images[0].id_Item}/${images[index].image}`}
+              src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
               className={classes.PointCursorPicture}
             ></img>
           </Box>
@@ -182,7 +185,7 @@ const MapReceivedImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
-              src={`/images/${images[0].id_Item}/${images[index].image}`}
+              src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
               className={classes.PointCursorPicture}
             ></img>
           </Box>
@@ -204,9 +207,9 @@ const MapReceivedImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
-            alt={`/images/${images[0].id_Item}/${images[index].image}`}
-            key={`/images/${images[0].id_Item}/${images[index].image}`}
-              src={`/images/${images[0].id_Item}/${images[index].image}`}
+              alt={`/images/${images[0].id_Item}/${images[index].image}`}
+              key={`/images/${images[0].id_Item}/${images[index].image}`}
+              src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
               className={classes.PointCursorPicture}
             ></img>
           </Box>
@@ -231,7 +234,7 @@ const MapReceivedImage = (images, handleClickOpen, setIndex, classes) => {
               alignItems="center"
             >
               <img
-                src={`/images/${images[0].id_Item}/${images[index].image}`}
+                src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
                 className={classes.PointCursorPicture}
                 style={{ opacity: 0.6 }}
               ></img>
@@ -297,7 +300,7 @@ const ImageGalleryPreview = () => {
             paddingRight={"0.7%"}
           >
             <img
-              src={`/images/${images[0].id_Item}/${images[0].image}`}
+              src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[0].image}`}
               className={classes.PointCursorPicture}
             ></img>
           </Box>
@@ -314,7 +317,7 @@ const ImageGalleryPreview = () => {
             paddingRight={"0.7%"}
           >
             <img
-              src={`/images/${images[0].id_Item}/${images[0].image}`}
+              src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[0].image}`}
               className={classes.PointCursorPicture}
             ></img>
           </Box>

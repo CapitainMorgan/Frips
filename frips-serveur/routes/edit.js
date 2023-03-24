@@ -1,6 +1,13 @@
 const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { edit: { type: "file", filename: "edit.log" } },
+  categories: { default: { appenders: ["edit"], level: "error" } },
+});
+const sharp = require("sharp")
+var logger = log4js.getLogger("edit");
 
 const { PrismaClient } = require("@prisma/client");
 const multer = require("multer");
@@ -9,12 +16,6 @@ const {
   item,
   account,
   image,
-  favorit,
-  item_brand,
-  item_category,
-  item_color,
-  item_fees,
-  itemcondition,
   brand,
 } = new PrismaClient();
 const path = require("path");
@@ -54,7 +55,7 @@ router.get("/:idItem", auth, async (req, res) => {
             },
             item_color: {
               select: {
-                color:true
+                color: true,
               },
             },
             item_category: {
@@ -72,34 +73,13 @@ router.get("/:idItem", auth, async (req, res) => {
       },
     });
 
-    console.log(item[0].item_color[0])
-
     res.status(200).json(item[0]);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /:idItem " + error);
     res.status(500).json("Server error");
   }
 });
 
-const colorLengthFunction = (Color) => {
-  const [firstColor, SecondColor] = Color;
-
-  if (Color.length == 2) {
-    return {
-      id_Color: {
-        set: [
-          { id_Color: parseInt(firstColor) },
-
-          { id_Color: parseInt(SecondColor) },
-        ],
-      },
-    };
-  } else {
-    return {
-      id_Color: parseInt(firstColor),
-    };
-  }
-};
 
 const upload = multer().any();
 
@@ -121,7 +101,6 @@ router.post("/", auth, upload, async (req, res) => {
   if (!Array.isArray(Color)) {
     Color = Array.of(Color);
   }
-
 
   try {
     const ancientItem = await item.findUnique({
@@ -152,7 +131,7 @@ router.post("/", auth, upload, async (req, res) => {
       },
     });
 
-    console.log(    ancientItem.item_fees)
+    console.log(ancientItem.item_fees);
     const exist = await brand.upsert({
       where: {
         Name: Brand,
@@ -213,24 +192,21 @@ router.post("/", auth, upload, async (req, res) => {
             };
           }),
         },
-      item_fees:{
-        deleteMany:{},
-        create:Delivery.map((id_Fees) => {
-          return {
-            fees: {
-              connect: {
-                id: parseInt(id_Fees),
+        item_fees: {
+          deleteMany: {},
+          create: Delivery.map((id_Fees) => {
+            return {
+              fees: {
+                connect: {
+                  id: parseInt(id_Fees),
+                },
               },
-            },
-          };
-        }),
+            };
+          }),
+        },
       },
-     
-      
-    }
-
     });
-   
+
     let pathDir = `public/images/${Item.id}`;
 
     fs.readdir(pathDir, (err, files) => {
@@ -249,27 +225,29 @@ router.post("/", auth, upload, async (req, res) => {
     });
     for (let index = 0; index < req.files.length; index++) {
       let id = nanoid();
-      fs.writeFileSync(
-        path.join(
-          "./",
-          pathDir,
-          `${id}` + path.extname(req.files[index].originalname)
-        ),
-        req.files[index].buffer,
-        "UTF8"
+        fs.writeFileSync(
+          path.join("./", pathDir, `${id}` + ".jpeg"),
+          await sharp(req.files[index].buffer)
+            .resize({ width: 1000, height: 1000 })
+            .jpeg({ quality: 75 })
+            .toBuffer()
+        
       );
+      
       await image.create({
         data: {
           id_Item: Item.id,
+
           confidencial: false,
-          image: `${id}` + path.extname(req.files[index].originalname),
+
+          image: `${id}` + ".jpeg",
         },
       });
     }
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("POST / " + error);
     res.status(500).json("Server error");
   }
 });

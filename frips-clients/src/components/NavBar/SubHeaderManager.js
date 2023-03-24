@@ -36,11 +36,14 @@ const SubHeaderManager = () => {
       
     >
       <SubHeaderNavigation
-        category={1}
+        category={0}
+        name={"Femme"}
+
         transformStringToUrl={transformStringToUrl}
       />
       <SubHeaderNavigation
         category={1}
+        name={"Homme"}
         transformStringToUrl={transformStringToUrl}
       />
     </Box>

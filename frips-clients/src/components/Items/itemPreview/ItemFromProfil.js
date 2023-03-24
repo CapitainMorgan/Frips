@@ -7,7 +7,7 @@ import {
   Divider,
   IconButton,
   makeStyles,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -16,7 +16,7 @@ import React, { useMemo } from "react";
 import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addFavorite, removeFavorite } from "../../../actions";
-
+import API_ENDPOINT from "../../../api/url";
 
 const useStyles = makeStyles((theme) => ({
   floatContentInfomrationdiv: {
@@ -40,37 +40,42 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const renderedItem = (state, classes, favorite, dispatch, navigate,number) => {
+const renderedItem = (state, classes, favorite, dispatch, navigate, number) => {
   return state?.map((item, index) => {
     let category = item?.item_category[0]?.category?.Name;
     return (
       <Box width={"100%"} height={"100%"} padding={1} key={index}>
         <Card className={classes.BoxOneItem}>
-          <CardHeader
-            avatar={
-              <IconButton onClick={()=>{
+          <Box
+            display={"flex"}
+            alignItems="center"
+            
+            marginBottom={2}
+            width="100%"
+          >
+            <IconButton
+              onClick={() => {
                 navigate(`/member/${item.account.Pseudo}`);
+              }}
+            >
+              <Avatar
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                  cursor: "pointer",
+                }}
+                alt={`${item.account.Pseudo}`}
+                src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+              />
+            </IconButton>
+            <Typography
+              style={{
+                wordBreak:"break-all"
+              }}
+            >
+              {item.account.Pseudo}
+            </Typography>
+          </Box>
 
-              }}>
-                <Avatar
-
-                  style={{
-                    boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-                    cursor: "pointer",
-                  }}
-                  alt={`${item.account.Pseudo}`}
-                  src={`/imageProfile/${item.account.id}/${item.account?.image?.image}`}
-                />
-              </IconButton>
-            }
-            titleTypographyProps={{
-              style: {
-                fontSize: 14,
-                color: "#4D4D4D",
-              },
-            }}
-            title={item.account.Pseudo}
-          />
           <Box>
             <CardActionArea
               style={{ width: "100%", height: 300 }}
@@ -79,8 +84,8 @@ const renderedItem = (state, classes, favorite, dispatch, navigate,number) => {
               }}
             >
               <img
-                alt={`/images/${state[index].id}/${state[index].image[0].image}`}
-                src={`/images/${state[index].id}/${state[index].image[0].image}`}
+                alt={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
+                src={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </CardActionArea>
@@ -92,16 +97,15 @@ const renderedItem = (state, classes, favorite, dispatch, navigate,number) => {
             <Typography>{item.Size}</Typography>
             <Typography>{item.item_brand[0]?.brand.Name}</Typography>
             <Typography>{category}</Typography>
-
           </Box>
           <Divider />
           <Box height={44} display="flex" alignItems="center">
             <IconButton
               onClick={() => {
                 if (_.some(favorite, { id_Item: item.id })) {
-                  dispatch(removeFavorite(state[index].id,number));
+                  dispatch(removeFavorite(state[index].id, number));
                 } else {
-                  dispatch(addFavorite(state[index].id,number));
+                  dispatch(addFavorite(state[index].id, number));
                 }
               }}
             >
@@ -124,16 +128,15 @@ const renderedItem = (state, classes, favorite, dispatch, navigate,number) => {
   });
 };
 
-const ItemProfil = ({ items,favorite,number }) => {
+const ItemProfil = ({ items, favorite, number }) => {
   const classes = useStyles();
-  const dispatch = useDispatch()
-  const navigate = useNavigate()
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const renderedItems = useMemo(() => {
-    return renderedItem(items, classes, favorite, dispatch, navigate,number);
+    return renderedItem(items, classes, favorite, dispatch, navigate, number);
   }, [items, favorite]);
-  
-  
-    return <Box className={classes.GridSytem}>{renderedItems}</Box>;
+
+  return <Box className={classes.GridSytem}>{renderedItems}</Box>;
 };
 
 export default ItemProfil;

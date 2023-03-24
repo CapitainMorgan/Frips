@@ -10,7 +10,9 @@ import {
   makeStyles,
   Slide,
   Snackbar,
-  Typography
+  Typography,
+  useMediaQuery,
+  useTheme,
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -25,9 +27,11 @@ import {
   fetchItems,
   fetchMoreItems,
   idFavorite,
-  removeFavorite
+  removeFavorite,
 } from "../../actions";
 import { SUCCESS_CREATION_ITEM } from "../../actions/type";
+import API_ENDPOINT from "../../api/url";
+import TopBusiness from "./FirstPage/TopBusiness";
 import DisplayMain from "./logicItems/displayImageMain";
 import DisplayNewItems from "./logicItems/displayNewItems";
 
@@ -108,30 +112,34 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
     return (
       <Box width={"100%"} height={"100%"} padding={1} key={index}>
         <Card className={classes.BoxOneItem}>
-          <CardHeader
-            avatar={
-              <IconButton onClick={()=>{
-                navigate(`/member/${item.account.Pseudo}`)
-              }}>
-                <Avatar
-
-                  style={{
-                    boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
-                    cursor: "pointer",
-                  }}
-                  alt={`${item.account.Pseudo}`}
-                  src={`/imageProfile/${item.account.id}/${item.account?.image?.image}`}
-                />
-              </IconButton>
-            }
-            titleTypographyProps={{
-              style: {
-                fontSize: 14,
-                color: "#4D4D4D",
-              },
-            }}
-            title={item.account.Pseudo}
-          />
+          <Box
+            display={"flex"}
+            alignItems="center"
+            marginBottom={2}
+            width="100%"
+          >
+            <IconButton
+              onClick={() => {
+                navigate(`/member/${item.account.Pseudo}`);
+              }}
+            >
+              <Avatar
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                  cursor: "pointer",
+                }}
+                alt={`${item.account.Pseudo}`}
+                src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+              />
+            </IconButton>
+            <Typography
+              style={{
+                wordBreak: "break-all",
+              }}
+            >
+              {item.account.Pseudo}
+            </Typography>
+          </Box>
           <Box>
             <CardActionArea
               style={{ width: "100%", height: 300 }}
@@ -140,8 +148,8 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
               }}
             >
               <img
-                alt={`/images/${state[index].id}/${state[index].image[0].image}`}
-                src={`/images/${state[index].id}/${state[index].image[0].image}`}
+                alt={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
+                src={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </CardActionArea>
@@ -158,9 +166,9 @@ const renderedItem = (state, classes, favorite, dispatch, navigate) => {
             <IconButton
               onClick={() => {
                 if (_.some(favorite, { id_Item: item.id })) {
-                  dispatch(removeFavorite(state[index].id,0));
+                  dispatch(removeFavorite(state[index].id, 0));
                 } else {
-                  dispatch(addFavorite(state[index].id,0));
+                  dispatch(addFavorite(state[index].id, 0));
                 }
               }}
             >
@@ -196,29 +204,36 @@ function TransitionUp(props) {
   return <Slide {...props} direction="left" />;
 }
 
-const ItemList = ({ loading, items, loaded, success, favorite }) => {
+const ItemList = ({
+  loading,
+  items,
+  loaded,
+  success,
+  favorite,
+  topBusiness,
+}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [Page, setPage] = useState(2);
   let navigate = useNavigate();
-  const location = useLocation()
-  useEffect(()=>{
-    window.scrollTo(0, 0)
-  },[location])
+  const location = useLocation();
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   useEffect(() => {
-    if(!loading && items.length===0 ){
-      dispatch(fetchItems());
-    dispatch(idFavorite());
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    if (!loading && items.length === 0) {
+      dispatch(fetchItems(mobile, mobile));
+      dispatch(idFavorite());
     }
-
-  }, [dispatch,loading,location]);
-
-  
+  }, [dispatch, loading, location]);
 
   const renderedItems = useMemo(() => {
     return renderedItem(items, classes, favorite, dispatch, navigate);
-  }, [items, favorite, loading,dispatch]);
+  }, [items, favorite, loading, dispatch]);
 
   const fetchMore = () => {
     setPage((prevState) => prevState + 1);
@@ -246,7 +261,7 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
     dispatch({ type: SUCCESS_CREATION_ITEM, payload: false });
   };
 
-  if (loading) {
+  if (loading && items.length === 0) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -285,11 +300,28 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
         ) : null}
         (
         <Box className={classes.floatContentArticle}>
-          <Box height={"10vh"} />
+          <Box height={"5vh"} />
           {Image}
-          <DisplayNewItems classes={classes} favorite={favorite} />
+          <Box height={"5vh"} />
+          <TopBusiness
+            favorite={favorite}
+            loading={loading}
+            mobile={mobile}
+            accountTop={topBusiness}
+          />
+          <Box height={"10vh"} />
 
-          <Box height={"10vh"} width={"100%"} />
+          <DisplayNewItems
+            mobile={mobile}
+            classes={classes}
+            favorite={favorite}
+          />
+          <Box height={"5vh"} />
+
+          <Box padding={1.5} display={"flex"} alignItems="center">
+        <Typography style={{fontSize:18,fontWeight:550}}>Articles</Typography>
+        </Box>
+          <Box height={"1vh"} width={"100%"} />
 
           <InfiniteScroll
             style={{ width: "100%" }}
@@ -311,7 +343,7 @@ const ItemList = ({ loading, items, loaded, success, favorite }) => {
             <Box className={classes.GridSytem}>{renderedItems}</Box>
           </InfiniteScroll>
         </Box>
-        )
+        
       </Box>
     </Box>
   );
@@ -322,6 +354,7 @@ const mapStateToProps = (state) => ({
   loading: state.items.loading,
   loaded: state.items.loaded,
   favorite: state.favoriteReducers.favoritIds,
+  topBusiness: state.items.topBusiness,
   success: state.items.successCreationItem,
 });
 

@@ -4,15 +4,16 @@ import {
   Button,
   Card,
   CardActionArea,
-  CircularProgress,
-  IconButton,
-  Typography,
+  CircularProgress, Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import Accordion from "@material-ui/core/Accordion";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import AccordionSummary from "@material-ui/core/AccordionSummary";
+import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
+import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
 import EditIcon from "@material-ui/icons/Edit";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import React, { useEffect, useState } from "react";
@@ -22,14 +23,12 @@ import "react-toastify/dist/ReactToastify.css";
 import {
   changeMyFripsPagination,
   fetchMyfrips,
-  sendStatusProposition,
+  sendStatusProposition
 } from "../../../actions";
-import MyPaginate from "../../Footer/PaginationComponent";
-import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
-import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
-import DeleteForeverIcon from "@material-ui/icons/DeleteForever";
-import DeleteModal from "./DeleteModal";
 import { FETCH_MYFRIPS } from "../../../actions/type";
+import API_ENDPOINT from "../../../api/url";
+import MyPaginate from "../../Footer/PaginationComponent";
+import DeleteModal from "./DeleteModal";
 const renderedItem = (
   classes,
   state,
@@ -70,8 +69,8 @@ const renderedItem = (
                     }}
                   >
                     <img
-                      alt={state[index].image[0].id_Item}
-                      src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                      alt={`${API_ENDPOINT}/${state[index].image[0].id_Item}`}
+                      src={`${API_ENDPOINT}/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
                       style={{
                         width: "100%",
                         height: "100%",
@@ -296,8 +295,8 @@ const renderedItem = (
                     }}
                   >
                     <img
-                      alt={state[index].image[0].id_Item}
-                      src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                      alt={`${API_ENDPOINT}/state[index].image[0].id_Item`}
+                      src={`${API_ENDPOINT}/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
                       style={{
                         width: "100%",
                         height: "100%",
@@ -491,8 +490,8 @@ const renderedItem = (
                     }}
                   >
                     <img
-                      alt={state[index].image[0].id_Item}
-                      src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                      alt={`${API_ENDPOINT}/state[index].image[0].id_Item`}
+                      src={`${API_ENDPOINT}/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
                       style={{
                         width: "100%",
                         height: "100%",
@@ -681,8 +680,8 @@ const renderedItem = (
                   }}
                 >
                   <img
-                    alt={state[index].image[0].id_Item}
-                    src={`http://localhost:5000/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
+                    alt={`${API_ENDPOINT}/${state[index].image[0].id_Item}`}
+                    src={`${API_ENDPOINT}/images/${state[index].image[0].id_Item}/${state[index].image[0].image}`}
                     style={{
                       width: "100%",
                       height: "100%",
@@ -867,6 +866,7 @@ const MyItems = ({
         alignItems="center"
       >
         <Typography style={{ fontSize: 16 }}>{msg}</Typography>
+        <Link to={"/items/new"}>Commencer à vendre ?</Link>
       </Box>
     );
   }

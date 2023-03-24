@@ -15,19 +15,21 @@ import MoreIcon from "@material-ui/icons/MoreVert";
 import React, { useRef } from "react";
 import Div100vh from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
-
 import { useTheme } from "@material-ui/core/styles";
-
+import { MdOutlineAttachMoney, MdRecycling } from "react-icons/md";
 import { Button } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
 import { logout } from "../actions";
+import { IoShirtSharp } from "react-icons/io5";
+import { GiLargeDress } from "react-icons/gi";
 
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import { useNavigate } from "react-router-dom";
 import Search from "./NavBar/Search";
 import SubHeaderManager from "./NavBar/SubHeaderManager";
+import API_ENDPOINT from "../api/url";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -59,8 +61,9 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   grow: {
-    flexGrow: 1,
     backgroundColor: "#F5f5f3",
+    display: "flex",
+    flexGrow: 1,
   },
   menuButton: {
     marginLeft: "50px",
@@ -114,12 +117,19 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 35,
     cursor: "pointer",
     color: "white",
+    background: "transparent",
+    outline: "none",
     userSelect: "none",
+    msTouchSelect: "none",
     WebkitUserSelect: "none",
+
+    WebkitTapHighlightColor: "transparent",
+    WebkitTouchCallout: "none",
   },
   BoxItem: {
     height: 50,
     minHeight: 50,
+    width: "100%",
     fontSize: 16,
     color: "rgb(117,117,117)",
     fontFamily: "Helvetica",
@@ -129,7 +139,7 @@ const useStyles = makeStyles((theme) => ({
     WebkitOverflowScrolling: "touch",
     backgroundColor: "white",
     overflowY: "scroll",
-    padding: 3,
+    padding: 10,
     position: "relative",
   },
 }));
@@ -144,6 +154,9 @@ const Header = ({ onSearchSubmit }) => {
   const dispatch = useDispatch();
   const unReadNotification = useSelector(
     (state) => state.notification.unReadNotification
+  );
+  const sellNotification = useSelector(
+    (state) => state.myFrips.sellNotification
   );
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
@@ -224,7 +237,7 @@ const Header = ({ onSearchSubmit }) => {
           handleMenuDesktop();
         }}
       >
-        Mon profile
+        Mon profil
       </MenuItem>
       <MenuItem
         className={classes.BoxItem}
@@ -235,15 +248,7 @@ const Header = ({ onSearchSubmit }) => {
       >
         Mes Annonces
       </MenuItem>
-      <MenuItem
-        className={classes.BoxItem}
-        onClick={() => {
-          history("/settings/profile");
-          handleMenuDesktop();
-        }}
-      >
-        Créer une réduction
-      </MenuItem>
+
       {isAuth(handleMenuDesktop)}
     </Menu>
   );
@@ -267,8 +272,7 @@ const Header = ({ onSearchSubmit }) => {
         <Box height={40} />
         <Box position="absolute" top={0} right={0}>
           <IconButton onClick={handleMobileMenuClose}>
-            {" "}
-            <CloseIcon />{" "}
+            <CloseIcon />
           </IconButton>
         </Box>
         <Box display="flex" justifyContent="center" padding={3}>
@@ -297,20 +301,25 @@ const Header = ({ onSearchSubmit }) => {
               Catégorie
             </Typography>
           </Box>
-          <Box>
+          <Box display={"flex"} alignItems="center" flexGrow={1}>
+            <GiLargeDress color="#82A0C2" size={20} />
+
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/items/Femme");
+                history("/Femme");
                 handleMobileMenuClose();
               }}
             >
               Femme
             </MenuItem>
+          </Box>
+          <Box display={"flex"} alignItems="center">
+            <IoShirtSharp color="#82A0C2" size={20} />
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/items/Homme");
+                history("/Homme");
                 handleMobileMenuClose();
               }}
             >
@@ -342,22 +351,13 @@ const Header = ({ onSearchSubmit }) => {
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/items/Homme");
+                history("/members/myFrips");
                 handleMobileMenuClose();
               }}
             >
-              Mes Offres
+              Mes Annonces
             </MenuItem>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                history("/items/Homme");
-                handleMobileMenuClose();
-              }}
-            >
-              Créer une réduction
-            </MenuItem>
-            {isAuth(handleMenuDesktop)}
+            {isAuth(handleMobileMenuClose)}
           </Box>
         </Box>
 
@@ -377,17 +377,7 @@ const Header = ({ onSearchSubmit }) => {
               onClick={() => {
                 handleMobileMenuClose();
 
-                history("/Aide");
-              }}
-            >
-              Aide
-            </MenuItem>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                handleMobileMenuClose();
-
-                history("/assisstance");
+                history("/aide");
               }}
             >
               Assisstance
@@ -395,11 +385,11 @@ const Header = ({ onSearchSubmit }) => {
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/Condition-général-de-vente-et-politique");
+                history("/ConditionGeneral");
                 handleMobileMenuClose();
               }}
             >
-              Politique
+              Condition Générale
             </MenuItem>
           </Box>
         </Box>
@@ -424,15 +414,13 @@ const Header = ({ onSearchSubmit }) => {
             >
               Instagram
             </MenuItem>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                history("/items/Homme");
-                handleMobileMenuClose();
-              }}
+            <a
+              rel="noreferrer"
+              target="_blank"
+              href={"https://www.facebook.com/profile.php?id=100090896610241"}
             >
-              Facebook
-            </MenuItem>
+              <MenuItem className={classes.BoxItem}>Facebook</MenuItem>
+            </a>
           </Box>
         </Box>
 
@@ -445,7 +433,14 @@ const Header = ({ onSearchSubmit }) => {
           justifyContent="center"
           alignItems="center"
           marginBottom={10}
+          flexDirection="column"
         >
+          <Box display={"flex"} alignItems="center" marginTop={2}>
+            <MdRecycling size={20} />
+            <Typography style={{ fontSize: 16, marginLeft: 2 }}>
+              Powered by renewable energy
+            </Typography>
+          </Box>
           <Box
             marginBottom={2}
             marginTop={1}
@@ -462,7 +457,7 @@ const Header = ({ onSearchSubmit }) => {
                 padding: 6,
               }}
             >
-              Frips
+              MyFrips
             </Typography>
             <Typography style={{ fontSize: 14, color: "black" }}>
               Tous droits réservés
@@ -494,10 +489,11 @@ const Header = ({ onSearchSubmit }) => {
               paddingRight={2}
               onClick={() => {
                 history("/");
+                handleMobileMenuClose();
               }}
             >
               <Typography className={classes.Logo}>
-                {mobile ? "F" : "Frips"}
+                {mobile ? "F" : "MyFrips"}
               </Typography>
             </Box>
             {!mobile ? (
@@ -512,7 +508,7 @@ const Header = ({ onSearchSubmit }) => {
                 <div className={classes.sectionDesktop}>
                   <Box flexGrow={1} display="flex" alignItems={"center"}>
                     {!state.isAuthenticated ? (
-                      <Box paddingLeft={2} alignItems="center">
+                      <Box marginLeft={2} alignItems="center">
                         <Button
                           onClick={() => history("/signup")}
                           variant="outlined"
@@ -525,7 +521,7 @@ const Header = ({ onSearchSubmit }) => {
                       </Box>
                     ) : null}
 
-                    {state.isAuthenticated ? <Box paddingLeft={2}></Box> : null}
+                    <Box marginLeft={2} />
                     <Button
                       onClick={() => history("/items/new")}
                       variant="contained"
@@ -537,7 +533,21 @@ const Header = ({ onSearchSubmit }) => {
                     </Button>
                   </Box>
                   {state.isAuthenticated ? (
-                    <Box display="flex">
+                    <Box display="flex" marginLeft={1}>
+                      <IconButton
+                        aria-label="show 4 new mails"
+                        color="inherit"
+                        onClick={() => {
+                          history("/members/myFrips/mySell");
+                        }}
+                      >
+                        <Badge
+                          badgeContent={sellNotification?.length}
+                          color="secondary"
+                        >
+                          <MdOutlineAttachMoney size={25} />
+                        </Badge>
+                      </IconButton>
                       <IconButton
                         aria-label="show 4 new mails"
                         color="inherit"
@@ -577,7 +587,7 @@ const Header = ({ onSearchSubmit }) => {
                           }}
                           onClick={handleMenuDesktop}
                           alt={`${state.user?.Pseudo}`}
-                          src={`/imageProfile/${state.user?.id}/${state.user?.image?.image}`}
+                          src={`${API_ENDPOINT}/imageProfile/${state.user?.id}/${state.user?.image?.image}`}
                         />
 
                         <Box
@@ -601,6 +611,20 @@ const Header = ({ onSearchSubmit }) => {
                     aria-label="show 4 new mails"
                     color="inherit"
                     onClick={() => {
+                      history("/members/myFrips/mySell");
+                    }}
+                  >
+                    <Badge
+                      badgeContent={sellNotification?.length}
+                      color="secondary"
+                    >
+                      <MdOutlineAttachMoney size={25} />
+                    </Badge>
+                  </IconButton>
+                  <IconButton
+                    aria-label="show 4 new mails"
+                    color="inherit"
+                    onClick={() => {
                       history("/member/conversation");
                     }}
                   >
@@ -614,6 +638,9 @@ const Header = ({ onSearchSubmit }) => {
                   <IconButton
                     aria-label="show  new notifications"
                     color="inherit"
+                    onClick={() => {
+                      history("/member/myFavorite");
+                    }}
                   >
                     <Badge color="secondary">
                       <FavoriteIcon />

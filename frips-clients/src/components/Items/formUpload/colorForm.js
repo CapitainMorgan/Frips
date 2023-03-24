@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import { Box, InputAdornment, Popper, TextField } from "@material-ui/core";
+import { Box, ClickAwayListener, InputAdornment, Popper, TextField } from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
@@ -12,7 +12,6 @@ import _ from "lodash";
 
 import CloseIcon from "@material-ui/icons/Close";
 import { useSelector } from "react-redux";
-import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyles = makeStyles({
   pointer: {
@@ -32,8 +31,8 @@ const useStyles = makeStyles({
     right: 10,
   },
   Dialog: {
-    width: 300,
-    height: 500,
+    width: "80vw",
+    height: "80vh",
   },
 });
 
@@ -98,7 +97,6 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
   );
   const [anchorEl, setAnchorEl] = useState(null);
 
-  console.log(form)
 
   const renderedColorForm = ColorInfo.map((item, index) => {
     return (
@@ -176,13 +174,12 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
                 </Box>
               </Box>
 
-              <Box padding={3} display="flex" justifyContent="center">
-                {field.value.length === 1 ? field.value : `${field.value}`}
-              </Box>
+           
 
               <Box style={{ backgroundColor: "white" }} width={"100%"}>
-                {renderedColorForm}
-              </Box>
+              {renderedColorForm}
+
+                </Box>
             </Box>
           </Dialog>
         )}

@@ -54,8 +54,8 @@ const useStyle = makeStyles((theme) => ({
     fontWeight: 500,
   },
   Dialog: {
-    width: 300,
-    height: 500,
+    width: "75vw",
+    height: "80vh",
   },
 }));
 
@@ -169,7 +169,7 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
   }
   else{
     return (
-      <ClickAwayListener onClickAway={handleClickAway} disableReactTree >
+      <ClickAwayListener onClickAway={handleClickAway} >
         <Box style={{ position: "relative" }} width={"100%"}>
           <TextField
             onClick={handleClick}
@@ -193,34 +193,10 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
             }}
           />
   
-          {!mobile ? (
-            <Popper
-              disablePortal={false}
-              style={{ width: "28%", marginTop: 1 }}
-              anchorEl={anchorEl}
-              placement="bottom"
-              open={Boolean(anchorEl)}
-            >
-              <Box
-                style={{ backgroundColor: "white", position: "absolute" }}
-                width={"100%"}
-              >
-                {listCategorie(
-                  field.value,
-                  navigationValue,
-                  setNavigationValue,
-                  classes,
-                  form,
-                  handleClickAway,
-                  setSize
-                )}
-              </Box>
-            </Popper>
-          ) : (
+         
             <Dialog open={Boolean(anchorEl)}>
               <Box
-                height={"80vh"}
-                maxWidth="50vh"
+                className={classes.Dialog}
                 display="flex"
                 flexDirection="column"
               >
@@ -253,7 +229,7 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
                 </Box>
               </Box>
             </Dialog>
-          )}
+          
         </Box>
       </ClickAwayListener>
     );

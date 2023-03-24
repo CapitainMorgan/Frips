@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { handleClickAwayPropose, sendMessage } from "../../../actions";
+import API_ENDPOINT from "../../../api/url";
 
 const renderItemForPropose = (item, classes, history) => {
   return (
@@ -16,8 +17,8 @@ const renderItemForPropose = (item, classes, history) => {
             }}
           >
             <img
-              alt={`/images/${item.id}/${item.image.image}`}
-              src={`/images/${item.id}/${item.image.image}`}
+              alt={`${API_ENDPOINT}/images/${item.id}/${item.image.image}`}
+              src={`${API_ENDPOINT}/images/${item.id}/${item.image.image}`}
               style={{ width: "100%", height: "100%", objectFit: "cover" }}
             />
           </CardActionArea>
@@ -77,7 +78,6 @@ const SecondPageDialog = ({
   };
 
   const id_Receiver = () => {
-    console.log(Profile, userId);
     if (Profile.Profile1.ProfileNumber !== userId) {
       return Profile.Profile1.ProfileNumber;
     }
@@ -147,7 +147,6 @@ const SecondPageDialog = ({
               variant="outlined"
               color="primary"
               onClick={() => {
-                console.log(item);
                 if (socket.connected) {
                   dispatch(
                     sendMessage(null, id, id_Receiver(), userId, item, Price)

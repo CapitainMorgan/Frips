@@ -1,8 +1,10 @@
 import { Box, Button, Typography } from "@material-ui/core";
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import image from "../../../img/kaylin-pacheco-5ToyvEJIny8-unsplash (1).jpg";
 
 const DisplayMain = ({ classes, loaded }) => {
+  const history = useNavigate()
   return (
     <Box className={classes.floatImage}>
       {true ? (
@@ -18,7 +20,7 @@ const DisplayMain = ({ classes, loaded }) => {
             <Box display="inline-block" padding={2}>
               <Box>
                 <Typography style={{ fontSize: 30, fontWeight: 500 }}>
-                  Prêts à rejoindre la communauté ?
+                  Prêt à rejoindre la communauté ?
                 </Typography>
               </Box>
               <Box
@@ -27,14 +29,24 @@ const DisplayMain = ({ classes, loaded }) => {
                 marginTop={2}
                 height={50}
               >
-                <Button disableElevation variant="contained" color="primary">
+                <Button disableElevation variant="contained" color="primary" onClick={()=>{
+                  history("/items/new")
+                }}>
                   <Typography style={{ color: "white" }}>
                     Commencer à vendre
                   </Typography>
                 </Button>
               </Box>
 
-              <Box
+              
+            </Box>
+          </Box>
+        </Box>
+      ) : null}
+    </Box>
+  );
+};
+/*<Box
                 display="flex"
                 justifyContent="center"
                 marginTop={2}
@@ -45,13 +57,6 @@ const DisplayMain = ({ classes, loaded }) => {
                     Commencer ça marche
                   </Typography>
                 </Button>
-              </Box>
-            </Box>
-          </Box>
-        </Box>
-      ) : null}
-    </Box>
-  );
-};
+              </Box>*/
 
 export default DisplayMain;

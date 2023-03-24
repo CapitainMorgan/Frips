@@ -5,14 +5,13 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardHeader,
   CircularProgress,
   Divider,
   IconButton,
   makeStyles,
   Typography,
   useMediaQuery,
-  useTheme
+  useTheme,
 } from "@material-ui/core";
 import ArrowBackIosIcon from "@material-ui/icons/ArrowBackIos";
 import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
@@ -20,19 +19,20 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import _ from "lodash";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   addFavorite,
   changePagination,
   getItemCreationInfo,
   idFavorite,
   paginationForFilter,
-  removeFavorite
+  removeFavorite,
 } from "../../../actions";
+import API_ENDPOINT from "../../../api/url";
 import MyPaginate from "../../Footer/PaginationComponent";
 import { arraySize, Catalogue } from "../staticItems/staticItemName";
 import CostumChips from "./CostumChips";
-import RenderChipsComponents from "./renderChipsComponents";
+import RenderChipsComponents from "./RenderChipsComponent";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -114,8 +114,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const renderedItem = (state, classes, favorite, dispatch, history) => {
   return state.map((item, index) => {
     let category = item.item_category[0].category.Name;
@@ -123,19 +121,34 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
     return (
       <Box width={"100%"} height={"100%"} padding={1} id={item}>
         <Card className={classes.BoxOneItem}>
-          <CardHeader
-            avatar={
-              <IconButton>
-                <Avatar>S</Avatar>
-              </IconButton>
-            }
-            titleTypographyProps={{
-              style: {
-                fontSize: 14,
-              },
-            }}
-            title={item.account?.Pseudo}
-          />
+          <Box
+            display={"flex"}
+            alignItems="center"
+            marginBottom={2}
+            width="100%"
+          >
+            <IconButton
+              onClick={() => {
+                history(`/member/${item.account.Pseudo}`);
+              }}
+            >
+              <Avatar
+                style={{
+                  boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                  cursor: "pointer",
+                }}
+                alt={`${item.account.Pseudo}`}
+                src={`${API_ENDPOINT}/imageProfile/${item.account.id}/${item.account?.image?.image}`}
+              />
+            </IconButton>
+            <Typography
+              style={{
+                wordBreak: "break-all",
+              }}
+            >
+              {item.account.Pseudo}
+            </Typography>
+          </Box>
           <Box>
             <CardActionArea
               style={{ width: "100%", height: 300 }}
@@ -144,8 +157,8 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
               }}
             >
               <img
-                alt={`/images/${state[index].id}/${state[index].image[0].image}`}
-                src={`/images/${state[index].id}/${state[index].image[0].image}`}
+                alt={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
+                src={`${API_ENDPOINT}/images/${state[index].id}/${state[index].image[0].image}`}
                 style={{ width: "100%", height: "100%", objectFit: "cover" }}
               />
             </CardActionArea>
@@ -160,12 +173,12 @@ const renderedItem = (state, classes, favorite, dispatch, history) => {
           </Box>
           <Divider />
           <Box height={44} display="flex" alignItems="center">
-          <IconButton
+            <IconButton
               onClick={() => {
                 if (_.some(favorite, { id_Item: item.id })) {
-                  dispatch(removeFavorite(state[index].id,5));
+                  dispatch(removeFavorite(state[index].id, 5));
                 } else {
-                  dispatch(addFavorite(state[index].id,5));
+                  dispatch(addFavorite(state[index].id, 5));
                 }
               }}
             >
@@ -193,8 +206,6 @@ const filterBy = [
   { Name: "Prix croissant", id: 1, label: "sortedBy" },
 ];
 
-
-
 const DisplayCatalogue = ({
   items,
   loaded,
@@ -211,6 +222,11 @@ const DisplayCatalogue = ({
   const theme = useTheme();
   const history = useNavigate();
 
+  useEffect(() => {
+    return () => {
+      dispatch({ type: "RESTORE" });
+    };
+  }, []);
 
   useEffect(() => {
     if (itemInfo && !infoLoading) {
@@ -224,18 +240,14 @@ const DisplayCatalogue = ({
         { label: "sortedBy", array: filterBy },
       ]);
     }
-    if(!itemInfo && !infoLoading){
-        dispatch(getItemCreationInfo());
-      
+    if (!itemInfo && !infoLoading) {
+      dispatch(getItemCreationInfo());
     }
-    
-  }, [dispatch,itemInfo,infoLoading]);
+  }, [dispatch, itemInfo, infoLoading]);
 
-  useEffect(()=>{
-    dispatch(idFavorite())
-
-  },[dispatch])
-
+  useEffect(() => {
+    dispatch(idFavorite());
+  }, [dispatch]);
 
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const favorite = useSelector((state) => state.favoriteReducers.favoritIds);
@@ -258,23 +270,17 @@ const DisplayCatalogue = ({
     if (items.length !== 0 && !loading) {
       setFilterItem(items);
     }
-    
-  }, [items, dispatch,loading]);
-
-  
+  }, [items, dispatch, loading]);
 
   useEffect(() => {
-      dispatch(paginationForFilter());
-    
-    
-  }, [dispatch, allFilterProps, pagination,filterLoading]);
-  
+    dispatch(paginationForFilter());
+  }, [dispatch, allFilterProps, pagination, filterLoading]);
 
   const renderedItems = useMemo(() => {
     return renderedItem(filterItem, classes, favorite, dispatch, history);
   }, [filterItem, items, allFilterProps]);
-  
-  if (loading && itemInfo?.length===0) {
+
+  if (loading && itemInfo?.length === 0) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -309,31 +315,31 @@ const DisplayCatalogue = ({
           {typeOfFilter ? <CostumChips TypeCatalogue={typeOfFilter} /> : null}
           <RenderChipsComponents />
         </Box>
-        {count ===0 &&!loading ?
-        <Box
-          display="flex"
-          justifyContent="center"
-          width="100%"
-          alignItems="center"
-        >
-          <Typography
-            style={{
-              fontSize: "1.3rem",
-              color: "#82A0C2",
-              paddingLeft: "1.3rem",
-            }}
+        {count === 0 && !loading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            width="100%"
+            alignItems="center"
           >
-           Oups il semblerait qu'il n'y ait aucun résultat correspondant à votre recherche
-          </Typography>
-        </Box>:null}
-
-        <Box height={"10vh"} />
+            <Typography
+              style={{
+                fontSize: "1.3rem",
+                color: "#82A0C2",
+                paddingLeft: "1.3rem",
+              }}
+            >
+              Oups il semblerait qu'il n'y ait aucun résultat correspondant à
+              votre recherche
+            </Typography>
+          </Box>
+        ) : null}
 
         <Box className={classes.GridSytem}>{renderedItems}</Box>
 
         <Box className={classes.PaginationBox}>
           <MyPaginate
-            pageCount={Math.ceil(count / 5)}
+            pageCount={Math.ceil(count / 15)}
             onPageChange={handleChange}
             pageRangeDisplayed={!mobile ? 2 : 1}
             forcePage={pagination - 1}
@@ -342,7 +348,7 @@ const DisplayCatalogue = ({
               <ArrowForwardIosIcon
                 style={{
                   color:
-                    pagination !== Math.ceil(count / 5)
+                    pagination !== Math.ceil(count / 15)
                       ? "rgba(130, 160, 194, 1)"
                       : "grey",
                 }}

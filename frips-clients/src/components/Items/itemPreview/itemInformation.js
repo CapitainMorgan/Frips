@@ -13,15 +13,16 @@ import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import NavigateNextIcon from "@material-ui/icons/NavigateNext";
 import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import Rating from "@material-ui/lab/Rating";
+import _ from "lodash";
 import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { newConv } from "../../../actions";
+import { addFavorite, newConv, removeFavorite } from "../../../actions";
+import API_ENDPOINT from "../../../api/url";
 import PricePropose from "../../Checkout/PricePropose";
-const ItemInformation = ({ state, classes,review }) => {
+const ItemInformation = ({ state, classes, review, myAccount, favorite }) => {
   const history = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState(false);
-  const [favorite, setFavorite] = useState(null);
 
   const handleClick = () => {
     setAnchorEl(true);
@@ -32,8 +33,6 @@ const ItemInformation = ({ state, classes,review }) => {
   };
 
   const dispatch = useDispatch();
-
-
 
   if (!state?.Price) {
     return null;
@@ -60,7 +59,7 @@ const ItemInformation = ({ state, classes,review }) => {
                       width: 50,
                     }}
                     alt={`${state.account.Pseudo}`}
-                    src={`/imageProfile/${state.account.id}/${state.account?.image?.image}`}
+                    src={`${API_ENDPOINT}/imageProfile/${state.account.id}/${state.account?.image?.image}`}
                   />
                 </IconButton>
               }
@@ -70,7 +69,11 @@ const ItemInformation = ({ state, classes,review }) => {
                 onClick={() => {
                   history(`/member/${state.account.Pseudo}`);
                 }}
-                style={{ fontSize: 16, cursor: "pointer" }}
+                style={{
+                  fontSize: 16,
+                  cursor: "pointer",
+                  wordBreak: "break-word",
+                }}
               >
                 {state.account.Pseudo}
               </Typography>
@@ -86,7 +89,7 @@ const ItemInformation = ({ state, classes,review }) => {
           </Typography>
         </Box>
 
-        <Box display="flex">
+        <Box display="flex" marginTop={2}>
           <Box className={classes.ContentInformationItem}>
             <Typography style={{ fontSize: 16, color: "#999998" }}>
               Marque
@@ -154,23 +157,24 @@ const ItemInformation = ({ state, classes,review }) => {
                 })}
           </Box>
         </Box>
-        <Box display="flex">
-          <Box className={classes.ContentInformationItem}>Emplacement</Box>
-
-          <Box className={classes.ContentInformationItem}>
-            {state.Emplacement}
-          </Box>
-        </Box>
-        <Box display="flex">
-          <Box className={classes.ContentInformationItem}>
-            Moyen de paiement
-          </Box>
-          <Box className={classes.ContentInformationItem}></Box>
-        </Box>
 
         <Divider style={{ marginTop: 5 }} />
-
         <Box marginTop={2}>
+          <Box height={"100%"}>
+            <Box display="inline-block" lineHeight={2}>
+              <Typography style={{ fontSize: 17, color: "#999998" }}>
+                Nom
+              </Typography>
+            </Box>
+
+            <Box display="inline-block" width={"100%"}>
+              <Typography style={{ wordWrap: "break-word", fontSize: 16 }}>
+                {state.Name}
+              </Typography>
+            </Box>
+          </Box>
+        </Box>
+        <Box marginTop={1}>
           <Box height={"100%"}>
             <Box display="inline-block" lineHeight={2}>
               <Typography style={{ fontSize: 16, color: "#999998" }}>
@@ -191,15 +195,17 @@ const ItemInformation = ({ state, classes,review }) => {
           justifyContent="center"
           alignItems="center"
         >
-          <Button
-            variant="outlined"
-            style={{ width: "100%", marginTop: 5 }}
-            onClick={() => {
-              dispatch(newConv(state.id, state, history));
-            }}
-          >
-            Envoyer un message
-          </Button>
+          {myAccount?.id !== state?.account?.id ? (
+            <Button
+              variant="outlined"
+              style={{ width: "100%", marginTop: 5 }}
+              onClick={() => {
+                dispatch(newConv(state.id, state, history));
+              }}
+            >
+              Envoyer un message
+            </Button>
+          ) : null}
 
           <Button
             style={{ width: "100%", marginTop: 5 }}
@@ -210,16 +216,22 @@ const ItemInformation = ({ state, classes,review }) => {
             Acheter
           </Button>
 
-          <Button
-            style={{ width: "100%", marginTop: 5 }}
-            variant="outlined"
-            color="primary"
-            onClick={() => {
-              handleClick();
-            }}
-          >
-            Faire une offre
-          </Button>
+          {myAccount?.id !== state?.account?.id ? (
+            <Button
+              style={{ width: "100%", marginTop: 5 }}
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                if (!Boolean(myAccount)) {
+                  history("/signup");
+                } else {
+                  handleClick();
+                }
+              }}
+            >
+              Faire une offre
+            </Button>
+          ) : null}
           {anchorEl ? (
             <PricePropose
               itemPrice={state.Price}
@@ -234,10 +246,18 @@ const ItemInformation = ({ state, classes,review }) => {
             variant="outlined"
             style={{ width: "100%", marginTop: 5 }}
             onClick={() => {
-              setFavorite(!favorite);
+              if (Boolean(myAccount)) {
+                if (_.some(favorite, { id_Item: state.id })) {
+                  dispatch(removeFavorite(state.id, null, false));
+                } else {
+                  dispatch(addFavorite(state.id, null, false));
+                }
+              } else {
+                history("/signup");
+              }
             }}
           >
-            {!favorite ? (
+            {_.some(favorite, { id_Item: state.id }) ? (
               <Box display="flex" width={"100%"} justifyContent="center">
                 <FavoriteIcon style={{ color: "red" }}></FavoriteIcon>
                 enlever des favoris

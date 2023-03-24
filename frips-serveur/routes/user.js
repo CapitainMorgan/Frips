@@ -5,6 +5,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
 const { PrismaClient } = require("@prisma/client");
+const { sendEmail } = require("../email/sendEmail");
 
 const { account } = new PrismaClient();
 
@@ -56,12 +57,11 @@ router.post("/checkUser", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res,next) => {
   let {
     Pseudo,
     Email,
     Password,
-    IBAN,
     Mois,
     Jour,
     Annee,
@@ -121,7 +121,11 @@ router.post("/", async (req, res) => {
               Street: Rue,
             },
           },
+          LastConnection:new Date()
+          
         },
+
+
       });
 
       const payload = {
@@ -139,8 +143,10 @@ router.post("/", async (req, res) => {
           res.json({ token });
         }
       );
-    }
 
+      await sendEmail(newUser.id,"Welcome",next)
+
+    }
     //encrypt password
   } catch (error) {
     console.log(error);

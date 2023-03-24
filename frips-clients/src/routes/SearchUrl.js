@@ -26,6 +26,7 @@ const checkUrl = (url, infoItem) => {
   return true;
 };
 
+
 const SearchUrl = ({ itemInfo, loading, loadingFilter }) => {
   const location = useParams();
   const dispatch = useDispatch();
@@ -34,6 +35,8 @@ const SearchUrl = ({ itemInfo, loading, loadingFilter }) => {
       dispatch(getItemCreationInfo());
     } 
   }, [itemInfo, location]);
+
+
 
   if (!itemInfo || loadingFilter) {
     return (

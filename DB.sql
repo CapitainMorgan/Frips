@@ -101,7 +101,6 @@ CREATE TABLE account(
    FOREIGN KEY(id_Address) REFERENCES address(id)
 );
 
-
 CREATE TABLE chat(
    id INT AUTO_INCREMENT,
    id_Account_1 INT NOT NULL,

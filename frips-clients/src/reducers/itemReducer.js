@@ -1,10 +1,12 @@
 import {
   CREATE_ITEM,
   EDIT_ITEM,
+  ERROR_ITEM,
   FETCH_ID_FAVORITE,
   FETCH_ITEM,
   FETCH_ITEMS,
   FETCH_NEW_ITEMS,
+  FETCH_TOP_BUSINESS,
   GET_MORE_ITEMS,
   LOADING_FETCH_ITEM,
   LOADING_ITEM,
@@ -20,8 +22,10 @@ const initialValues = {
   loaded: false,
   favorites: [],
   newItem: [],
-  initialValues:{},
-  imageBlob:[],
+  error: false,
+  initialValues: {},
+  topBusiness:null,
+  imageBlob: [],
   editItemPage: null,
   successCreationItem: null,
 };
@@ -47,13 +51,18 @@ export default (state = initialValues, action) => {
       };
     }
     case EDIT_ITEM:
-      
       return {
         ...state,
-        initialValues:action.payload.initialValues,
-        imageBlob:action.payload.imageBlob,
+        initialValues: action.payload.initialValues,
+        imageBlob: action.payload.imageBlob,
       };
-      
+
+    case ERROR_ITEM:
+      return {
+        ...state,
+        error: action.payload,
+      };
+
     case FETCH_ITEMS:
       return {
         ...state,
@@ -87,19 +96,24 @@ export default (state = initialValues, action) => {
 
         UniqueItem: action.payload,
       };
-      case LOADING_FETCH_ITEM:
-        return{
-          ...state,
-          loading:true,
-          loaded:false
-        }
-        case SUCCESS_FETCH_ITEM:
-        return{
-          ...state,
-          loading:false,
-          loaded:true
-        }
-      
+
+    case FETCH_TOP_BUSINESS:
+      return {
+        ...state,
+        topBusiness:{...action.payload}
+      }
+    case LOADING_FETCH_ITEM:
+      return {
+        ...state,
+        loading: true,
+        loaded: false,
+      };
+    case SUCCESS_FETCH_ITEM:
+      return {
+        ...state,
+        loading: false,
+        loaded: true,
+      };
 
     case FETCH_NEW_ITEMS:
       return {
@@ -113,7 +127,10 @@ export default (state = initialValues, action) => {
     case RESET_ITEM:
       return {
         ...state,
-        UniqueItem:[]
+        UniqueItem: [],
+        initialValues: {},
+        imageBlob: [],
+        editItemPage: null,
       };
 
     default:

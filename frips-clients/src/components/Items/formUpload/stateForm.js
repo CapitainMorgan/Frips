@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, Checkbox, Dialog, IconButton, InputAdornment, makeStyles, Popper, TextField, Typography } from "@material-ui/core";
+import { Box, Checkbox, ClickAwayListener, Dialog, IconButton, InputAdornment, makeStyles, Popper, TextField, Typography } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
 import { useSelector } from "react-redux";
-import ClickAwayListener from "../../SpecialComponent/ClickAwayListener";
 
 const useStyle = makeStyles((theme) => ({
   checkBox: {
@@ -30,8 +29,8 @@ const useStyle = makeStyles((theme) => ({
     color: "#8B8B8B",
   },
   Dialog: {
-    width: 300,
-    height: 500,
+    width: "80vw",
+    height: "80vh",
   },
 }));
 
@@ -88,7 +87,6 @@ const StateForm = ({ field, form, mobile }) => {
     setAnchorEl(e.currentTarget);
   };
 
-  console.log(field.value);
 
   const handleClickAway = () => {
     setAnchorEl(null);

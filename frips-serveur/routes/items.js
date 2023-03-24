@@ -7,8 +7,17 @@ let fs = require("fs-extra");
 const path = require("path"); // path for cut the file extension
 const { PrismaClient } = require("@prisma/client");
 const { similarProduct } = require("./logicFunction/logicSimilarProduct");
+const log4js = require("log4js");
+const { sendEmail } = require("../email/sendEmail");
+const sharp = require("sharp");
 
-const { item, image, nbview, favorit, brand, pricepropose ,review} =
+log4js.configure({
+  appenders: { items: { type: "file", filename: "items.log" } },
+  categories: { default: { appenders: ["items"], level: "error" } },
+});
+var logger = log4js.getLogger("items");
+
+const { item, image, nbview, favorit, brand, review, pricepropose, account } =
   new PrismaClient();
 
 // @route   Post api/items
@@ -19,7 +28,6 @@ const upload = multer().any();
 
 const colorLengthFunction = (Color) => {
   const [firstColor, SecondColor] = Color;
-  console.log(Color);
 
   if (Color.length == 2) {
     return {
@@ -32,8 +40,6 @@ const colorLengthFunction = (Color) => {
       },
     };
   } else {
-    console.log("ici");
-
     return {
       create: {
         data: {
@@ -87,12 +93,6 @@ router.post("/", auth, upload, async (req, res) => {
     Delivery = Delivery.split(",").map(Number);
   }
 
-  console.log(Color);
-
-  console.log(Delivery)
-
-  
-
   try {
     const exist = await brand.upsert({
       where: {
@@ -142,7 +142,6 @@ router.post("/", auth, upload, async (req, res) => {
             };
           }),
         },
-       
 
         id_ItemCondition: State,
         item_brand: {
@@ -160,28 +159,27 @@ router.post("/", auth, upload, async (req, res) => {
     for (let index = 0; index < req.files.length; index++) {
       let id = nanoid();
       fs.writeFileSync(
-        path.join(
-          "./",
-          pathDir,
-          `${id}` + path.extname(req.files[index].originalname)
-        ),
-        req.files[index].buffer,
-        "UTF8"
+        path.join("./", pathDir, `${id}` + ".jpeg"),
+        await sharp(req.files[index].buffer)
+          .resize({ width: 1000, height: 1000 })
+          .jpeg({ quality: 75 })
+          .toBuffer()
       );
+
       await image.create({
         data: {
           id_Item: Item.id,
 
           confidencial: false,
 
-          image: `${id}` + path.extname(req.files[index].originalname),
+          image: `${id}` + ".jpeg",
         },
       });
     }
-
+    logger.info("POST / : " + Item.id);
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("POST / : " + error);
     await item.delete({
       where: {
         id: Item.id,
@@ -194,7 +192,6 @@ router.post("/", auth, upload, async (req, res) => {
 // @route   Post api/items
 // @desc    post one item
 // @acces    Private
-
 router.get("/", async (req, res) => {
   try {
     const Item = await item.findMany({
@@ -244,7 +241,7 @@ router.get("/", async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET / : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -265,12 +262,20 @@ router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
           id: parseFloat(id_Item),
         },
       });
+      logger.info("DELETE / : " + deleted.id + " by user " + id);
       res.sendStatus(200);
     } else {
+      logger.warn(
+        "DELETE / : " +
+          "not authorized action by user " +
+          id +
+          " on item " +
+          id_Item
+      );
       res.status(401).send({ msg: "Action non-autorisée" });
     }
   } catch (error) {
-    console.log(error);
+    logger.error("DELETE / : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -311,7 +316,7 @@ router.post("/ItemForPorpose", async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /ItemForPorpose : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -353,7 +358,7 @@ router.get("/auth", auth, async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /auth : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -414,7 +419,7 @@ router.get("/filterCataloguePagination", async (req, res) => {
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /filterCataloguePagination : " + error);
     res.status(500).json("Server error");
   }
 });
@@ -537,6 +542,24 @@ const filterCatalogue = (Catalogue) => {
     },
   };
 };
+
+const findSearchQuery = (Search) => {
+  const arraySearch = [];
+  Search.map((item) => {
+    arraySearch.push({
+      Name: {
+        contains: item.Name,
+      },
+    });
+    arraySearch.push({
+      Description: {
+        contains: item.Name,
+      },
+    });
+  });
+  return arraySearch;
+};
+
 const isFilter = (filter) => {
   const {
     newCatalogue,
@@ -544,6 +567,7 @@ const isFilter = (filter) => {
     newEtat,
     newMarque,
     Price,
+    Search,
     itemsId,
     newTaille,
   } = filter;
@@ -554,14 +578,12 @@ const isFilter = (filter) => {
     newEtat.length !== 0 ||
     newMarque.length !== 0 ||
     newTaille.length !== 0 ||
-    Price[0] !== 0 ||
-    Price[1] !== null
+    Boolean(Price[0]) ||
+    Boolean(Price[1]) ||
+    Search.length !== 0
   ) {
     return {
       OR: [
-        { id_ItemCondition: { in: newEtat } },
-        { Size: { in: newTaille } },
-        { item_color: { some: { id_Color: { in: newCouleur } } } },
         {
           item_brand: {
             some: {
@@ -570,8 +592,12 @@ const isFilter = (filter) => {
           },
         },
         filterCatalogue(newCatalogue),
+        { id_ItemCondition: { in: newEtat } },
+        { Size: { in: newTaille } },
+        { item_color: { some: { id_Color: { in: newCouleur } } } },
 
         priceRange(Price),
+        ...findSearchQuery(Search),
       ],
     };
   } else return;
@@ -602,11 +628,21 @@ router.post("/pagination", async (req, res) => {
 
   try {
     const count = await item.count({
-      where: isFilter(req.body),
+      where: {
+        OR: isFilter(req.body),
+        transaction: {
+          none: {},
+        },
+      },
     });
 
     const Item = await item.findMany({
-      where: isFilter(req.body),
+      where: {
+        OR: isFilter(req.body),
+        transaction: {
+          none: {},
+        },
+      },
       include: {
         image: {
           take: 1,
@@ -664,21 +700,21 @@ router.post("/pagination", async (req, res) => {
       },
 
       orderBy: [isSorted(sortedBy?.id), { DatePuplication: "desc" }],
-      skip: 5 * (number - 1),
+      skip: 15 * (number - 1),
 
-      take: 5,
+      take: 15,
     });
 
     res.status(200).json({ items: Item, count: count });
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/pagination" + error);
     res.status(500).json("Server error");
   }
 });
 
 router.post("/more", async (req, res) => {
   const { number } = req.body;
-
+  console.log(number);
   try {
     const Item = await item.findMany({
       include: {
@@ -712,11 +748,11 @@ router.post("/more", async (req, res) => {
         DatePuplication: "desc",
       },
       take: 10,
-      skip: 10 * number,
+      skip: 10 * (number - 1),
     });
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/more" + error);
     res.status(500).json("Server error");
   }
 });
@@ -767,13 +803,91 @@ router.get("/new", async (req, res) => {
           },
         },
       },
-
-      take: -5,
+      orderBy: [
+        { nbview: { _count: "desc" } },
+        { favorit: { _count: "desc" } },
+      ],
+      take: 4,
     });
 
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /api/item/new" + error);
+    res.status(500).json("Server error");
+  }
+});
+
+router.post("/topBusiness", async (req, res) => {
+  const { mobile } = req.body;
+  try {
+    const Item = await account.findMany({
+      where: {
+        item: {
+          some: {
+            transaction: {
+              none: {},
+            },
+          },
+        },
+        id: 1,
+      },
+      select: {
+        item: {
+          include: {
+            image: {
+              take: 1,
+            },
+            item_brand: {
+              select: {
+                brand: true,
+              },
+            },
+            item_color: {
+              select: {
+                color: {
+                  select: {
+                    Name: true,
+                  },
+                },
+              },
+            },
+            itemcondition: {
+              select: {
+                Name: true,
+              },
+            },
+
+            _count: {
+              select: {
+                favorit: true,
+              },
+            },
+          },
+          orderBy: [
+            { nbview: { _count: "desc" } },
+            { favorit: { _count: "desc" } },
+          ],
+          take: mobile ? 6 : 5,
+        },
+        image: true,
+        Pseudo: true,
+        id: true,
+      },
+    });
+    const { _avg } = await review.aggregate({
+      where: {
+        id_Account: 1,
+      },
+      _avg: {
+        Note: true,
+      },
+    });
+
+    console.log(Item, _avg);
+
+    res.status(200).json({ ...Item[0], _avg });
+  } catch (error) {
+    logger.error("GET /api/item/new" + error);
     res.status(500).json("Server error");
   }
 });
@@ -791,7 +905,7 @@ router.get("/Id_of_MyFavorite", auth, async (req, res) => {
 
     res.status(200).json(favoriteIDs);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /api/item/Id_of_MyFavorite" + error);
     res.status(500).json("Server error");
   }
 });
@@ -799,22 +913,33 @@ router.get("/Id_of_MyFavorite", auth, async (req, res) => {
 router.post("/proposition", auth, async (req, res) => {
   const { Price, idItem } = req.body;
   const { id } = req.user;
-
-  console.log(id);
+  const DatePuplication = await new Date();
 
   try {
-    await pricepropose.create({
+    const data = await pricepropose.create({
       data: {
-        id_Account: id,
         Price: parseFloat(Price),
-        id_Item: parseInt(idItem),
-        SendDate: new Date(),
+        SendDate: DatePuplication,
+        id_Account: id,
+        id_Item: idItem,
+      },
+      include: {
+        account: {
+          select: {
+            id: true,
+          },
+        },
       },
     });
-
-    res.sendStatus(200);
+    logger.info("Price proposition send by " + id + " for item " + idItem + "");
+    res.status(200).json(data);
+    sendEmail(data.account.id, "ReceivedOffer", {
+      id_Item: idItem,
+      pricepropose: parseFloat(Price),
+      id_Sender: id,
+    });
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/proposition" + error);
     res.status(500).json("Server error");
   }
 });
@@ -921,17 +1046,15 @@ router.get("/:id", async (req, res) => {
           },
         },
       },
-
     });
-   const {_avg} =  await review.aggregate({
-      where:{
-        id_Account:Item.account.id
+    const { _avg } = await review.aggregate({
+      where: {
+        id_Account: Item.account.id,
       },
-      _avg:{
-        Note:true
-      }
-    })
-
+      _avg: {
+        Note: true,
+      },
+    });
 
     const userItem = await item.findMany({
       where: {
@@ -993,16 +1116,15 @@ router.get("/:id", async (req, res) => {
       Item.item_category[0].category.id
     );
 
-
     Item = {
       ...Item,
       userItem,
       findedSimilarProduct,
-      review:_avg?.Note
+      review: _avg?.Note,
     };
     res.status(200).json(Item);
   } catch (error) {
-    console.log(error);
+    logger.error("GET /api/item/:id" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1041,7 +1163,7 @@ router.post("/favorit", auth, async (req, res) => {
       res.status(200).json("ok");
     }
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/favorit" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1065,7 +1187,7 @@ router.post("/view", auth, async (req, res) => {
     });
     res.status(200).json("viewed");
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/view" + error);
     res.status(500).json("Serveur error");
   }
 });
@@ -1083,10 +1205,10 @@ router.delete("/favorit", auth, async (req, res) => {
         item: true,
       },
     });
-
+    logger.info("DELETE /api/item/favorit by " + req.user.id);
     res.status(200).json("ok");
   } catch (error) {
-    console.log(error);
+    logger.error("DELETE /api/item/favorit" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1154,7 +1276,7 @@ router.post("/favorit/all", auth, async (req, res) => {
 
     res.status(200).json({ items: Item, count });
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/favorit/all" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1211,7 +1333,7 @@ router.post("/search", auth, async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/search" + error);
     res.status(500).json("Server error");
   }
 });
@@ -1301,7 +1423,7 @@ router.post("/search", auth, async (req, res) => {
 
     res.status(200).json(result);
   } catch (error) {
-    console.log(error);
+    logger.error("POST /api/item/search" + error);
     res.status(500).json("Server error");
   }
 });

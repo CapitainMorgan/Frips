@@ -6,16 +6,14 @@ import {
   makeStyles,
   Modal,
   TextField,
-  Typography,
+  Typography
 } from "@material-ui/core";
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
 import CloseIcon from "@material-ui/icons/Close";
-import axios from "axios";
 import DoneIcon from "@material-ui/icons/Done";
-import CancelIcon from "@material-ui/icons/Cancel";
+import React, { useState } from "react";
+import { connect, useDispatch } from "react-redux";
 import { sendMessage } from "../../actions";
-import { connect } from "react-redux";
+import axiosInstance from "../../api/api";
 const useStyles = makeStyles((theme) => ({
   pointer: {
     cursor: "pointer",
@@ -103,7 +101,7 @@ const PricePropose = ({
   anchorEl,
   imageSender,
   Profile,
-  Message,
+  Pseudo,
   userId,
   id_Receiver,
   chat_id,
@@ -120,6 +118,7 @@ const PricePropose = ({
 
   const dispatch = useDispatch();
 
+
   const handleChange = (e) => {
     if (!isNaN(e.target.value)) {
       setPrice(e.target.value);
@@ -129,7 +128,7 @@ const PricePropose = ({
   const sendProposition = async (Price, idItem) => {
     try {
       setLoading(true);
-      const succeed = await axios.post("/api/items/proposition", {
+      const succeed = await axiosInstance.post("/api/items/proposition", {
         Price:Price,
         idItem:idItem,
       });
@@ -208,7 +207,7 @@ const PricePropose = ({
               backgroundColor: displayColor(succeed),
             }}
             variant="contained"
-            disabled={loading || succeed === 2 || error}
+            disabled={loading ||  error}
             onClick={async () => {
               if (item) {
                 if (socket?.connected) {
@@ -226,6 +225,7 @@ const PricePropose = ({
                     item,
                     Price,
                     imageSender: imageSender?.image ? imageSender : null,
+                    Pseudo:Pseudo
                   };
                   dispatch(
                     sendMessage(
@@ -239,6 +239,10 @@ const PricePropose = ({
                       socket
                     )
                   );
+                  setLoading(false);
+                  handleClickAway()
+
+
                       
                  
 
@@ -248,7 +252,7 @@ const PricePropose = ({
               }
             }}
           >
-            {loadingSendProposition(succeed, loading)}
+            {!error ? loadingSendProposition(succeed, loading):null}
             {error ? <Typography style={{fontSize:16}}>{error}</Typography>:null}
 
           </Button>

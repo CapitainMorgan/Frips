@@ -1,6 +1,12 @@
 const express = require("express");
 const router = express.Router();
 const { nanoid } = require("nanoid");
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { image: { type: "file", filename: "image.log" } },
+  categories: { default: { appenders: ["image"], level: "error" } },
+});
+var logger = log4js.getLogger("image");
 
 const path = require("path"); // path for cut the file extension
 let fs = require("fs-extra");
@@ -52,6 +58,7 @@ router.post("/", upload.any(), async (req, res) => {
         id: req.body.id[0],
       },
     });
+    logger.error("POST / " + error);
     res.status(500).json("Server error");
   }
 });

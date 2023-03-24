@@ -4,9 +4,6 @@ import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import { io } from "socket.io-client";
 import PrivateRoute from "../routes/PrivateRoute";
-import Aide from "./Footer/Aide";
-import Assisstance from "./Footer/Assisstance";
-import ConditionGeneral from "./Footer/ConditionG";
 import Footer from "./Footer/Footer";
 import Header from "./Header";
 import ItemCreate from "./Items/ItemCreate";
@@ -28,10 +25,14 @@ import {
   loadUser,
   setSocket,
 } from "../actions";
+import API_ENDPOINT from "../api/url";
 import CheckUrl from "../routes/CheckUrl";
+import SellerRoute from "../routes/SellerRoute";
 import store from "../store/store";
 import setAuthToken from "../utils/setAuthToken";
-import Sell from "./Footer/Sell";
+import "./App.css";
+import CheckOutComponent from "./Checkout/CheckOutComponent";
+import StatusPaymentComponent from "./Checkout/StatusPaymentComponent";
 import DisplayCatalogue from "./Items/CatalogueDisplay/DisplayCatalogue";
 import ItemEdit from "./Items/ItemEdit";
 import Register from "./Login/UserRegister";
@@ -39,19 +40,25 @@ import Conversation from "./Message/Conversation";
 import NewMessage from "./Message/newMessage";
 import PageNotFound from "./NavBar/PageNotFound";
 import MyFavorite from "./Profil/MyFavorite";
-import MyFrips from "./Profil/MyFrips/MyFrips";
-import NotificationComponent from "./Profil/NotificationComponent";
-import "./App.css";
-import StripeContainer from "./Checkout/StripeContainer";
-import StatusPaymentComponent from "./Checkout/StatusPaymentComponent";
-import CheckOutComponent from "./Checkout/CheckOutComponent";
 import MemberProfile from "./Profil/MyFrips/Members/MemberProfile";
+import MyFrips from "./Profil/MyFrips/MyFrips";
+import MySellById from "./Profil/MyFrips/MySell/MySellById";
+import NotificationComponent from "./Profil/NotificationComponent";
+import RegisterSeller from "./Profil/RegisterSeller";
+import ConditionGeneral from "./Footer/Help/ConditionGeneral";
+import Aide from "./Footer/Help/Aide";
+import MyPropositionById from "./Profil/MyFrips/MyProposition/MyPropositionById";
+import SellInfo from "./Footer/Help/SellInfo";
+import BuyInfo from "./Footer/Help/BuyInfo";
+import AccountInfo from "./Footer/Help/AccountInfo";
+import PaymentInfo from "./Footer/Help/PaymentInfo";
+import Dashboard from "../admin/Dashboard";
+
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
-const ENDPOINT = "http://192.168.1.108:5000";
-const socket = io(ENDPOINT);
+const socket = io(API_ENDPOINT, { reconnection: true,autoConnect:true });
 
 const App = () => {
   const [notification, setNotification] = useState(null);
@@ -102,7 +109,10 @@ const App = () => {
         >
           <Router>
             <Header />
-            <NotificationComponent notification={notification} />
+            <NotificationComponent
+              mobile={mobile}
+              notification={notification}
+            />
             <Routes>
               <Route
                 path="/signup"
@@ -129,25 +139,42 @@ const App = () => {
               </Route>
 
               <Route element={<PrivateRoute />} key={"private-route"}>
-                <Route
-                  path="/items/new"
-                  caseSensitive={false}
-                  element={<ItemCreate />}
-                />
                 <Route path="/settings/profile" element={<UserProfile />} />
                 <Route path="/members/myFrips" element={<MyFrips />} />
+                <Route path="/members/myFrips/:url" element={<MyFrips />} />
+
+                <Route
+                  path="/members/myFrips/mySell/:id"
+                  element={<MySellById />}
+                />
+
+                <Route
+                  path="/members/myFrips/myProposition/:id"
+                  element={<MyPropositionById />}
+                />
+
                 <Route path="/member/conversation" element={<Conversation />} />
                 <Route path="/member/myFavorite" element={<MyFavorite />} />
                 <Route path="/member/message/:id" element={<NewMessage />} />
-                <Route path="/items/edit/:id" element={<ItemEdit />} />
                 <Route
-                  path="/items/offer/:id"
-                  element={<div style={{ height: 200 }}>salut</div>}
+                  path="/member/register/Seller"
+                  element={<RegisterSeller />}
                 />
+
+                <Route path="/items/edit/:id" element={<ItemEdit />} />
+
                 <Route path="/payment/:id" element={<CheckOutComponent />} />
                 <Route
                   path="/payment/:id/paymentStatus"
                   element={<StatusPaymentComponent />}
+                />
+              </Route>
+
+              <Route element={<SellerRoute />} key={"seller-route"}>
+                <Route
+                  path="/items/new"
+                  caseSensitive={false}
+                  element={<ItemCreate />}
                 />
               </Route>
               <Route path="/filter" element={<DisplayCatalogue />} />
@@ -167,14 +194,22 @@ const App = () => {
                 </Route>
               </Route>
 
-              <Route path="/assisstance" exact element={<Assisstance />} />
               <Route
                 path="/Condition-général-de-vente-et-politique"
                 exact
                 element={<ConditionGeneral />}
               />
-              <Route path="/Aide/vendre" exact element={<Sell />} />
-              <Route path="/Aide" exact element={<Aide />} />
+                 <Route
+                  path="/admin"
+                  element={<Dashboard />}
+                />
+              <Route path="/aide" element={<Aide />} />
+              <Route path="/aide/paymentInfo" element={<PaymentInfo />} />
+              <Route path="/aide/sellInfo" element={<SellInfo />} />
+              <Route path="/aide/buyInfo" element={<BuyInfo />} />
+
+              <Route path="/aide/accountInfo" element={<AccountInfo />} />
+
               <Route path="*" element={<PageNotFound />} />
               <Route path="/PageIntrouvable" element={<PageNotFound />} />
             </Routes>

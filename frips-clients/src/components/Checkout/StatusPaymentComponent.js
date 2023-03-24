@@ -29,7 +29,7 @@ const FailComponent = ({id,navigate}) => {
     <Box display={"flex"} flexDirection={"column"} justifyContent="center" alignItems={"center"}>
         <ErrorIcon style={{color:"#DD3437",fontSize:80}}/>
         <Typography>
-          Il semblerait que le paiement est échouée
+          Il semblerait que le paiement a échoué
         </Typography>
         <Box display={"flex"}>
         <Button
@@ -48,12 +48,6 @@ const FailComponent = ({id,navigate}) => {
 
 const StatusPaymentComponent = ({ successed, failed, item }) => {
   const navigate = useNavigate()
- 
-
-  if(!item){
-    navigate("/")
-  }
-
   return (
     <Box
       style={{ backgroundColor: "#F5f5f3" }}

@@ -16,10 +16,11 @@ import React, { useEffect, useState } from "react";
 import { AiOutlineStar } from "react-icons/ai";
 import { TbTruckDelivery } from "react-icons/tb";
 import { useDispatch } from "react-redux";
-import { changeStep, review } from "../../../../actions";
+import { changeStep } from "../../../../actions";
 import { DELIVERY } from "../../../../actions/type";
 import DetailsDelivery from "./DetailsDelivery";
 import RatingComponent from "./RatingComponent";
+
 const useQontoStepIconStyles = makeStyles({
   root: {
     color: "#eaeaf0",
@@ -176,19 +177,7 @@ function getSteps() {
   return ["Livraison", "Review"];
 }
 
-function getStepContent(step) {
-  switch (step) {
-    case 0:
-      return "Livraison";
-    case 1:
-      return "Review";
-
-    default:
-      return "Unknown step";
-  }
-}
-
-const handleNumberStep = ({ Status, DateSend,review }) => {
+const handleNumberStep = ({ Status, DateSend, review }) => {
   if (!DateSend) {
     return 0;
   }
@@ -202,7 +191,7 @@ const handleNumberStep = ({ Status, DateSend,review }) => {
   }
 };
 
-const DeliveryStep = ({ item, account, id, classesSell }) => {
+const DeliveryStep = ({ item, account, id, classesSell, buyerAccount }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [index, setindex] = useState(0);
@@ -210,15 +199,21 @@ const DeliveryStep = ({ item, account, id, classesSell }) => {
   const steps = getSteps();
   const dispatch = useDispatch();
 
-
   useEffect(() => {
     setActiveStep(handleNumberStep(item));
     setindex(handleNumberStep(item));
   }, [item]);
 
-  const handleIndex = ({ Status, DateSend, id_transaction,review }) => {
+  const handleIndex = ({ Status, DateSend, id_transaction, review }) => {
     if (index === 0) {
-      return <DetailsDelivery classes={classesSell} account={account} />;
+      return (
+        <DetailsDelivery
+          item={item}
+          buyerAccount={buyerAccount}
+          classes={classesSell}
+          account={account}
+        />
+      );
     }
     if (index === 1 && Boolean(DateSend)) {
       return (
@@ -226,12 +221,17 @@ const DeliveryStep = ({ item, account, id, classesSell }) => {
           review={review[0]?.Note ? review[0]?.Note : null}
           id={id_transaction}
           classes={classesSell}
-          Pseudo={account.Pseudo}
+          Pseudo={buyerAccount.Pseudo}
         />
       );
     } else
       return (
-        <DetailsDelivery classes={classesSell} item={item} account={account} />
+        <DetailsDelivery
+          item={item}
+          buyerAccount={buyerAccount}
+          classes={classesSell}
+          account={account}
+        />
       );
   };
 

@@ -1,31 +1,24 @@
-import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
-import Stepper from "@material-ui/core/Stepper";
-import Step from "@material-ui/core/Step";
-import StepLabel from "@material-ui/core/StepLabel";
-import Check from "@material-ui/icons/Check";
-import SettingsIcon from "@material-ui/icons/Settings";
-import GroupAddIcon from "@material-ui/icons/GroupAdd";
-import VideoLabelIcon from "@material-ui/icons/VideoLabel";
-import StepConnector from "@material-ui/core/StepConnector";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
-import { TbTruckDelivery } from "react-icons/tb";
-import { AiOutlineStar } from "react-icons/ai";
 import { Box, Divider } from "@material-ui/core";
-import { useDispatch } from "react-redux";
+import Button from "@material-ui/core/Button";
+import Step from "@material-ui/core/Step";
+import StepConnector from "@material-ui/core/StepConnector";
+import StepLabel from "@material-ui/core/StepLabel";
+import Stepper from "@material-ui/core/Stepper";
+import { makeStyles, withStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+import Check from "@material-ui/icons/Check";
+import clsx from "clsx";
 import moment from "moment";
 import "moment/locale/de";
 import "moment/locale/fr";
+import React, { useEffect, useState } from "react";
+import { AiOutlineStar } from "react-icons/ai";
+import { TbTruckDelivery } from "react-icons/tb";
+import { useDispatch } from "react-redux";
 import { changeStep } from "../../../../actions";
-import { DELIVERY, RECEIVED } from "../../../../actions/type";
+import { RECEIVED } from "../../../../actions/type";
 import DetailsDelivery from "../MySell/DetailsDelivery";
 import RatingComponent from "../MySell/RatingComponent";
-
-
-
 
 const ColorlibConnector = withStyles({
   alternativeLabel: {
@@ -99,7 +92,6 @@ function ColorlibStepIcon(props) {
   );
 }
 
-
 const useStyles = makeStyles((theme) => ({
   root: {
     width: "100%",
@@ -129,7 +121,7 @@ function getStepContent(step) {
   }
 }
 
-const handleNumberStep = ({ Status, DateSend,review }) => {
+const handleNumberStep = ({ Status, DateSend, review }) => {
   if (!DateSend) {
     return 0;
   }
@@ -143,7 +135,7 @@ const handleNumberStep = ({ Status, DateSend,review }) => {
   }
 };
 
-const PurchaseStep = ({ item, account, id,classesSell }) => {
+const PurchaseStep = ({ item, account, id, classesSell, buyerAccount }) => {
   const classes = useStyles();
   const [activeStep, setActiveStep] = useState(0);
   const [index, setindex] = useState(0);
@@ -151,26 +143,21 @@ const PurchaseStep = ({ item, account, id,classesSell }) => {
   const steps = getSteps();
   const dispatch = useDispatch();
 
-  const handleNext = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep + 1);
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
-  };
-
   useEffect(() => {
     setActiveStep(handleNumberStep(item));
     setindex(handleNumberStep(item));
   }, [item]);
 
-  const handleIndex = ({ Status, DateSend, id_transaction,review }) => {
+  const handleIndex = ({ Status, DateSend, id_transaction, review }, item) => {
     if (index === 0) {
-      return <DetailsDelivery classes={classesSell} account={account} />;
+      return (
+        <DetailsDelivery
+          item={item}
+          buyerAccount={buyerAccount}
+          classes={classesSell}
+          account={account}
+        />
+      );
     }
     if (index === 1 && Boolean(DateSend)) {
       return (
@@ -183,7 +170,12 @@ const PurchaseStep = ({ item, account, id,classesSell }) => {
       );
     } else
       return (
-        <DetailsDelivery classes={classesSell} item={item} account={account} />
+        <DetailsDelivery
+          buyerAccount={buyerAccount}
+          classes={classesSell}
+          item={item}
+          account={account}
+        />
       );
   };
 
@@ -220,8 +212,6 @@ const PurchaseStep = ({ item, account, id,classesSell }) => {
         padding={5}
         justifyContent="space-between"
       >
-       
-
         {Boolean(item.DateSend) ? (
           <Typography>
             Envoyé{" "}
@@ -229,11 +219,14 @@ const PurchaseStep = ({ item, account, id,classesSell }) => {
               item.DateSend
             ).format("LLL")}`}
           </Typography>
-        ) : null}
+        ) : <Typography>
+            en cours d'envoi
+            
+          </Typography>}
         <Button
-          disabled={Boolean(item.Status)}
+          disabled={Boolean(item.Status) || !Boolean(item.DateSend)}
           onClick={() => {
-            dispatch(changeStep(id, RECEIVED, item.id_transaction,"Received"));
+            dispatch(changeStep(id, RECEIVED, item.id_transaction, "Received"));
             setindex(index + 1);
           }}
           style={{ fontSize: 14 }}
@@ -245,42 +238,7 @@ const PurchaseStep = ({ item, account, id,classesSell }) => {
       </Box>
 
       <Divider />
-      {handleIndex(item)}
-      <div>
-        {activeStep === steps.length ? (
-          <div>
-            <Typography className={classes.instructions}>
-              All steps completed - you&apos;re finished
-            </Typography>
-            <Button onClick={handleReset} className={classes.button}>
-              Reset
-            </Button>
-          </div>
-        ) : (
-          <div>
-            <Typography className={classes.instructions}>
-              {getStepContent(activeStep)}
-            </Typography>
-            <div>
-              <Button
-                disabled={activeStep === 0}
-                onClick={handleBack}
-                className={classes.button}
-              >
-                Back
-              </Button>
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleNext}
-                className={classes.button}
-              >
-                {activeStep === steps.length - 1 ? "Finish" : "Next"}
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
+      {handleIndex(item, item)}
     </div>
   );
 };

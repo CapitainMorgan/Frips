@@ -5,50 +5,41 @@ import { BiPackage } from "react-icons/bi";
 import { BsFillPersonFill } from "react-icons/bs";
 import { GiPositionMarker } from "react-icons/gi";
 
-const DetailAddress = ({buyerAccount}) =>{
+const DetailAddress = ({ buyerAccount }) => {
   const { Firstname, Lastname } = buyerAccount;
   const { City, NPA, Street, NumStreet } = buyerAccount?.address;
   return (
     <Box display={"flex"} flexDirection={"column"} marginBottom={5}>
-    <Box display={"flex"} alignItems="center">
-      <Icon component={GiPositionMarker} />
-      <Typography style={{ fontSize: 16 }}>Adresse</Typography>
-    </Box>
-    <Box marginLeft={10} display={"flex"}>
-      <Box display={"flex"} flexDirection="column" flexGrow={1}>
-        <Typography
-          style={{ fontSize: 16, fontWeight: 600 }}
-        >{`${Firstname} ${Lastname}`}</Typography>
-        <Typography
-          style={{ fontSize: 16 }}
-        >{`${Street} ${NumStreet}`}</Typography>
-        <Typography
-          style={{ fontSize: 16 }}
-        >{`${City} ${NPA}`}</Typography>
+      <Box display={"flex"} alignItems="center">
+        <Icon component={GiPositionMarker} />
+        <Typography style={{ fontSize: 16 }}>Adresse</Typography>
+      </Box>
+      <Box marginLeft={10} display={"flex"} flexDirection={"column"}>
+        <Box display={"flex"} flexDirection="column">
+          <Typography
+            style={{ fontSize: 16, fontWeight: 600 }}
+          >{`${Firstname} ${Lastname}`}</Typography>
+          <Typography
+            style={{ fontSize: 16 }}
+          >{`${Street} ${NumStreet}`}</Typography>
+          <Typography style={{ fontSize: 16 }}>{`${City} ${NPA}`}</Typography>
+        </Box>
       </Box>
     </Box>
-  </Box>
-  )
-}
+  );
+};
 
-const typeOfDelivery = (price) =>{
-  if(price===7){
-    return "Livraison Poste Standard"
+const typeOfDelivery = (price) => {
+  if (price === 7) {
+    return "Livraison Poste Standard";
   }
-  if(price===9){
-    return "Livraison Poste Rapide"
+  if (price === 9) {
+    return "Livraison Poste Rapide";
   }
-  return "Livraison en main-propre"
-}
+  return "Livraison en main-propre";
+};
 
-const DetailsDelivery = ({
-  item,
-  buyerAccount,
-  account,
-  classes,
-}) => {
-
-  
+const DetailsDelivery = ({ item, buyerAccount, account, classes }) => {
   const { Firstname, Lastname } = account;
   const { City, NPA, Street, NumStreet } = account?.address;
   return (
@@ -58,12 +49,7 @@ const DetailsDelivery = ({
       </Typography>
 
       <Box className={classes.delivery}>
-        <Box
-          display={"flex"}
-          flexDirection="column"
-          width={"50%"}
-          maxWidth={"50%"}
-        >
+        <Box className={classes.deliveryCategory}>
           <Box display={"flex"} flexDirection={"column"} marginBottom={5}>
             <Box display={"flex"} alignItems="center">
               <Icon component={AttachMoneyIcon} />
@@ -78,7 +64,7 @@ const DetailsDelivery = ({
                   {"Total"}
                 </Typography>
               </Box>
-              <Box display={"flex"} marginLeft={10} flexDirection={"column"}>
+              <Box display={"flex"} marginLeft={6} flexDirection={"column"}>
                 <Typography style={{ fontSize: 15 }}>
                   {item?.Price}.-
                 </Typography>
@@ -89,9 +75,7 @@ const DetailsDelivery = ({
                   {item?.Price_Fees}.-
                 </Typography>
                 <Typography style={{ fontSize: 17, fontWeight: 720 }}>
-                  {item?.Price +
-                    item?.DeliveryPrice +
-                    item?.Price_Fees}
+                  {item?.Price + item?.DeliveryPrice + item?.Price_Fees}
                   CHF
                 </Typography>
               </Box>
@@ -113,18 +97,13 @@ const DetailsDelivery = ({
             </Box>
           </Box>
         </Box>
-        <Box
-          display={"flex"}
-          flexDirection="column"
-          width={"50%"}
-          maxWidth={"50%"}
-        >
+        <Box className={classes.deliveryCategory}>
           <Box display={"flex"} flexDirection={"column"} marginBottom={5}>
             <Box display={"flex"} alignItems="center">
               <Icon component={BsFillPersonFill} />
               <Typography style={{ fontSize: 16 }}>Vendeur</Typography>
             </Box>
-            <Box marginLeft={10} display={"flex"}>
+            <Box marginLeft={10} display={"flex"} width="100%">
               <Box display={"flex"} flexDirection={"column"}>
                 <Typography
                   style={{ fontSize: 16, fontWeight: 600 }}

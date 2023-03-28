@@ -12,6 +12,11 @@ const { item, account, image, message, transaction, pricepropose } =
 let taxe = 1.07;
 
 const log4js = require("log4js");
+const { sendEmail } = require("../email/sendEmail");
+log4js.configure({
+  appenders: { payment: { type: "file", filename: "payment.log" } },
+  categories: { default: { appenders: ["payment"], level: "error" } },
+});
 var logger = log4js.getLogger("payment");
 
 const customRound = (price) => {
@@ -66,7 +71,12 @@ router.post("/createCheckoutPayment", auth, async (req, res) => {
         enabled: true,
       },
     });
-    logger.info("POST /payment/createCheckoutPayment user " + req.user.id + " item " + idItem );
+    logger.info(
+      "POST /payment/createCheckoutPayment user " +
+        req.user.id +
+        " item " +
+        idItem
+    );
     res.send({ client_secret: paymentIntent.client_secret });
   } catch (error) {
     logger.error("POST /payment/createCheckoutPayment", error);
@@ -81,13 +91,19 @@ router.post("/info", auth, async (req, res) => {
   try {
     let itemInfo;
     const ifSold = await transaction.findFirst({
-      where:{
-        id_Item:idItem
-      }
-    })
+      where: {
+        id_Item: idItem,
+      },
+    });
 
     if (ifSold) {
-      logger.info("POST /payment/info user" + req.user.id + " item " + idItem + " but item is sold");
+      logger.info(
+        "POST /payment/info user" +
+          req.user.id +
+          " item " +
+          idItem +
+          " but item is sold"
+      );
       res.status(400).json("L'article a été vendu");
     } else {
       if (idItem && !isFromProposition) {
@@ -205,13 +221,15 @@ router.post("/reserved", auth, async (req, res) => {
   try {
     await item.update({
       where: {
-        id: idItem,
+        id: parseInt(idItem),
       },
       data: {
         Disponibility: true,
       },
     });
-    logger.info("POST /payment/reserved user " + req.user.id + " item " + idItem );
+    logger.info(
+      "POST /payment/reserved user " + req.user.id + " item " + idItem
+    );
     res.status(200).json("ok");
   } catch (error) {
     logger.error("POST /payment/reserved", error);
@@ -240,12 +258,17 @@ router.post("/isReserved", auth, async (req, res) => {
         Disponibility: false,
       },
     });
-    console.log(Disponibility);
 
     if (Disponibility) {
       res.status(200).json(Disponibility);
     } else {
-      logger.info("POST /payment/isReserved user " + req.user.id + " item " + idItem + " but item is not available")
+      logger.info(
+        "POST /payment/isReserved user " +
+          req.user.id +
+          " item " +
+          idItem +
+          " but item is not available"
+      );
       res
         .status(400)
         .json("Oups il semblerait que cet article ne soit plus disponible");
@@ -259,6 +282,7 @@ router.post("/isReserved", auth, async (req, res) => {
 router.post("/succeed", auth, async (req, res) => {
   const { StripeIdentifier, idItem, id_Account, id_Fees, isFromProposition } =
     req.body;
+  const { id } = req.user;
 
   try {
     if (!isFromProposition) {
@@ -345,8 +369,12 @@ router.post("/succeed", auth, async (req, res) => {
         },
       });
     }
-    logger.info("POST /payment/succeed user " + req.user.id + " item " + idItem );
+    logger.info(
+      "POST /payment/succeed user " + req.user.id + " item " + idItem
+    );
     res.status(200).json(`/payment/${idItem}/paymentStatus`);
+    await sendEmail(id_Account, "Sell", { id_Item: idItem});
+    await sendEmail(id, "Bill", { id_Item: idItem, id_Buyer: id });
   } catch (error) {
     logger.error("POST /payment/succeed", error);
     res.status(500).json("Servor error");

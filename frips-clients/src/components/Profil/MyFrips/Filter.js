@@ -1,11 +1,9 @@
 import {
   Box,
   Checkbox,
-  ClickAwayListener,
-  ListItemIcon,
-  MenuItem,
+  ClickAwayListener, MenuItem,
   Popper,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { FaFilter } from "react-icons/fa";
@@ -22,11 +20,6 @@ const filterArrayItems = [
     { Name: "par date croissante", id: 3 },
   ],
   [
-    { Name: "par date croissante", id: 3 },
-    { Name: "par date décroissante", id: 4 },
-    { Name: "Meilleure offre", id: 2 },
-  ],
-  [
     { Name: "à envoyer", id: 10 },
     { Name: "vendu", id: 11 },
     { Name: "vendu par ordre décroissant", id: 8 },
@@ -41,7 +34,6 @@ const filterArrayItems = [
     { Name: "à recevoir", id: 12 },
     { Name: "reçu", id: 13 },
     { Name: "acheté par ordre décroissant", id: 14 },
-    { Name: "acheté par ordre croissant", id: 15 },
   ],
 ];
 
@@ -105,10 +97,8 @@ const Filter = ({ id, classes, filterMyFrips }) => {
           justifyContent="center"
         >
           <Typography style={{ fontSize: 16 }}>Trier par</Typography>
-          <ListItemIcon style={{ paddingLeft: 0, minWidth: 0 }}>
-            <FaFilter />
+            <FaFilter color="#82A0C2" style={{marginLeft:4}} />
             <Typography>({filterMyFrips.length})</Typography>
-          </ListItemIcon>
         </Box>
 
         <Popper

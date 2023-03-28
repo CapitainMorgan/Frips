@@ -9,6 +9,7 @@ var log4js = require("log4js");
 var logger = log4js.getLogger('auth');
 
 const { PrismaClient } = require("@prisma/client");
+const { sendEmail } = require("../email/sendEmail");
 
 const { account, favorit } = new PrismaClient();
 
@@ -32,7 +33,8 @@ router.get("/", auth, async (req, res) => {
           },
         },
         IBAN:true,
-        address:true
+        address:true,
+        
       },
     });
     logger.info("user " + req.user.id + " GET /auth")
@@ -47,7 +49,7 @@ router.get("/", auth, async (req, res) => {
 // @desc    Auth user & get token
 // @acces    Public
 
-router.post("/", async (req, res) => {
+router.post("/", async (req, res,next) => {
   const { Email, Password } = req.body;
   try {
     let user = await account.findUnique({
@@ -80,6 +82,8 @@ router.post("/", async (req, res) => {
       },
     };
 
+
+    console.log(payload)
     jwt.sign(
       payload,
       config.get("jwtSecret"),

@@ -19,7 +19,7 @@ export default (state = initialState, action) => {
     case NOTIFICATION:
       return {
         ...state,
-        notificationUser: [...state.notificationUser, payload.id_Sender],
+        notificationUser: [...state.notificationUser, payload],
       };
 
     case UNREAD_NOTIFICATION:
@@ -29,7 +29,7 @@ export default (state = initialState, action) => {
       };
     case CLEAR_NOTIFICATION: {
       const removeArrayUser = state.notificationUser.filter((user, index) => {
-        return user.id !== payload.id;
+        return user.id_Chat !== payload;
       });
       return {
         ...state,

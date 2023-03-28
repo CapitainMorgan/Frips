@@ -20,7 +20,7 @@ const DisplayMain = ({ classes, loaded }) => {
             <Box display="inline-block" padding={2}>
               <Box>
                 <Typography style={{ fontSize: 30, fontWeight: 500 }}>
-                  Prêts à rejoindre la communauté ?
+                  Prêt à rejoindre la communauté ?
                 </Typography>
               </Box>
               <Box

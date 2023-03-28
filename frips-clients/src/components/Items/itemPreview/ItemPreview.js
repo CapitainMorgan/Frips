@@ -1,10 +1,11 @@
 import {
-  Box, CircularProgress,
+  Box,
+  CircularProgress,
   makeStyles,
   Typography
 } from "@material-ui/core";
 import { isNumber } from "lodash";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useParams } from "react-router-dom";
 import { fetchItem, idFavorite, itemViewed } from "../../../actions";
@@ -110,12 +111,12 @@ const ItemPreview = (props) => {
   const dispatch = useDispatch();
   let singleItem = useSelector((state) => state.items.UniqueItem);
   let loading = useSelector((state) => state.items.loading);
-  const myAccount = useSelector(state => state.auth.user)
+  const myAccount = useSelector((state) => state.auth.user);
   let favorite = useSelector((state) => state.favoriteReducers.favoritIds);
   const location = useLocation();
 
   useEffect(() => {
-    if(isNumber(id)){
+    if (isNumber(id)) {
       dispatch(fetchItem(id));
       dispatch(idFavorite());
       dispatch(itemViewed(id));
@@ -170,7 +171,7 @@ const ItemPreview = (props) => {
                 favorite={favorite}
               />
             </Box>
-            <Box  height={"10vh"} width={"100%"}></Box>
+            <Box height={"15vh"} width={"100%"}></Box>
 
             <Box className={classes.ArticleProfil}>
               <ItemProfil
@@ -180,7 +181,7 @@ const ItemPreview = (props) => {
               />
             </Box>
             <Box height={50} width={"100%"} />
-            <Box display="flex" width={"100%"} height={40}>
+            <Box display="flex" width={"100%"} height={40} padding={2}>
               <Typography style={{ fontSize: 20, color: "#757575" }}>
                 Offres similaire
               </Typography>

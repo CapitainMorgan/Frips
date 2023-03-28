@@ -8,9 +8,17 @@ const path = require("path"); // path for cut the file extension
 const { PrismaClient } = require("@prisma/client");
 const { similarProduct } = require("./logicFunction/logicSimilarProduct");
 const log4js = require("log4js");
+const { sendEmail } = require("../email/sendEmail");
+const sharp = require("sharp");
+
+log4js.configure({
+  appenders: { items: { type: "file", filename: "items.log" } },
+  categories: { default: { appenders: ["items"], level: "error" } },
+});
 var logger = log4js.getLogger("items");
 
-const { item, image, nbview, favorit, brand ,review,pricepropose} =new PrismaClient();
+const { item, image, nbview, favorit, brand, review, pricepropose, account } =
+  new PrismaClient();
 
 // @route   Post api/items
 // @desc    post one item
@@ -20,7 +28,6 @@ const upload = multer().any();
 
 const colorLengthFunction = (Color) => {
   const [firstColor, SecondColor] = Color;
-  console.log(Color);
 
   if (Color.length == 2) {
     return {
@@ -33,7 +40,6 @@ const colorLengthFunction = (Color) => {
       },
     };
   } else {
-
     return {
       create: {
         data: {
@@ -85,7 +91,7 @@ router.post("/", auth, upload, async (req, res) => {
 
   if (!Array.isArray(Delivery)) {
     Delivery = Delivery.split(",").map(Number);
-  }  
+  }
 
   try {
     const exist = await brand.upsert({
@@ -136,7 +142,6 @@ router.post("/", auth, upload, async (req, res) => {
             };
           }),
         },
-       
 
         id_ItemCondition: State,
         item_brand: {
@@ -154,21 +159,20 @@ router.post("/", auth, upload, async (req, res) => {
     for (let index = 0; index < req.files.length; index++) {
       let id = nanoid();
       fs.writeFileSync(
-        path.join(
-          "./",
-          pathDir,
-          `${id}` + path.extname(req.files[index].originalname)
-        ),
-        req.files[index].buffer,
-        "UTF8"
+        path.join("./", pathDir, `${id}` + ".jpeg"),
+        await sharp(req.files[index].buffer)
+          .resize({ width: 1000, height: 1000 })
+          .jpeg({ quality: 75 })
+          .toBuffer()
       );
+
       await image.create({
         data: {
           id_Item: Item.id,
 
           confidencial: false,
 
-          image: `${id}` + path.extname(req.files[index].originalname),
+          image: `${id}` + ".jpeg",
         },
       });
     }
@@ -245,7 +249,6 @@ router.get("/", async (req, res) => {
 router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
   const { id } = req.user;
   const { id_Item } = req.params;
-  console.log(id_Item)
   try {
     const findUser = await item.findUnique({
       where: {
@@ -262,7 +265,13 @@ router.delete("/deleteItem/:id_Item", auth, async (req, res) => {
       logger.info("DELETE / : " + deleted.id + " by user " + id);
       res.sendStatus(200);
     } else {
-      logger.warn("DELETE / : " + "not authorized action by user " + id + " on item " + id_Item);
+      logger.warn(
+        "DELETE / : " +
+          "not authorized action by user " +
+          id +
+          " on item " +
+          id_Item
+      );
       res.status(401).send({ msg: "Action non-autorisée" });
     }
   } catch (error) {
@@ -534,16 +543,23 @@ const filterCatalogue = (Catalogue) => {
   };
 };
 
-const findSearchQuery = (Search) =>{
-  const arraySearch = []
-  Search.map((item)=>{
-    arraySearch.push({Name:{
-      contains:item.Name
-    }})
-  })
-  console.log(...arraySearch)
-  return arraySearch
-}
+const findSearchQuery = (Search) => {
+  const arraySearch = [];
+  Search.map((item) => {
+    arraySearch.push({
+      Name: {
+        contains: item.Name,
+      },
+    });
+    arraySearch.push({
+      Description: {
+        contains: item.Name,
+      },
+    });
+  });
+  return arraySearch;
+};
+
 const isFilter = (filter) => {
   const {
     newCatalogue,
@@ -555,7 +571,6 @@ const isFilter = (filter) => {
     itemsId,
     newTaille,
   } = filter;
-  
 
   if (
     newCatalogue.length !== 0 ||
@@ -563,15 +578,12 @@ const isFilter = (filter) => {
     newEtat.length !== 0 ||
     newMarque.length !== 0 ||
     newTaille.length !== 0 ||
-    Price[0] !== 0 ||
-    Price[1] !== null || 
-    Search.length !==0
+    Boolean(Price[0]) ||
+    Boolean(Price[1]) ||
+    Search.length !== 0
   ) {
     return {
       OR: [
-        { id_ItemCondition: { in: newEtat } },
-        { Size: { in: newTaille } },
-        { item_color: { some: { id_Color: { in: newCouleur } } } },
         {
           item_brand: {
             some: {
@@ -580,10 +592,12 @@ const isFilter = (filter) => {
           },
         },
         filterCatalogue(newCatalogue),
+        { id_ItemCondition: { in: newEtat } },
+        { Size: { in: newTaille } },
+        { item_color: { some: { id_Color: { in: newCouleur } } } },
 
         priceRange(Price),
-        ...findSearchQuery(Search)
-
+        ...findSearchQuery(Search),
       ],
     };
   } else return;
@@ -614,21 +628,20 @@ router.post("/pagination", async (req, res) => {
 
   try {
     const count = await item.count({
-      where:{
-        OR:isFilter(req.body),
+      where: {
+        OR: isFilter(req.body),
         transaction: {
           none: {},
         },
-      }
+      },
     });
 
     const Item = await item.findMany({
-      where:{
-        OR:isFilter(req.body),
+      where: {
+        OR: isFilter(req.body),
         transaction: {
           none: {},
         },
-        
       },
       include: {
         image: {
@@ -701,7 +714,7 @@ router.post("/pagination", async (req, res) => {
 
 router.post("/more", async (req, res) => {
   const { number } = req.body;
-
+  console.log(number);
   try {
     const Item = await item.findMany({
       include: {
@@ -735,7 +748,7 @@ router.post("/more", async (req, res) => {
         DatePuplication: "desc",
       },
       take: 10,
-      skip: 10 * number,
+      skip: 10 * (number - 1),
     });
     res.status(200).json(Item);
   } catch (error) {
@@ -790,11 +803,89 @@ router.get("/new", async (req, res) => {
           },
         },
       },
-
-      take: -5,
+      orderBy: [
+        { nbview: { _count: "desc" } },
+        { favorit: { _count: "desc" } },
+      ],
+      take: 4,
     });
 
     res.status(200).json(Item);
+  } catch (error) {
+    logger.error("GET /api/item/new" + error);
+    res.status(500).json("Server error");
+  }
+});
+
+router.post("/topBusiness", async (req, res) => {
+  const { mobile } = req.body;
+  try {
+    const Item = await account.findMany({
+      where: {
+        item: {
+          some: {
+            transaction: {
+              none: {},
+            },
+          },
+        },
+        id: 1,
+      },
+      select: {
+        item: {
+          include: {
+            image: {
+              take: 1,
+            },
+            item_brand: {
+              select: {
+                brand: true,
+              },
+            },
+            item_color: {
+              select: {
+                color: {
+                  select: {
+                    Name: true,
+                  },
+                },
+              },
+            },
+            itemcondition: {
+              select: {
+                Name: true,
+              },
+            },
+
+            _count: {
+              select: {
+                favorit: true,
+              },
+            },
+          },
+          orderBy: [
+            { nbview: { _count: "desc" } },
+            { favorit: { _count: "desc" } },
+          ],
+          take: mobile ? 6 : 5,
+        },
+        image: true,
+        Pseudo: true,
+        id: true,
+      },
+    });
+    const { _avg } = await review.aggregate({
+      where: {
+        id_Account: 1,
+      },
+      _avg: {
+        Note: true,
+      },
+    });
+
+    console.log(Item, _avg);
+
+    res.status(200).json({ ...Item[0], _avg });
   } catch (error) {
     logger.error("GET /api/item/new" + error);
     res.status(500).json("Server error");
@@ -826,15 +917,27 @@ router.post("/proposition", auth, async (req, res) => {
 
   try {
     const data = await pricepropose.create({
-      data:{
-        Price:parseFloat(Price),
-        SendDate:DatePuplication ,
-        id_Account:id,
-        id_Item:id
-      }
-    })
-    logger.info("Price proposition send by " + id + " for item " + idItem + "")
-    res.status(200).json(data)
+      data: {
+        Price: parseFloat(Price),
+        SendDate: DatePuplication,
+        id_Account: id,
+        id_Item: idItem,
+      },
+      include: {
+        account: {
+          select: {
+            id: true,
+          },
+        },
+      },
+    });
+    logger.info("Price proposition send by " + id + " for item " + idItem + "");
+    res.status(200).json(data);
+    sendEmail(data.account.id, "ReceivedOffer", {
+      id_Item: idItem,
+      pricepropose: parseFloat(Price),
+      id_Sender: id,
+    });
   } catch (error) {
     logger.error("POST /api/item/proposition" + error);
     res.status(500).json("Server error");
@@ -943,17 +1046,15 @@ router.get("/:id", async (req, res) => {
           },
         },
       },
-
     });
-   const {_avg} =  await review.aggregate({
-      where:{
-        id_Account:Item.account.id
+    const { _avg } = await review.aggregate({
+      where: {
+        id_Account: Item.account.id,
       },
-      _avg:{
-        Note:true
-      }
-    })
-
+      _avg: {
+        Note: true,
+      },
+    });
 
     const userItem = await item.findMany({
       where: {
@@ -1015,12 +1116,11 @@ router.get("/:id", async (req, res) => {
       Item.item_category[0].category.id
     );
 
-
     Item = {
       ...Item,
       userItem,
       findedSimilarProduct,
-      review:_avg?.Note
+      review: _avg?.Note,
     };
     res.status(200).json(Item);
   } catch (error) {
@@ -1105,7 +1205,7 @@ router.delete("/favorit", auth, async (req, res) => {
         item: true,
       },
     });
-    logger.info("DELETE /api/item/favorit by " + req.user.id );
+    logger.info("DELETE /api/item/favorit by " + req.user.id);
     res.status(200).json("ok");
   } catch (error) {
     logger.error("DELETE /api/item/favorit" + error);

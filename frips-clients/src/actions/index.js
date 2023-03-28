@@ -29,9 +29,11 @@ import {
   FETCH_MYFAVORITE,
   FETCH_MYFAVORITEIDs,
   FETCH_MYFRIPS,
+  FETCH_MYPROPOSITIONID,
   FETCH_MYSELLBYID,
   FETCH_NEW_ITEMS,
   FETCH_NEW_ITEM_TYPE,
+  FETCH_TOP_BUSINESS,
   GENERATE_CONV,
   GET_ALL_CONV,
   GET_CONV,
@@ -259,7 +261,7 @@ export const createItem =
       dispatch({ type: CREATE_ITEM, payload: response.data });
       setIsLoading(false);
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: true });
-      // history("/")
+      history("/")
     } catch (error) {
       dispatch({ type: ERROR_ITEM, payload: true });
 
@@ -268,7 +270,7 @@ export const createItem =
     //
   };
 
-export const fetchItems = (fromHome) => async (dispatch, getState) => {
+export const fetchItems = (fromHome,mobile) => async (dispatch, getState) => {
   const loading = getState().items.loading;
 
   try {
@@ -276,11 +278,23 @@ export const fetchItems = (fromHome) => async (dispatch, getState) => {
     dispatch({ type: LOADING_FETCH_ITEM });
     dispatch({ type: FETCH_ITEMS, payload: data });
     dispatch(fetchNewItems());
+    dispatch(fetchTopBusiness(mobile))
 
     dispatch({ type: SUCCESS_FETCH_ITEM });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 };
 
+
+export const fetchTopBusiness = (mobile) => async (dispatch, getState) => {
+  try {
+    const { data } = await axiosInstance.post("/api/items/topBusiness",{mobile},config);
+    dispatch({ type: FETCH_TOP_BUSINESS, payload: data });
+  } catch (error) {
+    console.log(error)
+  }
+}
 export const fetchNewItems = () => async (dispatch, getState) => {
   try {
     const { data } = await axiosInstance.get("/api/items/new");
@@ -694,7 +708,7 @@ export const deleteItem = (id_Item) => async (dispatch, getState) => {
       `/api/items/deleteItem/${id_Item}`,
       config
     );
-    dispatch({type:REMOVE_ITEM,payload:id_Item})
+    dispatch({ type: REMOVE_ITEM, payload: id_Item });
   } catch (error) {
     console.log(error);
   }
@@ -846,14 +860,12 @@ export const paginationForFilter = () => async (dispatch, getState) => {
   let itemsId = [];
   let newTaille = [];
 
-  console.log(Search)
-
   if (
     AllFilter.Catalogue.length !== 0 ||
     AllFilter.Couleur.length !== 0 ||
     AllFilter.Marque.length !== 0 ||
     AllFilter.Etat.length !== 0 ||
-    AllFilter.Taille.length !== 0 
+    AllFilter.Taille.length !== 0
   ) {
     Catalogue.forEach((element) => {
       newCatalogue.push(element?.id);
@@ -912,21 +924,33 @@ export const addFilterFromSearch =
       dispatch(addToFilter(MAN_ID, "Catalogue"));
     } else {
       try {
-
         if (string.includes("rechercher")) {
-          let count = 0
+          let count = 0;
           string
             .replace("rechercher ", "")
             .replace(/"/g, "")
             .split(/\b(?:a|the|was|\s)+\b/i)
             .map((strArray) => {
               dispatch(
-                addToFilter({ Name: strArray.replace(/\s*$/, ""),id:1304+count }, "Search")
+                addToFilter(
+                  { Name: strArray.replace(/\s*$/, ""), id: 1304 + count },
+                  "Search"
+                )
               );
-              count+=1
+              count += 1;
             });
         } else {
-          const splitArray = string.split(/\b(?:a|the|was|\s)+\b/i);
+          let splitArray = string.match(
+            /^(Louis Vuitton|Marc Jacobs|Michael Kors|Ralph Lauren|The North Face|Tommy Hilfiger|Victoria's Secret|Calvin Klein|Sans marque)\s(.*)$/i
+          );
+          splitArray = splitArray
+            ? [splitArray[1], splitArray[2]]
+            : string.includes("Sans marque")
+            ? ["Sans marque", string.replace("Sans marque", "").trim()]
+            : [
+                string.split(" ")[0],
+                string.split(" ").slice(1).join(" ").trim(),
+              ];
 
           splitArray.forEach((element) => {
             if (_.find(array[1], { Name: element })) {
@@ -941,9 +965,8 @@ export const addFilterFromSearch =
             }
           });
         }
+
         history(`/filter`);
-
-
       } catch (error) {
         console.log(error);
       }
@@ -1040,7 +1063,6 @@ export const checkIfDisponible = (idItem) => async (dispatch, getState) => {
       { idItem },
       config
     );
-    console.log(data);
     dispatch({ type: ISRESERVED, payload: data });
     dispatch({ type: PAYMENT_INFO_SUCCESS_FETCH });
   } catch (error) {
@@ -1128,19 +1150,21 @@ export const updateAddress = (address) => async (dispatch, getState) => {
   }
 };
 
-export const changeIban = (address) => async (dispatch, getState) => {
-  try {
-    const { data } = await axiosInstance.post(
-      "/api/members/updateIban",
-      address,
-      config
-    );
+export const changeIban =
+  (IBAN, from, history) => async (dispatch, getState) => {
+    try {
+      const { data } = await axiosInstance.post(
+        "/api/members/IBAN",
+        { IBAN },
+        config
+      );
 
-    dispatch({ type: CHANGE_IBAN, payload: data });
-  } catch (error) {
-    dispatch({ type: PAYMENT_FAILED });
-  }
-};
+      dispatch({ type: CHANGE_IBAN, payload: data });
+      history(from);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
 export const getNotificationsMyFrips = () => async (dispatch, getState) => {
   try {
@@ -1227,7 +1251,7 @@ export const fetchMembersInfo =
     try {
       dispatch({ type: MEMBERS_LOADING });
       const { data } = await axiosInstance.post(
-        `/api/members/${name}`,
+        `/api/members/user/${name}`,
         { number: pagination },
         config
       );
@@ -1261,6 +1285,21 @@ export const fetchMySellId = (id) => async (dispatch, getState) => {
       config
     );
     dispatch({ type: FETCH_MYSELLBYID, payload: data });
+    dispatch({ type: "SUCCESS_FETCH_MYFRIPS" });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export const fetchMyPropositionId = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: "LOADING_MYFRIPS" });
+
+    const { data } = await axiosInstance.get(
+      `/api/members/myProposition/${id}`,
+      config
+    );
+    dispatch({ type: FETCH_MYPROPOSITIONID, payload: data });
     dispatch({ type: "SUCCESS_FETCH_MYFRIPS" });
   } catch (error) {
     console.log(error);

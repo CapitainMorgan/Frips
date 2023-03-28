@@ -1,9 +1,9 @@
-const fs = require("fs")
+const fs = require("fs");
 
-/*let sslOptions = {
+let sslOptions = {
    key: fs.readFileSync('api.myfrips.ch-2023-02-13.key'),
    cert: fs.readFileSync('api.myfrips.ch-2023-02-13.crt')
-};*/
+};
 
 const express = require("express");
 const app = express();
@@ -13,46 +13,21 @@ const path = require("path");
 const http = require("http");
 const https = require("https");
 const cors = require("cors");
-const log4js = require("log4js");
-log4js.configure({
-  appenders: { 
-    payment: { type: "file", filename: "log/payment.log" },
-    items: { type: "file", filename: "log/items.log" } ,
-    auth: { type: "file", filename: "log/auth.log" },
-    conversation: { type: "file", filename: "log/conversation.log" },
-    edit: { type: "file", filename: "log/edit.log" },
-    image: { type: "file", filename: "log/image.log" },
-    infoItem: { type: "file", filename: "log/infoItem.log" },
-    members: { type: "file", filename: "log/members.log" },
-    user: { type: "file", filename: "log/user.log" },
-  },
-  categories: { 
-    default: { appenders: ["items"], level: "info" } ,
-    payment: { appenders: ["payment"], level: "info" },
-    auth: { appenders: ["auth"], level: "info" },
-    conversation: { appenders: ["conversation"], level: "info" },
-    edit: { appenders: ["edit"], level: "info" },
-    image: { appenders: ["image"], level: "info" },
-    infoItem: { appenders: ["infoItem"], level: "info" },
-    members: { appenders: ["members"], level: "info" },
-    user: { appenders: ["user"], level: "info" },
-  },
-});
-//const server = https.createServer(sslOptions,app);
-const server = http.createServer(app);
+const server = https.createServer(sslOptions,app);
+//const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",
   },
-      forceNew: true,
-      upgrade: false,
-      rejectUnauthorized: false,
+  forceNew: true,
+  upgrade: false,
+  rejectUnauthorized: false,
 });
 const { PrismaClient } = require("@prisma/client");
 let onlineUsers = [];
 
 const prisma = new PrismaClient();
-const { account, item, category_category, brand, chat, message } = prisma
+const { account, item, category_category, brand, chat, message } = prisma;
 
 app.use(cors());
 app.use(express.json({ extended: false }));
@@ -102,17 +77,16 @@ try {
       socket.join(room);
     });
     socket.on("new message", async (newMessage) => {
-      const { id, id_Receiver, chat_id, item, Price } = newMessage;
+      const { id, id_Receiver, chat_id, item, Price,Pseudo } = newMessage;
       const user = getUser(id_Receiver);
-      const rooms = io.sockets.adapter.rooms.get(id)
+      const rooms = io.sockets.adapter.rooms.get(id);
 
-      
+      console.log(newMessage)
+
       try {
-        if(!user &&!rooms){
+        if (!user && !rooms) {
           return;
-        }
-        else if (io.sockets.adapter.rooms.get(id).has(user.socketId)) {
-
+        } else if (io.sockets.adapter.rooms.get(id).has(user?.socketId)) {
           socket.to(id).emit("message received", {
             id_Sender: newMessage.id_Sender,
             id_Receiver: newMessage.id_Receiver,
@@ -129,7 +103,7 @@ try {
                       Price: parseFloat(Price),
                       SendDate: new Date(),
                       Approve: null,
-                      id_Account:id_Sender,
+                      id_Account: id_Sender,
                       dateApprove: null,
                     },
                   ],
@@ -139,8 +113,7 @@ try {
             newMessage: true,
           });
         } else {
-          console.log("sendother")
-          socket.to(user.socketId).emit("message notification", {
+          socket.to(user?.socketId).emit("message notification", {
             id_Sender: newMessage.id_Sender,
             imageSender: newMessage.imageSender,
             Text: newMessage.Message.text,
@@ -149,6 +122,7 @@ try {
             id_Chat: newMessage.id,
             Unread: true,
             newMessage: true,
+            Pseudo
           });
         }
       } catch (error) {
@@ -168,6 +142,7 @@ try {
 
       removeUser(socket.id);
     });
+ 
   });
 } catch (error) {
   console.log(error);

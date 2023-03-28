@@ -6,6 +6,8 @@ import { setReview } from "../../../../actions";
 
 const RatingComponent = ({ Pseudo, id, review }) => {
   const [value, setValue] = useState(review || 0);
+  const [disabled, setDisabled] = useState(false);
+
   const dispatch = useDispatch();
 
 
@@ -25,7 +27,7 @@ const RatingComponent = ({ Pseudo, id, review }) => {
 
       <Box display={"flex"} flexDirection="column" marginTop={2}>
         <Rating
-          readOnly={review ? review : null}
+          readOnly={review || disabled ? review ??value : null}
           size="large"
           name="rating"
           value={value}
@@ -34,10 +36,12 @@ const RatingComponent = ({ Pseudo, id, review }) => {
           }}
         />
       </Box>
-      {!review ? (
+      {!review || disabled ? (
         <Button
+          disabled={disabled || review}
           onClick={() => {
             dispatch(setReview(value, id));
+            setDisabled(true)
           }}
           color="Primary"
           style={{ fontSize: 13, marginTop: 20, width: "25%" }}

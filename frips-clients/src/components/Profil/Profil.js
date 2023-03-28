@@ -100,7 +100,6 @@ const UserProfile = () => {
   const editor = useRef(null);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [canton, setCanton] = useState("");
   const [openChange, setOpenChange] = useState(false);
   const state = useSelector((state) => state.auth.user);
 
@@ -177,7 +176,7 @@ const UserProfile = () => {
             className={classes.MenuSetting}
           >
             <Typography className={classes.Header}>
-              Détails du profile
+              Détails du profil
             </Typography>
           </Box>
           <Box padding={2} className={classes.FormLittleBox}>

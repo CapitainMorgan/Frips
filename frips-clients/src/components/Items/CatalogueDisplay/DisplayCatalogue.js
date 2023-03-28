@@ -5,7 +5,6 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardHeader,
   CircularProgress,
   Divider,
   IconButton,
@@ -20,7 +19,7 @@ import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
 import _ from "lodash";
 import { connect, useDispatch, useSelector } from "react-redux";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {
   addFavorite,
   changePagination,
@@ -29,11 +28,11 @@ import {
   paginationForFilter,
   removeFavorite,
 } from "../../../actions";
+import API_ENDPOINT from "../../../api/url";
 import MyPaginate from "../../Footer/PaginationComponent";
 import { arraySize, Catalogue } from "../staticItems/staticItemName";
 import CostumChips from "./CostumChips";
-import RenderChipsComponents from "./renderChipsComponents";
-import API_ENDPOINT from "../../../api/url";
+import RenderChipsComponents from "./RenderChipsComponent";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -223,11 +222,11 @@ const DisplayCatalogue = ({
   const theme = useTheme();
   const history = useNavigate();
 
-  useEffect(()=>{
-    return () =>{
-      dispatch({type:"RESTORE"})
-    }
-  },[])
+  useEffect(() => {
+    return () => {
+      dispatch({ type: "RESTORE" });
+    };
+  }, []);
 
   useEffect(() => {
     if (itemInfo && !infoLoading) {
@@ -336,7 +335,6 @@ const DisplayCatalogue = ({
           </Box>
         ) : null}
 
-
         <Box className={classes.GridSytem}>{renderedItems}</Box>
 
         <Box className={classes.PaginationBox}>
@@ -350,7 +348,7 @@ const DisplayCatalogue = ({
               <ArrowForwardIosIcon
                 style={{
                   color:
-                    pagination !== Math.ceil(count /15)
+                    pagination !== Math.ceil(count / 15)
                       ? "rgba(130, 160, 194, 1)"
                       : "grey",
                 }}

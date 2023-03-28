@@ -16,7 +16,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { getNotificationsMyFrips } from "../../../actions/index";
 import Filter from "./Filter";
 import MyItems from "./MyItems";
-import MyProposition from "./MyProposition";
+import MyProposition from "./MyProposition/MyProposition";
 import MyPurchase from "./MyPurchase/MyPurchase";
 import MySell from "./MySell/MySell";
 

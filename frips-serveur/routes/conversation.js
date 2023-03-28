@@ -6,6 +6,7 @@ var logger = log4js.getLogger("conversation");
 
 const { PrismaClient } = require("@prisma/client");
 const _ = require("lodash");
+const { sendEmail } = require("../email/sendEmail");
 const { account, item, chat, message, pricepropose } = new PrismaClient();
 
 /**
@@ -117,7 +118,13 @@ router.post("/", auth, async (req, res) => {
         message: create.message,
         id: create.id,
       };
-      logger.info("Conversation created between " + id + " and " + id_Receiver.account.id + "")
+      logger.info(
+        "Conversation created between " +
+          id +
+          " and " +
+          id_Receiver.account.id +
+          ""
+      );
       res.status(200).json(test);
     }
   } catch (error) {
@@ -126,9 +133,9 @@ router.post("/", auth, async (req, res) => {
   }
 });
 
-/** 
+/**
  * @route   POST api/conversation/myConversation
- * @desc    get new message 
+ * @desc    get new message
  */
 router.post("/myConversation/newMessage", auth, async (req, res) => {
   const id_Chat = req.body.chat_id;
@@ -155,6 +162,7 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
                     },
                   },
                 },
+                id: id_Item,
               },
             },
           },
@@ -195,11 +203,22 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
             id_Item: Boolean(id_Item) ? id_Item : null,
           },
         });
-        logger.info("Message (PricePropose) send between " + id + " and " + id_Receiver + "")
-        return res.status(200).json("message send");
+        logger.info(
+          "Message (PricePropose) send between " +
+            id +
+            " and " +
+            id_Receiver +
+            ""
+        );
+        res.status(200).json("message send");
+        await sendEmail(id_Receiver, "NewMessage", {
+          id_Sender: id,
+          id_Item: id_Item,
+          pricepropose: PricePropose,
+          id_Chat,
+        });
       }
     } else {
-
       await message.create({
         data: {
           Unread: true,
@@ -211,8 +230,11 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
           id_Item: Boolean(id_Item) ? id_Item : null,
         },
       });
-      logger.info("Message send between " + id + " and " + id_Receiver + "")
+
+      logger.info("Message send between " + id + " and " + id_Receiver + "");
       res.status(200).json("message send");
+      await sendEmail(id_Receiver, "NewMessage",{id_Sender:id,id_Chat});
+
     }
   } catch (error) {
     logger.error("POST /conversation/myConversation/newMessage" + error);
@@ -234,7 +256,9 @@ router.put("/updateMessage", auth, async (req, res) => {
         Unread: false,
       },
     });
-    logger.info("Message read between " + id + " and " + id_Chat + "by " + id + "")
+    logger.info(
+      "Message read between " + id + " and " + id_Chat + "by " + id + ""
+    );
     res.status(200).json("Messages updates");
   } catch (error) {
     logger.error("PUT /conversation/updateMessage" + error);
@@ -263,7 +287,7 @@ router.get("/unReadNotification", auth, async (req, res) => {
 
     const resultsSell = await item.findMany({
       where: {
-        id_Seller:id,
+        id_Seller: id,
         transaction: {
           some: {
             DateSend: {
@@ -277,7 +301,7 @@ router.get("/unReadNotification", auth, async (req, res) => {
       },
     });
 
-    res.status(200).json({conversation,resultsSell});
+    res.status(200).json({ conversation, resultsSell });
   } catch (error) {
     logger.error("GET /conversation/unReadNotification" + error);
     res.status(500).json("Serveur Erreur");
@@ -325,20 +349,23 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
     });
 
     if (
-      (convExist[0]?.id_Account_1 !== req.user.id &&
-      convExist[0]?.id_Account_2 !== req.user.id )
+      convExist[0]?.id_Account_1 !== req.user.id &&
+      convExist[0]?.id_Account_2 !== req.user.id
     ) {
-      logger.warn("GET /conversation/MyConversation/:id" + "Unauthorized by " + req.user.id + "");
+      logger.warn(
+        "GET /conversation/MyConversation/:id" +
+          "Unauthorized by " +
+          req.user.id +
+          ""
+      );
       res.status(400);
-    }
-
-    else{
+    } else {
       const messageNumber = await message.count({
         where: {
           id_Chat: parseInt(id),
         },
       });
-  
+
       const conv = await chat.findUnique({
         where: {
           id: parseInt(id),
@@ -346,7 +373,7 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
         select: {
           message: {
             orderBy: { Date_Houre: "desc" },
-  
+
             take: 20,
             include: {
               item: {
@@ -398,7 +425,7 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
           },
         },
       });
-  
+
       const data = {
         Profile: {
           id: conv.account_accountTochat_id_Account_1.id,
@@ -410,12 +437,14 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
           Pseudo: conv.account_accountTochat_id_Account_2.Pseudo,
           image: conv.account_accountTochat_id_Account_2.image?.image,
         },
-  
+
         message: conv.message,
-  
+
         messageNumber,
       };
-      logger.info("GET /conversation/MyConversation/:id" + "by " + req.user.id + "");
+      logger.info(
+        "GET /conversation/MyConversation/:id" + "by " + req.user.id + ""
+      );
       res.status(200).json(data);
     }
   } catch (error) {
@@ -424,7 +453,6 @@ router.get("/MyConversation/:id", auth, async (req, res) => {
   }
 });
 
-
 router.post("/MyConversation/:id", auth, async (req, res) => {
   const { id } = req.params;
   const { number } = req.body;
@@ -432,7 +460,7 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
   try {
     const isUserInConv = await chat.findMany({
       where: {
-        id_Chat: parseInt(id),
+        id: parseInt(id),
         OR: [
           {
             id_Account_1: req.user.id,
@@ -443,7 +471,12 @@ router.post("/MyConversation/:id", auth, async (req, res) => {
     });
 
     if (isUserInConv.length === 0) {
-      logger.warn("POST /conversation/MyConversation/:id" + "Unauthorized by " + req.user.id + "");
+      logger.warn(
+        "POST /conversation/MyConversation/:id" +
+          "Unauthorized by " +
+          req.user.id +
+          ""
+      );
       res.status(400);
     }
 

@@ -1,7 +1,4 @@
-import {
-    Box, makeStyles, TextField,
-    Typography
-} from "@material-ui/core";
+import { Box, makeStyles, TextField, Typography } from "@material-ui/core";
 import React from "react";
 
 import { useDispatch } from "react-redux";
@@ -59,8 +56,18 @@ const CostumPriceComponent = ({ label }) => {
             placeholder="CHF"
             inputProps={{ style: { fontSize: 18 } }}
             onBlur={(e) => {
-              if (!isNaN(e.target.value)&& e.target.value!=="") {
-                
+              if (!isNaN(e.target.value) && e.target.value !== "") {
+                dispatch(
+                  addToFilter({ value: e.target.value, De: true }, label)
+                );
+              }
+            }}
+            onKeyPress={(e) => {
+              if (
+                !isNaN(e.target.value) &&
+                e.target.value !== "" &&
+                e.key === "Enter"
+              ) {
                 dispatch(
                   addToFilter({ value: e.target.value, De: true }, label)
                 );
@@ -78,7 +85,18 @@ const CostumPriceComponent = ({ label }) => {
             inputProps={{ style: { fontSize: 18 } }}
             placeholder="CHF"
             onBlur={(e) => {
-              if (!isNaN(e.target.value)) {
+              if (!isNaN(e.target.value) && e.target.value !== "") {
+                dispatch(
+                  addToFilter({ value: e.target.value, A: true }, label)
+                );
+              }
+            }}
+            onKeyPress={(e) => {
+              if (
+                !isNaN(e.target.value) &&
+                e.target.value !== "" &&
+                e.key === "Enter"
+              ) {
                 dispatch(
                   addToFilter({ value: e.target.value, A: true }, label)
                 );

@@ -6,6 +6,7 @@ import {
   FETCH_ITEM,
   FETCH_ITEMS,
   FETCH_NEW_ITEMS,
+  FETCH_TOP_BUSINESS,
   GET_MORE_ITEMS,
   LOADING_FETCH_ITEM,
   LOADING_ITEM,
@@ -23,6 +24,7 @@ const initialValues = {
   newItem: [],
   error: false,
   initialValues: {},
+  topBusiness:null,
   imageBlob: [],
   editItemPage: null,
   successCreationItem: null,
@@ -94,6 +96,12 @@ export default (state = initialValues, action) => {
 
         UniqueItem: action.payload,
       };
+
+    case FETCH_TOP_BUSINESS:
+      return {
+        ...state,
+        topBusiness:{...action.payload}
+      }
     case LOADING_FETCH_ITEM:
       return {
         ...state,
@@ -120,6 +128,9 @@ export default (state = initialValues, action) => {
       return {
         ...state,
         UniqueItem: [],
+        initialValues: {},
+        imageBlob: [],
+        editItemPage: null,
       };
 
     default:

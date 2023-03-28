@@ -101,7 +101,7 @@ const PricePropose = ({
   anchorEl,
   imageSender,
   Profile,
-  Message,
+  Pseudo,
   userId,
   id_Receiver,
   chat_id,
@@ -118,7 +118,6 @@ const PricePropose = ({
 
   const dispatch = useDispatch();
 
-  console.log(loading)
 
   const handleChange = (e) => {
     if (!isNaN(e.target.value)) {
@@ -226,6 +225,7 @@ const PricePropose = ({
                     item,
                     Price,
                     imageSender: imageSender?.image ? imageSender : null,
+                    Pseudo:Pseudo
                   };
                   dispatch(
                     sendMessage(

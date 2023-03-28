@@ -5,6 +5,8 @@ const { emailMessage } = require("./Template/emailMessage");
 const { searchInformation } = require("./searchInformationEmail");
 const { emailSell } = require("./Template/emailSell");
 const { emailBill } = require("./Template/emailBill");
+const { emailOfferReceived } = require("./Template/emailOfferReceived");
+const { emailOfferAccepted } = require("./Template/emailOfferAccepted");
 const client = new postmark.ServerClient(config.get("postMark"));
 
 const typeOfEmail = (type, information, args) => {
@@ -12,7 +14,7 @@ const typeOfEmail = (type, information, args) => {
     case "Welcome":
       return {
         From: "noreply@myfrips.ch",
-        To: "noreply@myfrips.ch",
+        To: information.Email,
         Subject: "Confirmation d'inscription à MyFrips",
         HtmlBody: emailUser(information.Firstname),
         MessageStream: "smtp-test",
@@ -38,7 +40,7 @@ const typeOfEmail = (type, information, args) => {
         From: "noreply@myfrips.ch",
         To: "noreply@myfrips.ch",
         Subject: "Une vente a été conclue !",
-        HtmlBody: emailSell(information.findUserItem, args.id_Item),
+        HtmlBody: emailSell(information, args.id_Item),
         MessageStream: "smtp-test",
       };
     case "Bill":
@@ -53,26 +55,51 @@ const typeOfEmail = (type, information, args) => {
         ),
         MessageStream: "smtp-test",
       };
+    case "ReceivedOffer":
+      return {
+        From: "noreply@myfrips.ch",
+        To: "noreply@myfrips.ch",
+        Subject: "Vous avez reçu une nouvelle offre",
+        HtmlBody: emailOfferReceived(
+          information.findUserItem,
+          information.senderInfo,
+          information?.itemForEmail,
+          args?.pricepropose
+        ),
+        MessageStream: "outbound",
+      };
+    case "AcceptedOffer":
+      return {
+        From: "noreply@myfrips.ch",
+        To: "noreply@myfrips.ch",
+        Subject: "Une de tes offres a été acceptée",
+        HtmlBody: emailOfferAccepted(information),
+        MessageStream: "outbound",
+      };
+
     default:
       break;
   }
 };
 
-const sendEmail = async (id_Receiver, type, next, args) => {
+const sendEmail = async (id_Receiver, type, args) => {
   try {
+    return;
     const information = await searchInformation(id_Receiver, type, args);
-    
-    client.sendEmail(typeOfEmail(type, information, args),(error,result)=>{
-        console.log(error)
-        if(!error){
-        next()
-        }
-        else{
-            throw new Error(error)
-        }
-    })
 
-    next()
+    if (Boolean(information)) {
+      client.sendEmail(
+        typeOfEmail(type, information, args),
+        (error, result) => {
+          if (result) {
+            console.log(result);
+          } else {
+            console.log(information)
+            throw new Error(error);
+          }
+        }
+      );
+    }
   } catch (error) {
     console.log(error);
   }

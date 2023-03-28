@@ -174,13 +174,12 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
                 </Box>
               </Box>
 
-              <Box padding={3} display="flex" justifyContent="center">
-                {field.value.length === 1 ? field.value : `${field.value}`}
-              </Box>
+           
 
               <Box style={{ backgroundColor: "white" }} width={"100%"}>
-                {renderedColorForm}
-              </Box>
+              {renderedColorForm}
+
+                </Box>
             </Box>
           </Dialog>
         )}

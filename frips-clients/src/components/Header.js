@@ -16,7 +16,7 @@ import React, { useRef } from "react";
 import Div100vh from "react-div-100vh";
 import { useDispatch, useSelector } from "react-redux";
 import { useTheme } from "@material-ui/core/styles";
-import { MdOutlineAttachMoney } from "react-icons/md";
+import { MdOutlineAttachMoney, MdRecycling } from "react-icons/md";
 import { Button } from "@material-ui/core";
 
 import CloseIcon from "@material-ui/icons/Close";
@@ -119,10 +119,8 @@ const useStyles = makeStyles((theme) => ({
     color: "white",
     background: "transparent",
     outline: "none",
-
     userSelect: "none",
     msTouchSelect: "none",
-
     WebkitUserSelect: "none",
 
     WebkitTapHighlightColor: "transparent",
@@ -131,7 +129,7 @@ const useStyles = makeStyles((theme) => ({
   BoxItem: {
     height: 50,
     minHeight: 50,
-    width:"100%",
+    width: "100%",
     fontSize: 16,
     color: "rgb(117,117,117)",
     fontFamily: "Helvetica",
@@ -141,7 +139,7 @@ const useStyles = makeStyles((theme) => ({
     WebkitOverflowScrolling: "touch",
     backgroundColor: "white",
     overflowY: "scroll",
-    padding: 3,
+    padding: 10,
     position: "relative",
   },
 }));
@@ -239,7 +237,7 @@ const Header = ({ onSearchSubmit }) => {
           handleMenuDesktop();
         }}
       >
-        Mon profile
+        Mon profil
       </MenuItem>
       <MenuItem
         className={classes.BoxItem}
@@ -304,7 +302,7 @@ const Header = ({ onSearchSubmit }) => {
             </Typography>
           </Box>
           <Box display={"flex"} alignItems="center" flexGrow={1}>
-          <GiLargeDress color="#82A0C2" size={20} />
+            <GiLargeDress color="#82A0C2" size={20} />
 
             <MenuItem
               className={classes.BoxItem}
@@ -313,12 +311,11 @@ const Header = ({ onSearchSubmit }) => {
                 handleMobileMenuClose();
               }}
             >
-            
               Femme
             </MenuItem>
           </Box>
           <Box display={"flex"} alignItems="center">
-          <IoShirtSharp color="#82A0C2" size={20} />
+            <IoShirtSharp color="#82A0C2" size={20} />
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
@@ -380,17 +377,7 @@ const Header = ({ onSearchSubmit }) => {
               onClick={() => {
                 handleMobileMenuClose();
 
-                history("/Aide");
-              }}
-            >
-              Aide
-            </MenuItem>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                handleMobileMenuClose();
-
-                history("/assisstance");
+                history("/aide");
               }}
             >
               Assisstance
@@ -398,11 +385,11 @@ const Header = ({ onSearchSubmit }) => {
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/Condition-général-de-vente-et-politique");
+                history("/ConditionGeneral");
                 handleMobileMenuClose();
               }}
             >
-              Politique
+              Condition Générale
             </MenuItem>
           </Box>
         </Box>
@@ -427,15 +414,13 @@ const Header = ({ onSearchSubmit }) => {
             >
               Instagram
             </MenuItem>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                history("/items/Homme");
-                handleMobileMenuClose();
-              }}
+            <a
+              rel="noreferrer"
+              target="_blank"
+              href={"https://www.facebook.com/profile.php?id=100090896610241"}
             >
-              Facebook
-            </MenuItem>
+              <MenuItem className={classes.BoxItem}>Facebook</MenuItem>
+            </a>
           </Box>
         </Box>
 
@@ -448,7 +433,14 @@ const Header = ({ onSearchSubmit }) => {
           justifyContent="center"
           alignItems="center"
           marginBottom={10}
+          flexDirection="column"
         >
+          <Box display={"flex"} alignItems="center" marginTop={2}>
+            <MdRecycling size={20} />
+            <Typography style={{ fontSize: 16, marginLeft: 2 }}>
+              Powered by renewable energy
+            </Typography>
+          </Box>
           <Box
             marginBottom={2}
             marginTop={1}

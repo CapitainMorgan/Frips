@@ -1,5 +1,4 @@
 const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
-  console.log(Boolean(item))
 
   return `
   <html lang="fr">
@@ -112,7 +111,7 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
                       </tr>
                     </tbody>
                   </table>`
-                      : ""
+                      : "<br/>"
                   }
                   <table
                     style="padding-bottom: 20px"

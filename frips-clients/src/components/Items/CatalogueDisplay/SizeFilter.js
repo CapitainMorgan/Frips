@@ -13,7 +13,7 @@ import React, { useState } from "react";
 
 import { useDispatch } from "react-redux";
 import { addToFilter, removeToFilter } from "../../../actions";
-import { arraySize, Catalogue } from "../staticItems/staticItemName";
+import { arraySize } from "../staticItems/staticItemName";
 
 const useStyles = makeStyles((theme) => ({
   BoxShadow: {
@@ -50,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
   ArrowBackIcon: {
     height: 40,
-    
+
     "&:hover": {
       background: "transparent",
     },
@@ -141,12 +141,12 @@ const SizeFilter = ({ filter, label }) => {
             onClick={() => {
               setNavigation(null);
             }}
-            style={{justifySelf:"flex-start",display:"flex"}}
+            style={{ justifySelf: "flex-start", display: "flex" }}
             disableFocusRipple
             disableRipple
             disableTouchRipple
           >
-            <ArrowBackIcon fontSize="large"  />
+            <ArrowBackIcon fontSize="large" />
           </IconButton>
           <Typography style={{ fontSize: 18 }}>
             {arraySize[navigationId].Name}

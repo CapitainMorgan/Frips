@@ -48,16 +48,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-/* let regex;
-const filterArray = subArray.filter((el, index) => {
-  return array2.some((filter) => {
-    regex = new RegExp(`\\b${filter}`, "i");
 
-    return regex.test(el.Name);
-  });
-})
 
-return filterArray*/
 const options = {
   includeScore: true,
   keys: ["Name"],
@@ -112,6 +104,7 @@ const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
     suggestionArray.push(WOMAN_ID.Name);
     suggestionArray.push(MAN_ID.Name);
   }
+
   suggestionArray.push(`rechercher "${currentText}"`);
 
 

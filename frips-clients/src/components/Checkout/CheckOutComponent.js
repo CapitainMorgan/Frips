@@ -3,7 +3,7 @@ import {
   CircularProgress,
   Divider,
   makeStyles,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import HelpOutlineIcon from "@material-ui/icons/HelpOutline";
 import React, { useEffect, useRef, useState } from "react";
@@ -12,7 +12,7 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
   cleanUpPayment,
   fetchPaymentInfo,
-  fetchPaymentIntent
+  fetchPaymentIntent,
 } from "../../actions";
 import API_ENDPOINT from "../../api/url";
 import Adress from "./Adress";
@@ -142,20 +142,26 @@ const CheckOut = ({
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [loadingPayment, setloadinPayment] = useState(false);
   const hasProposition = useLocation();
-  const history = useNavigate();
   const isMounted = useRef(false);
+  const [showInfo, setShowInfo] = useState(false);
 
   let { id } = useParams();
   id = parseInt(id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const handleMouseEnter = () => {
+    setShowInfo(true);
+  };
+
+  const handleMouseLeave = () => {
+    setShowInfo(false);
+  };
 
   useEffect(() => {
     isMounted.current = true;
     return () => {
       if (isMounted.current && hasProposition.pathname === `/payment/${id}`) {
-
         dispatch(cleanUpPayment(id));
       }
     };
@@ -340,21 +346,24 @@ const CheckOut = ({
                   className={classes.ContentInformationItem}
                   display="flex"
                   alignItems={"center"}
+                  onMouseEnter={handleMouseEnter}
+                  onMouseLeave={handleMouseLeave}
                 >
                   <Typography className={classes.TypographyText}>
                     Frais
                   </Typography>
+
+                  <Typography style={{ marginLeft: 5 }}>
+                    en savoir plus
+                  </Typography>
                   <HelpOutlineIcon
-                    style={{ height: "0.85em", width: "0.85em" }}
+                    style={{ height: "0.85em", width: "0.85em", marginLeft: 5 }}
                   />
-                  <div className={classes.paper}>
-                    Frais de transaction + commission.
-                  </div>
                 </Box>
                 <Box className={classes.ContentInformationItem}>
-                  {customRound(item.Price * 0.07) - item.Price <= 1
+                  {customRound(item.Price * 1.07) - item.Price <= 1
                     ? customRound(item.Price + 1) - item.Price
-                    : customRound(item.Price * 0.07) - item.Price}{" "}
+                    : customRound(item.Price * 1.07) - item.Price}
                   CHF
                 </Box>
               </Box>

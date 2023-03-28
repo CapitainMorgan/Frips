@@ -1,25 +1,24 @@
 import {
   Avatar,
-  Box,
-  Button,
-  CircularProgress,
+  Box, CircularProgress,
   Divider,
   Icon,
   makeStyles,
   MenuItem,
-  Typography,
+  Typography
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
 import AdjustOutlinedIcon from "@material-ui/icons/AdjustOutlined";
 import AttachMoneyIcon from "@material-ui/icons/AttachMoney";
 import moment from "moment";
 import "moment/locale/de";
 import "moment/locale/fr";
 import React, { useEffect } from "react";
-import { connect, useDispatch, useSelector } from "react-redux";
+import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { getAllConv } from "../../actions";
 import API_ENDPOINT from "../../api/url";
+
+
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
     boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
@@ -67,7 +66,7 @@ const renderPseudo = (
   if (account_accountTochat_id_Account_2.id === userId) {
     return `${account_accountTochat_id_Account_1.Pseudo}`;
   } else {
-    return `${account_accountTochat_id_Account_1.Pseudo}`;
+    return `${account_accountTochat_id_Account_2.Pseudo}`;
   }
 };
 
@@ -135,7 +134,7 @@ const UserMessage = (messages, classes, history, idUser) => {
                     <Box display={"flex"}>
                       <AttachMoneyIcon style={{ color: "#228D57" }} />
                       <Typography style={{ fontSize: 16 }}>
-                        Tu as une proposition d'offre ?
+                        Proposition
                       </Typography>
                       <AttachMoneyIcon style={{ color: "#228D57" }} />
                     </Box>
@@ -178,7 +177,7 @@ const AllConversations = ({ conversations, loading, count, idUser }) => {
     }
   }, [dispatch, loading, count, conversations]);
 
-  if (conversations.length === 0 && loading && !Boolean(count)) {
+  if (conversations.length === 0 && loading) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -193,8 +192,10 @@ const AllConversations = ({ conversations, loading, count, idUser }) => {
     );
   }
 
-  if (!loading && count === 0) {
-    <Box
+  if (!loading && count===0 &&conversations.length ===0 ) {
+
+    return (
+      <Box
       style={{ backgroundColor: "#F5f5f3" }}
       display="flex"
       justifyContent="center"
@@ -202,8 +203,9 @@ const AllConversations = ({ conversations, loading, count, idUser }) => {
       height="100vh"
       alignItems="center"
     >
-      <Typography style={{ fontSize: 16 }}>Vous avez aucun message</Typography>
-    </Box>;
+      <Typography style={{ fontSize: 16 }}>Vous n'avez aucun message</Typography>
+    </Box>
+    )
   }
 
   return (

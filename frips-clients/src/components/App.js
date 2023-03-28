@@ -129,7 +129,6 @@ const App = () => {
               <Route path="/member" key={"member-management"}>
                 <Route path="/member/:name" element={<MemberProfile />} />
               </Route>
-              <Route path="/Condition-général-de-vente-et-politique" element={<ConditionGeneral />} />"
 
               <Route path="/items" key={"items-id"}>
                 <Route path="/items/:id" element={<ItemPreview />} />
@@ -196,7 +195,7 @@ const App = () => {
               </Route>
 
               <Route
-                path="/Condition-général-de-vente-et-politique"
+                path="/Condition-general-de-vente-et-politique"
                 exact
                 element={<ConditionGeneral />}
               />

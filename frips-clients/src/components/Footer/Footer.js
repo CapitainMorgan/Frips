@@ -20,7 +20,7 @@ export const Footer = () => {
       <Box margin="auto" display="flex" alignItems="center" height={70}>
         <Box>
           <MenuItem
-            onClick={() => history("/Condition-général-de-vente-et-politique")}
+            onClick={() => history("/Condition-general-de-vente-et-politique")}
           >
             Condition Général
           </MenuItem>

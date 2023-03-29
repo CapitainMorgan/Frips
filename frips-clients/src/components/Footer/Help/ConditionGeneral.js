@@ -65,6 +65,8 @@ export const ConditionGeneral = () => {
       display="flex"
       justifyContent="center"
       width="100%"
+      paddingBottom={8}
+      marginTop={8}
       flexGrow={1}>
       <Box className={classes.Container}>
         <Typography variant="h5" sx={{ fontWeight: "bold" }}>

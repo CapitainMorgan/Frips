@@ -113,6 +113,7 @@ try {
             newMessage: true,
           });
         } else {
+          console.log("ici")
           socket.to(user?.socketId).emit("message notification", {
             id_Sender: newMessage.id_Sender,
             imageSender: newMessage.imageSender,

@@ -353,12 +353,16 @@ const CheckOut = ({
                     Frais
                   </Typography>
 
-                  <Typography style={{ marginLeft: 5 }}>
+                  <Box onClick={()=>{
+                    navigate("/aide/paymentInfo")
+                  }} display={"flex"} alignItems="center" justifyContent={"center"} >
+                  <Typography style={{ marginLeft: 6 }} >
                     en savoir plus
                   </Typography>
                   <HelpOutlineIcon
                     style={{ height: "0.85em", width: "0.85em", marginLeft: 5 }}
                   />
+                  </Box>
                 </Box>
                 <Box className={classes.ContentInformationItem}>
                   {customRound(item.Price * 1.07) - item.Price <= 1

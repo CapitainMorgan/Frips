@@ -76,7 +76,8 @@ const renderedItem = (state, classes, favorite, dispatch, history, mobile) => {
                   {item.Price} CHF
                 </Typography>
                 <Typography>{item.Size}</Typography>
-                <Typography>{item.Brand}</Typography>
+                <Typography>{item.item_brand[0]?.brand.Name}</Typography>
+
               </Box>
               <Divider />
               <Box height={44} display="flex" alignItems="center">
@@ -155,26 +156,9 @@ const renderedItem = (state, classes, favorite, dispatch, history, mobile) => {
             </Box>
           </Card>
         </Box>
-      ) : (
-        <Box
-          alignItems={"center"}
-          justifyContent="center"
-          display={"flex"}
-          height={100}
-          onClick={() => {
-            history("/items/allNewItems");
-          }}
-          style={{
-            backgroundColor: "white",
-            borderRadius: 5,
-            cursor: "pointer",
-          }}
-        >
-          <Typography style={{ color: "black", fontSize: 20 }}>
-            Afficher plus
-          </Typography>
-        </Box>
-      )}
+      ) : 
+        null
+      }
     </React.Fragment>
   );
 };
@@ -182,7 +166,7 @@ const renderedItem = (state, classes, favorite, dispatch, history, mobile) => {
 const DisplayNewItems = ({ classes, favorite, loading }) => {
   const history = useNavigate();
   const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.only("sm"));
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
   const dispatch = useDispatch();
 
   const items = useSelector((state) => state.items.newItem);
@@ -200,6 +184,25 @@ const DisplayNewItems = ({ classes, favorite, loading }) => {
           </Typography>
         </Box>
         <Box className={classes.GridSytem}>{renderedItems}</Box>
+        {mobile ? <Box
+          alignItems={"center"}
+          justifyContent="center"
+          display={"flex"}
+          height={100}
+          width="100%"
+          onClick={() => {
+            history("/items/allNewItems");
+          }}
+          style={{
+            backgroundColor: "white",
+            borderRadius: 5,
+            cursor: "pointer",
+          }}
+        >
+          <Typography style={{ color: "black", fontSize: 20 }}>
+            Afficher plus
+          </Typography>
+        </Box>:null}
       </Box>
     );
   }

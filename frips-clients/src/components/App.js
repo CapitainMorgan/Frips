@@ -53,12 +53,14 @@ import BuyInfo from "./Footer/Help/BuyInfo";
 import AccountInfo from "./Footer/Help/AccountInfo";
 import PaymentInfo from "./Footer/Help/PaymentInfo";
 import Dashboard from "../admin/Dashboard";
+import { NOTIFICATION } from "../actions/type";
+import PropositionReceived from "./Profil/MyFrips/MyProposition/PropositionReceived";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
 }
 
-const socket = io(API_ENDPOINT, { reconnection: true,autoConnect:true });
+const socket = io(API_ENDPOINT, { reconnection: true, autoConnect: true });
 
 const App = () => {
   const [notification, setNotification] = useState(null);
@@ -77,13 +79,12 @@ const App = () => {
     socket.on("message notification", (data) => {
       if (!mobile) {
         if (
-          !_.includes(
-            store.getState().notification.notificationUser,
-            data.id_Sender
-          )
+          !_.some(store.getState().notification.notificationUser, {
+            id_Sender: data.id_Sender,
+          })
         ) {
           setNotification(data);
-          store.dispatch({ type: "NOTIFICATION", payload: data });
+          store.dispatch({ type: NOTIFICATION, payload: data });
         }
         store.dispatch(handleNotificaiton(data));
       }
@@ -153,6 +154,11 @@ const App = () => {
                   element={<MyPropositionById />}
                 />
 
+                <Route
+                  path="/members/myFrips/ReceivedProposition/:id_Item/:id_Sender"
+                  element={<PropositionReceived />}
+                />
+
                 <Route path="/member/conversation" element={<Conversation />} />
                 <Route path="/member/myFavorite" element={<MyFavorite />} />
                 <Route path="/member/message/:id" element={<NewMessage />} />
@@ -199,10 +205,7 @@ const App = () => {
                 exact
                 element={<ConditionGeneral />}
               />
-                 <Route
-                  path="/admin"
-                  element={<Dashboard />}
-                />
+              <Route path="/admin" element={<Dashboard />} />
               <Route path="/aide" element={<Aide />} />
               <Route path="/aide/paymentInfo" element={<PaymentInfo />} />
               <Route path="/aide/sellInfo" element={<SellInfo />} />

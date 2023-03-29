@@ -1,4 +1,5 @@
-const emailOfferAccepted = (profile) => {
+const emailOfferAccepted = (profile,args) => {
+  console.log(profile)
   return `
     <!DOCTYPE html>
 <html>
@@ -12,7 +13,33 @@ const emailOfferAccepted = (profile) => {
     <p>Bonjour ${profile.FirstName},</p>
     <p>Nous avons le plaisir de vous informer que une de vos offres a été acceptée sur MyFrips. Félicitations ! Vous avez 24 heures pour effectuer le paiement autrement l'offre disparaîtra</p>
     <p>Pour voir les détails de la transaction et finaliser l'achat, veuillez cliquer sur le lien ci-dessous :</p>
-    <p><a                                     href=https://myfrips.ch/members/myFrips/myProposition    >Voir les détails de la transaction</a></p>
+    <a ref=https://myfrips.ch/members/myFrips/myProposition/${args.id}    >
+    <span
+    style="
+      background-color: #82a0c2;
+      border-radius: 3px;
+      color: #fff;
+      height:30px,
+      font-size: 18px;
+      text-decoration: none;
+      text-align: center;
+      display:flex;
+      height:50px;
+      justify-content:center;
+      align-items:center;
+      width: 100%;
+      p-y: 19px;
+      max-width: 100%;
+      height:25px,
+      line-height: 120%;
+      text-transform: none;
+      mso-padding-alt: 0px;
+      mso-text-raise: 14.25px;
+    "
+    >
+   Voir l'offre
+    </span>
+    </a>
     <p>Merci de votre confiance,</p>
     <p>L'équipe MyFrips</p>
   </body>

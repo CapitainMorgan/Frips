@@ -14,7 +14,7 @@ import "moment/locale/de";
 import "moment/locale/fr";
 import React, { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { getAllConv } from "../../actions";
 import API_ENDPOINT from "../../api/url";
 
@@ -165,6 +165,7 @@ const UserMessage = (messages, classes, history, idUser) => {
 const AllConversations = ({ conversations, loading, count, idUser }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
+  const location = useLocation()
   const history = useNavigate();
 
   useEffect(() => {
@@ -172,10 +173,10 @@ const AllConversations = ({ conversations, loading, count, idUser }) => {
   }, []);
 
   useEffect(() => {
-    if (conversations.length === 0 && !loading && count !== 0) {
+    if (conversations.length === 0 && !loading && count) {
       dispatch(getAllConv());
     }
-  }, [dispatch, loading, count, conversations]);
+  }, [dispatch, loading, count, conversations,location]);
 
   if (conversations.length === 0 && loading) {
     return (

@@ -112,7 +112,7 @@ const emailBill = (buyerProfile, item, transaction) => {
   } src=${`https://api.myfrips.ch:5000//images/${item.id}/${item.image[0].image}`} width="64" height="64" style="display:block;outline:none;border:1px solid rgba(128,128,128,0.2);text-decoration:none;margin:0 0 0 20px;border-radius:14px;object-fit: cover;" />
   </td>
         <td style="padding-left:22px">
-          <p style="font-size:14px;line-height:1.4;margin:0;padding:0">${
+          <p style="font-size:14px;line-height:1.4;margin:0;padding:0;width:"50%">${
             item.Name
           }</p>
           <p style="font-size:14px;line-height:1.4;margin:0;padding:0">${
@@ -144,15 +144,15 @@ const emailBill = (buyerProfile, item, transaction) => {
             <td align="right" style="display:table-cell;padding:0px 20px 0px 0px;width:100px;vertical-align:top">
               <p style="font-size:14px;line-height:24px;margin:0">${
                 transaction.Price
-              }</p>
+              } CHF</p>
               <p style="font-size:14px;line-height:24px;margin:0">${
                 transaction.PriceDelivery
 
-              }</p>
+              } CHF</p>
               <p style="font-size:14px;line-height:24px;margin:0">${
                 transaction.Price_Fees
 
-              }</p>
+              } CHF </p>
             </td>
             </td>
           </tr>

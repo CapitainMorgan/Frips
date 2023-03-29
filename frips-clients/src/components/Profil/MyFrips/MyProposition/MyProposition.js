@@ -89,7 +89,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const renderStatus = (id, Approve, dateApprove, history,id_proposition) => {
+const renderStatus = (id, Approve, dateApprove, history, id_proposition) => {
   if (Boolean(Approve) && Boolean(dateApprove)) {
     return (
       <Box display={"flex"} flexDirection="column">
@@ -145,7 +145,6 @@ const renderStatus = (id, Approve, dateApprove, history,id_proposition) => {
     );
   }
 };
-
 
 const renderedItem = (classes, items, history, handleClick, setNavigation) => {
   return items.map((item, index) => {

@@ -11,7 +11,7 @@ import _ from "lodash";
 import React, { useEffect, useState } from "react";
 import { GiClothes } from "react-icons/gi";
 import { connect, useDispatch } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import "react-toastify/dist/ReactToastify.css";
 import { getNotificationsMyFrips } from "../../../actions/index";
 import Filter from "./Filter";
@@ -170,6 +170,21 @@ const handleNavigation = (key, classes, setNavigation) => {
   }
 };
 
+const handleUrlCategory = (index) =>{
+  switch (index) {
+    case 1:
+      return "/members/myFrips/mySell";
+    case 2:
+      return "/members/myFrips/myProposition"
+    case 3:
+      return "/members/myFrips/myPurchase";
+
+
+    default:
+      return "/members/myFrips";
+  }
+}
+
 const navigationArray = [
   { Name: "Mes Items",url:"myItems" },
   { Name: "Mes ventes",url:"mySell" },
@@ -183,7 +198,8 @@ const renderNavigationArray = (
   propositionNotif,
   sellNotif,
   classes,
-  mobile
+  mobile,
+  history
 ) => {
   return navigationArray.map((navigationItem, index) => {
     if (navigationItem.Name === "Mes ventes") {
@@ -199,7 +215,9 @@ const renderNavigationArray = (
             variant="outlined"
             color="primary"
             onClick={() => {
+              
               setNavigation(index);
+              history(handleUrlCategory(index))
             }}
           >
             {navigationItem.Name}
@@ -243,6 +261,8 @@ const renderNavigationArray = (
             color="primary"
             onClick={() => {
               setNavigation(index);
+              history(handleUrlCategory(index))
+
             }}
           >
             {navigationItem.Name}
@@ -278,6 +298,8 @@ const renderNavigationArray = (
             color="primary"
             onClick={() => {
               setNavigation(index);
+              history(handleUrlCategory(index))
+
             }}
           >
             {navigationItem.Name}
@@ -306,9 +328,8 @@ const MyFrips = ({
   const [navigationId, setNavigation] = useState(0);
   const theme = useTheme();
   const location = useLocation()
-
+  const history = useNavigate()
   
-
 
   useEffect(()=>{
     if(Object.keys(params).length !== 0){
@@ -350,7 +371,8 @@ const MyFrips = ({
             propositionNotif,
             sellNotif,
             classes,
-            mobile
+            mobile,
+            history
           )}
         </Box>
         <Box>

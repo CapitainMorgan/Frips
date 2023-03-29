@@ -3,8 +3,10 @@ import {
   Box,
   Button,
   Dialog,
-  Divider, makeStyles, Slider,
-  Typography
+  Divider,
+  makeStyles,
+  Slider,
+  Typography,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import React, { useEffect, useRef, useState } from "react";
@@ -13,6 +15,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { changeImageProfile } from "../../actions";
 import API_ENDPOINT from "../../api/url";
 import ModalAdress from "./ModalAdress";
+import ModalForIban from "./ModalForIban";
 
 const useStyles = makeStyles((theme) => ({
   FormLittleBox: {
@@ -61,7 +64,7 @@ const useStyles = makeStyles((theme) => ({
     },
   },
   Dialog: {
-    width: 350,
+    width: 400,
     overflow: "hidden",
     display: "flex",
     flexDirection: "column",
@@ -69,6 +72,18 @@ const useStyles = makeStyles((theme) => ({
 
     [theme.breakpoints.down("sm")]: {
       height: "80vh",
+      width: "auto",
+      padding: 5,
+    },
+  },
+  DialogIban: {
+    width: 400,
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
+    padding: 15,
+
+    [theme.breakpoints.down("sm")]: {
       width: "auto",
       padding: 5,
     },
@@ -100,6 +115,7 @@ const UserProfile = () => {
   const editor = useRef(null);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [openModalIban, setOpenModalIban] = useState(false);
   const [openChange, setOpenChange] = useState(false);
   const state = useSelector((state) => state.auth.user);
 
@@ -142,10 +158,14 @@ const UserProfile = () => {
     setSelectedImage({ ...selectedImage, position: position });
   };
 
-  const handleClickOpen = () => {
-    setOpen(true);
+
+  const handleCloseIban = () => {
+    setOpenModalIban(false);
   };
 
+  const handleOpenIban = () => {
+    setOpenModalIban(true);
+  };
   const handleClose = () => {
     setOpen(false);
   };
@@ -323,11 +343,7 @@ const UserProfile = () => {
               </Box>
             </Box>
 
-            <Box className={classes.SubFormLittleBox} justifyContent="flex-end">
-              <Button variant="contained" color="primary">
-                Changer
-              </Button>
-            </Box>
+           
           </Box>
           <Divider />
 
@@ -337,14 +353,15 @@ const UserProfile = () => {
                 <Typography>IBAN</Typography>
               </Box>
               <Box padding={3} display="flex">
-                <Typography>{transformIBAN(state?.IBAN)}</Typography>
+                <Typography>{state?.IBAN}</Typography>
               </Box>
             </Box>
 
             <Box className={classes.SubFormLittleBox} justifyContent="flex-end">
-              <Button variant="contained" color="primary">
+              <Button onClick={handleOpenIban} variant="contained" color="primary">
                 Changer
               </Button>
+              <ModalForIban open={openModalIban} handleClose={handleCloseIban} classes={classes} />
             </Box>
           </Box>
         </Box>

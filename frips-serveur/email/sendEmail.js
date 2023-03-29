@@ -17,12 +17,12 @@ const typeOfEmail = (type, information, args) => {
         To: information.Email,
         Subject: "Confirmation d'inscription à MyFrips",
         HtmlBody: emailUser(information.Firstname),
-        MessageStream: "smtp-test",
+        MessageStream: "outbound",
       };
     case "NewMessage":
       return {
         From: "noreply@myfrips.ch",
-        To: "noreply@myfrips.ch",
+        To: information?.findUserItem?.Email,
         Subject: Boolean(args?.id_Item)
           ? "Vous avez reçu une nouvelle offre"
           : "Vous avez reçu un nouveau message",
@@ -33,32 +33,32 @@ const typeOfEmail = (type, information, args) => {
           information?.itemForEmail,
           args?.pricepropose
         ),
-        MessageStream: "smtp-test",
+        MessageStream: "outbound",
       };
     case "Sell":
       return {
         From: "noreply@myfrips.ch",
-        To: "noreply@myfrips.ch",
+        To: information.Email,
         Subject: "Une vente a été conclue !",
         HtmlBody: emailSell(information, args.id_Item),
-        MessageStream: "smtp-test",
+        MessageStream: "outbound",
       };
     case "Bill":
       return {
         From: "noreply@myfrips.ch",
-        To: "noreply@myfrips.ch",
+        To: information.buyerAccount.Email,
         Subject: "Résumé de votre achat",
         HtmlBody: emailBill(
           information.buyerAccount,
           information.soldItem,
           information.transactionInfo
         ),
-        MessageStream: "smtp-test",
+        MessageStream: "outbound",
       };
     case "ReceivedOffer":
       return {
         From: "noreply@myfrips.ch",
-        To: "noreply@myfrips.ch",
+        To: information.findUserItem.Email,
         Subject: "Vous avez reçu une nouvelle offre",
         HtmlBody: emailOfferReceived(
           information.findUserItem,
@@ -71,9 +71,9 @@ const typeOfEmail = (type, information, args) => {
     case "AcceptedOffer":
       return {
         From: "noreply@myfrips.ch",
-        To: "noreply@myfrips.ch",
+        To: information.Email,
         Subject: "Une de tes offres a été acceptée",
-        HtmlBody: emailOfferAccepted(information),
+        HtmlBody: emailOfferAccepted(information,args),
         MessageStream: "outbound",
       };
 
@@ -84,7 +84,6 @@ const typeOfEmail = (type, information, args) => {
 
 const sendEmail = async (id_Receiver, type, args) => {
   try {
-    return;
     const information = await searchInformation(id_Receiver, type, args);
 
     if (Boolean(information)) {

@@ -1,10 +1,21 @@
 import React, { useState } from "react";
 
-import { Box, ClickAwayListener, InputAdornment, Popper, TextField } from "@material-ui/core";
+import {
+  Box,
+  ClickAwayListener,
+  InputAdornment,
+  Popper,
+  TextField,
+} from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 
-import { Dialog, IconButton, makeStyles, MenuItem, Typography
+import {
+  Dialog,
+  IconButton,
+  makeStyles,
+  MenuItem,
+  Typography,
 } from "@material-ui/core";
 import { alpha } from "@material-ui/core/styles/colorManipulator";
 import FiberManualRecordSharpIcon from "@material-ui/icons/FiberManualRecordSharp";
@@ -97,7 +108,6 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
   );
   const [anchorEl, setAnchorEl] = useState(null);
 
-
   const renderedColorForm = ColorInfo.map((item, index) => {
     return (
       <CostumBox value={field.value} setvalue={form} item={item}></CostumBox>
@@ -107,7 +117,6 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
   const handleClick = (e) => {
     setAnchorEl(e.currentTarget);
   };
-
 
   const handleClickAway = () => {
     setAnchorEl(null);
@@ -174,12 +183,9 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
                 </Box>
               </Box>
 
-           
-
               <Box style={{ backgroundColor: "white" }} width={"100%"}>
-              {renderedColorForm}
-
-                </Box>
+                {renderedColorForm}
+              </Box>
             </Box>
           </Dialog>
         )}

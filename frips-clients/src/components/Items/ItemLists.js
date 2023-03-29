@@ -226,10 +226,10 @@ const ItemList = ({
 
   useEffect(() => {
     if (!loading && items.length === 0) {
-      dispatch(fetchItems(mobile, mobile));
+      dispatch(fetchItems(true, mobile));
       dispatch(idFavorite());
     }
-  }, [dispatch, loading, location]);
+  }, [dispatch, loading, location,mobile]);
 
   const renderedItems = useMemo(() => {
     return renderedItem(items, classes, favorite, dispatch, navigate);

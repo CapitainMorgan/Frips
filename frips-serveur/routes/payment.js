@@ -373,7 +373,7 @@ router.post("/succeed", auth, async (req, res) => {
       "POST /payment/succeed user " + req.user.id + " item " + idItem
     );
     res.status(200).json(`/payment/${idItem}/paymentStatus`);
-    await sendEmail(id_Account, "Sell", { id_Item: idItem});
+    await sendEmail(null, "Sell", { id_Item: idItem});
     await sendEmail(id, "Bill", { id_Item: idItem, id_Buyer: id });
   } catch (error) {
     logger.error("POST /payment/succeed", error);

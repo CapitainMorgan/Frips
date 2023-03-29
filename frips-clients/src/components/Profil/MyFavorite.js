@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardHeader,
   CircularProgress,
   Divider,
   IconButton,
@@ -20,7 +19,7 @@ import _ from "lodash";
 import React, { useEffect, useMemo, useState } from "react";
 import ReactPaginate from "react-paginate";
 import { connect, useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import {
   addFavorite,
@@ -63,10 +62,9 @@ const renderedItem = (favoriteItems, classes, favorite, dispatch, navigate) => {
     return (
       <Box width={"100%"} height={"100%"} padding={1} key={index}>
         <Card className={classes.BoxOneItem}>
-        <Box
+          <Box
             display={"flex"}
             alignItems="center"
-            
             marginBottom={2}
             width="100%"
           >
@@ -86,7 +84,7 @@ const renderedItem = (favoriteItems, classes, favorite, dispatch, navigate) => {
             </IconButton>
             <Typography
               style={{
-                wordBreak:"break-all"
+                wordBreak: "break-all",
               }}
             >
               {item.account.Pseudo}
@@ -150,7 +148,7 @@ const MyPaginate = styled(ReactPaginate).attrs({
   padding: 0;
   flex-wrap: wrap;
   list-style: none;
-  justify-content:center;
+  justify-content: center;
   align-items: center;
   margin-block-start: 1em;
   margin-block-end: 1em;
@@ -207,14 +205,16 @@ const MyFavorite = ({ loading, items, favoriteIds, count }) => {
   const dispatch = useDispatch();
   const [pagination, changePagination] = useState(1);
   const theme = useTheme();
-
+  const classes = useStyles();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const handleChange = ({ selected }) => {
+    changePagination(selected + 1);
+  };
 
   useEffect(() => {
     dispatch(fetchMyFavorite(pagination));
     window.scrollTo(0, 0);
   }, [dispatch, pagination]);
-  const classes = useStyles();
 
   const renderedItems = useMemo(() => {
     return renderedItem(items, classes, favoriteIds, dispatch, history);
@@ -234,9 +234,25 @@ const MyFavorite = ({ loading, items, favoriteIds, count }) => {
       </Box>
     );
   }
-  const handleChange = ({ selected }) => {
-    changePagination(selected + 1);
-  };
+
+  if (!loading && items.length === 0) {
+    return (
+      <Box
+        width={"100%"}
+        height={"100vh"}
+        style={{ backgroundColor: "#F5f5f3" }}
+        justifyContent="center"
+        display="flex"
+        alignItems="center"
+      >
+        <Typography style={{ fontSize: 16 }}>
+          {" "}
+          Vous n'avez aucun favori
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box width={"100%"} style={{ backgroundColor: "#F5f5f3" }}>
       <Box height={"15vh"} />

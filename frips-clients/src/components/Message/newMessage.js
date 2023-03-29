@@ -395,7 +395,7 @@ const Conversation = ({
                     color="primary"
                     style={{ marginLeft: 5 }}
                   >
-                    Voir plus d'offres ?
+                    Voir plus d'articles ?
                   </Button>
                 </Box>
               </Box>
@@ -493,7 +493,7 @@ const Conversation = ({
                         item: null,
                         Price: null,
                         imageSender: imageSender?.image ? imageSender : null,
-                        Pseudo: renderProfileName(Profile, userId),
+                        Pseudo: renderProfileName(Profile, id_Receiver(Profile, userId)),
                       };
 
                       socket.emit("new message", data);

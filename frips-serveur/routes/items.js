@@ -560,6 +560,21 @@ const findSearchQuery = (Search) => {
   return arraySearch;
 };
 
+const constructFilter = (filter) =>{
+  const arrayFilter = []
+  const {    newCatalogue,newMarque  } = filter
+
+  if(newCatalogue.length!==0 && newCatalogue.length!==0){
+    arrayFilter.push({
+      item_brand: {
+        some: {
+          id_Brand: { in: newMarque },
+        },
+      },
+    })
+  }
+}
+
 const isFilter = (filter) => {
   const {
     newCatalogue,
@@ -695,6 +710,7 @@ router.post("/pagination", async (req, res) => {
           select: {
             Pseudo: true,
             image: true,
+            id:true
           },
         },
       },
@@ -714,7 +730,6 @@ router.post("/pagination", async (req, res) => {
 
 router.post("/more", async (req, res) => {
   const { number } = req.body;
-  console.log(number);
   try {
     const Item = await item.findMany({
       include: {
@@ -825,11 +840,11 @@ router.post("/topBusiness", async (req, res) => {
         item: {
           some: {
             transaction: {
-              none: {},
+              none:{}
             },
           },
         },
-        id: 1,
+        id:1
       },
       select: {
         item: {
@@ -883,7 +898,6 @@ router.post("/topBusiness", async (req, res) => {
       },
     });
 
-    console.log(Item, _avg);
 
     res.status(200).json({ ...Item[0], _avg });
   } catch (error) {
@@ -913,7 +927,7 @@ router.get("/Id_of_MyFavorite", auth, async (req, res) => {
 router.post("/proposition", auth, async (req, res) => {
   const { Price, idItem } = req.body;
   const { id } = req.user;
-  const DatePuplication = await new Date();
+  const DatePuplication =  new Date();
 
   try {
     const data = await pricepropose.create({
@@ -924,16 +938,20 @@ router.post("/proposition", auth, async (req, res) => {
         id_Item: idItem,
       },
       include: {
-        account: {
-          select: {
-            id: true,
-          },
-        },
+        item:{
+          select:{
+            account:{
+              select:{
+                id:true
+              }
+            }
+          }
+        }
       },
     });
     logger.info("Price proposition send by " + id + " for item " + idItem + "");
     res.status(200).json(data);
-    sendEmail(data.account.id, "ReceivedOffer", {
+    sendEmail(data.item.account.id, "ReceivedOffer", {
       id_Item: idItem,
       pricepropose: parseFloat(Price),
       id_Sender: id,

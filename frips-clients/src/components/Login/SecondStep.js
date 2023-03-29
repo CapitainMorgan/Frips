@@ -4,13 +4,10 @@ import { Controller } from "react-hook-form";
 import StepTextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "./TextFieldLogin";
 
-const SecondStep = ({ control, errors }) => {
+const SecondStep = ({ control, errors,setValue }) => {
   return (
     <React.Fragment>
-      <Box>
-        Ces informations serviront comment garants à des fins juridiques et ne
-        serviront aucunement à des fins de profiling
-      </Box>
+      
       <Box marginTop={3} display="flex">
         <Box display={"flex"} flexDirection="column" width={"50%"}>
           <Controller
@@ -27,75 +24,46 @@ const SecondStep = ({ control, errors }) => {
         </Box>
 
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-        <Controller
+          <Controller
             name="step2.name"
             control={control}
             render={({ field }) => {
               return (
-                <TextFieldLogin {...{ ...field, placeholder: "Nom de famille" }} />
+                <TextFieldLogin
+                  {...{ ...field, placeholder: "Nom de famille" }}
+                />
               );
             }}
           />
 
           <StepTextError text={errors?.step2?.name?.message} />
-          
         </Box>
       </Box>
       <Box marginTop={3} display="flex">
-        <Box display={"flex"} flexDirection="column" width={"50%"}>
-        <Controller
-            name="step2.Jour"
+        <Box display={"flex"} flexDirection="column" width={"100%"}>
+          <Controller
+            name="step2.Birthday"
             control={control}
             render={({ field }) => {
-              return (
-                <TextFieldLogin {...{ ...field, placeholder: "Jour" }} />
-              );
+              return <TextFieldLogin {...{ ...field, placeholder: "Date de naissance, par exemple 04/02/2000" ,setValue}} />;
             }}
           />
 
           <Box>
-            <StepTextError text={errors?.step2?.Jour?.message} />
+            <StepTextError text={errors?.step2?.Birthday?.message} />
           </Box>
         </Box>
 
-        <Box display={"flex"} flexDirection="column" width={"50%"}>
-        <Controller
-            name="step2.Mois"
-            control={control}
-            
-            render={({ field }) => {
-              return (
-                <TextFieldLogin {...{ ...field, placeholder: "Mois" }} />
-              );
-            }}
-          />
-
-          <StepTextError text={errors?.step2?.Mois?.message} />
-        </Box>
-        <Box display={"flex"} flexDirection="column" width={"50%"}>
-        <Controller
-            name="step2.Annee"
-            control={control}
-            render={({ field }) => {
-              return (
-                <TextFieldLogin {...{ ...field, placeholder: "Année" }} />
-              );
-            }}
-          />
-
-          <StepTextError text={errors?.step2?.Annee?.message} />
-        </Box>
+        <StepTextError text={errors?.step2?.Mois?.message} />
       </Box>
 
       <Box marginTop={3} display="flex">
         <Box display={"flex"} flexDirection="column" width={"75%"}>
-        <Controller
+          <Controller
             name="step2.Rue"
             control={control}
             render={({ field }) => {
-              return (
-                <TextFieldLogin {...{ ...field, placeholder: "Rue" }} />
-              );
+              return <TextFieldLogin {...{ ...field, placeholder: "Rue" }} />;
             }}
           />
 
@@ -103,7 +71,7 @@ const SecondStep = ({ control, errors }) => {
         </Box>
 
         <Box display={"flex"} flexDirection="column" width={"25%"}>
-        <Controller
+          <Controller
             name="step2.Numero"
             control={control}
             render={({ field }) => {
@@ -119,13 +87,11 @@ const SecondStep = ({ control, errors }) => {
 
       <Box marginTop={3} display="flex">
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-        <Controller
+          <Controller
             name="step2.NPA"
             control={control}
             render={({ field }) => {
-              return (
-                <TextFieldLogin {...{ ...field, placeholder: "NPA" }} />
-              );
+              return <TextFieldLogin {...{ ...field, placeholder: "NPA" }} />;
             }}
           />
 
@@ -133,7 +99,7 @@ const SecondStep = ({ control, errors }) => {
         </Box>
 
         <Box display={"flex"} flexDirection="column" width={"50%"}>
-        <Controller
+          <Controller
             name="step2.Localite"
             control={control}
             render={({ field }) => {
@@ -146,7 +112,6 @@ const SecondStep = ({ control, errors }) => {
           <StepTextError text={errors?.step2?.Localite?.message} />
         </Box>
       </Box>
-      
     </React.Fragment>
   );
 };

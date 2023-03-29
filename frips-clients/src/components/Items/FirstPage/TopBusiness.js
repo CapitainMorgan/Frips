@@ -141,16 +141,17 @@ const renderedItem = (state, classes, favorite, dispatch, history, mobile) => {
                   {item.Price} CHF
                 </Typography>
                 <Typography>{item.Size}</Typography>
-                <Typography>{item.Brand}</Typography>
+                <Typography>{item.item_brand[0]?.brand.Name}</Typography>
+
               </Box>
               <Divider />
               <Box height={44} display="flex" alignItems="center">
                 <IconButton
                   onClick={() => {
                     if (_.some(favorite, { id_Item: item.id })) {
-                      dispatch(removeFavorite(state[index].id, 4));
+                      dispatch(removeFavorite(state[index].id, 7));
                     } else {
-                      dispatch(addFavorite(state[index].id, 4));
+                      dispatch(addFavorite(state[index].id, 7));
                     }
                   }}
                 >
@@ -159,7 +160,7 @@ const renderedItem = (state, classes, favorite, dispatch, history, mobile) => {
                   ) : (
                     <FavoriteBorderIcon
                       style={{ color: "grey" }}
-                    ></FavoriteBorderIcon>
+                    />
                   )}
                 </IconButton>
 

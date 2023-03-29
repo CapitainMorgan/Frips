@@ -1,19 +1,17 @@
 import {
-  Badge,
   Box,
   Button,
   Card,
   CardActionArea,
   CircularProgress,
   makeStyles,
-  Typography,
+  Typography
 } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate, useParams } from "react-router-dom";
-import { TiWarning } from "react-icons/ti";
-import API_ENDPOINT from "../../../../api/url";
 import { fetchMyPropositionId } from "../../../../actions";
+import API_ENDPOINT from "../../../../api/url";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -29,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 10,
     gridTemplateColumns: "repeat(2,50%)",
     position: "relative",
+    
     [theme.breakpoints.down("sm")]: {
       width: "100%",
       display: "grid",
@@ -161,10 +160,9 @@ const MyPropositionById = ({ loading, item }) => {
   id = parseInt(id);
 
   useEffect(() => {
-    if (!loading && !Boolean(item)) {
       dispatch(fetchMyPropositionId(id));
-    }
-  }, [dispatch, loading]);
+    
+  }, [dispatch]);
 
   if (loading && !Boolean(item)) {
     return (

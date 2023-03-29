@@ -151,73 +151,73 @@ const emailOfferReceived = (profile,sender, item,pricepropose) => {
                                   ${Boolean(item) ? `
                                   
                                   <table
-    style="
-      padding-left: 40px;
-      padding-right: 40px;
-      padding-top: 40px;
-      padding-bottom: 40px;
-    "
-    align="center"
-    border="0"
-    cellpadding="0"
-    cellspacing="0"
-    role="presentation"
-    width="100%"
-  >
-    <tbody>
-      <tr>
-        <td>
-          <table
-            align="center"
-            role="presentation"
-            cellspacing="0"
-            cellpadding="0"
-            border="0"
-            width="100%"
-          >
-            <tbody style="width: 100%">
-              <tr style="width: 100%">
-                <td>
-                  <img alt="${item.Name}"
-                  src=${`https://api.myfrips.ch:5000//images/${item.id}/${item.image[0].image}`}
-                  width="150px" height="150px" style=" display: block; outline:
-                  none; border: none; text-decoration: none; float: left;
-                  object-fit: cover; " />
-                </td>
-                <td style="vertical-align: top; padding-left: 12px">
-                  <p
-                    style="
-                      font-size: 14px;
-                      line-height: 2;
-                      margin: 0;
-                      font-weight: 500;
-                    "
-                  >
-                    ${item.Name}
-                  </p>
-                  <p
-                    style="
-                      font-size: 14px;
-                      line-height: 2;
-                      margin: 0;
-                      color: #747474;
-                      font-weight: 500;
-                    "
-                  >
-                    ${item.Size}
-                  </p>
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+                                  style="
+                                    padding-left: 40px;
+                                    padding-right: 40px;
+                                    padding-top: 40px;
+                                    padding-bottom: 40px;
+                                  "
+                                  align="center"
+                                  border="0"
+                                  cellpadding="0"
+                                  cellspacing="0"
+                                  role="presentation"
+                                  width="100%"
+                                >
+                                  <tbody>
+                                    <tr>
+                                      <td>
+                                        <table
+                                          align="center"
+                                          role="presentation"
+                                          cellspacing="0"
+                                          cellpadding="0"
+                                          border="0"
+                                          width="100%"
+                                        >
+                                          <tbody style="width: 100%">
+                                            <tr style="width: 100%">
+                                              <td>
+                                                <img alt="${item.Name}"
+                                                  src=${`https://api.myfrips.ch:5000//images/${item.id}/${item.image[0].image}`}
+                                                  width="150" height="150" style=" display: block; outline:
+                                                  none; border: none; text-decoration: none; float: left;
+                                                  object-fit: cover; max-width: 100%; height: auto;" />
+                                              </td>
+                                              <td style="vertical-align: top; padding-left: 12px">
+                                                <p
+                                                  style="
+                                                    font-size: 14px;
+                                                    line-height: 2;
+                                                    margin: 0;
+                                                    font-weight: 500;
+                                                  "
+                                                >
+                                                  ${item.Name}
+                                                </p>
+                                                <p
+                                                  style="
+                                                    font-size: 14px;
+                                                    line-height: 2;
+                                                    margin: 0;
+                                                    color: #747474;
+                                                    font-weight: 500;
+                                                  "
+                                                >
+                                                  ${item.Size}
+                                                </p>
+                                              </td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                      </td>
+                                    </tr>
+                                  </tbody>
+                                </table> 
                                   `:""}
   
                                   <a
-                                    href=https://myfrips.ch/members/myFrips/myProposition/item=${item.id}&user_Id=${sender.id}
+                                    href=https://myfrips.ch/members/myFrips/ReceivedProposition/${item.id}/${sender.id}
                                     style="
                                       background-color: #82a0c2;
                                       border-radius: 3px;

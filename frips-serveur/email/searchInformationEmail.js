@@ -1,37 +1,30 @@
 const { PrismaClient } = require("@prisma/client");
 
-const { account, item, chat, transaction,pricepropose } = new PrismaClient();
+const { account, item, chat, transaction, pricepropose, message } =
+  new PrismaClient();
 
 const checkIfShouldSend = async (
   id_Receiver,
   { id_Sender, id_Chat, id_Item = undefined }
 ) => {
-  const didUserSendMessage = await chat.findMany({
+  didUserSendMessage = await message.count({
     where: {
-      id: id_Chat,
-      message: {
-        some: {
+      id_Chat,
+      AND: [
+        { id_Sender: id_Sender },
+        {
           AND: [
-            { id_Sender: id_Sender },
             {
-              AND: [
-                {
-                  Date_Houre: {
-                    gte: new Date(new Date().getTime() - 24 * 60 * 60 * 2000),
-                  },
-                  Text: { not: { equals: null } },
-                },
-              ],
+              Date_Houre: {
+                gte: new Date(new Date().getTime() - 24 * 60 * 60 * 2000),
+              },
+              Text: { not: { equals: null } },
             },
           ],
         },
-      },
+      ],
     },
   });
-
-  if (didUserSendMessage.length !== 0) {
-    return;
-  }
 
   if (id_Sender && id_Item) {
     const findUserItem = await account.findUnique({
@@ -104,7 +97,6 @@ const findUserNameEmail = async (id_Receiver) => {
 };
 
 const bill = async (id_Receiver, { id_Item, id_Buyer }) => {
-  console.log(id_Buyer, id_Item);
   let mySellItem = await transaction.findFirst({
     where: {
       id_Item: parseInt(id_Item),
@@ -141,9 +133,11 @@ const bill = async (id_Receiver, { id_Item, id_Buyer }) => {
             },
           },
 
+          
           DeliveryDetails: true,
         },
       },
+
       id: true,
 
       DateSell: true,
@@ -158,6 +152,7 @@ const bill = async (id_Receiver, { id_Item, id_Buyer }) => {
           Email: true,
         },
       },
+
       TaxPrice: true,
       DeliveryPrice: true,
 
@@ -181,17 +176,37 @@ const bill = async (id_Receiver, { id_Item, id_Buyer }) => {
   };
 };
 
+const sell  = async (id_Receiver, {id_Item}) =>{
+  const {account} = await item.findUnique({
+    where:{
+      id:id_Item
+    },
+    select:{
+      account:{
+        select:{
+          Email:true,
+          Firstname:true
+        }
+      }
+    },
+  })
+  
+
+  return account
+}
+
 const offer = async (id_Receiver, { id_Sender, id_Item }) => {
   const ifAlreadyHaveSomeProposition = await pricepropose.count({
-    where:{
+    where: {
       id_Item,
       SendDate: {
         gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
       },
-    }
-  }) 
-
-  console.log(ifAlreadyHaveSomeProposition,id_Item)
+    },
+    
+  }
+  
+  );
 
   const findUserItem = await account.findUnique({
     where: {
@@ -206,7 +221,7 @@ const offer = async (id_Receiver, { id_Sender, id_Item }) => {
       },
       Firstname: true,
       Email: true,
-      id:true
+      id: true,
     },
   });
 
@@ -227,18 +242,16 @@ const offer = async (id_Receiver, { id_Sender, id_Item }) => {
     },
   });
 
-
-
-  return { findUserItem,itemForEmail };
+  return { findUserItem, itemForEmail };
 };
 
 const typeOfEmail = async (type, id_Receiver, args) => {
-  let infoReceiver
+  let infoReceiver;
   switch (type) {
     case "Welcome":
       return await findUserNameEmail(id_Receiver);
     case "NewMessage":
-       infoReceiver = await checkIfShouldSend(id_Receiver, args);
+      infoReceiver = await checkIfShouldSend(id_Receiver, args);
       const SenderPseudo = await account.findUnique({
         where: { id: args?.id_Sender },
         select: {
@@ -248,16 +261,18 @@ const typeOfEmail = async (type, id_Receiver, args) => {
               image: true,
             },
           },
-          id:true
+          id: true,
         },
-        
       });
 
-    
+      if (!Boolean(infoReceiver)) {
+        return;
+      }
+
       return { SenderPseudo, ...infoReceiver };
 
     case "Sell":
-      return await findUserNameEmail(id_Receiver);
+      return await sell(id_Receiver,args);
 
     case "Bill":
       return await bill(id_Receiver, args);
@@ -272,19 +287,18 @@ const typeOfEmail = async (type, id_Receiver, args) => {
               image: true,
             },
           },
-          id:true
+          id: true,
         },
-        
       });
-      if(!Boolean(infoReceiver)){
+      if (!Boolean(infoReceiver)) {
         return;
       }
 
-      return {...infoReceiver,senderInfo};
-    
+      return { ...infoReceiver, senderInfo };
+
     case "AcceptedOffer":
       return await findUserNameEmail(id_Receiver);
-   
+
     default:
       break;
   }

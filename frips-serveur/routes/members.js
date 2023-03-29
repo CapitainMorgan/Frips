@@ -7,7 +7,7 @@ const multer = require("multer");
 const { nanoid } = require("nanoid");
 let fs = require("fs-extra");
 const path = require("path"); // path for cut the file extension
-const sharp = require("sharp")
+const sharp = require("sharp");
 const log4js = require("log4js");
 const { sendEmail } = require("../email/sendEmail");
 
@@ -17,14 +17,8 @@ log4js.configure({
 });
 var logger = log4js.getLogger("members");
 
-const {
-  item,
-  account,
-  image,
-  pricepropose,
-  transaction,
-  review,
-} = new PrismaClient();
+const { item, account, image, pricepropose, transaction, review } =
+  new PrismaClient();
 // @route   GET api/members/myFrips
 // @desc    get all your post
 // @acces    Private
@@ -86,23 +80,19 @@ router.post("/myProfile", auth, upload, async (req, res) => {
   try {
     let pathDir = `public/imageProfile/${id}`;
 
-    fs.emptyDir(pathDir, err => {
+    fs.emptyDir(pathDir, (err) => {
       if (err) throw err;
       console.log(`Successfully deleted everything inside ${pathDir}`);
-    })
+    });
     fs.mkdirsSync(pathDir);
 
     let idImage = nanoid();
     fs.writeFileSync(
-      path.join(
-        "./",
-        pathDir,
-        `${idImage}` + ".jpeg"
-      ),
+      path.join("./", pathDir, `${idImage}` + ".jpeg"),
       await sharp(req.file.buffer)
-      .resize({ width: 400, height: 400 })
-      .jpeg({ quality: 75 })
-      .toBuffer(),
+        .resize({ width: 400, height: 400 })
+        .jpeg({ quality: 75 })
+        .toBuffer()
     );
 
     const changeProfileImage = await image.upsert({
@@ -177,7 +167,7 @@ const constructQueryMySell = (whereFilter) => {
       arrayWhere.push({ DateSend: { not: { equals: null } } });
     }
   });
-  if(arrayWhere.length==0){
+  if (arrayWhere.length == 0) {
     return;
   }
   return arrayWhere;
@@ -476,6 +466,8 @@ router.post("/myFrips", auth, async (req, res) => {
       orderBy: constructFilter(filter, "myFrips"),
     });
 
+    console.log(MyFrips);
+
     if (count === 0 && filter.length === 0) {
       res.status(200).json({
         items: MyFrips,
@@ -666,57 +658,174 @@ router.post("/MyProposition", auth, async (req, res) => {
   }
 });
 
-router.get("/myProposition/:id_Item", auth, async (req, res) => {
-  const { id } = req.user;
-  const { id_Item } = req.params;
+router.get(
+  "/ReceivedProposition/:id_Item/:id_Sender",
+  auth,
+  async (req, res) => {
+    const { id } = req.user;
+    const { id_Item, id_Sender } = req.params;
 
-  try {
-    const MyProposition = await pricepropose.findUnique({
-      where: {
-        id_Account_id_Item: {
-          id_Account: id,
-          id_Item: parseInt(id_Item),
+    try {
+      const { account } = await item.findFirst({
+        where: {
+          id: parseInt(id_Item),
         },
-      },
-      select: {
-        item: {
-          select: {
-            image: {
-              take: 1,
+        select: {
+          account: {
+            select: {
+              id: true,
             },
-            Price: true,
-            id: true,
-            Size: true,
-            Name: true,
-            item_brand: {
+          },
+        },
+      });
+      console.log(account);
+
+      if (id !== account.id) {
+        console.log("la");
+        res.status(400).json({ msg: "Aucune correspondance" });
+      } else {
+        const MyProposition = await pricepropose.findUnique({
+          where: {
+            id_Account_id_Item: {
+              id_Account: parseInt(id_Sender),
+              id_Item: parseInt(id_Item),
+            },
+          },
+          select: {
+            item: {
               select: {
-                brand: {
+                image: {
+                  take: 1,
+                },
+                Price: true,
+                id: true,
+                Size: true,
+                Name: true,
+                item_brand: {
                   select: {
-                    Name: true,
+                    brand: {
+                      select: {
+                        Name: true,
+                      },
+                    },
                   },
                 },
               },
             },
+            dateApprove: true,
+            Approve: true,
+            SendDate: true,
+            Price: true,
+            id_Account: true,
           },
+        });
+        console.log(MyProposition);
+        if (!Boolean(MyProposition)) {
+          res.status(400).json({ msg: "Aucune correspondance" });
+        } else {
+          if (
+            MyProposition.SendDate >
+            new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+          ) {
+            res.status(200).json(MyProposition);
+          } else {
+            res.status(400).json({ msg: "Article plus disponible" });
+          }
+        }
+      }
+    } catch (error) {
+      logger.error("GET /mySell/:id_Item", error);
+      res.status(500).json("Servor Error");
+    }
+  }
+);
+
+router.get(
+  "/MyProposition/:id_Item",
+  auth,
+  async (req, res) => {
+    const { id } = req.user;
+    const { id_Item } = req.params;
+
+
+
+    try {
+      const MyProposition = await pricepropose.findUnique({
+        where: {
+          id_Account_id_Item:{
+            id_Account:parseInt(id),
+            id_Item:parseInt(id_Item)
+          }          
         },
-        dateApprove: true,
-        Approve: true,
-        SendDate: true,
-        Price: true,
-        id_Account: true,
+        select: {
+          item: {
+            select: {
+              image: {
+                take: 1,
+              },
+              Price: true,
+              id: true,
+              Size: true,
+              Name: true,
+              item_brand: {
+                select: {
+                  brand: {
+                    select: {
+                      Name: true,
+                    },
+                  },
+                },
+              },
+              
+            },
+          },
+          dateApprove: true,
+          Approve: true,
+          SendDate: true,
+          Price: true,
+          id_Account: true,
+        },
+      });
+
+      if (!Boolean(MyProposition) || MyProposition.id_Account !==id) {
+        res.status(400).json({ msg: "Aucune correspondance" });
+      } else {
+        if (
+          MyProposition.dateApprove <
+          new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+        ) {
+          res.status(200).json(MyProposition);
+        } else {
+          res.status(400).json({ msg: "Offre plus disponible" });
+        }
+      }
+    } catch (error) {
+      logger.error("GET /mySell/:id_Item", error);
+      res.status(500).json("Servor Error");
+    }
+  }
+);
+
+router.post("/Received", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_transaction } = req.body;
+
+  try {
+    await transaction.update({
+      where: {
+        id: id_transaction,
+      },
+      data: {
+        Status: "reçu",
       },
     });
-
-    if (
-      MyProposition.dateApprove >
-      new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
-    ) {
-      res.status(200).json(MyProposition);
-    } else {
-      res.status(400).json("Article plus disponible");
-    }
+    logger.info(
+      "POST /Received",
+      "Transaction " + id_transaction + " received"
+    );
+    res.sendStatus(200);
   } catch (error) {
-    logger.error("GET /mySell/:id_Item", error);
+    logger.error("POST /Received", error);
     res.status(500).json("Servor Error");
   }
 });
@@ -768,35 +877,13 @@ router.post("/Rewiew", auth, async (req, res) => {
   }
 });
 
-router.post("/Received", auth, async (req, res) => {
-  const { id } = req.user;
-  const { id_transaction } = req.body;
 
-  try {
-    await transaction.update({
-      where: {
-        id: id_transaction,
-      },
-      data: {
-        Status: "reçu",
-      },
-    });
-    logger.info(
-      "POST /Received",
-      "Transaction " + id_transaction + " received"
-    );
-    res.sendStatus(200);
-  } catch (error) {
-    logger.error("POST /Received", error);
-    res.status(500).json("Servor Error");
-  }
-});
 
 const constructQueryMyPurchase = (whereFilter) => {
   const arrayWhere = [];
 
   if (whereFilter.length === 0) {
-    return ;
+    return;
   }
   whereFilter.map((item) => {
     if (item === 13) {
@@ -806,7 +893,7 @@ const constructQueryMyPurchase = (whereFilter) => {
       arrayWhere.push({ Status: { not: { equals: null } } });
     }
   });
-  if(arrayWhere.length==0){
+  if (arrayWhere.length == 0) {
     return;
   }
   return arrayWhere;
@@ -954,8 +1041,8 @@ router.post("/StatusProposition", auth, async (req, res) => {
     });
 
     res.sendStatus(200);
-    if(approved){
-      sendEmail(id_Account,"AcceptedOffer")
+    if (approved) {
+      sendEmail(id_Account, "AcceptedOffer",{id_Item});
     }
   } catch (error) {
     logger.error("POST /StatusProposition", error);

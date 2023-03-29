@@ -405,15 +405,13 @@ const Header = ({ onSearchSubmit }) => {
             </Typography>
           </Box>
           <Box>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                history("/items/Femme");
-                handleMobileMenuClose();
-              }}
+            <a
+              rel="noreferrer"
+              target="_blank"
+              href={"https://instagram.com/my_frips?igshid=ZDdkNTZiNTM="}
             >
               Instagram
-            </MenuItem>
+            </a>
             <a
               rel="noreferrer"
               target="_blank"

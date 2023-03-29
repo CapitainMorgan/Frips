@@ -1,6 +1,17 @@
 import React, { useState } from "react";
 
-import { Box, ClickAwayListener, Dialog, IconButton, InputAdornment, makeStyles, Modal, Popper, TextField, Typography } from "@material-ui/core";
+import {
+  Box,
+  ClickAwayListener,
+  Dialog,
+  IconButton,
+  InputAdornment,
+  makeStyles,
+  Modal,
+  Popper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
 import { listCategorie } from "../staticItems/staticItemName";
@@ -8,7 +19,6 @@ import { listCategorie } from "../staticItems/staticItemName";
 import CloseIcon from "@material-ui/icons/Close";
 import _ from "lodash";
 import { useSelector } from "react-redux";
-
 
 const useStyle = makeStyles((theme) => ({
   pointer: {
@@ -76,24 +86,29 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
     setAnchorEl(null);
   };
 
-  if(!mobile){
+  console.log(form);
+  if (!mobile) {
     return (
       <ClickAwayListener onClickAway={handleClickAway}>
         <Box style={{ position: "relative" }} width={"100%"}>
           <TextField
             onClick={handleClick}
             autoComplete="off"
-            {...field}
+            type="text"
             placeholder="Selectionne une catégorie"
             value={_.find(Catalogue, { id: field.value })?.Name}
-            onChange={(e) => form.SetFieldValue(field.name, e.target.value)}
+            onChange={(e) => {
+              if (e.currentTarget !== "") {
+                form.SetFieldValue(field.name, e.target.value);
+              }
+            }}
             fullWidth
             InputProps={{
               classes: { input: classes.pointer },
               style: { fontSize: 16 },
-  
+
               readOnly: true,
-  
+
               endAdornment: (
                 <InputAdornment position="end" className={classes.pointer}>
                   {Boolean(anchorEl) ? <ExpandLess /> : <ExpandMore />}
@@ -101,7 +116,7 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
               ),
             }}
           />
-  
+
           {!mobile ? (
             <Popper
               disablePortal={false}
@@ -147,7 +162,7 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
                     </IconButton>
                   </Box>
                 </Box>
-  
+
                 <Box style={{ backgroundColor: "white" }} width={"100%"}>
                   {listCategorie(
                     field.value,
@@ -166,10 +181,9 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
         </Box>
       </ClickAwayListener>
     );
-  }
-  else{
+  } else {
     return (
-      <ClickAwayListener onClickAway={handleClickAway} >
+      <ClickAwayListener onClickAway={handleClickAway}>
         <Box style={{ position: "relative" }} width={"100%"}>
           <TextField
             onClick={handleClick}
@@ -182,9 +196,9 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
             InputProps={{
               classes: { input: classes.pointer },
               style: { fontSize: 16 },
-  
+
               readOnly: true,
-  
+
               endAdornment: (
                 <InputAdornment position="end" className={classes.pointer}>
                   {Boolean(anchorEl) ? <ExpandLess /> : <ExpandMore />}
@@ -192,44 +206,42 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
               ),
             }}
           />
-  
-         
-            <Dialog open={Boolean(anchorEl)}>
+
+          <Dialog open={Boolean(anchorEl)}>
+            <Box
+              className={classes.Dialog}
+              display="flex"
+              flexDirection="column"
+            >
               <Box
-                className={classes.Dialog}
+                minHeight={80}
                 display="flex"
-                flexDirection="column"
+                justifyContent="center"
+                alignItems="center"
+                position="relative"
               >
-                <Box
-                  minHeight={80}
-                  display="flex"
-                  justifyContent="center"
-                  alignItems="center"
-                  position="relative"
-                >
-                  <Typography>{field.Name}</Typography>
-                  <Box padding={3} position="absolute" right={0}>
-                    <IconButton onClick={handleClickAway}>
-                      <CloseIcon />
-                    </IconButton>
-                  </Box>
-                </Box>
-  
-                <Box style={{ backgroundColor: "white" }} width={"100%"}>
-                  {listCategorie(
-                    field.value,
-                    navigationValue,
-                    setNavigationValue,
-                    classes,
-                    form,
-                    handleClickAway,
-                    setSize,
-                    mobile
-                  )}
+                <Typography>{field.Name}</Typography>
+                <Box padding={3} position="absolute" right={0}>
+                  <IconButton onClick={handleClickAway}>
+                    <CloseIcon />
+                  </IconButton>
                 </Box>
               </Box>
-            </Dialog>
-          
+
+              <Box style={{ backgroundColor: "white" }} width={"100%"}>
+                {listCategorie(
+                  field.value,
+                  navigationValue,
+                  setNavigationValue,
+                  classes,
+                  form,
+                  handleClickAway,
+                  setSize,
+                  mobile
+                )}
+              </Box>
+            </Box>
+          </Dialog>
         </Box>
       </ClickAwayListener>
     );

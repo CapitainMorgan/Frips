@@ -411,7 +411,6 @@ const ItemForm = ({
                       <Box className={classes.SubFormLittleBox}>
                         <Field
                           name="Catalogue"
-                          as="checkbox"
                           id="Catalogue"
                           mobile={typeOfInput()}
                           size={size}

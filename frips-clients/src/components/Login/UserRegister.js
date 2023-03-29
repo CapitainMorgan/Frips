@@ -6,14 +6,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
 import { registerUser, userIfExist } from "../../actions";
-import { REGISTER_FAILURE, RESET_ERROR } from "../../actions/type";
-import axiosInstance from "../../api/api";
+import { RESET_ERROR } from "../../actions/type";
 import StepTextError from "../Items/formUpload/errorText";
 import CostumStepper from "./CostumStepper";
 import FirsStep from "./FirsStep";
 import SecondStep from "./SecondStep";
-
-
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -51,10 +48,8 @@ const initialValue = {
     firstName: "",
     name: "",
     NPA: "",
-    Annee: "",
     Localite: "",
-    Mois: "",
-    Jour: "",
+    Birthday: "",
     Rue: "",
     Numero: "",
   },
@@ -92,18 +87,17 @@ const validationSchema = yup.object().shape({
       .string("Entrez un nom")
       .matches(/^[^\d]+$/, "Veuillez indiquer seulement votre nom de")
       .required("Un nom de famille requis"),
-    Jour: yup
-      .string("Entrez un jour ")
-      .matches(/^[0-9]*$/, "Veuillez seulement utiliser des nombres")
-      .required("Un jour est requis"),
-    Mois: yup
-      .string("Entrez un mois ")
-      .matches(/^[0-9]*$/, "Veuillez seulement utiliser des nombres")
-      .required("Un mois est requis"),
-    Annee: yup
-      .string("Entrez une année ")
-      .matches(/^[0-9]*$/, "Veuillez seulement utiliser des nombres")
-      .required("Une année est requise"),
+    Birthday: yup
+      .string()
+      .test("valid-date", "Date de naissance invalide", (value) => {
+        const [month, day, year] = value.split("/");
+
+        if (!Boolean(month) || !Boolean(day) || !Boolean(year)) return false;
+        const date = new Date(`${year}-${month}-${day}`);
+        return date instanceof Date && !isNaN(date);
+      })
+      .max(new Date(), "Date de naissance impossible")
+      .required("Une date de naissance est requise"),
     NPA: yup.string("Entrez un NPA ").required("Un NPA est requis"),
     Rue: yup
       .string("Entrez une rue ")
@@ -126,11 +120,9 @@ const validationSchema = yup.object().shape({
   }),
 });
 
-
 function getSteps() {
   return ["Créer un profile", "Valider ses informations personnels"];
 }
-
 
 export const Register = () => {
   const dispatch = useDispatch();
@@ -146,6 +138,7 @@ export const Register = () => {
     watch,
     handleSubmit,
     clearErrors,
+    setValue,
     trigger,
     formState: { errors },
   } = useForm({
@@ -154,8 +147,7 @@ export const Register = () => {
   });
   const pseudo = watch("step1.Pseudo"); // you can also target specific fields by their names
 
-  const { Email, Pseudo, Password } = getValues().step1;
-
+  console.log(errors);
   const renderStepper = (step) => {
     switch (step) {
       case 0:
@@ -177,6 +169,7 @@ export const Register = () => {
             handleSubmit={handleSubmit}
             onSubmit={onSubmit}
             getValues={getValues}
+            setValue={setValue}
             errors={errors}
           />
         );

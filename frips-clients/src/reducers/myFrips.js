@@ -17,20 +17,25 @@ import {
   RESET_FILTER_MYFRIPS,
   REVIEW,
   STATUS_PROPOSITION,
+  FETCH_MYPROPOSITION_RECEIVED_ID,
   SUCCESS_FETCH_MYFRIPS,
+  MYFRIPS_ERROR,
+  MYFRIPS_ERROR_FETCH,
+  STATUS_PROPOSITION_ID,
 } from "../actions/type.js";
 
 const initialValues = {
-  loading: false,
+  loading: true,
   items: [],
   delivery: [],
   proposition: [],
-  propositionId:null,
+  propositionId: null,
+  propostionReceived: null,
   sell: [],
-  sellId:null,
+  sellId: null,
   item: null,
   purchase: [],
-  purchaseId:null,
+  purchaseId: null,
   filter: [],
   sellNotification: [],
   purchaseNotification: [],
@@ -50,6 +55,21 @@ export default (state = initialValues, action) => {
         items: payload.items,
         count: payload.count,
         msg: payload.msg,
+      };
+
+    case FETCH_MYPROPOSITION_RECEIVED_ID:
+      return {
+        ...state,
+        propostionReceived: {
+          ...payload.item,
+          pricepropose: payload.Price,
+          dateApprove: payload.dateApprove,
+          SendDate: payload.SendDate,
+          id_Account: payload.id_Account,
+          review: payload.review,
+          Approve: payload.Approve,
+        
+         },
       };
     case FETCH_MYSELLBYID:
       return {
@@ -101,15 +121,15 @@ export default (state = initialValues, action) => {
         msg: payload.msg,
       };
     case REMOVE_ITEM:
-      const filterArray = state.items.filter((item)=>{
-        return item.id !== payload
-      })
+      const filterArray = state.items.filter((item) => {
+        return item.id !== payload;
+      });
 
       return {
         ...state,
-        items:[...filterArray]
-      }
-     
+        items: [...filterArray],
+      };
+
     case FETCH_MYPURCHASE:
       const purchaseArray = payload.items.map(
         ({
@@ -169,19 +189,19 @@ export default (state = initialValues, action) => {
         count: payload.count,
       };
 
-      case FETCH_MYPROPOSITIONID:
-        return {
-          ...state,
-          propositionId:{
-            ...payload.item,
+    case FETCH_MYPROPOSITIONID:
+      return {
+        ...state,
+        propositionId: {
+          ...payload.item,
           pricepropose: payload.Price,
-          dateApprove:payload.dateApprove,
-          SendDate:payload.SendDate,
-          id_Account:payload.id_Account,
-          review:payload.review,
-          Approve:payload.Approve,
-          }
-        }
+          dateApprove: payload.dateApprove,
+          SendDate: payload.SendDate,
+          id_Account: payload.id_Account,
+          review: payload.review,
+          Approve: payload.Approve,
+        },
+      };
     case CHANGE_PAGINATION_MYFRIPS:
       return {
         ...state,
@@ -191,6 +211,7 @@ export default (state = initialValues, action) => {
       return {
         ...state,
         loading: true,
+        msg:""
       };
     case SUCCESS_FETCH_MYFRIPS:
       return {
@@ -235,6 +256,12 @@ export default (state = initialValues, action) => {
         ...state,
         items: [...payload],
       };
+      case STATUS_PROPOSITION_ID:
+        console.log(payload)
+        return {
+          ...state,
+          propostionReceived:payload
+        }
 
     case RESET_FILTER_MYFRIPS:
       return {
@@ -243,22 +270,30 @@ export default (state = initialValues, action) => {
         msg: "",
         count: null,
       };
-
+    case MYFRIPS_ERROR:
+      return{
+        ...state,
+        msg:payload.msg,
+      }
+      case MYFRIPS_ERROR_FETCH:
+        return {
+          ...state,
+          loading:false
+        }
     case DELIVERY:
-
       const updatedData = state.sell.map((item) => {
         if (item.id === payload) {
           return { ...item, DateSend: new Date() };
         }
         return item;
       });
-      const sellNotif = state.sellNotification.filter(item =>{
-        return item.id !== payload
-      })
+      const sellNotif = state.sellNotification.filter((item) => {
+        return item.id !== payload;
+      });
       return {
         ...state,
         sell: [...updatedData],
-        sellNotification:[...sellNotif]
+        sellNotification: [...sellNotif],
       };
 
     case RECEIVED:

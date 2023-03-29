@@ -5,21 +5,6 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
   <head>
     <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
   </head>
-  <div
-    id="__react-email-preview"
-    style="
-      display: none;
-      overflow: hidden;
-      line-height: 1px;
-      opacity: 0;
-      max-height: 0;
-      max-width: 0;
-    "
-  >
-    
-    
-  </div>
-
   <body
     style="
       background-color: #ffffff;
@@ -80,7 +65,7 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
                     </tbody>
                   </table>
                   ${
-                    Boolean(profile.image?.image)
+                    Boolean(profile?.image?.image)
                       ? `<table
                     align="center"
                     border="0"
@@ -149,7 +134,6 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
                                
                                 ${content(pricepropose,sender)}
                                 ${Boolean(item) ? `
-                                
                                 <table
   style="
     padding-left: 40px;
@@ -179,10 +163,10 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
             <tr style="width: 100%">
               <td>
                 <img alt="${item.Name}"
-                src=${`https://api.myfrips.ch:5000//images/${item.id}/${item.image[0].image}`}
-                width="150px" height="150px" style=" display: block; outline:
-                none; border: none; text-decoration: none; float: left;
-                object-fit: cover; " />
+                  src=${`https://api.myfrips.ch:5000//images/${item.id}/${item.image[0].image}`}
+                  width="150" height="150" style=" display: block; outline:
+                  none; border: none; text-decoration: none; float: left;
+                  object-fit: cover; max-width: 100%; height: auto;" />
               </td>
               <td style="vertical-align: top; padding-left: 12px">
                 <p
@@ -213,8 +197,7 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
       </td>
     </tr>
   </tbody>
-</table>
-                                `:""}
+</table>           `:""}
 
                                 <a
                                   href=https://myfrips.ch/member/message/${id_Chat}
@@ -356,9 +339,8 @@ const content = (pricepropose,sender) => {
 font-size: 17px;
 line-height: 24px;
 margin: 16px 0;
-font-weight: bold;
 text-align: left;
-"> N'oublie pas que tu peux toujours contacter ${sender.Pseudo} pour clarifier toute question ou détail avant de prendre une décision. </p>
+"> N'oublie pas que tu peux toujours contacter <span>${sender.Pseudo}</span> pour clarifier toute question ou détail avant de prendre une décision. </p>
 
 <p style="
 font-size: 17px;

@@ -71,15 +71,16 @@ router.get("/search", async (req, res) => {
 router.get("/info", async (req, res) => {
   
   try {
-    const infoBrand = await brand.findMany({
+    let infoBrand = await brand.findMany({
       select: {
         Name: true,
         id: true,
       },
       orderBy: {
-        id: "asc",
+        Name:"asc"
       },
     });
+
     const infoColor = await color.findMany({
       select: {
         Code: true,

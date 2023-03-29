@@ -30,9 +30,15 @@ export const Footer = () => {
         </Box>
 
         <Box>
-          <IconButton>
-            <InstagramIcon />
-          </IconButton>
+        <a
+            rel="noreferrer"
+            target="_blank"
+            href={"https://instagram.com/my_frips?igshid=ZDdkNTZiNTM="}
+          >
+            <IconButton>
+              <InstagramIcon />
+            </IconButton>
+          </a>
         </Box>
         <Box>
           <a

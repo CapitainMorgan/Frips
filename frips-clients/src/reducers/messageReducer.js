@@ -1,4 +1,3 @@
-import _ from "lodash";
 import {
   ADD_MESSAGE_IMAGE,
   ADD_MORE_MESSAGE,
@@ -6,15 +5,11 @@ import {
   GENERATE_CONV,
   GET_ALL_CONV,
   GET_CONV,
-  GET_MORE_MESSAGE,
-  GET_MORE_MESSAGE_LOADING,
-  MESSAGE_FETCH_SUCCESS,
+  GET_MORE_MESSAGE, MESSAGE_FETCH_SUCCESS,
   MESSAGE_LOADING,
   NEW_MESSAGE,
-  NO_MORE,
-  Page_NUMBER,
-  SEND_DATE,
-  UPDATE_MESSAGE,
+  NO_MORE, SEND_DATE,
+  UPDATE_MESSAGE
 } from "../actions/type";
 
 const initialState = {
@@ -85,9 +80,6 @@ export default (state = initialState, action) => {
       };
 
     case UPDATE_MESSAGE:
-      
-
-
       return {
         ...state,
         conversations:[...payload],

@@ -245,22 +245,7 @@ const renderedItem = (
                       </Box>
                     </Box>
                   </AccordionDetails>
-                  <AccordionDetails>
-                    <Typography
-                      onClick={() => {
-                        setNavigation(3);
-                      }}
-                      style={{
-                        cursor: "pointer",
-                        fontSize: 16,
-                        color: "#82A0C2",
-                        borderBottom: "1px solid",
-                        borderColor: "#82A0C2",
-                      }}
-                    >
-                      Envie de voir plus d'offres ?
-                    </Typography>
-                  </AccordionDetails>
+                 
                 </Accordion>
               ) : null}
             </Card>
@@ -441,22 +426,7 @@ const renderedItem = (
                       </Box>
                     </Box>
                   </AccordionDetails>
-                  <AccordionDetails>
-                    <Typography
-                      onClick={() => {
-                        setNavigation(3);
-                      }}
-                      style={{
-                        cursor: "pointer",
-                        fontSize: 16,
-                        color: "#82A0C2",
-                        borderBottom: "1px solid",
-                        borderColor: "#82A0C2",
-                      }}
-                    >
-                      Envie de voir plus d'offres ?
-                    </Typography>
-                  </AccordionDetails>
+                  
                 </Accordion>
               ) : null}
             </Card>
@@ -634,22 +604,7 @@ const renderedItem = (
                       </Box>
                     </Box>
                   </AccordionDetails>
-                  <AccordionDetails>
-                    <Typography
-                      onClick={() => {
-                        setNavigation(3);
-                      }}
-                      style={{
-                        cursor: "pointer",
-                        fontSize: 16,
-                        color: "#82A0C2",
-                        borderBottom: "1px solid",
-                        borderColor: "#82A0C2",
-                      }}
-                    >
-                      Envie de voir plus d'offres ?
-                    </Typography>
-                  </AccordionDetails>
+                  
                 </Accordion>
               ) : null}
             </Card>

@@ -28,8 +28,8 @@ import {
   FETCH_ITEM_TYPE,
   FETCH_MYFAVORITE,
   FETCH_MYFAVORITEIDs,
-  FETCH_MYFRIPS,
   FETCH_MYPROPOSITIONID,
+  FETCH_MYPROPOSITION_RECEIVED_ID,
   FETCH_MYSELLBYID,
   FETCH_NEW_ITEMS,
   FETCH_NEW_ITEM_TYPE,
@@ -50,7 +50,7 @@ import {
   INFO_ITEM,
   ISRESERVED,
   LOADING_FETCH_ITEM,
-  LOADING_ITEM,
+  LOADING_MYFRIPS,
   LOADING_PAYMENT,
   LOGIN_FAIL,
   LOGIN_SUCCES,
@@ -61,6 +61,8 @@ import {
   MESSAGE_ERROR,
   MESSAGE_LOADING,
   MSG_ERROR,
+  MYFRIPS_ERROR,
+  MYFRIPS_ERROR_FETCH,
   NEW_MESSAGE,
   NO_MORE,
   NUMBER_COUNT,
@@ -68,7 +70,6 @@ import {
   PAYMENT_INFO,
   PAYMENT_INFO_SUCCESS_FETCH,
   PAYMENT_INTENT,
-  PAYMENT_SUCCESS,
   RECEIVED,
   REGISTER_FAILURE,
   REGISTER_SUCCESS,
@@ -83,8 +84,11 @@ import {
   SEND_DATE,
   SOCKET,
   STATUS_PROPOSITION,
+  STATUS_PROPOSITION_ID,
   SUCCESS_CREATION_ITEM,
   SUCCESS_FETCH_ITEM,
+  SUCCESS_FETCH_MYFRIPS,
+  UPDATE_MESSAGE,
   USER_LOADED,
 } from "./type";
 ////LOGIN/////
@@ -261,7 +265,7 @@ export const createItem =
       dispatch({ type: CREATE_ITEM, payload: response.data });
       setIsLoading(false);
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: true });
-      history("/")
+      history("/");
     } catch (error) {
       dispatch({ type: ERROR_ITEM, payload: true });
 
@@ -270,7 +274,7 @@ export const createItem =
     //
   };
 
-export const fetchItems = (fromHome,mobile) => async (dispatch, getState) => {
+export const fetchItems = (fromHome, mobile) => async (dispatch, getState) => {
   const loading = getState().items.loading;
 
   try {
@@ -278,23 +282,26 @@ export const fetchItems = (fromHome,mobile) => async (dispatch, getState) => {
     dispatch({ type: LOADING_FETCH_ITEM });
     dispatch({ type: FETCH_ITEMS, payload: data });
     dispatch(fetchNewItems());
-    dispatch(fetchTopBusiness(mobile))
+    dispatch(fetchTopBusiness(mobile));
 
     dispatch({ type: SUCCESS_FETCH_ITEM });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
-
 export const fetchTopBusiness = (mobile) => async (dispatch, getState) => {
   try {
-    const { data } = await axiosInstance.post("/api/items/topBusiness",{mobile},config);
+    const { data } = await axiosInstance.post(
+      "/api/items/topBusiness",
+      { mobile },
+      config
+    );
     dispatch({ type: FETCH_TOP_BUSINESS, payload: data });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-}
+};
 export const fetchNewItems = () => async (dispatch, getState) => {
   try {
     const { data } = await axiosInstance.get("/api/items/new");
@@ -608,8 +615,7 @@ export const handleNotificaiton =
         (obj) => _.get(obj, "message[0].Date_Houre"),
         "desc"
       );
-
-      dispatch({ type: "UPDATE_MESSAGE", payload: sortedArray });
+      dispatch({ type: UPDATE_MESSAGE, payload: sortedArray });
     } catch (error) {
       console.log(error);
     }
@@ -732,6 +738,8 @@ const updateItemsList = (key, getState) => {
       return getState().filterCatalogue.items;
     case 6:
       return getState().members.items;
+    case 7:
+      return getState().items.topBusiness.item;
 
     default:
       return getState().items.items;
@@ -1160,7 +1168,9 @@ export const changeIban =
       );
 
       dispatch({ type: CHANGE_IBAN, payload: data });
-      history(from);
+      if (history) {
+        history(from);
+      }
     } catch (error) {
       console.log(error);
     }
@@ -1225,21 +1235,34 @@ export const sendDateProposition =
   };
 
 export const sendStatusProposition =
-  (id, dateApprove, approved, id_Account) => async (dispatch, getState) => {
-    const items = getState().myFrips.items;
+  (id, dateApprove, approved, id_Account, fromReceivedProposition) =>
+  async (dispatch, getState) => {
+    let items;
 
-    const updateItems = _.find(items, { id });
-    updateItems.pricepropose[0].Approve = approved;
-    updateItems.pricepropose[0].dateApprove = dateApprove;
+    console.log(id, dateApprove, approved, id);
 
     try {
+      if (!fromReceivedProposition) {
+        items = getState().myFrips.items;
+
+        const updateItems = _.find(items, { id });
+        updateItems.pricepropose[0].Approve = approved;
+        updateItems.pricepropose[0].dateApprove = dateApprove;
+        dispatch({ type: STATUS_PROPOSITION, payload: items });
+      } else {
+        items = getState().myFrips.propostionReceived;
+
+        items.Approve = approved;
+        items.dateApprove = dateApprove;
+        const updateItem = { ...items };
+        dispatch({ type: STATUS_PROPOSITION_ID, payload: updateItem });
+      }
       await axiosInstance.post(
         `/api/members/StatusProposition`,
         { id_Item: id, approved, id_Account },
         config
       );
 
-      dispatch({ type: STATUS_PROPOSITION, payload: items });
       dispatch(removeNotificationMyFrips("propositionNotification", id));
     } catch (error) {
       console.log(error);
@@ -1293,20 +1316,82 @@ export const fetchMySellId = (id) => async (dispatch, getState) => {
 
 export const fetchMyPropositionId = (id) => async (dispatch, getState) => {
   try {
-    dispatch({ type: "LOADING_MYFRIPS" });
-
+    dispatch({ type: LOADING_MYFRIPS });
     const { data } = await axiosInstance.get(
-      `/api/members/myProposition/${id}`,
+      `/api/members/MyProposition/${id}`,
       config
     );
     dispatch({ type: FETCH_MYPROPOSITIONID, payload: data });
-    dispatch({ type: "SUCCESS_FETCH_MYFRIPS" });
+    dispatch({ type: SUCCESS_FETCH_MYFRIPS });
   } catch (error) {
-    console.log(error);
+    dispatch({ type: MYFRIPS_ERROR, payload: error.response.data });
+
+    dispatch({ type: MYFRIPS_ERROR_FETCH });
   }
 };
 
+export const fetchMyPropositionReceivedId =
+  (id_Item, id_Sender) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: LOADING_MYFRIPS });
+
+      const { data } = await axiosInstance.get(
+        `/api/members/ReceivedProposition/${id_Item}/${id_Sender}`,
+        config
+      );
+
+      dispatch({ type: FETCH_MYPROPOSITION_RECEIVED_ID, payload: data });
+      dispatch({ type: SUCCESS_FETCH_MYFRIPS });
+    } catch (error) {
+      dispatch({ type: MYFRIPS_ERROR, payload: error.response.data });
+
+      dispatch({ type: MYFRIPS_ERROR_FETCH });
+    }
+  };
+
 export const fetchMyPurchaseId =
+  (note, id_transaction) => async (dispatch, getState) => {
+    try {
+      const { data } = await axiosInstance.post(
+        `/api/members/Rewiew`,
+        { note, id_transaction },
+        config
+      );
+      dispatch({ type: REVIEW, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const fetchForPayment =
+  (note, id_transaction) => async (dispatch, getState) => {
+    try {
+      const { data } = await axiosInstance.post(
+        `/api/members/Rewiew`,
+        { note, id_transaction },
+        config
+      );
+      dispatch({ type: REVIEW, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const fetchSubscriber =
+  (note, id_transaction) => async (dispatch, getState) => {
+    try {
+      const { data } = await axiosInstance.post(
+        `/api/members/Rewiew`,
+        { note, id_transaction },
+        config
+      );
+      dispatch({ type: REVIEW, payload: data });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+export const fetchProblemUser =
   (note, id_transaction) => async (dispatch, getState) => {
     try {
       const { data } = await axiosInstance.post(

@@ -62,9 +62,7 @@ router.post("/", async (req, res,next) => {
     Pseudo,
     Email,
     Password,
-    Mois,
-    Jour,
-    Annee,
+    Birthday,
     name,
     firstName,
     Rue,
@@ -72,6 +70,8 @@ router.post("/", async (req, res,next) => {
     Localite,
     NPA,
   } = req.body;
+
+  console.log(req.body)
   const salt = await bcrypt.genSalt(10);
   Password = await bcrypt.hash(Password, salt);
 
@@ -112,7 +112,7 @@ router.post("/", async (req, res,next) => {
           Password,
           Lastname: name,
           Firstname: firstName,
-          BirthDate: new Date(parseInt(Annee), parseInt(Mois), parseInt(Jour)),
+          BirthDate: new Date(Birthday),
           address: {
             create: {
               City: Localite,

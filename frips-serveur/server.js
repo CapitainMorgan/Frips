@@ -25,6 +25,7 @@ log4js.configure({
     infoItem: { type: "file", filename: "log/infoItem.log" },
     members: { type: "file", filename: "log/members.log" },
     user: { type: "file", filename: "log/user.log" },
+    mail: { type: "file", filename: "log/mail.log" },
   },
   categories: { 
     default: { appenders: ["items"], level: "info" } ,
@@ -36,6 +37,7 @@ log4js.configure({
     infoItem: { appenders: ["infoItem"], level: "info" },
     members: { appenders: ["members"], level: "info" },
     user: { appenders: ["user"], level: "info" },
+    mail: { appenders: ["mail"], level: "info" },
   },
 });
 const server = https.createServer(sslOptions,app);

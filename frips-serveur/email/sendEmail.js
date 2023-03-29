@@ -8,6 +8,8 @@ const { emailBill } = require("./Template/emailBill");
 const { emailOfferReceived } = require("./Template/emailOfferReceived");
 const { emailOfferAccepted } = require("./Template/emailOfferAccepted");
 const client = new postmark.ServerClient(config.get("postMark"));
+const log4js = require("log4js");
+const logger = log4js.getLogger("mail");
 
 const typeOfEmail = (type, information, args) => {
   switch (type) {
@@ -91,7 +93,7 @@ const sendEmail = async (id_Receiver, type, args) => {
         typeOfEmail(type, information, args),
         (error, result) => {
           if (result) {
-            console.log(result);
+            logger.info(result);
           } else {
             console.log(information)
             throw new Error(error);
@@ -100,7 +102,7 @@ const sendEmail = async (id_Receiver, type, args) => {
       );
     }
   } catch (error) {
-    console.log(error);
+    logger.error(error);
   }
 };
 

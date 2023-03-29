@@ -5,20 +5,7 @@ const emailOfferReceived = (profile,sender, item,pricepropose) => {
     <head>
       <meta http-equiv="Content-Type" content="text/html charset=UTF-8" />
     </head>
-    <div
-      id="__react-email-preview"
-      style="
-        display: none;
-        overflow: hidden;
-        line-height: 1px;
-        opacity: 0;
-        max-height: 0;
-        max-width: 0;
-      "
-    >
-      
-      
-    </div>
+    
   
     <body
       style="

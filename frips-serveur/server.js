@@ -13,6 +13,31 @@ const path = require("path");
 const http = require("http");
 const https = require("https");
 const cors = require("cors");
+const log4js = require("log4js");
+log4js.configure({
+  appenders: { 
+    payment: { type: "file", filename: "log/payment.log" },
+    items: { type: "file", filename: "log/items.log" } ,
+    auth: { type: "file", filename: "log/auth.log" },
+    conversation: { type: "file", filename: "log/conversation.log" },
+    edit: { type: "file", filename: "log/edit.log" },
+    image: { type: "file", filename: "log/image.log" },
+    infoItem: { type: "file", filename: "log/infoItem.log" },
+    members: { type: "file", filename: "log/members.log" },
+    user: { type: "file", filename: "log/user.log" },
+  },
+  categories: { 
+    default: { appenders: ["items"], level: "info" } ,
+    payment: { appenders: ["payment"], level: "info" },
+    auth: { appenders: ["auth"], level: "info" },
+    conversation: { appenders: ["conversation"], level: "info" },
+    edit: { appenders: ["edit"], level: "info" },
+    image: { appenders: ["image"], level: "info" },
+    infoItem: { appenders: ["infoItem"], level: "info" },
+    members: { appenders: ["members"], level: "info" },
+    user: { appenders: ["user"], level: "info" },
+  },
+});
 const server = https.createServer(sslOptions,app);
 //const server = http.createServer(app);
 const io = require("socket.io")(server, {

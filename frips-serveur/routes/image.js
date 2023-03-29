@@ -2,10 +2,6 @@ const express = require("express");
 const router = express.Router();
 const { nanoid } = require("nanoid");
 const log4js = require("log4js");
-log4js.configure({
-  appenders: { image: { type: "file", filename: "image.log" } },
-  categories: { default: { appenders: ["image"], level: "error" } },
-});
 var logger = log4js.getLogger("image");
 
 const path = require("path"); // path for cut the file extension

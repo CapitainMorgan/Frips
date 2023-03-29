@@ -201,7 +201,7 @@ const App = () => {
               </Route>
 
               <Route
-                path="/Condition-général-de-vente-et-politique"
+                path="/Condition-general-de-vente-et-politique"
                 exact
                 element={<ConditionGeneral />}
               />

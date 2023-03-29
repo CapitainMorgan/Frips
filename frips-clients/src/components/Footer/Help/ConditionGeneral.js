@@ -195,7 +195,7 @@ export const ConditionGeneral = () => {
         </Typography>
         <Typography className={classes.typoSubtitle}>6.5 Commission</Typography>
         <Typography className={classes.typoBody}>
-        Le vendeur paie à MyFrips une commission pour son rôle d’intermédiaire avec l’acheteur. La hauteur de la commission est réglementée dans l’annexe 1. MyFrips est en droit de modifier la commission en tout temps, en respectant un préavis de 30 jours.
+        Le vendeur paie à MyFrips une commission pour son rôle d’intermédiaire avec l’acheteur. La hauteur de la commission est de 7%. MyFrips est en droit de modifier la commission en tout temps, en respectant un préavis de 30 jours.
         </Typography>
         <Typography className={classes.typoBody}>
         La commission est calculée à partir du prix de vente de l’objet acheté (y compris les frais, cotisations, coûts d’emballage, frais de livraison, mais sans la TVA éventuelle).

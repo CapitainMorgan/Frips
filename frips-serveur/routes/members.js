@@ -82,7 +82,7 @@ router.post("/myProfile", auth, upload, async (req, res) => {
 
     fs.emptyDir(pathDir, (err) => {
       if (err) throw err;
-      console.log(`Successfully deleted everything inside ${pathDir}`);
+      logger.info(`Successfully deleted everything inside ${pathDir}`);
     });
     fs.mkdirsSync(pathDir);
 
@@ -393,7 +393,7 @@ router.get("/mySell/:id_Item", auth, async (req, res) => {
     res.status(200).json(mySellItem);
   } catch (error) {
     res.status(500).json("Servor Error");
-    console.log(error);
+    logger.error(error);
   }
 });
 
@@ -1164,10 +1164,10 @@ router.post("/IBAN", auth, async (req, res) => {
         IBAN: true,
       },
     });
-
+    
     res.status(200).json(Account.IBAN);
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).json("Serveur error");
   }
 });

@@ -1,10 +1,6 @@
 const jwt = require("jsonwebtoken");
 const config = require("config");
 const log4js = require("log4js");
-log4js.configure({
-  appenders: { auth: { type: "file", filename: "auth.log" } },
-  categories: { default: { appenders: ["auth"], level: "error" } },
-});
 var logger = log4js.getLogger("auth");
 
 module.exports = (req, res, next) => {

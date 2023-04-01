@@ -3,6 +3,8 @@ const router = express.Router();
 const config = require("config");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const log4js = require("log4js");
+const logger = log4js.getLogger("user");
 
 const { PrismaClient } = require("@prisma/client");
 const { sendEmail } = require("../email/sendEmail");
@@ -36,12 +38,15 @@ router.post("/checkUser", async (req, res) => {
 
     if (user || email) {
       if (user && email) {
+        logger.info("Ce pseudo et ce mail sont déjà utilisés" + Pseudo + Email);
         res
           .status(400)
           .json({ msg: "Ce pseudo et ce mail sont déjà utilisés" });
       } else if (user) {
+        logger.info("Ce pseudo est déjà utilisé" + Pseudo);
         res.status(400).json({ msg: "Ce pseudo est déjà utilisé" });
       } else {
+        logger.info("Ce mail est déjà utilisé" + Email);
         res.status(400).json({ msg: "Ce mail est déjà utilisé" });
       }
     }
@@ -52,7 +57,7 @@ router.post("/checkUser", async (req, res) => {
 
 
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).send("Serveur error");
   }
 });
@@ -71,7 +76,6 @@ router.post("/", async (req, res,next) => {
     NPA,
   } = req.body;
 
-  console.log(req.body)
   const salt = await bcrypt.genSalt(10);
   Password = await bcrypt.hash(Password, salt);
 
@@ -96,12 +100,15 @@ router.post("/", async (req, res,next) => {
 
     if (user || email) {
       if (user && email) {
+        logger.info("Ce pseudo et ce mail sont déjà utilisés" + Pseudo + Email);
         res
           .status(400)
           .json({ msg: "Ce pseudo et ce mail sont déjà utilisés" });
       } else if (user) {
+        logger.info("Ce pseudo est déjà utilisé" + Pseudo);
         res.status(400).json({ msg: "Ce pseudo est déjà utilisé" });
       } else {
+        logger.info("Ce mail est déjà utilisé" + Email);
         res.status(400).json({ msg: "Ce mail est déjà utilisé" });
       }
     } else {
@@ -149,7 +156,7 @@ router.post("/", async (req, res,next) => {
     }
     //encrypt password
   } catch (error) {
-    console.log(error);
+    logger.error(error);
     res.status(500).send("Serveur error");
   }
 });

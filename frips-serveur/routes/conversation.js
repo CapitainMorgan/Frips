@@ -2,10 +2,6 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const log4js = require("log4js");
-log4js.configure({
-  appenders: { conversation: { type: "file", filename: "conversation.log" } },
-  categories: { default: { appenders: ["conversation"], level: "error" } },
-});
 var logger = log4js.getLogger("conversation");
 
 const { PrismaClient } = require("@prisma/client");

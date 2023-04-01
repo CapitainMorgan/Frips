@@ -40,8 +40,8 @@ log4js.configure({
     mail: { appenders: ["mail"], level: "info" },
   },
 });
-const server = https.createServer(sslOptions,app);
-//const server = http.createServer(app);
+/*const server = https.createServer(sslOptions,app);*/
+const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",

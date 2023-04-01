@@ -1,8 +1,15 @@
 import { IconButton, InputAdornment, TextField } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
-import React from "react";
+import React, { useState } from "react";
 
 const TextFieldLogin = (props) => {
+  const [lastKeyEvent, setLastKeyEvent] = useState(null);
+
+  function handleKeyDown(event) {
+      setLastKeyEvent(event.keyCode);
+    
+  }
+
   const handleClickShowPassword = () => {
     props.setshowPassword(!props.showPassword);
   };
@@ -20,18 +27,29 @@ const TextFieldLogin = (props) => {
           const { value } = event.target;
 
           let birthdate = value.replace(/[^\d]/g, "").slice(0, 8);
-
-          // Add slashes between the day and month, and between month and year
-          if (birthdate.length >= 3) {
-            birthdate = `${birthdate.slice(0, 2)}/${birthdate.slice(2)}`;
-          }
-          if (birthdate.length >= 6) {
-            birthdate = `${birthdate.slice(0, 5)}/${birthdate.slice(5)}`;
+          console.log(lastKeyEvent)
+          if (lastKeyEvent !== 8) {
+            // Add slashes between the day and month, and between month and year
+            // Add slashes if they are missing
+            if (birthdate.length >= 2 && birthdate.charAt(2) !== "/") {
+              birthdate = `${birthdate.slice(0, 2)}/${birthdate.slice(2)}`;
+            }
+            if (birthdate.length >= 5 && birthdate.charAt(5) !== "/") {
+              birthdate = `${birthdate.slice(0, 5)}/${birthdate.slice(5)}`;
+            }
+          } else {
+            birthdate = birthdate.slice(0, -1);
+            if (birthdate.length >= 2 ) {
+              birthdate = `${birthdate.slice(0, 2)}/${birthdate.slice(2)}`;
+            }
+            if (birthdate.length >= 5 ) {
+              birthdate = `${birthdate.slice(0, 5)}/${birthdate.slice(5)}`;
+            }
           }
 
           props.onChange(birthdate);
         }}
-        onKeyDown={props.onKeyDown}
+        onKeyDown={handleKeyDown}
         onKeyPress={props.onKeyPress}
         placeholder={props.placeholder}
         value={props.value}

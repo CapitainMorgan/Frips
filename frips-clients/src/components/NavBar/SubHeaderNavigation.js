@@ -7,12 +7,11 @@ import {
   Typography,
 } from "@material-ui/core";
 import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import { BsHandbagFill } from "react-icons/bs";
+import { GiConverseShoe, GiLargeDress, GiRunningShoe,GiBackpack} from "react-icons/gi";
+import { IoShirtSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { Catalogue } from "../Items/staticItems/staticItemName";
-import { IoShirtSharp } from "react-icons/io5";
-import { GiConverseShoe, GiLargeDress, GiRunningShoe } from "react-icons/gi";
-import { BsHandbagFill } from "react-icons/bs";
 const useStyles = makeStyles((theme) => ({
   fakeBox: {
     cursor: "pointer",
@@ -25,14 +24,14 @@ const useStyles = makeStyles((theme) => ({
   BoxShadow: {
     boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
     backgroundColor: "white",
-    borderRadius:5
+    borderRadius: 5,
   },
 }));
 
 let thirdQuery;
 
-const changeIcon = (index,category) => {
-  if(category===0){
+const changeIcon = (index, category) => {
+  if (category === 0) {
     if (index === 0) {
       return <GiLargeDress color="#82A0C2" size={20} />;
     } else if (index === 1) {
@@ -40,29 +39,27 @@ const changeIcon = (index,category) => {
     } else {
       return <BsHandbagFill color="#82A0C2" size={20} />;
     }
-  }
-  else{
-    if(index===0){
+  } else {
+    if (index === 0) {
       return <IoShirtSharp color="#82A0C2" size={20} />;
-
+    } 
+    else if (index===1){
+      return <GiRunningShoe color="#82A0C2" size={20} />
     }
-    else{
-      return <GiRunningShoe color="#82A0C2" size={20} />;
-
+    else {
+      return <GiBackpack color="#82A0C2" size={20} />;
     }
   }
 };
 
 const SubHeaderNavigation = ({ category, transformStringToUrl, name }) => {
   const history = useNavigate();
-  const dispatch = useDispatch();
 
   const classes = useStyles();
   const [anchor, setAnchor] = useState(null);
   const [indexItem, setIndex] = useState(0);
 
   let secondQuery = "/" + Catalogue[category].subitems[indexItem]?.Name;
-
 
   const handleClick = (e) => {
     setAnchor(e.currentTarget);
@@ -114,7 +111,7 @@ const SubHeaderNavigation = ({ category, transformStringToUrl, name }) => {
                         setIndex(index);
                       }}
                     >
-                      {changeIcon(index,category)}
+                      {changeIcon(index, category)}
                       <Typography
                         style={{
                           marginleft: 10,

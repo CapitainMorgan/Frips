@@ -1,13 +1,11 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Box, Button, makeStyles, Typography } from "@material-ui/core";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { useDispatch, useSelector } from "react-redux";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
-import { changeIban, registerUser, userIfExist } from "../../actions";
-import { REGISTER_FAILURE, RESET_ERROR } from "../../actions/type";
-import axiosInstance from "../../api/api";
+import { changeIban } from "../../actions";
 import StepTextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "../Login/TextFieldLogin";
 

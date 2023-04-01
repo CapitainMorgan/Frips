@@ -95,8 +95,9 @@ const Filter = ({ id, classes, filterMyFrips }) => {
           alignItems="center"
           height={40}
           justifyContent="center"
+          aria-readonly={"true"}
         >
-          <Typography style={{ fontSize: 16 }}>Trier par</Typography>
+          <Typography  style={{ fontSize: 16 }}>Trier par</Typography>
             <FaFilter color="#82A0C2" style={{marginLeft:4}} />
             <Typography>({filterMyFrips.length})</Typography>
         </Box>

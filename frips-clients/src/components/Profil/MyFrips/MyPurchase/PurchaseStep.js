@@ -159,13 +159,15 @@ const PurchaseStep = ({ item, account, id, classesSell, buyerAccount }) => {
         />
       );
     }
-    if (index === 1 && Boolean(DateSend)) {
+    if (((index === 1 && Boolean(DateSend)) || index===2 ) ){
       return (
         <RatingComponent
           review={review[0]?.Note ? review[0]?.Note : null}
           id={id_transaction}
           classes={classesSell}
+          isFrom={true}
           Pseudo={account.Pseudo}
+          setindex={setActiveStep}
         />
       );
     } else

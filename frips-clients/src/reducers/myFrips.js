@@ -68,8 +68,7 @@ export default (state = initialValues, action) => {
           id_Account: payload.id_Account,
           review: payload.review,
           Approve: payload.Approve,
-        
-         },
+        },
       };
     case FETCH_MYSELLBYID:
       return {
@@ -211,7 +210,7 @@ export default (state = initialValues, action) => {
       return {
         ...state,
         loading: true,
-        msg:""
+        msg: "",
       };
     case SUCCESS_FETCH_MYFRIPS:
       return {
@@ -256,12 +255,11 @@ export default (state = initialValues, action) => {
         ...state,
         items: [...payload],
       };
-      case STATUS_PROPOSITION_ID:
-        console.log(payload)
-        return {
-          ...state,
-          propostionReceived:payload
-        }
+    case STATUS_PROPOSITION_ID:
+      return {
+        ...state,
+        propostionReceived: payload,
+      };
 
     case RESET_FILTER_MYFRIPS:
       return {
@@ -271,15 +269,15 @@ export default (state = initialValues, action) => {
         count: null,
       };
     case MYFRIPS_ERROR:
-      return{
+      return {
         ...state,
-        msg:payload.msg,
-      }
-      case MYFRIPS_ERROR_FETCH:
-        return {
-          ...state,
-          loading:false
-        }
+        msg: payload.msg,
+      };
+    case MYFRIPS_ERROR_FETCH:
+      return {
+        ...state,
+        loading: false,
+      };
     case DELIVERY:
       const updatedData = state.sell.map((item) => {
         if (item.id === payload) {
@@ -308,10 +306,17 @@ export default (state = initialValues, action) => {
         purchase: [...updatedDataReceived],
       };
     case REVIEW:
-      return {
-        ...state,
-      };
-
+      if (!payload.isFromPurchase)
+        return {
+          ...state,
+          sell: [...payload.items],
+        };
+      else {
+        return {
+          ...state,
+          purchase: [...payload.items],
+        };
+      }
     default:
       return state;
   }

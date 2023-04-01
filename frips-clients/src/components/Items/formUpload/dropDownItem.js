@@ -86,7 +86,6 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
     setAnchorEl(null);
   };
 
-  console.log(form);
   if (!mobile) {
     return (
       <ClickAwayListener onClickAway={handleClickAway}>

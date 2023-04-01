@@ -1,29 +1,21 @@
 import {
   Box,
   Button,
-  CircularProgress,
-  makeStyles,
-  Typography,
+  CircularProgress, Typography
 } from "@material-ui/core";
 import {
   PaymentElement,
   useElements,
-  useStripe,
+  useStripe
 } from "@stripe/react-stripe-js";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { succeedPayment } from "../../actions";
 import { PAYMENT_FAILED } from "../../actions/type";
 import ModalCostum from "./ModalCostum";
 import SecurityBadge from "./SecurityBadge";
-const useStyles = makeStyles((theme) => ({
-  boxShadow: {
-    boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
-    backgroundColor: "white",
-    padding: 20,
-  },
-}));
+
 
 const PaymentForm = ({
   idItem,
@@ -65,11 +57,9 @@ const PaymentForm = ({
       dispatch({ type: PAYMENT_FAILED });
       navigate(`/payment/${idItem}/paymentStatus`, { replace: true });
     } else {
-      
-      dispatch(succeedPayment(idItem, cs, idAccount, navigate,selectedId));
+      dispatch(succeedPayment(idItem, cs, idAccount, navigate, selectedId));
     }
   };
-
 
   return (
     <form onSubmit={handleSubmit} id={"payment-form"}>

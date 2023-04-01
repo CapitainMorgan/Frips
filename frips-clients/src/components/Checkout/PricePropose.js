@@ -6,7 +6,7 @@ import {
   makeStyles,
   Modal,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import DoneIcon from "@material-ui/icons/Done";
@@ -14,6 +14,9 @@ import React, { useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { sendMessage } from "../../actions";
 import axiosInstance from "../../api/api";
+
+
+
 const useStyles = makeStyles((theme) => ({
   pointer: {
     cursor: "pointer",
@@ -118,7 +121,6 @@ const PricePropose = ({
 
   const dispatch = useDispatch();
 
-
   const handleChange = (e) => {
     if (!isNaN(e.target.value)) {
       setPrice(e.target.value);
@@ -129,9 +131,10 @@ const PricePropose = ({
     try {
       setLoading(true);
       const succeed = await axiosInstance.post("/api/items/proposition", {
-        Price:Price,
-        idItem:idItem,
+        Price: Price,
+        idItem: idItem,
       });
+
       if (succeed) {
         SetSucceed(1);
         setLoading(false);
@@ -207,11 +210,11 @@ const PricePropose = ({
               backgroundColor: displayColor(succeed),
             }}
             variant="contained"
-            disabled={loading ||  error}
+            disabled={loading || error}
             onClick={async () => {
               if (item) {
                 if (socket?.connected) {
-                  setLoading(true)
+                  setLoading(true);
                   const data = {
                     Message: "",
                     id_Sender: userId,
@@ -225,7 +228,7 @@ const PricePropose = ({
                     item,
                     Price,
                     imageSender: imageSender?.image ? imageSender : null,
-                    Pseudo:Pseudo
+                    Pseudo: Pseudo,
                   };
                   dispatch(
                     sendMessage(
@@ -240,23 +243,18 @@ const PricePropose = ({
                     )
                   );
                   setLoading(false);
-                  handleClickAway()
-
-
-                      
-                 
-
+                  handleClickAway();
                 }
               } else {
                 sendProposition(Price, itemId);
               }
             }}
           >
-            {!error ? loadingSendProposition(succeed, loading):null}
-            {error ? <Typography style={{fontSize:16}}>{error}</Typography>:null}
-
+            {!error ? loadingSendProposition(succeed, loading) : null}
+            {error ? (
+              <Typography style={{ fontSize: 16 }}>{error}</Typography>
+            ) : null}
           </Button>
-
         </Box>
       </Box>
     </Modal>

@@ -1,10 +1,10 @@
 const fs = require("fs");
-
+/*
 let sslOptions = {
    key: fs.readFileSync('api.myfrips.ch-2023-02-13.key'),
    cert: fs.readFileSync('api.myfrips.ch-2023-02-13.crt')
 };
-
+*/
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -13,8 +13,8 @@ const path = require("path");
 const http = require("http");
 const https = require("https");
 const cors = require("cors");
-const server = https.createServer(sslOptions,app);
-//const server = http.createServer(app);
+/*const server = https.createServer(sslOptions,app);*/
+const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",

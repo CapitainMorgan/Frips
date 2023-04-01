@@ -8,7 +8,7 @@ import { addToFilter, getItemCreationInfo } from "../actions";
 const transformStringToUrl = (string) => {
   if (string.includes("T-shirts")) {
     
-      return string.replace("Haut-and-T-shirts", "Hauts & T-shirts");
+      return string.replace("Hauts-and-T-shirts", "Hauts & T-shirts");
 
   } else {
     return string
@@ -55,6 +55,7 @@ const CheckUrl = ({ itemInfo, loading, loadingFilter, chips }) => {
       );
     }
   }, [location, loading]);
+
 
 
   if (!itemInfo || loadingFilter) {

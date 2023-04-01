@@ -147,7 +147,6 @@ export const Register = () => {
   });
   const pseudo = watch("step1.Pseudo"); // you can also target specific fields by their names
 
-  console.log(errors);
   const renderStepper = (step) => {
     switch (step) {
       case 0:

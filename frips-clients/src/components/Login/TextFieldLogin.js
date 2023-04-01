@@ -11,7 +11,6 @@ const TextFieldLogin = (props) => {
     event.preventDefault();
   };
 
-  console.log(props);
   if (props.name === "step2.Birthday") {
     return (
       <TextField
@@ -19,31 +18,16 @@ const TextFieldLogin = (props) => {
         onBlur={props.onBlur}
         onChange={(event) => {
           const { value } = event.target;
-          
-          let birthdate = value.replace(/\D/g, "");
-          birthdate = birthdate.slice(0, 8);
 
-
-          // Add leading zeros if the day or month is a single digit
-          if (birthdate.length > 1 ) {
-            const day = birthdate.slice(0, 2);
-            const month = birthdate.slice(2, 4);
-            const year = birthdate.slice(4);
-
-            birthdate = `${day.padStart(2, "0")}${month.padStart(
-              2,
-              "0"
-            )}${year}`;
-          }
+          let birthdate = value.replace(/[^\d]/g, "").slice(0, 8);
 
           // Add slashes between the day and month, and between month and year
-          if (birthdate.length > 2) {
+          if (birthdate.length >= 3) {
             birthdate = `${birthdate.slice(0, 2)}/${birthdate.slice(2)}`;
           }
-          if (birthdate.length > 5) {
+          if (birthdate.length >= 6) {
             birthdate = `${birthdate.slice(0, 5)}/${birthdate.slice(5)}`;
           }
-
 
           props.onChange(birthdate);
         }}

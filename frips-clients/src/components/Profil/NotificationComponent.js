@@ -1,17 +1,13 @@
 import React, { useEffect } from "react";
 
-import { Avatar, Box, makeStyles, Typography } from "@material-ui/core";
+import { Avatar, Box, Typography } from "@material-ui/core";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import { Link } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import API_ENDPOINT from "../../api/url";
 
-const useStyles = makeStyles((theme) => ({
-  progressBarStyle: {
-    backgroundColor: "red",
-  },
-}));
+
 
 const clearWaitingQueue = () => {
   // Easy, right 😎
@@ -49,7 +45,6 @@ const notify = (notification) => {
 };
 
 const NotificationComponent = ({ notification ,mobile}) => {
-  const classes = useStyles();
 
   useEffect(() => {
     if (notification !== null &&!mobile) {
@@ -59,7 +54,7 @@ const NotificationComponent = ({ notification ,mobile}) => {
   return (
     <div>
       <ToastContainer
-        autoClose={false}
+        autoClose={2000}
         newestOnTop={true}
         style={{
           width: "30%",

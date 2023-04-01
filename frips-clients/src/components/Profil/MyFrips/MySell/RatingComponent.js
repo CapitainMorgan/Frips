@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { setReview } from "../../../../actions";
 
-const RatingComponent = ({ Pseudo, id, review }) => {
+const RatingComponent = ({ Pseudo, id, review,isFrom,setindex }) => {
   const [value, setValue] = useState(review || 0);
   const [disabled, setDisabled] = useState(false);
 
@@ -40,7 +40,8 @@ const RatingComponent = ({ Pseudo, id, review }) => {
         <Button
           disabled={disabled || review}
           onClick={() => {
-            dispatch(setReview(value, id));
+            dispatch(setReview(value, id,isFrom));
+            setindex(2)
             setDisabled(true)
           }}
           color="Primary"

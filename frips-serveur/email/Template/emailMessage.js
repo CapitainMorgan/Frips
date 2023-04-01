@@ -258,57 +258,41 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
 const typeMessage = (price) => {
   if (price) {
     return `
-    
-    <span
-  style="
-    background-color: #82a0c2;
-    border-radius: 3px;
-    color: #fff;
-    height:30px,
-    font-size: 18px;
-    text-decoration: none;
-    text-align: center;
-    display:flex;
-    height:50px;
-    justify-content:center;
-    align-items:center;
-    width: 100%;
-    p-y: 19px;
-    max-width: 100%;
-    height:25px,
-    line-height: 120%;
-    text-transform: none;
-    mso-padding-alt: 0px;
-    mso-text-raise: 14.25px;
-  "
-  >Voir l'offre</span
->
+    <div style="text-align: center;">
+  <span style="
+      display: inline-block;
+      background-color: #82a0c2;
+      color: #fff;
+      text-align: center;
+      border-radius: 3px;
+      font-size: 18px;
+      height: 50px;
+      line-height: 50px;
+      max-width: 100%;
+      text-decoration: none;
+  ">
+    Voir l'offre
+  </span>
+</div>
     `;
   } else {
     return `
-    <span
-  style="
-    background-color: #82a0c2;
-    border-radius: 3px;
-    color: #fff;
-    font-size: 18px;
-    text-decoration: none;
-    text-align: center;
-    display:flex;
-    width: 100%;
-    height:25px;
-    justify-content:center;
-    align-items:center;
-
-    p-y: 19px;
-    max-width: 100%;
-    line-height: 120%;
-    text-transform: none;
-    mso-padding-alt: 0px;
-    mso-text-raise: 14.25px;
-  "
-  >Voir le message</span
->
+    <div style="text-align: center;">
+  <span style="
+      display: inline-block;
+      background-color: #82a0c2;
+      color: #fff;
+      text-align: center;
+      border-radius: 3px;
+      font-size: 18px;
+      height: 50px;
+      line-height: 50px;
+      max-width: 100%;
+      text-decoration: none;
+  ">
+    Voir le message
+  </span>
+</div>
     `;
   }
 };

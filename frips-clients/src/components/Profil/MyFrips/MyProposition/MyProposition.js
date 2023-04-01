@@ -285,7 +285,7 @@ const MyProposition = ({
         alignItems="center"
       >
         <Typography style={{ fontSize: 16 }}>
-          Il n'y malheureusement aucune correspondance
+          Vous avez fait 0 offre ses dernières 24 heures
         </Typography>
       </Box>
     );

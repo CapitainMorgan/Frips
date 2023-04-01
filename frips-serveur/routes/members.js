@@ -1050,7 +1050,7 @@ router.post("/StatusProposition", auth, async (req, res) => {
   }
 });
 
-router.post("/user/:name", auth, async (req, res) => {
+router.post("/user/:name", async (req, res) => {
   const { filter, number } = req.body;
   const { name } = req.params;
 
@@ -1142,6 +1142,7 @@ router.post("/user/:name", auth, async (req, res) => {
       userAccount: { ...userAccount, review: _avg?.Note },
     });
   } catch (error) {
+    console.log(error)
     logger.error("POST /:name", error);
     res.status(500).json("Serveur error");
   }

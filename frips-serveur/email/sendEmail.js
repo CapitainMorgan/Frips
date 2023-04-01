@@ -84,8 +84,8 @@ const typeOfEmail = (type, information, args) => {
 
 const sendEmail = async (id_Receiver, type, args) => {
   try {
+    
     const information = await searchInformation(id_Receiver, type, args);
-
     if (Boolean(information)) {
       client.sendEmail(
         typeOfEmail(type, information, args),

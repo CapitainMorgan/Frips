@@ -90,7 +90,6 @@ const useStyles = makeStyles((theme) => ({
     maxWidth: "50%",
     [theme.breakpoints.down("sm")]: {
       width: "100%",
-
     },
   },
   send: {

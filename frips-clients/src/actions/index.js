@@ -1239,8 +1239,6 @@ export const sendStatusProposition =
   async (dispatch, getState) => {
     let items;
 
-    console.log(id, dateApprove, approved, id);
-
     try {
       if (!fromReceivedProposition) {
         items = getState().myFrips.items;
@@ -1286,14 +1284,26 @@ export const fetchMembersInfo =
   };
 
 export const setReview =
-  (note, id_transaction) => async (dispatch, getState) => {
+  (note, id_transaction, isFromPurchase) => async (dispatch, getState) => {
+    let items;
+
+    if (!isFromPurchase) {
+      items = getState().myFrips.sell;
+    } else {
+      items = getState().myFrips.purchase;
+    }
+
     try {
-      const { data } = await axiosInstance.post(
+      await axiosInstance.post(
         `/api/members/Rewiew`,
         { note, id_transaction },
         config
       );
-      dispatch({ type: REVIEW, payload: data });
+      const findTransaction = _.find(items, { id_transaction });
+
+      findTransaction.review = [{ Note: note }];
+
+      dispatch({ type: REVIEW, payload: { isFromPurchase, items } });
     } catch (error) {
       console.log(error);
     }

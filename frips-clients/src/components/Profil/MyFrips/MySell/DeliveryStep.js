@@ -186,9 +186,7 @@ const handleNumberStep = ({ Status, DateSend, review }) => {
   }
   if (Boolean(review[0]) && DateSend) {
     return 2;
-  } else {
-    return 0;
-  }
+  } 
 };
 
 const DeliveryStep = ({ item, account, id, classesSell, buyerAccount }) => {
@@ -204,6 +202,8 @@ const DeliveryStep = ({ item, account, id, classesSell, buyerAccount }) => {
     setindex(handleNumberStep(item));
   }, [item]);
 
+
+
   const handleIndex = ({ Status, DateSend, id_transaction, review }) => {
     if (index === 0) {
       return (
@@ -215,16 +215,18 @@ const DeliveryStep = ({ item, account, id, classesSell, buyerAccount }) => {
         />
       );
     }
-    if (index === 1 && Boolean(DateSend)) {
+    if ((index === 1 && Boolean(DateSend) )|| index===2 ) {
       return (
         <RatingComponent
           review={review[0]?.Note ? review[0]?.Note : null}
           id={id_transaction}
           classes={classesSell}
+          setindex={setActiveStep}
+
           Pseudo={buyerAccount.Pseudo}
         />
       );
-    } else
+    } else if(index ===2 && Boolean(DateSend)){
       return (
         <DetailsDelivery
           item={item}
@@ -233,6 +235,7 @@ const DeliveryStep = ({ item, account, id, classesSell, buyerAccount }) => {
           account={account}
         />
       );
+    }
   };
 
   return (

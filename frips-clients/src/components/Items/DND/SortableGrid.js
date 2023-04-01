@@ -149,7 +149,7 @@ const ImageBox = ({
     if (desktop || tablet) {
       return 0.6;
     } else if (mobile) {
-      return 2;
+      return 200;
     }
   };
 

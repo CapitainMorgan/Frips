@@ -410,7 +410,7 @@ const Header = ({ onSearchSubmit }) => {
               target="_blank"
               href={"https://instagram.com/my_frips?igshid=ZDdkNTZiNTM="}
             >
-              Instagram
+              <MenuItem className={classes.BoxItem}>Instagram</MenuItem>
             </a>
             <a
               rel="noreferrer"

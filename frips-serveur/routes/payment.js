@@ -4,9 +4,12 @@ const router = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const Stripe = require("stripe");
 const auth = require("../middleware/auth");
-const stripe = Stripe(
+/*const stripe = Stripe(
   "sk_test_51JfniQEK6bYR8YbaJaNW71dylmEjFAiuARhTXWgLyL6CKJWvTttrt95fdt8qYVLreTQqiFafvdsohrHN5mf7kW4s00l0TIXVOy"
-);
+); */
+
+const stripe = Stripe("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")
+
 const { item, account, image, message, transaction, pricepropose } =
   new PrismaClient();
 let taxe = 1.07;
@@ -373,7 +376,7 @@ router.post("/succeed", auth, async (req, res) => {
       "POST /payment/succeed user " + req.user.id + " item " + idItem
     );
     res.status(200).json(`/payment/${idItem}/paymentStatus`);
-    await sendEmail(null, "Sell", { id_Item: idItem});
+    await sendEmail(null, "Sell", { id_Item: idItem });
     await sendEmail(id, "Bill", { id_Item: idItem, id_Buyer: id });
   } catch (error) {
     logger.error("POST /payment/succeed", error);

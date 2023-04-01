@@ -186,13 +186,13 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
           create: {
             id_Item: id_Item,
             id_Account: id,
-            Price: parseInt(PricePropose),
+            Price: parseFloat(PricePropose),
             SendDate: new Date(),
           },
           update: {
             id_Item: id_Item,
             id_Account: id,
-            Price: parseInt(PricePropose),
+            Price: parseFloat(PricePropose),
             SendDate: new Date(),
           },
         });

@@ -1,5 +1,5 @@
 const emailOfferAccepted = (profile,args) => {
-  console.log(profile)
+
   return `
     <!DOCTYPE html>
 <html>
@@ -15,7 +15,7 @@ const emailOfferAccepted = (profile,args) => {
     <p>Pour voir les détails de la transaction et finaliser l'achat, veuillez cliquer sur le lien ci-dessous :</p>
     <a ref=https://myfrips.ch/members/myFrips/myProposition/${args.id}    >
     <span
-    style="
+    style="   
       background-color: #82a0c2;
       border-radius: 3px;
       color: #fff;

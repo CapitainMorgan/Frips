@@ -1,17 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
-import { Box, CircularProgress } from "@material-ui/core";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import { connect, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
-import { fetchPaymentInfo } from "../../actions";
-import CheckOutComponent from "./CheckOutComponent";
+import { connect } from "react-redux";
 import PaymentForm from "./PaymentForm";
+import STRIPE_KEY from "../../api/stripe";
 
-const PUBLIC_KEY =
-  "pk_test_51JfniQEK6bYR8YbaaWm4fKWZR0O6qG62d0wBMIC4tvaRlK5IqDJXTPwbwwkxi65mGp8MyYjF5e9hOd52KMWmy9EL0012kg008l";
-const stripePromise = loadStripe(PUBLIC_KEY);
+const stripePromise = loadStripe(`${STRIPE_KEY}`);
+
 
 const StripeContainer = ({
   cs,

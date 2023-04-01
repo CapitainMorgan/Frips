@@ -174,10 +174,10 @@ const MemberProfile = ({ count, loading, items, favorite, account }) => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    if (!loading && items.length === 0 && !Boolean(count) && !account) {
+    if (!Boolean(count) && !account) {
       dispatch(fetchMembersInfo(name, pagination));
     }
-  }, [dispatch, loading]);
+  }, [dispatch, loading,count,account]);
 
   useEffect(() => {
     window.scrollTo(0, 0);

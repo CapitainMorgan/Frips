@@ -173,12 +173,12 @@ const AllConversations = ({ conversations, loading, count, idUser }) => {
   }, []);
 
   useEffect(() => {
-    if (conversations.length === 0 && !loading && count) {
+    if (!loading && !Boolean(count) && conversations.length===0) {
       dispatch(getAllConv());
     }
-  }, [dispatch, loading, count, conversations,location]);
+  }, [dispatch, loading, count, conversations,location.pathname]);
 
-  if (conversations.length === 0 && loading) {
+  if (conversations.length === 0 && loading && Boolean(count)) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}

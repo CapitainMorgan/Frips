@@ -28,6 +28,7 @@ const initialState = {
   itemForPropose: [],
   item: null,
   newMessage: false,
+  count:null,
   hasmore: null,
 };
 

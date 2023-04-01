@@ -1,8 +1,7 @@
 import React from "react";
 
-import {
-    Input
-} from "@material-ui/core";
+import { Input } from "@material-ui/core";
+import { isNumber } from "lodash";
 
 export const CostumTextField = ({ field, form, error, ...props }) => {
   return (
@@ -40,6 +39,12 @@ export const CostumTextFieldDescription = ({
   );
 };
 
+const customRound = (price) => {
+  let decimal = price - Math.floor(price);
+  return decimal >= 0.25 && decimal <= 0.75
+    ? Math.floor(price) + 0.5
+    : Math.round(price);
+};
 export const CostumPriceField = ({ field, form, error, ...props }) => {
   return (
     <Input
@@ -47,7 +52,14 @@ export const CostumPriceField = ({ field, form, error, ...props }) => {
       autoComplete="off"
       style={{ fontSize: 16 }}
       spellCheck={false}
-      {...field}
+      value={field.value}
+      onChange={(e) => {
+        if (isNaN(e.target.value)) {
+            return;
+        } else {
+          form.setFieldValue(field.name, e.target.value);
+        }
+      }}
       fullWidth
     />
   );

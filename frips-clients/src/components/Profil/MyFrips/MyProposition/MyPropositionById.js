@@ -161,7 +161,6 @@ const MyPropositionById = ({ loading, item }) => {
 
   useEffect(() => {
       dispatch(fetchMyPropositionId(id));
-    
   }, [dispatch]);
 
   if (loading && !Boolean(item)) {

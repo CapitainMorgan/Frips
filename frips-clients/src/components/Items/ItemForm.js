@@ -154,10 +154,8 @@ const validationSchema = yup.object({
     .required(`Choissisez l'état de votre produit`),
   Price: yup
     .number("Doit être un nombre")
-    .typeError("Doit être un nombre")
-
     .min(1, "Mettez un prix plus grand ou égale à 1")
-    .required("Mettez un prix plus ou égale à 1"),
+    .required("Mettez un prix plus grand ou égale à 1"),
   Color: yup
     .array()
     .min(1, "Mettez aux moins une couleur")
@@ -309,7 +307,7 @@ const ItemForm = ({
                             minHeight={182}
                             margin={3}
                             style={{
-                              border: "1px black dashed",
+                              border: "1px rgb(201,201,201) dashed",
                               overflow: "hidden",
                             }}
                             display="flex"

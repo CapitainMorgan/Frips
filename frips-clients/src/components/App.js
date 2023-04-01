@@ -205,6 +205,7 @@ const App = () => {
                 exact
                 element={<ConditionGeneral />}
               />
+              
               <Route path="/admin" element={<Dashboard />} />
               <Route path="/aide" element={<Aide />} />
               <Route path="/aide/paymentInfo" element={<PaymentInfo />} />

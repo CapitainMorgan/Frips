@@ -171,7 +171,6 @@ const PropositionReceived = ({ loading, item, msg }) => {
   let { id_Item, id_Sender } = useParams();
 
   useEffect(() => {
-    console.log("running")
     dispatch(fetchMyPropositionReceivedId(id_Item, id_Sender));
   }, [dispatch]);
 

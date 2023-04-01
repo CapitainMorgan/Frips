@@ -2,26 +2,13 @@ import { Box, makeStyles } from "@material-ui/core";
 import React from "react";
 import SubHeaderNavigation from "./SubHeaderNavigation";
 
-const useStyles = makeStyles((theme) => ({
-  fakeBox: {
-    cursor: "pointer",
-    padding: 8,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    fontSize: 20,
 
-    "&:hover": {
-      backgroundColor: "#F5F5F5",
-    },
-  },
-}));
 
 const transformStringToUrl = (string) => {
   return string
     .replaceAll(" ", "-")
     .replaceAll("&", "and")
-    .replaceAll(" et ", "and");
+    .replaceAll(" et ", "and")
 };
 
 const SubHeaderManager = () => {

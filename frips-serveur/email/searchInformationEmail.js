@@ -7,24 +7,37 @@ const checkIfShouldSend = async (
   id_Receiver,
   { id_Sender, id_Chat, id_Item = undefined }
 ) => {
-  didUserSendMessage = await message.count({
+  const didUserSendMessage = await message.count({
     where: {
       id_Chat,
       AND: [
         { id_Sender: id_Sender },
         {
-          AND: [
-            {
-              Date_Houre: {
-                gte: new Date(new Date().getTime() - 24 * 60 * 60 * 2000),
-              },
-              Text: { not: { equals: null } },
-            },
-          ],
+          Date_Houre: {
+            gte: new Date(new Date().getTime() - 24 * 60 * 60 * 2000),
+          },
+          
+          OR:[
+            {Text:{
+              not:{
+                equals:null   
+              }
+            }},
+            {id_Item:{
+              not:{
+                equals:null
+              }
+            }}
+          ]
         },
       ],
     },
   });
+
+
+  if(didUserSendMessage > 1){
+    return;
+  }   
 
   if (id_Sender && id_Item) {
     const findUserItem = await account.findUnique({
@@ -61,6 +74,7 @@ const checkIfShouldSend = async (
       },
     });
 
+
     return { findUserItem, itemForEmail };
   } else {
     const findUserItem = await account.findUnique({
@@ -79,6 +93,7 @@ const checkIfShouldSend = async (
         id: true,
       },
     });
+
     return { findUserItem };
   }
 };
@@ -200,13 +215,17 @@ const offer = async (id_Receiver, { id_Sender, id_Item }) => {
     where: {
       id_Item,
       SendDate: {
-        gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1000),
+        gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1500),
       },
     },
     
   }
   
   );
+
+  if(ifAlreadyHaveSomeProposition > 1){
+    return;
+  }
 
   const findUserItem = await account.findUnique({
     where: {

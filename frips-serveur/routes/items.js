@@ -560,20 +560,20 @@ const findSearchQuery = (Search) => {
   return arraySearch;
 };
 
-const constructFilter = (filter) =>{
-  const arrayFilter = []
-  const {    newCatalogue,newMarque  } = filter
+const constructFilter = (filter) => {
+  const arrayFilter = [];
+  const { newCatalogue, newMarque } = filter;
 
-  if(newCatalogue.length!==0 && newCatalogue.length!==0){
+  if (newCatalogue.length !== 0 && newCatalogue.length !== 0) {
     arrayFilter.push({
       item_brand: {
         some: {
           id_Brand: { in: newMarque },
         },
       },
-    })
+    });
   }
-}
+};
 
 const isFilter = (filter) => {
   const {
@@ -710,7 +710,7 @@ router.post("/pagination", async (req, res) => {
           select: {
             Pseudo: true,
             image: true,
-            id:true
+            id: true,
           },
         },
       },
@@ -835,59 +835,64 @@ router.get("/new", async (req, res) => {
 router.post("/topBusiness", async (req, res) => {
   const { mobile } = req.body;
   try {
-    const Item = await account.findMany({
-      where: {
-        item: {
-          some: {
-            transaction: {
-              none:{}
-            },
-          },
-        },
+    const user = await account.findUnique({
+      where:{
         id:1
       },
+      select:{
+        image:true,
+        Pseudo:true,
+        id:true
+      }
+    })
+    const Item = await item.findMany({
+      where: {
+        transaction:{
+          none:{}
+        },
+        id_Seller:1
+      },
       select: {
-        item: {
-          include: {
-            image: {
-              take: 1,
-            },
-            item_brand: {
-              select: {
-                brand: true,
-              },
-            },
-            item_color: {
-              select: {
-                color: {
-                  select: {
-                    Name: true,
-                  },
-                },
-              },
-            },
-            itemcondition: {
+        image: {
+          take: 1,
+        },
+        item_brand: {
+          select: {
+            brand:true
+          },
+        },
+        item_category:{
+          select:{
+            category:{
+              select:{
+
+              }
+            }
+          }
+        },
+        Price:true,
+        item_category: {
+          select: {
+            category: {
               select: {
                 Name: true,
               },
             },
-
-            _count: {
-              select: {
-                favorit: true,
-              },
-            },
           },
-          orderBy: [
-            { nbview: { _count: "desc" } },
-            { favorit: { _count: "desc" } },
-          ],
-          take: mobile ? 6 : 5,
         },
-        image: true,
-        Pseudo: true,
-        id: true,
+        Size:true,
+        _count: {
+          select: {
+            favorit: true,
+          },
+        },
+        id:true
       },
+      orderBy: [
+        { nbview: { _count: "desc" } },
+        { favorit: { _count: "desc" } },
+      ],
+      take: mobile ? 6 : 5,
     });
     const { _avg } = await review.aggregate({
       where: {
@@ -898,9 +903,11 @@ router.post("/topBusiness", async (req, res) => {
       },
     });
 
+    console.log(Item)
 
-    res.status(200).json({ ...Item[0], _avg });
+    res.status(200).json({ ...user,item:Item, _avg });
   } catch (error) {
+    console.log(error)
     logger.error("GET /api/item/new" + error);
     res.status(500).json("Server error");
   }
@@ -927,36 +934,78 @@ router.get("/Id_of_MyFavorite", auth, async (req, res) => {
 router.post("/proposition", auth, async (req, res) => {
   const { Price, idItem } = req.body;
   const { id } = req.user;
-  const DatePuplication =  new Date();
+
+  console.log("ok");
 
   try {
-    const data = await pricepropose.create({
-      data: {
-        Price: parseFloat(Price),
-        SendDate: DatePuplication,
-        id_Account: id,
+    const hasSendProposition = await pricepropose.findUnique({
+      where: {
+        id_Account_id_Item: {
+          id_Account: id,
+          id_Item: parseInt(idItem),
+        },
+      },
+      select: {
+        SendDate: true,
+      },
+    });
+
+    console.log(
+      hasSendProposition,
+      new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+    );
+    if (
+      Boolean(hasSendProposition) &&
+      new Date(hasSendProposition?.SendDate) <
+        new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+    ) {
+      res.status(400).json("déjà envoyé");
+    } else {
+      const data = await pricepropose.upsert({
+        where: {
+          id_Account_id_Item: {
+            id_Account: id,
+            id_Item: idItem,
+          },
+        },
+        create: {
+          id_Item: idItem,
+          id_Account: id,
+          Price: parseFloat(Price),
+          SendDate: new Date(),
+        },
+        update: {
+          id_Item: idItem,
+          id_Account: id,
+          Price: parseFloat(Price),
+          SendDate: new Date(),
+        },
+        select: {
+          item: {
+            select: {
+              account: {
+                select: {
+                  id: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      logger.info(
+        "Price proposition send by " + id + " for item " + idItem + ""
+      );
+
+      sendEmail(data.item.account.id, "ReceivedOffer", {
         id_Item: idItem,
-      },
-      include: {
-        item:{
-          select:{
-            account:{
-              select:{
-                id:true
-              }
-            }
-          }
-        }
-      },
-    });
-    logger.info("Price proposition send by " + id + " for item " + idItem + "");
-    res.status(200).json(data);
-    sendEmail(data.item.account.id, "ReceivedOffer", {
-      id_Item: idItem,
-      pricepropose: parseFloat(Price),
-      id_Sender: id,
-    });
+        pricepropose: parseFloat(Price),
+        id_Sender: id,
+      });
+      res.status(200).json(data);
+    }
   } catch (error) {
+    console.log(error);
     logger.error("POST /api/item/proposition" + error);
     res.status(500).json("Server error");
   }

@@ -90,7 +90,7 @@ const validationSchema = yup.object().shape({
     Birthday: yup
       .string()
       .test("valid-date", "Date de naissance invalide", (value) => {
-        const [month, day, year] = value.split("/");
+        const [day, month, year] = value.split("/");
 
         if (!Boolean(month) || !Boolean(day) || !Boolean(year)) return false;
         const date = new Date(`${year}-${month}-${day}`);

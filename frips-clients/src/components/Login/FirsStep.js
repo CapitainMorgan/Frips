@@ -2,7 +2,6 @@ import { Box, Typography } from "@material-ui/core";
 import React from "react";
 import { Controller } from "react-hook-form";
 import StepTextError from "../Items/formUpload/errorText";
-import TextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "./TextFieldLogin";
 
 const FirsStep = ({ control, onSubmit, errors, getValues ,setshowPassword,showPassword}) => {

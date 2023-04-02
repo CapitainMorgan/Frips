@@ -10,11 +10,6 @@ const path = require("path"); // path for cut the file extension
 const sharp = require("sharp");
 const log4js = require("log4js");
 const { sendEmail } = require("../email/sendEmail");
-
-log4js.configure({
-  appenders: { members: { type: "file", filename: "members.log" } },
-  categories: { default: { appenders: ["members"], level: "error" } },
-});
 var logger = log4js.getLogger("members");
 
 const { item, account, image, pricepropose, transaction, review } =

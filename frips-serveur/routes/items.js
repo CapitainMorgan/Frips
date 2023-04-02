@@ -10,11 +10,6 @@ const { similarProduct } = require("./logicFunction/logicSimilarProduct");
 const log4js = require("log4js");
 const { sendEmail } = require("../email/sendEmail");
 const sharp = require("sharp");
-
-log4js.configure({
-  appenders: { items: { type: "file", filename: "items.log" } },
-  categories: { default: { appenders: ["items"], level: "error" } },
-});
 var logger = log4js.getLogger("items");
 
 const { item, image, nbview, favorit, brand, review, pricepropose, account } =

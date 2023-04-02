@@ -45,7 +45,7 @@ const validationSchema = yup.object().shape({
   IBAN: yup
     .string()
     .matches(
-      /^CH\d{2}\s\d{4}\s\d{4}\s\d{4}\s\d{4}\s\d$/,
+      /^CH\d{2}\s\d{4}\s\d{4}\s\d{4}\s\d{4}\s[\dA-Za-z]$/,
       "Veuillez entrer un IBAN valide"
     )
     .required("Un IBAN est requis"),

@@ -283,7 +283,7 @@ const ItemList = ({
       justifyContent="center"
     >
       <Box width={"100%"}>
-        {success ? (
+        {success &&!mobile? (
           <Snackbar
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             open={open}

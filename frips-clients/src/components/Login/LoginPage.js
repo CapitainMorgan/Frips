@@ -131,11 +131,26 @@ export const LoginPage = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
   const history = useNavigate();
+  const [showPassword, setshowPassword] = useState(false);
 
   let location = useLocation();
 
-  let from = location?.state?.from?.pathname || "/";
-  const [showPassword, setshowPassword] = useState(false);
+  let from;
+  if (
+    location &&
+    location.state &&
+    location.state.from &&
+    location.state.from.pathname
+  ) {
+    from = location.state.from.pathname;
+  } else {
+    from = "/";
+  }
+
+  
+
+
+
   const error = useSelector((state) => state.auth.error);
 
 

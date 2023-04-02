@@ -209,6 +209,7 @@ export const Register = () => {
 
   let location = useLocation();
 
+
   let from = location?.state?.from?.pathname || "/";
 
   const onSubmit = (values) => {

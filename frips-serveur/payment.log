@@ -521,3 +521,19 @@ type CategoryRelationFilter {
 [2023-04-02T15:51:07.077] [ERROR] auth - Authentification denied token invalide
 [2023-04-02T15:51:07.341] [ERROR] auth - Authentification denied token invalide
 [2023-04-02T15:51:07.342] [ERROR] auth - Authentification denied token invalide
+[2023-04-02T18:27:05.201] [ERROR] user - PrismaClientKnownRequestError: 
+Invalid `account.create()` invocation in
+C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\user.js:115:37
+
+  112     res.status(400).json({ msg: "Ce mail est déjà utilisé" });
+  113   }
+  114 } else {
+→ 115   const newUser = await account.create(
+  Unique constraint failed on the constraint: `Email`
+    at RequestHandler.request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49022:15)
+    at async PrismaClient._request (C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\node_modules\@prisma\client\runtime\index.js:49919:18)
+    at async C:\Users\Stefa\Desktop\Frips2\Frips\frips-serveur\routes\user.js:115:23 {
+  code: 'P2002',
+  clientVersion: '3.15.2',
+  meta: { target: 'Email' }
+}

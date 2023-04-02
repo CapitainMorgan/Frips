@@ -207,13 +207,22 @@ export const Register = () => {
     setActiveStep(0);
   };
 
-  let location = useLocation()
+  let location = useLocation();
 
+  let from;
+  if (
+    location &&
+    location.state &&
+    location.state.from &&
+    location.state.from.pathname
+  ) {
+    from = location.state.from.pathname;
+  } else {
+    from = "/";
+  }
 
-  let from = location?.state?.from?.pathname || "/";
-  alert(from)
   const onSubmit = (values) => {
-    /*dispatch(registerUser(values, from, history));*/
+    dispatch(registerUser(values, from, history));
   };
 
   return (

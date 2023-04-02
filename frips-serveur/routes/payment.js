@@ -16,10 +16,6 @@ let taxe = 1.07;
 
 const log4js = require("log4js");
 const { sendEmail } = require("../email/sendEmail");
-log4js.configure({
-  appenders: { payment: { type: "file", filename: "payment.log" } },
-  categories: { default: { appenders: ["payment"], level: "error" } },
-});
 var logger = log4js.getLogger("payment");
 
 const customRound = (price) => {

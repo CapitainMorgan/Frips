@@ -1,10 +1,10 @@
 const fs = require("fs");
-/*
-let sslOptions = {
+
+/*let sslOptions = {
    key: fs.readFileSync('api.myfrips.ch-2023-02-13.key'),
    cert: fs.readFileSync('api.myfrips.ch-2023-02-13.crt')
-};
-*/
+};*/
+
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -28,7 +28,8 @@ log4js.configure({
     mail: { type: "file", filename: "log/mail.log" },
   },
   categories: { 
-    default: { appenders: ["items"], level: "info" } ,
+	default: { appenders: ["items"], level:"info" },
+    items: { appenders: ["items"], level: "info" },
     payment: { appenders: ["payment"], level: "info" },
     auth: { appenders: ["auth"], level: "info" },
     conversation: { appenders: ["conversation"], level: "info" },
@@ -40,7 +41,7 @@ log4js.configure({
     mail: { appenders: ["mail"], level: "info" },
   },
 });
-/*const server = https.createServer(sslOptions,app);*/
+//const server = https.createServer(sslOptions,app);
 const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {

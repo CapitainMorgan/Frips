@@ -4,8 +4,14 @@ import { Controller } from "react-hook-form";
 import StepTextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "./TextFieldLogin";
 
-const FirsStep = ({ control, onSubmit, errors, getValues ,setshowPassword,showPassword}) => {
-
+const FirsStep = ({
+  control,
+  onSubmit,
+  errors,
+  getValues,
+  setshowPassword,
+  showPassword,
+}) => {
   return (
     <React.Fragment>
       <Box marginTop={3}>
@@ -45,7 +51,14 @@ const FirsStep = ({ control, onSubmit, errors, getValues ,setshowPassword,showPa
           control={control}
           render={({ field }) => {
             return (
-              <TextFieldLogin {...{ ...field, placeholder: "Mot de passe",setshowPassword,showPassword }} />
+              <TextFieldLogin
+                {...{
+                  ...field,
+                  placeholder: "Mot de passe",
+                  setshowPassword,
+                  showPassword,
+                }}
+              />
             );
           }}
         />

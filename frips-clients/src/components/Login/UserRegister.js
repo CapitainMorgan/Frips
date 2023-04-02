@@ -121,7 +121,7 @@ const validationSchema = yup.object().shape({
 });
 
 function getSteps() {
-  return ["Créer un profile", "Valider ses informations personnels"];
+  return ["Créer un profil", "Valider ses informations personnels"];
 }
 
 export const Register = () => {
@@ -209,7 +209,7 @@ export const Register = () => {
 
   let location = useLocation();
 
-  let { from } = location.state || { from: { pathname: "/" } };
+  let from = location?.state?.from?.pathname || "/";
 
   const onSubmit = (values) => {
     dispatch(registerUser(values, from, history));
@@ -258,7 +258,7 @@ export const Register = () => {
                   color="primary"
                   type="submit"
                 >
-                  <Typography style={{ fontSize: 14, color: "white" }}>
+                  <Typography hy style={{ fontSize: 14, color: "white" }}>
                     S'inscrire
                   </Typography>
                 </Button>

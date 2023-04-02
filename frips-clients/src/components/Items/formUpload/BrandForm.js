@@ -1,6 +1,18 @@
 import React, { useState } from "react";
 
-import { Box, Checkbox, ClickAwayListener, Dialog, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
+import {
+  Box,
+  Checkbox,
+  ClickAwayListener,
+  Dialog,
+  IconButton,
+  InputAdornment,
+  makeStyles,
+  MenuItem,
+  Popper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -28,7 +40,7 @@ const useStyle = makeStyles((theme) => ({
     fontWeight: 500,
   },
   Dialog: {
-    width: "80vw",
+    width: "100vw",
     height: "80vh",
   },
 }));
@@ -180,7 +192,11 @@ const BrandForm = ({ mobile, field, form, ...props }) => {
             </Box>
           </Popper>
         ) : (
-          <Dialog open={Boolean(anchorEl)}>
+          <Dialog
+            open={Boolean(anchorEl)}
+            PaperProps={{ style: { margin: 0, flexDirection: "inherit" } }}
+
+          >
             <Box
               className={classes.Dialog}
               display="flex"
@@ -193,12 +209,15 @@ const BrandForm = ({ mobile, field, form, ...props }) => {
                 justifyContent="center"
                 alignItems="center"
                 position="relative"
+                style={{ position: "sticky", top: 0, backgroundColor: "white" ,zIndex:100}}
+
               >
-                <Typography>Marque</Typography>
+                <Typography style={{ fontSize: 16 }}>Marque</Typography>
 
                 <Box padding={3} position="absolute" right={0}>
                   <IconButton onClick={handleClickAway}>
-                    <CloseIcon />
+                  <CloseIcon style={{fontSize:30}}  /> 
+
                   </IconButton>
                 </Box>
               </Box>
@@ -232,8 +251,6 @@ const BrandForm = ({ mobile, field, form, ...props }) => {
               >
                 {brandCatalogue(suggestion)}
               </Box>
-
-              <Box alignSelf="center"></Box>
             </Box>
           </Dialog>
         )}

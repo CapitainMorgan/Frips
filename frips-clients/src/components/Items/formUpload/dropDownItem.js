@@ -64,8 +64,8 @@ const useStyle = makeStyles((theme) => ({
     fontWeight: 500,
   },
   Dialog: {
-    width: "75vw",
-    height: "80vh",
+    width: "100vw",
+    minHeight: "20vh",
   },
 }));
 
@@ -140,10 +140,12 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
               </Box>
             </Popper>
           ) : (
-            <Dialog open={Boolean(anchorEl)}>
+            <Dialog
+              open={Boolean(anchorEl)}
+              PaperProps={{ style: { margin: 0, flexDirection: "inherit" } }}
+            >
               <Box
-                height={"80vh"}
-                maxWidth="50vh"
+                className={classes.Dialog}
                 display="flex"
                 flexDirection="column"
               >
@@ -153,11 +155,17 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
                   justifyContent="center"
                   alignItems="center"
                   position="relative"
+                  style={{
+                    position: "sticky",
+                    top: 0,
+                    backgroundColor: "white",
+                    zIndex: 100,
+                  }}
                 >
                   <Typography>{field.Name}</Typography>
                   <Box padding={3} position="absolute" right={0}>
                     <IconButton onClick={handleClickAway}>
-                      <CloseIcon />
+                      <CloseIcon style={{ fontSize: 30 }} />
                     </IconButton>
                   </Box>
                 </Box>
@@ -190,7 +198,11 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
             {...field}
             placeholder="Selectionne une catégorie"
             value={_.find(Catalogue, { id: field.value })?.Name}
-            onChange={(e) => form.SetFieldValue(field.name, e.target.value)}
+            onChange={(e) => {
+              if (e.currentTarget !== "") {
+                form.SetFieldValue(field.name, e.target.value);
+              }
+            }}
             fullWidth
             InputProps={{
               classes: { input: classes.pointer },
@@ -206,7 +218,10 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
             }}
           />
 
-          <Dialog open={Boolean(anchorEl)}>
+          <Dialog
+            open={Boolean(anchorEl)}
+            PaperProps={{ style: { margin: 0, flexDirection: "inherit" } }}
+          >
             <Box
               className={classes.Dialog}
               display="flex"
@@ -218,11 +233,12 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
                 justifyContent="center"
                 alignItems="center"
                 position="relative"
+                
               >
                 <Typography>{field.Name}</Typography>
                 <Box padding={3} position="absolute" right={0}>
                   <IconButton onClick={handleClickAway}>
-                    <CloseIcon />
+                    <CloseIcon style={{ fontSize: 30 }} />
                   </IconButton>
                 </Box>
               </Box>

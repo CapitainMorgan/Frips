@@ -42,7 +42,7 @@ const useStyles = makeStyles({
     right: 10,
   },
   Dialog: {
-    width: "80vw",
+    width: "100vw",
     height: "80vh",
   },
 });
@@ -162,7 +162,10 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
             </Box>
           </Popper>
         ) : (
-          <Dialog open={Boolean(anchorEl)}>
+          <Dialog
+            open={Boolean(anchorEl)}
+            PaperProps={{ style: { margin: 0, flexDirection: "inherit" } }}
+          >
             <Box
               className={classes.Dialog}
               display="flex"
@@ -174,11 +177,14 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
                 justifyContent="center"
                 alignItems="center"
                 position="relative"
+                style={{ position: "sticky", top: 0, backgroundColor: "white" ,zIndex:100}}
+
               >
-                <Typography>Taille</Typography>
+                <Typography style={{ fontSize: 16 }}>Couleurs</Typography>
                 <Box padding={3} position="absolute" right={0}>
                   <IconButton onClick={handleClickAway}>
-                    <CloseIcon />
+                  <CloseIcon style={{fontSize:30}}  /> 
+
                   </IconButton>
                 </Box>
               </Box>

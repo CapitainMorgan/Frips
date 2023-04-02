@@ -385,7 +385,7 @@ const Header = ({ onSearchSubmit }) => {
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/ConditionGeneral");
+                history("/Condition-general-de-vente-et-politique");
                 handleMobileMenuClose();
               }}
             >

@@ -1,6 +1,17 @@
 import React, { useEffect, useState } from "react";
 
-import { Box, Checkbox, ClickAwayListener, Dialog, IconButton, InputAdornment, makeStyles, Popper, TextField, Typography } from "@material-ui/core";
+import {
+  Box,
+  Checkbox,
+  ClickAwayListener,
+  Dialog,
+  IconButton,
+  InputAdornment,
+  makeStyles,
+  Popper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import CloseIcon from "@material-ui/icons/Close";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
@@ -29,8 +40,8 @@ const useStyle = makeStyles((theme) => ({
     color: "#8B8B8B",
   },
   Dialog: {
-    width: "80vw",
-    height: "80vh",
+    width: "100vw",
+    minHeight: "30vh",
   },
 }));
 
@@ -87,7 +98,6 @@ const StateForm = ({ field, form, mobile }) => {
     setAnchorEl(e.currentTarget);
   };
 
-
   const handleClickAway = () => {
     setAnchorEl(null);
   };
@@ -133,7 +143,11 @@ const StateForm = ({ field, form, mobile }) => {
             </Box>
           </Popper>
         ) : (
-          <Dialog open={Boolean(anchorEl)}>
+          <Dialog
+            open={Boolean(anchorEl)}
+            PaperProps={{ style: { margin: 0 ,flexDirection:"inherit"} }}
+
+          >
             <Box
               className={classes.Dialog}
               display="flex"
@@ -145,11 +159,13 @@ const StateForm = ({ field, form, mobile }) => {
                 justifyContent="center"
                 alignItems="center"
                 position="relative"
+                style={{ position: "sticky", top: 0, backgroundColor: "white" ,zIndex:100}}
+
               >
-                <Typography>Etat</Typography>
+                <Typography style={{ fontSize: 16 }}>Etat</Typography>
                 <Box padding={3} position="absolute" right={0}>
                   <IconButton onClick={handleClickAway}>
-                    <CloseIcon />
+                    <CloseIcon style={{fontSize:30}}  /> 
                   </IconButton>
                 </Box>
               </Box>

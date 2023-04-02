@@ -1,9 +1,22 @@
 import React, { useState } from "react";
 
-import { Box, Checkbox, ClickAwayListener, Dialog, Divider, IconButton, InputAdornment, makeStyles, MenuItem, Popper, TextField, Typography } from "@material-ui/core";
+import {
+  Box,
+  Checkbox,
+  ClickAwayListener,
+  Dialog,
+  Divider,
+  IconButton,
+  InputAdornment,
+  makeStyles,
+  MenuItem,
+  Popper,
+  TextField,
+  Typography,
+} from "@material-ui/core";
 import ExpandLess from "@material-ui/icons/ExpandLess";
 import ExpandMore from "@material-ui/icons/ExpandMore";
-import { arraySize, renderArraySize } from "../staticItems/staticItemName";
+import { arraySize } from "../staticItems/staticItemName";
 
 import CloseIcon from "@material-ui/icons/Close";
 
@@ -20,19 +33,16 @@ const useStyle = makeStyles((theme) => ({
     fontSize: 16,
   },
   Dialog: {
-    width: "80vw",
-    height: "80vh",
+    width: "100vw",
+    minHeight: "20vh",
   },
 }));
 
 const SizeForm = ({ form, field, mobile, size, ...props }) => {
   const classes = useStyle();
   const [anchorEl, setAnchorEl] = useState(null);
-  const [id,subId]= size
+  const [id, subId] = size;
 
-
-
-  
   const renderedStateClothes = arraySize[id]?.subitems[subId]?.subitems.map(
     (item, index) => {
       return (
@@ -106,7 +116,11 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
             </Box>
           </Popper>
         ) : (
-          <Dialog open={Boolean(anchorEl)}>
+          <Dialog
+            open={Boolean(anchorEl)}
+            PaperProps={{ style: { margin: 0 ,flexDirection:"inherit"} }}
+
+          >
             <Box
               className={classes.Dialog}
               display="flex"
@@ -118,17 +132,19 @@ const SizeForm = ({ form, field, mobile, size, ...props }) => {
                 justifyContent="center"
                 alignItems="center"
                 position="relative"
+                style={{ position: "sticky", top: 0, backgroundColor: "white" ,zIndex:100}}
+
               >
-                <Typography>Taille</Typography>
+                <Typography style={{ fontSize: 16 }}>Taille</Typography>
                 <Box padding={3} position="absolute" right={0}>
                   <IconButton onClick={handleClickAway}>
-                    <CloseIcon />
+                  <CloseIcon style={{fontSize:30}}  /> 
+
                   </IconButton>
                 </Box>
               </Box>
 
               <Box style={{ backgroundColor: "white" }} width={"100%"}>
-              
                 {renderedStateClothes}
               </Box>
             </Box>

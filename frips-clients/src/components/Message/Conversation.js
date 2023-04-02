@@ -173,10 +173,9 @@ const AllConversations = ({ conversations, loading, count, idUser }) => {
   }, []);
 
   useEffect(() => {
-    if (!loading && !Boolean(count) && conversations.length===0) {
       dispatch(getAllConv());
-    }
-  }, [dispatch, loading, count, conversations,location.pathname]);
+    
+  }, [dispatch, location]);
 
   if (conversations.length === 0 && loading && Boolean(count)) {
     return (

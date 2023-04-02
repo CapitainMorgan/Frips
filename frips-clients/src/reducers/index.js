@@ -10,6 +10,7 @@ import myFrips from "./myFrips";
 import notification from "./notification";
 import payment from "./payment";
 import members from "./members";
+import location from "./location"
 export default combineReducers({
   items: itemReducer,
   auth,
@@ -21,5 +22,6 @@ export default combineReducers({
   itemInfo: creationItem,
   notification,
   payment,
-  members
+  members,
+  location,
 });

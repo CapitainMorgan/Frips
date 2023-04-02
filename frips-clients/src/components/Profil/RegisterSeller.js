@@ -46,6 +46,7 @@ const validationSchema = yup.object().shape({
     .string()
     .matches(
       /^CH\d{2}\s\d{4}\s\d{4}\s\d{4}\s\d{4}\s[\dA-Za-z]$/,
+
       "Veuillez entrer un IBAN valide"
     )
     .required("Un IBAN est requis"),
@@ -54,7 +55,6 @@ const validationSchema = yup.object().shape({
 export const RegisterSeller = () => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const [iban, setIban] = useState("");
 
   const {
     control,
@@ -71,12 +71,11 @@ export const RegisterSeller = () => {
   const history = useNavigate();
   let location = useLocation();
 
-  let { from } = location.state || { from: { pathname: "/" } };
 
   const handleChange = (event) => {
     const input = event.target.value.replace(/\s/g, "");
     let formatted = input.match(/.{1,4}/g)?.join(" ");
-    
+
     if (formatted && input.length > 4 && input.length % 4 === 0) {
       formatted += "";
     }
@@ -84,7 +83,7 @@ export const RegisterSeller = () => {
   };
 
   const onSubmit = (values) => {
-    dispatch(changeIban(values.IBAN, from, history));
+    dispatch(changeIban(values.IBAN, "items/new", history));
   };
 
   return (

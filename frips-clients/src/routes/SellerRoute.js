@@ -1,30 +1,21 @@
-import propsTypes from "prop-types";
 import React from "react";
-import { connect, useSelector } from "react-redux";
 import { Navigate, Outlet, useLocation } from "react-router-dom";
+import { connect, useSelector } from "react-redux";
+import ItemCreate from "../components/Items/ItemCreate";
 
-const SellerRoute = () => {
-  let location = useLocation();
-  const auth = useSelector((state) => state.auth);
-  const { isAuthenticated, loading,user } = auth;
-  if (loading) {
-    return null;
-  }
+const SellerRoute = ({ user }) => {
+  const location = useLocation();
 
-
-  return isAuthenticated && !loading && Boolean(user?.IBAN) ? (
-    <Outlet />
+  return Boolean(user?.IBAN) ? (
+    <ItemCreate />
   ) : (
     <Navigate to="/member/register/Seller" state={{ from: location }} replace />
   );
 };
 
-SellerRoute.propsTypes = {
-  auth: propsTypes.object.isRequired,
-};
-
 const mapStateToProps = (state) => ({
-  auth: state.auth,
+  user: state.auth.user,
+  isLoading: state.auth.loading, // Pass loading state as a prop
 });
 
 export default connect(mapStateToProps)(SellerRoute);

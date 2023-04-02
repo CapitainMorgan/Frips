@@ -55,6 +55,7 @@ import PaymentInfo from "./Footer/Help/PaymentInfo";
 import Dashboard from "../admin/Dashboard";
 import { NOTIFICATION } from "../actions/type";
 import PropositionReceived from "./Profil/MyFrips/MyProposition/PropositionReceived";
+import PrivateSellerRoute from "../routes/PrivateSellerRoute";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -176,13 +177,10 @@ const App = () => {
                 />
               </Route>
 
-              <Route element={<SellerRoute />} key={"seller-route"}>
                 <Route
                   path="/items/new"
-                  caseSensitive={false}
-                  element={<ItemCreate />}
-                />
-              </Route>
+                  element={<PrivateSellerRoute/>}/>
+                
               <Route path="/filter" element={<DisplayCatalogue />} />
 
               <Route path="/" key={"root-filter"}>

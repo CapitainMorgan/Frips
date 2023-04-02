@@ -227,9 +227,8 @@ const ItemList = ({
   useEffect(() => {
     if (!loading && items.length === 0) {
       dispatch(fetchItems(true, mobile));
-      dispatch(idFavorite());
     }
-  }, [dispatch, loading, location,mobile]);
+  }, [dispatch, loading, location, mobile]);
 
   const renderedItems = useMemo(() => {
     return renderedItem(items, classes, favorite, dispatch, navigate);
@@ -283,7 +282,7 @@ const ItemList = ({
       justifyContent="center"
     >
       <Box width={"100%"}>
-        {success &&!mobile? (
+        {success && !mobile ? (
           <Snackbar
             anchorOrigin={{ vertical: "top", horizontal: "right" }}
             open={open}
@@ -319,8 +318,10 @@ const ItemList = ({
           <Box height={"5vh"} />
 
           <Box padding={1.5} display={"flex"} alignItems="center">
-        <Typography style={{fontSize:18,fontWeight:550}}>Articles</Typography>
-        </Box>
+            <Typography style={{ fontSize: 18, fontWeight: 550 }}>
+              Articles
+            </Typography>
+          </Box>
           <Box height={"1vh"} width={"100%"} />
 
           <InfiniteScroll
@@ -343,7 +344,6 @@ const ItemList = ({
             <Box className={classes.GridSytem}>{renderedItems}</Box>
           </InfiniteScroll>
         </Box>
-        
       </Box>
     </Box>
   );

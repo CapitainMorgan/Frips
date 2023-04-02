@@ -108,6 +108,7 @@ export const loadUser = (socket) => async (dispatch) => {
       type: USER_LOADED,
       payload: res.data,
     });
+    dispatch(idFavorite());
     dispatch(getUnReadNotification());
     if (socket?.connected) {
       socket.emit("join", { userId: res.data.id, socketId: socket.id });
@@ -1169,7 +1170,7 @@ export const changeIban =
 
       dispatch({ type: CHANGE_IBAN, payload: data });
       if (history) {
-        history(from);
+        history("/items/new");
       }
     } catch (error) {
       console.log(error);

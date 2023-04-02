@@ -180,6 +180,7 @@ export const Register = () => {
 
   const error = useSelector((state) => state.auth.error);
   const history = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     return () => {
@@ -207,8 +208,6 @@ export const Register = () => {
     setActiveStep(0);
   };
 
-  let location = useLocation();
-
   let from;
   if (
     location &&
@@ -217,6 +216,13 @@ export const Register = () => {
     location.state.from.pathname
   ) {
     from = location.state.from.pathname;
+  } else if (
+    location &&
+    location.state &&
+    location.state.isFromSeller &&
+    location.state.isFromSeller.pathname
+  ) {
+    from = location.state.isFromSeller.pathname;
   } else {
     from = "/";
   }
@@ -301,10 +307,10 @@ export const Register = () => {
                 style={{ fontSize: 15, paddingLeft: 5 }}
                 color="primary"
               >
-                <Link to="/login">Se connecter</Link>
+                <Link  to="/login" >Se connecter</Link>
               </Typography>
             </Box>
-          </form>
+          </form> 
         </Box>
       </Box>
     </Box>

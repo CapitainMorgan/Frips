@@ -102,6 +102,7 @@ const sendEmail = async (id_Receiver, type, args) => {
       );
     }
   } catch (error) {
+    console.log(error)
     logger.error(error);
   }
 };

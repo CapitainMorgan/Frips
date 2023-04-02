@@ -3,8 +3,6 @@ const router = express.Router();
 const config = require("config");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const log4js = require("log4js");
-const logger = log4js.getLogger("user");
 
 const { PrismaClient } = require("@prisma/client");
 const { sendEmail } = require("../email/sendEmail");
@@ -38,31 +36,24 @@ router.post("/checkUser", async (req, res) => {
 
     if (user || email) {
       if (user && email) {
-        logger.info("Ce pseudo et ce mail sont déjà utilisés" + Pseudo + Email);
         res
           .status(400)
           .json({ msg: "Ce pseudo et ce mail sont déjà utilisés" });
       } else if (user) {
-        logger.info("Ce pseudo est déjà utilisé" + Pseudo);
         res.status(400).json({ msg: "Ce pseudo est déjà utilisé" });
       } else {
-        logger.info("Ce mail est déjà utilisé" + Email);
         res.status(400).json({ msg: "Ce mail est déjà utilisé" });
       }
-    }
-    else{
+    } else {
       res.status(200).json({ msg: "ok" });
-
     }
-
-
   } catch (error) {
-    logger.error(error);
+    console.log(error);
     res.status(500).send("Serveur error");
   }
 });
 
-router.post("/", async (req, res,next) => {
+router.post("/", async (req, res, next) => {
   let {
     Pseudo,
     Email,
@@ -75,9 +66,13 @@ router.post("/", async (req, res,next) => {
     Localite,
     NPA,
   } = req.body;
+  const [day, month, year] = Birthday.split("/");
 
   const salt = await bcrypt.genSalt(10);
   Password = await bcrypt.hash(Password, salt);
+
+  console.log(Birthday)
+  console.log(new Date(02/04/2000).getFullYear())
 
   try {
     let user = await account.findUnique({
@@ -100,15 +95,12 @@ router.post("/", async (req, res,next) => {
 
     if (user || email) {
       if (user && email) {
-        logger.info("Ce pseudo et ce mail sont déjà utilisés" + Pseudo + Email);
         res
           .status(400)
           .json({ msg: "Ce pseudo et ce mail sont déjà utilisés" });
       } else if (user) {
-        logger.info("Ce pseudo est déjà utilisé" + Pseudo);
         res.status(400).json({ msg: "Ce pseudo est déjà utilisé" });
       } else {
-        logger.info("Ce mail est déjà utilisé" + Email);
         res.status(400).json({ msg: "Ce mail est déjà utilisé" });
       }
     } else {
@@ -119,7 +111,7 @@ router.post("/", async (req, res,next) => {
           Password,
           Lastname: name,
           Firstname: firstName,
-          BirthDate: new Date(Birthday),
+          BirthDate: new Date(year,month,day),
           address: {
             create: {
               City: Localite,
@@ -131,7 +123,6 @@ router.post("/", async (req, res,next) => {
           LastConnection:new Date()
           
         },
-
 
       });
 
@@ -151,12 +142,11 @@ router.post("/", async (req, res,next) => {
         }
       );
 
-      await sendEmail(newUser.id,"Welcome",next)
-
+      await sendEmail(newUser.id, "Welcome");
     }
     //encrypt password
   } catch (error) {
-    logger.error(error);
+    console.log(error);
     res.status(500).send("Serveur error");
   }
 });

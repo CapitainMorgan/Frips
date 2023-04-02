@@ -5,7 +5,7 @@ import {
   InputAdornment,
   makeStyles,
   TextField,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import Visibility from "@material-ui/icons/Visibility";
 import VisibilityOff from "@material-ui/icons/VisibilityOff";
@@ -111,12 +111,10 @@ const TextFieldLogin = ({
                   </IconButton>
                 </InputAdornment>
               ) : null}
-
             </React.Fragment>
           ),
           style: { fontSize: 16 },
         }}
-        
       />
     );
   }
@@ -135,6 +133,7 @@ export const LoginPage = () => {
 
   let location = useLocation();
 
+
   let from;
   if (
     location &&
@@ -143,23 +142,24 @@ export const LoginPage = () => {
     location.state.from.pathname
   ) {
     from = location.state.from.pathname;
+  } else if (
+    location &&
+    location.state &&
+    location.state.isFromSeller &&
+    location.state.isFromSeller.pathname
+  ) {
+    from = location.state.isFromSeller.pathname;
   } else {
     from = "/";
   }
 
-  
-
-
-
   const error = useSelector((state) => state.auth.error);
 
-
-  useEffect(()=>{
-    return () =>{
-      dispatch({type:RESET_ERROR})
-    }
-  },[])
-
+  useEffect(() => {
+    return () => {
+      dispatch({ type: RESET_ERROR });
+    };
+  }, []);
 
   const onSubmit = (values) => {
     dispatch(login(values, from, history));
@@ -242,7 +242,7 @@ export const LoginPage = () => {
                         color="primary"
                       >
                         <Typography style={{ fontSize: 14 }}>
-                          Mot de passe oublier ?
+                          Mot de passe oublié ?
                         </Typography>
                       </Button>
                     </Box>

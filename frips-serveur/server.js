@@ -1,9 +1,9 @@
 const fs = require("fs");
 
-/*let sslOptions = {
+let sslOptions = {
    key: fs.readFileSync('api.myfrips.ch-2023-02-13.key'),
    cert: fs.readFileSync('api.myfrips.ch-2023-02-13.crt')
-};*/
+};
 
 const express = require("express");
 const app = express();
@@ -41,8 +41,8 @@ log4js.configure({
     mail: { appenders: ["mail"], level: "info" },
   },
 });
-//const server = https.createServer(sslOptions,app);
-const server = http.createServer(app);
+const server = https.createServer(sslOptions,app);
+//const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",

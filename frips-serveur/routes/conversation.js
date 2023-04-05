@@ -2,6 +2,10 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const log4js = require("log4js");
+log4js.configure({
+  appenders: { conversation: { type: "file", filename: "conversation.log" } },
+  categories: { default: { appenders: ["conversation"], level: "error" } },
+});
 var logger = log4js.getLogger("conversation");
 
 const { PrismaClient } = require("@prisma/client");
@@ -145,6 +149,7 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
   const PricePropose = req.body.Price;
   const { id_Receiver } = req.body;
 
+
   try {
     if (id_Item && PricePropose) {
       const { message: newMessage } = await chat.findUnique({
@@ -233,8 +238,7 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
 
       logger.info("Message send between " + id + " and " + id_Receiver + "");
       res.status(200).json("message send");
-      await sendEmail(id_Receiver, "NewMessage",{id_Sender:id,id_Chat});
-
+      await sendEmail(id_Receiver, "NewMessage", { id_Sender: id, id_Chat });
     }
   } catch (error) {
     logger.error("POST /conversation/myConversation/newMessage" + error);

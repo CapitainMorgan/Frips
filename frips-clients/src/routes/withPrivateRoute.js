@@ -10,6 +10,8 @@ const withPrivateRoute = (Component) => {
     const auth = useSelector((state) => state.auth);
     const { isAuthenticated, loading,user } = auth;
 
+    alert(location.state.p)
+
     useEffect(()=>{
       dispatch(loadUser(socket))
     },[])

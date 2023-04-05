@@ -37,20 +37,19 @@ export default (state = initialState, action) => {
       };
     }
 
-    case READ_CONVERSATION:{
+    case READ_CONVERSATION: {
       const removeArrayUser = state.notificationUser.filter((conv, index) => {
         return conv.id === payload.id;
       });
-      return{
+      return {
         ...state,
-        unReadNotification:[...removeArrayUser]
-      }
+        unReadNotification: [...removeArrayUser],
+      };
     }
     case NEW_NOTIFICATION: {
       return {
         ...state,
-        unReadNotification:
-          [...state.unReadNotification,payload]
+        unReadNotification: [...state.unReadNotification, payload],
       };
     }
 

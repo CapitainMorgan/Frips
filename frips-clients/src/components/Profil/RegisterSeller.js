@@ -69,7 +69,6 @@ export const RegisterSeller = () => {
     defaultValues: initialValue,
   });
   const history = useNavigate();
-  let location = useLocation();
 
 
   const handleChange = (event) => {
@@ -83,7 +82,7 @@ export const RegisterSeller = () => {
   };
 
   const onSubmit = (values) => {
-    dispatch(changeIban(values.IBAN, "items/new", history));
+    dispatch(changeIban(values.IBAN, "/items/new", history));
   };
 
   return (

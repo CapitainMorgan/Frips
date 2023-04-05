@@ -10,6 +10,11 @@ const path = require("path"); // path for cut the file extension
 const sharp = require("sharp");
 const log4js = require("log4js");
 const { sendEmail } = require("../email/sendEmail");
+
+log4js.configure({
+  appenders: { members: { type: "file", filename: "members.log" } },
+  categories: { default: { appenders: ["members"], level: "error" } },
+});
 var logger = log4js.getLogger("members");
 
 const { item, account, image, pricepropose, transaction, review } =
@@ -77,7 +82,7 @@ router.post("/myProfile", auth, upload, async (req, res) => {
 
     fs.emptyDir(pathDir, (err) => {
       if (err) throw err;
-      logger.info(`Successfully deleted everything inside ${pathDir}`);
+      console.log(`Successfully deleted everything inside ${pathDir}`);
     });
     fs.mkdirsSync(pathDir);
 
@@ -321,7 +326,16 @@ router.get("/mySell/:id_Item", auth, async (req, res) => {
             },
             id: true,
             Name: true,
-            Price: true,
+            account: {
+              select: {
+                Pseudo: true,
+                id: true,
+                address: true,
+                Firstname: true,
+                Lastname: true,
+                Email: true,
+              },
+            },
             item_fees: {
               select: {
                 fees: {
@@ -333,23 +347,10 @@ router.get("/mySell/:id_Item", auth, async (req, res) => {
                 },
               },
             },
-            account: {
-              select: {
-                Pseudo: true,
-                id: true,
-                address: true,
-                Firstname: true,
-                Lastname: true,
-                Email: true,
-              },
-            },
-
+            Price: true,
             DeliveryDetails: true,
           },
         },
-        DeliveryPrice: true,
-        TaxPrice: true,
-
         DateSell: true,
         DateSend: true,
         account: {
@@ -362,33 +363,32 @@ router.get("/mySell/:id_Item", auth, async (req, res) => {
             Email: true,
           },
         },
+
+        id: true,
+        DeliveryPrice: true,
+        TaxPrice: true,
+        
+        
+
+        Price: true,
+        Status: true,
         review: {
           where: {
-            transaction: {
-              item: {
-                id_Seller: id,
-              },
-            },
             id_Account: {
               equals: id,
             },
           },
           select: {
             Note: true,
-            id_Account: true,
           },
         },
-        id: true,
-
-        Price: true,
-        Status: true,
       },
     });
 
     res.status(200).json(mySellItem);
   } catch (error) {
     res.status(500).json("Servor Error");
-    logger.error(error);
+    console.log(error);
   }
 });
 
@@ -735,71 +735,64 @@ router.get(
   }
 );
 
-router.get(
-  "/MyProposition/:id_Item",
-  auth,
-  async (req, res) => {
-    const { id } = req.user;
-    const { id_Item } = req.params;
+router.get("/MyProposition/:id_Item", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_Item } = req.params;
 
-
-
-    try {
-      const MyProposition = await pricepropose.findUnique({
-        where: {
-          id_Account_id_Item:{
-            id_Account:parseInt(id),
-            id_Item:parseInt(id_Item)
-          }          
+  try {
+    const MyProposition = await pricepropose.findUnique({
+      where: {
+        id_Account_id_Item: {
+          id_Account: parseInt(id),
+          id_Item: parseInt(id_Item),
         },
-        select: {
-          item: {
-            select: {
-              image: {
-                take: 1,
-              },
-              Price: true,
-              id: true,
-              Size: true,
-              Name: true,
-              item_brand: {
-                select: {
-                  brand: {
-                    select: {
-                      Name: true,
-                    },
+      },
+      select: {
+        item: {
+          select: {
+            image: {
+              take: 1,
+            },
+            Price: true,
+            id: true,
+            Size: true,
+            Name: true,
+            item_brand: {
+              select: {
+                brand: {
+                  select: {
+                    Name: true,
                   },
                 },
               },
-              
             },
           },
-          dateApprove: true,
-          Approve: true,
-          SendDate: true,
-          Price: true,
-          id_Account: true,
         },
-      });
+        dateApprove: true,
+        Approve: true,
+        SendDate: true,
+        Price: true,
+        id_Account: true,
+      },
+    });
 
-      if (!Boolean(MyProposition) || MyProposition.id_Account !==id) {
-        res.status(400).json({ msg: "Aucune correspondance" });
+    if (!Boolean(MyProposition) || MyProposition.id_Account !== id) {
+      res.status(400).json({ msg: "Aucune correspondance" });
+    } else {
+      if (
+        MyProposition.dateApprove <
+        new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
+      ) {
+        res.status(200).json(MyProposition);
       } else {
-        if (
-          MyProposition.dateApprove <
-          new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
-        ) {
-          res.status(200).json(MyProposition);
-        } else {
-          res.status(400).json({ msg: "Offre plus disponible" });
-        }
+        res.status(400).json({ msg: "Offre plus disponible" });
       }
-    } catch (error) {
-      logger.error("GET /mySell/:id_Item", error);
-      res.status(500).json("Servor Error");
     }
+  } catch (error) {
+    logger.error("GET /mySell/:id_Item", error);
+    res.status(500).json("Servor Error");
   }
-);
+});
 
 router.post("/Received", auth, async (req, res) => {
   const { id } = req.user;
@@ -871,8 +864,6 @@ router.post("/Rewiew", auth, async (req, res) => {
     res.status(500).json("Servor Error");
   }
 });
-
-
 
 const constructQueryMyPurchase = (whereFilter) => {
   const arrayWhere = [];
@@ -1018,6 +1009,92 @@ router.post("/MyPurchase", auth, async (req, res) => {
   }
 });
 
+router.get("/MyPurchase/:id_Item", auth, async (req, res) => {
+  const { id } = req.user;
+  const { id_Item } = req.params;
+
+  try {
+    const MyPurchase = await transaction.findFirst({
+      where: {
+        id_Account: id,
+        id_Item: parseInt(id_Item),
+      },
+      select: {
+        item: {
+          select: {
+            image: {
+              take: 1,
+            },
+            id: true,
+            Name: true,
+            account: {
+              select: {
+                Pseudo: true,
+                id: true,
+                address: true,
+                Firstname: true,
+                Lastname: true,
+                Email: true,
+              },
+            },
+            item_fees: {
+              select: {
+                fees: {
+                  select: {
+                    Name: true,
+                    Description: true,
+                    Price: true,
+                  },
+                },
+              },
+            },
+            Price: true,
+            DeliveryDetails: true,
+          },
+        },
+        DateSell: true,
+        DateSend: true,
+        account: {
+          select: {
+            Pseudo: true,
+            id: true,
+            address: true,
+            Firstname: true,
+            Lastname: true,
+            Email: true,
+          },
+        },
+
+        id: true,
+        DeliveryPrice: true,
+        TaxPrice: true,
+
+        Price: true,
+        Status: true,
+        review: {
+          where: {
+            id_Account: {
+              equals: id,
+            },
+          },
+          select: {
+            Note: true,
+          },
+        },
+      },
+    });
+
+    if (Boolean(MyPurchase)) {
+      res.status(200).json(MyPurchase);
+    } else {
+      res.status(400).json({ msg: "Article a été supprimé" });
+    }
+  } catch (error) {
+    res.status(500).json("Servor Error");
+    console.log(error);
+  }
+});
+
 router.post("/StatusProposition", auth, async (req, res) => {
   const { id_Item, approved, id_Account } = req.body;
 
@@ -1037,7 +1114,7 @@ router.post("/StatusProposition", auth, async (req, res) => {
 
     res.sendStatus(200);
     if (approved) {
-      sendEmail(id_Account, "AcceptedOffer",{id_Item});
+      sendEmail(id_Account, "AcceptedOffer", { id_Item });
     }
   } catch (error) {
     logger.error("POST /StatusProposition", error);
@@ -1137,7 +1214,7 @@ router.post("/user/:name", async (req, res) => {
       userAccount: { ...userAccount, review: _avg?.Note },
     });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     logger.error("POST /:name", error);
     res.status(500).json("Serveur error");
   }
@@ -1159,10 +1236,10 @@ router.post("/IBAN", auth, async (req, res) => {
         IBAN: true,
       },
     });
-    
+
     res.status(200).json(Account.IBAN);
   } catch (error) {
-    logger.error(error);
+    console.log(error);
     res.status(500).json("Serveur error");
   }
 });

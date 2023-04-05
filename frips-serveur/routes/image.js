@@ -2,12 +2,14 @@ const express = require("express");
 const router = express.Router();
 const { nanoid } = require("nanoid");
 const log4js = require("log4js");
+log4js.configure({
+  appenders: { image: { type: "file", filename: "image.log" } },
+  categories: { default: { appenders: ["image"], level: "error" } },
+});
 var logger = log4js.getLogger("image");
 
 const path = require("path"); // path for cut the file extension
 let fs = require("fs-extra");
-
-
 
 const multer = require("multer");
 const fileStorage = multer.diskStorage({
@@ -36,17 +38,16 @@ const sharp = require("sharp");
 // @acces    Private
 
 router.post("/", upload.any(), async (req, res) => {
-
   try {
     for (let index = 0; index < req.files.length; index++) {
-     const image =  await image.create({
+      const image = await image.create({
         data: {
           id_Item: parseInt(req.body.id),
           image: req.files[index].path.split("\\")[3],
         },
       });
     }
-    
+
     res.status(200).json(image);
   } catch (error) {
     await item.delete({

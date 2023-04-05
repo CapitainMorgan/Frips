@@ -1,12 +1,11 @@
 import useMediaQuery from "@material-ui/core/useMediaQuery";
 import { ThemeProvider } from "@material-ui/styles";
 import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import { io } from "socket.io-client";
 import PrivateRoute from "../routes/PrivateRoute";
 import Footer from "./Footer/Footer";
 import Header from "./Header";
-import ItemCreate from "./Items/ItemCreate";
 import ItemList from "./Items/ItemLists";
 import ItemPreview from "./Items/itemPreview/ItemPreview";
 import LoginPage from "./Login/LoginPage";
@@ -25,14 +24,22 @@ import {
   loadUser,
   setSocket,
 } from "../actions";
+import { NOTIFICATION, SET_MOBILE_VERSION } from "../actions/type";
+import Dashboard from "../admin/Dashboard";
 import API_ENDPOINT from "../api/url";
 import CheckUrl from "../routes/CheckUrl";
-import SellerRoute from "../routes/SellerRoute";
+import PrivateSellerRoute from "../routes/PrivateSellerRoute";
 import store from "../store/store";
 import setAuthToken from "../utils/setAuthToken";
 import "./App.css";
 import CheckOutComponent from "./Checkout/CheckOutComponent";
 import StatusPaymentComponent from "./Checkout/StatusPaymentComponent";
+import AccountInfo from "./Footer/Help/AccountInfo";
+import Aide from "./Footer/Help/Aide";
+import BuyInfo from "./Footer/Help/BuyInfo";
+import ConditionGeneral from "./Footer/Help/ConditionGeneral";
+import PaymentInfo from "./Footer/Help/PaymentInfo";
+import SellInfo from "./Footer/Help/SellInfo";
 import DisplayCatalogue from "./Items/CatalogueDisplay/DisplayCatalogue";
 import ItemEdit from "./Items/ItemEdit";
 import Register from "./Login/UserRegister";
@@ -42,20 +49,12 @@ import PageNotFound from "./NavBar/PageNotFound";
 import MyFavorite from "./Profil/MyFavorite";
 import MemberProfile from "./Profil/MyFrips/Members/MemberProfile";
 import MyFrips from "./Profil/MyFrips/MyFrips";
+import MyPropositionById from "./Profil/MyFrips/MyProposition/MyPropositionById";
+import PropositionReceived from "./Profil/MyFrips/MyProposition/PropositionReceived";
+import MyPurchaseById from "./Profil/MyFrips/MyPurchase/MyPurchaseById";
 import MySellById from "./Profil/MyFrips/MySell/MySellById";
 import NotificationComponent from "./Profil/NotificationComponent";
 import RegisterSeller from "./Profil/RegisterSeller";
-import ConditionGeneral from "./Footer/Help/ConditionGeneral";
-import Aide from "./Footer/Help/Aide";
-import MyPropositionById from "./Profil/MyFrips/MyProposition/MyPropositionById";
-import SellInfo from "./Footer/Help/SellInfo";
-import BuyInfo from "./Footer/Help/BuyInfo";
-import AccountInfo from "./Footer/Help/AccountInfo";
-import PaymentInfo from "./Footer/Help/PaymentInfo";
-import Dashboard from "../admin/Dashboard";
-import { NOTIFICATION } from "../actions/type";
-import PropositionReceived from "./Profil/MyFrips/MyProposition/PropositionReceived";
-import PrivateSellerRoute from "../routes/PrivateSellerRoute";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -66,15 +65,15 @@ const socket = io(API_ENDPOINT, { reconnection: true, autoConnect: true });
 const App = () => {
   const [notification, setNotification] = useState(null);
   const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"),{noSsr:true});
+
 
   useEffect(() => {
-    store.dispatch(idFavorite());
-
     socket.on("connect", () => {
       store.dispatch(setSocket(socket));
       store.dispatch(loadUser(socket));
       store.dispatch(getAllConv());
+      store.dispatch(idFavorite());
       store.dispatch(getItemCreationInfo());
     });
     socket.on("message notification", (data) => {
@@ -156,6 +155,11 @@ const App = () => {
                 />
 
                 <Route
+                  path="/members/myFrips/myPurchase/:id"
+                  element={<MyPurchaseById />}
+                />
+
+                <Route
                   path="/members/myFrips/ReceivedProposition/:id_Item/:id_Sender"
                   element={<PropositionReceived />}
                 />
@@ -177,10 +181,8 @@ const App = () => {
                 />
               </Route>
 
-                <Route
-                  path="/items/new"
-                  element={<PrivateSellerRoute/>}/>
-                
+              <Route path="/items/new" element={<PrivateSellerRoute />} />
+
               <Route path="/filter" element={<DisplayCatalogue />} />
 
               <Route path="/" key={"root-filter"}>
@@ -203,7 +205,7 @@ const App = () => {
                 exact
                 element={<ConditionGeneral />}
               />
-              
+
               <Route path="/admin" element={<Dashboard />} />
               <Route path="/aide" element={<Aide />} />
               <Route path="/aide/paymentInfo" element={<PaymentInfo />} />

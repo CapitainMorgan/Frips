@@ -71,9 +71,6 @@ router.post("/", async (req, res, next) => {
   const salt = await bcrypt.genSalt(10);
   Password = await bcrypt.hash(Password, salt);
 
-  console.log(Birthday)
-  console.log(new Date(02/04/2000).getFullYear())
-
   try {
     let user = await account.findUnique({
       where: {

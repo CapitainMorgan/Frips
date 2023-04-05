@@ -246,7 +246,6 @@ const MyFavorite = ({ loading, items, favoriteIds, count }) => {
         alignItems="center"
       >
         <Typography style={{ fontSize: 16 }}>
-          {" "}
           Vous n'avez aucun favori
         </Typography>
       </Box>

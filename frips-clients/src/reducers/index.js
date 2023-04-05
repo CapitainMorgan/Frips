@@ -11,6 +11,7 @@ import notification from "./notification";
 import payment from "./payment";
 import members from "./members";
 import location from "./location"
+import parameter from "./parameter";
 export default combineReducers({
   items: itemReducer,
   auth,
@@ -24,4 +25,5 @@ export default combineReducers({
   payment,
   members,
   location,
+  parameter,
 });

@@ -2,18 +2,17 @@ const express = require("express");
 const router = express.Router();
 const auth = require("../middleware/auth");
 const log4js = require("log4js");
-const sharp = require("sharp")
+log4js.configure({
+  appenders: { edit: { type: "file", filename: "edit.log" } },
+  categories: { default: { appenders: ["edit"], level: "error" } },
+});
+const sharp = require("sharp");
 var logger = log4js.getLogger("edit");
 
 const { PrismaClient } = require("@prisma/client");
 const multer = require("multer");
 const fs = require("fs");
-const {
-  item,
-  account,
-  image,
-  brand,
-} = new PrismaClient();
+const { item, account, image, brand } = new PrismaClient();
 const path = require("path");
 const { nanoid } = require("nanoid");
 
@@ -75,7 +74,6 @@ router.get("/:idItem", auth, async (req, res) => {
     res.status(500).json("Server error");
   }
 });
-
 
 const upload = multer().any();
 
@@ -221,15 +219,14 @@ router.post("/", auth, upload, async (req, res) => {
     });
     for (let index = 0; index < req.files.length; index++) {
       let id = nanoid();
-        fs.writeFileSync(
-          path.join("./", pathDir, `${id}` + ".jpeg"),
-          await sharp(req.files[index].buffer)
-            .resize({ width: 1000, height: 1000 })
-            .jpeg({ quality: 75 })
-            .toBuffer()
-        
+      fs.writeFileSync(
+        path.join("./", pathDir, `${id}` + ".jpeg"),
+        await sharp(req.files[index].buffer)
+          .resize({ width: 1000, height: 1000 })
+          .jpeg({ quality: 75 })
+          .toBuffer()
       );
-      
+
       await image.create({
         data: {
           id_Item: Item.id,

@@ -218,7 +218,7 @@ const ItemList = ({
   let navigate = useNavigate();
   const location = useLocation();
   const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"),{noSsr:true});
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -228,7 +228,7 @@ const ItemList = ({
     if (!loading && items.length === 0) {
       dispatch(fetchItems(true, mobile));
     }
-  }, [dispatch, loading, location, mobile]);
+  }, [dispatch, loading]);
 
   const renderedItems = useMemo(() => {
     return renderedItem(items, classes, favorite, dispatch, navigate);

@@ -27,10 +27,11 @@ const withAuth = (WrappedComponent) => (props) => {
   }, [user, loading]);
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate(previousLocation, { state: { isFromSeller: location } });
+    if (!isAuthenticated &&!loading) {
+      navigate("/login", { state: { isFromSeller: location } });
     }
-  }, [isAuthenticated]);
+
+  }, [isAuthenticated,loading]);
 
   if (!userLoaded) {
     return null;

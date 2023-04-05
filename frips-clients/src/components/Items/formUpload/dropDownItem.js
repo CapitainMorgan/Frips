@@ -195,7 +195,6 @@ const DropDownItem = ({ field, form, mobile, size, setSize, ...props }) => {
           <TextField
             onClick={handleClick}
             autoComplete="off"
-            {...field}
             placeholder="Selectionne une catégorie"
             value={_.find(Catalogue, { id: field.value })?.Name}
             onChange={(e) => {

@@ -176,8 +176,8 @@ function checkString(inputString, setCheckForbiddenAction) {
     /(fb|facebook|insta|instagram|snap|snapchat|whatsapp|telegram|email|@|mon num|téléphone|tel|phone)/i; // regex to match forbidden words
   return !(
     regexLinks.test(inputString) ||
-    regexForbiddenWords.test(inputString) ||
-    isSwissPhoneNumber(inputString)
+    regexForbiddenWords.test(inputString.replace(/\s/g, "")) ||
+    isSwissPhoneNumber(inputString.replace(/\s/g, ""))  
   );
 }
 

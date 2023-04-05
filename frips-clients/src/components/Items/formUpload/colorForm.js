@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {
   Box,
   ClickAwayListener,
+  Divider,
   InputAdornment,
   Popper,
   TextField,
@@ -47,15 +48,14 @@ const useStyles = makeStyles({
   },
 });
 
-const CostumBox = ({ item, setvalue, value }) => {
+const CostumBox = ({ item, setvalue, value ,index}) => {
   const props = { hoverColor: alpha(item.Code, 0.6) };
 
   const classes = useStyles(props);
 
   return (
-    <Box style={{ position: "relative" }}>
+    <Box style={{ position: "relative",backgroundColor:_.some(value,{Code:item.Code}) ? `${alpha(item.Code, 0.6)}`:""}}>
       <MenuItem
-        className={classes.BoxItem}
         key={item.Name}
         onClick={() => {
           if (!_.find(value, item)) {
@@ -110,7 +110,7 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
 
   const renderedColorForm = ColorInfo.map((item, index) => {
     return (
-      <CostumBox value={field.value} setvalue={form} item={item}></CostumBox>
+      <CostumBox index={index} value={field.value} setvalue={form} item={item}></CostumBox>
     );
   });
 
@@ -177,17 +177,29 @@ const ColorForm = ({ form, mobile, field, ...props }) => {
                 justifyContent="center"
                 alignItems="center"
                 position="relative"
-                style={{ position: "sticky", top: 0, backgroundColor: "white" ,zIndex:100}}
-
+                style={{
+                  position: "sticky",
+                  top: 0,
+                  backgroundColor: "white",
+                  zIndex: 100,
+                }}
               >
-                <Typography style={{ fontSize: 16 }}>Couleurs</Typography>
+                <Box display={"flex"} flexDirection={"column"}>
+                  <Typography style={{ fontSize: 16 }}>Couleurs</Typography>
+                  <Typography style={{ fontSize: 16,marginTop:10 }}>
+                    {extractName(field.value)
+                      .toString()
+                      .replace(/([a-z])([A-Z])/g, "$1, $2")}
+                  </Typography>
+                </Box>
                 <Box padding={3} position="absolute" right={0}>
                   <IconButton onClick={handleClickAway}>
-                  <CloseIcon style={{fontSize:30}}  /> 
-
+                    <CloseIcon style={{ fontSize: 30 }} />
                   </IconButton>
                 </Box>
               </Box>
+              
+              <Divider/>
 
               <Box style={{ backgroundColor: "white" }} width={"100%"}>
                 {renderedColorForm}

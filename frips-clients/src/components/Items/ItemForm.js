@@ -215,8 +215,8 @@ const ItemForm = ({
 
   const classes = useStyles();
   const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"),{noSsr:true});
 
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   const typeOfInput = () => {
     if (!mobile) {

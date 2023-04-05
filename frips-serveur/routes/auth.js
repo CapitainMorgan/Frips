@@ -3,9 +3,12 @@ const router = express.Router();
 const auth = require("../middleware/auth");
 const jwt = require("jsonwebtoken");
 const config = require("config");
-const { check, validationResult } = require("express-validator");
 const bcrypt = require("bcryptjs");
 var log4js = require("log4js");
+log4js.configure({
+  appenders: { auth: { type: "file", filename: "auth.log" } },
+  categories: { default: { appenders: ["auth"], level: "error" } },
+});
 var logger = log4js.getLogger('auth');
 
 const { PrismaClient } = require("@prisma/client");

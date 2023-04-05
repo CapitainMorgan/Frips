@@ -38,7 +38,7 @@ router.post("/", async (req, res) => {
 router.post("/s", async (req, res,next) => {
   const count = 0
   try {
-    sendEmail(2,"AcceptedOffer",{id_Item:1})
+    sendEmail(2,"SendPacket",{id_Item:11,id_Sender:1})
 
     res.status(200).json("ok")
   } catch (error) {

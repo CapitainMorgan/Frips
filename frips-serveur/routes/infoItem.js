@@ -1,7 +1,10 @@
 const express = require("express");
 const router = express.Router();
 const log4js = require("log4js");
-
+log4js.configure({
+  appenders: { infoItem: { type: "file", filename: "infoItem.log" } },
+  categories: { default: { appenders: ["infoItem"], level: "error" } },
+});
 var logger = log4js.getLogger("infoItem");
 
 const { PrismaClient } = require("@prisma/client");
@@ -15,7 +18,7 @@ const {
   itemcondition,
   fees,
   category_category,
-} = new PrismaClient()
+} = new PrismaClient();
 
 // @route   GET api/members/myFrips
 // @desc    get all your post
@@ -24,49 +27,34 @@ const {
 router.get("/search", async (req, res) => {
   try {
     const infoBrand = await brand.findMany({
-      select:{
-        Name:true,
-        id:true
+      select: {
+        Name: true,
+        id: true,
       },
-      orderBy:{
-        id:"asc"
-      }
-      
+      orderBy: {
+        id: "asc",
+      },
     });
 
     const infoCategory = await category.findMany({
-      where: {
-        category_category_categoryTocategory_category_id_Child: {
-          some: {
-            category_categoryTocategory_category_id_Parent: {
-              category_category_categoryTocategory_category_id_Child: {
-                some: {
-                  id_Parent: {
-                    in: [2, 73, 81, 89],
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
+     
       select: {
         id: true,
         Name: true,
       },
+      distinct:["Name"]
     });
 
     const infoObject = [infoBrand, infoCategory];
 
     res.status(200).json(infoObject);
   } catch (error) {
-    logger.error("GET api/infoItem/search"+ error)
+    logger.error("GET api/infoItem/search" + error);
     res.status(500).json("Server error");
   }
 });
 
 router.get("/info", async (req, res) => {
-  
   try {
     let infoBrand = await brand.findMany({
       select: {
@@ -74,7 +62,7 @@ router.get("/info", async (req, res) => {
         id: true,
       },
       orderBy: {
-        Name:"asc"
+        Name: "asc",
       },
     });
 
@@ -99,7 +87,7 @@ router.get("/info", async (req, res) => {
       },
     });
 
-    const infoDelivery = await fees.findMany()
+    const infoDelivery = await fees.findMany();
 
     const infoCategory = await category.findMany({
       select: {
@@ -115,12 +103,12 @@ router.get("/info", async (req, res) => {
       itemconditionInfo: infoItemCondition,
       itemColorInfo: infoColor,
       infoCategory,
-      infoDelivery
+      infoDelivery,
     };
 
     res.status(200).json(infoObject);
   } catch (error) {
-    logger.error("GET api/infoItem/info"+ error)
+    logger.error("GET api/infoItem/info" + error);
     res.status(500).json("Server error");
   }
 });

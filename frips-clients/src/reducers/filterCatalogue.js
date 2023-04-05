@@ -1,6 +1,13 @@
 import _ from "lodash";
 import {
-    ADD_FILTER, CHANGE_PAGINATION, FETCH_FILTER, FETCH_ITEM_FILTER_SUCCESS, FETCH_ITEM_TYPE, FETCH_NEW_ITEM_TYPE, FILTER, REMOVE_FILTER
+  ADD_FILTER,
+  CHANGE_PAGINATION,
+  FETCH_FILTER,
+  FETCH_ITEM_FILTER_SUCCESS,
+  FETCH_ITEM_TYPE,
+  FETCH_NEW_ITEM_TYPE,
+  FILTER,
+  REMOVE_FILTER,
 } from "../actions/type.js";
 
 const initialValues = {
@@ -14,7 +21,7 @@ const initialValues = {
     Taille: [],
     Price: [0, Number.POSITIVE_INFINITY],
     Etat: [],
-    Search:[],
+    Search: [],
     sortedBy: null,
   },
   Chips: [],
@@ -104,7 +111,7 @@ export default (state = initialValues, action) => {
         AllFilter: {
           ...setfilter,
         },
-        filterLoading:false,
+        filterLoading: false,
         Chips: setChips,
         pagination: 1,
       };
@@ -156,7 +163,7 @@ export default (state = initialValues, action) => {
         ...state,
         AllFilter: { ...copyObjectAllFilter },
         Chips: [...arrayChip],
-        filterLoading:false,
+        filterLoading: false,
         pagination: 1,
       };
 
@@ -174,7 +181,6 @@ export default (state = initialValues, action) => {
         ...state,
         loaded: true,
         loading: false,
-
       };
 
     case FETCH_FILTER:
@@ -186,11 +192,11 @@ export default (state = initialValues, action) => {
     case FILTER:
       return {
         ...state,
-        filterLoading:true,
-      }
+        filterLoading: true,
+      };
 
     case "RESTORE":
-      return initialValues
+      return initialValues;
 
     default:
       return state;

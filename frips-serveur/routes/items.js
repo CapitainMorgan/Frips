@@ -10,6 +10,11 @@ const { similarProduct } = require("./logicFunction/logicSimilarProduct");
 const log4js = require("log4js");
 const { sendEmail } = require("../email/sendEmail");
 const sharp = require("sharp");
+
+log4js.configure({
+  appenders: { items: { type: "file", filename: "items.log" } },
+  categories: { default: { appenders: ["items"], level: "error" } },
+});
 var logger = log4js.getLogger("items");
 
 const { item, image, nbview, favorit, brand, review, pricepropose, account } =
@@ -569,7 +574,6 @@ const constructFilter = (filter) => {
     });
   }
 };
-
 const isFilter = (filter) => {
   const {
     newCatalogue,
@@ -582,36 +586,50 @@ const isFilter = (filter) => {
     newTaille,
   } = filter;
 
-  if (
-    newCatalogue.length !== 0 ||
-    newCouleur.length !== 0 ||
-    newEtat.length !== 0 ||
-    newMarque.length !== 0 ||
-    newTaille.length !== 0 ||
-    Boolean(Price[0]) ||
-    Boolean(Price[1]) ||
-    Search.length !== 0
-  ) {
-    return {
-      OR: [
-        {
-          item_brand: {
-            some: {
-              id_Brand: { in: newMarque },
-            },
-          },
-        },
-        filterCatalogue(newCatalogue),
-        { id_ItemCondition: { in: newEtat } },
-        { Size: { in: newTaille } },
-        { item_color: { some: { id_Color: { in: newCouleur } } } },
+  const filters = [];
 
-        priceRange(Price),
-        ...findSearchQuery(Search),
-      ],
-    };
-  } else return;
+  if (newMarque.length !== 0) {
+    filters.push({
+      item_brand: {
+        some: {
+          id_Brand: { in: newMarque },
+        },
+      },
+    });
+  }
+
+  if (newCatalogue.length !== 0) {
+    filters.push(filterCatalogue(newCatalogue));
+  }
+
+  if (newEtat.length !== 0) {
+    filters.push({ id_ItemCondition: { in: newEtat } });
+  }
+
+  if (newTaille.length !== 0) {
+    filters.push({ Size: { in: newTaille } });
+  }
+
+  if (newCouleur.length !== 0) {
+    filters.push({ item_color: { some: { id_Color: { in: newCouleur } } } });
+  }
+
+  if (Boolean(Price[0]) || Boolean(Price[1])) {
+    filters.push(priceRange(Price));
+  }
+
+  if (Search.length !== 0) {
+    filters.push(...findSearchQuery(Search));
+  }
+
+  if (filters.length !== 0) {
+    return {AND: filters };
+  } else {
+    return;
+  }
 };
+
+
 
 const isSorted = (sortedId) => {
   if (sortedId == null) return;
@@ -636,10 +654,11 @@ router.post("/pagination", async (req, res) => {
     sortedBy,
   } = req.body;
 
+  console.log(isFilter(req.body))
   try {
     const count = await item.count({
       where: {
-        OR: isFilter(req.body),
+        ...isFilter(req.body),
         transaction: {
           none: {},
         },
@@ -831,21 +850,21 @@ router.post("/topBusiness", async (req, res) => {
   const { mobile } = req.body;
   try {
     const user = await account.findUnique({
-      where:{
-        id:1
+      where: {
+        id: 1,
       },
-      select:{
-        image:true,
-        Pseudo:true,
-        id:true
-      }
-    })
+      select: {
+        image: true,
+        Pseudo: true,
+        id: true,
+      },
+    });
     const Item = await item.findMany({
       where: {
-        transaction:{
-          none:{}
+        transaction: {
+          none: {},
         },
-        id_Seller:1
+        id_Seller: 1,
       },
       select: {
         image: {
@@ -853,19 +872,17 @@ router.post("/topBusiness", async (req, res) => {
         },
         item_brand: {
           select: {
-            brand:true
+            brand: true,
           },
         },
-        item_category:{
-          select:{
-            category:{
-              select:{
-
-              }
-            }
-          }
+        item_category: {
+          select: {
+            category: {
+              select: {},
+            },
+          },
         },
-        Price:true,
+        Price: true,
         item_category: {
           select: {
             category: {
@@ -875,13 +892,13 @@ router.post("/topBusiness", async (req, res) => {
             },
           },
         },
-        Size:true,
+        Size: true,
         _count: {
           select: {
             favorit: true,
           },
         },
-        id:true
+        id: true,
       },
       orderBy: [
         { nbview: { _count: "desc" } },
@@ -898,11 +915,10 @@ router.post("/topBusiness", async (req, res) => {
       },
     });
 
-    console.log(Item)
 
-    res.status(200).json({ ...user,item:Item, _avg });
+    res.status(200).json({ ...user, item: Item, _avg });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     logger.error("GET /api/item/new" + error);
     res.status(500).json("Server error");
   }
@@ -930,7 +946,6 @@ router.post("/proposition", auth, async (req, res) => {
   const { Price, idItem } = req.body;
   const { id } = req.user;
 
-  console.log("ok");
 
   try {
     const hasSendProposition = await pricepropose.findUnique({
@@ -945,10 +960,7 @@ router.post("/proposition", auth, async (req, res) => {
       },
     });
 
-    console.log(
-      hasSendProposition,
-      new Date(new Date().getTime() - 24 * 60 * 60 * 1000)
-    );
+   
     if (
       Boolean(hasSendProposition) &&
       new Date(hasSendProposition?.SendDate) <
@@ -992,7 +1004,7 @@ router.post("/proposition", auth, async (req, res) => {
         "Price proposition send by " + id + " for item " + idItem + ""
       );
 
-      sendEmail(data.item.account.id, "ReceivedOffer", {
+     await sendEmail(data.item.account.id, "ReceivedOffer", {
         id_Item: idItem,
         pricepropose: parseFloat(Price),
         id_Sender: id,

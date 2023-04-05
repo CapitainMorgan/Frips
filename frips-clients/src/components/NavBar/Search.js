@@ -54,12 +54,15 @@ const options = {
   includeScore: true,
   keys: ["Name"],
   threshold: 0.1,
+  location:2
 };
 const matchValueSearch = (array1, searchArray) => {
   const array = array1.map((subArray, index) => {
+    console.log(array1)
     const filterArray = new Fuse(subArray, options).search(
       { $or: searchArray },
-      { limit: 5 }
+      { limit: 4 },
+      
     );
 
     return filterArray;

@@ -30,6 +30,7 @@ import {
   FETCH_MYFAVORITEIDs,
   FETCH_MYPROPOSITIONID,
   FETCH_MYPROPOSITION_RECEIVED_ID,
+  FETCH_MYPURCHASEID,
   FETCH_MYSELLBYID,
   FETCH_NEW_ITEMS,
   FETCH_NEW_ITEM_TYPE,
@@ -949,25 +950,22 @@ export const addFilterFromSearch =
               count += 1;
             });
         } else {
-          let splitArray = string.match(
-            /^(Louis Vuitton|Marc Jacobs|Michael Kors|Ralph Lauren|The North Face|Tommy Hilfiger|Victoria's Secret|Calvin Klein|Sans marque)\s(.*)$/i
-          );
-          splitArray = splitArray
-            ? [splitArray[1], splitArray[2]]
-            : string.includes("Sans marque")
-            ? ["Sans marque", string.replace("Sans marque", "").trim()]
-            : [
-                string.split(" ")[0],
-                string.split(" ").slice(1).join(" ").trim(),
-              ];
+          console.log(string)
+          const pattern = `^(${array[0].map(brand => brand.Name).join("|")})\\s(.*)$`;
 
+          let splitArray = string.match(new RegExp(pattern, "i"));
+
+
+          console.log(splitArray)
+          splitArray = [splitArray[1], splitArray[2]]
           splitArray.forEach((element) => {
             if (_.find(array[1], { Name: element })) {
               dispatch(
                 addToFilter(_.find(array[1], { Name: element }), "Catalogue")
               );
             }
-            if (_.find(array[0], { Name: element })) {
+            if (_.find(array[0], { Name: element.trim() })) {
+              console.log(element)
               dispatch(
                 addToFilter(_.find(array[0], { Name: element }), "Marque")
               );
@@ -1144,7 +1142,7 @@ export const updateAddress = (address) => async (dispatch, getState) => {
 
     const newAddress = { Street: Rue, NumStreet: Numero, City: Localite, NPA };
 
-    const { data } = await axiosInstance.post(
+    await axiosInstance.post(
       "/api/members/updateAddress",
       address,
       config
@@ -1361,16 +1359,23 @@ export const fetchMyPropositionReceivedId =
   };
 
 export const fetchMyPurchaseId =
-  (note, id_transaction) => async (dispatch, getState) => {
+  (id_Item) => async (dispatch, getState) => {
     try {
-      const { data } = await axiosInstance.post(
-        `/api/members/Rewiew`,
-        { note, id_transaction },
+      alert("here")
+      dispatch({ type: LOADING_MYFRIPS });
+
+      const { data } = await axiosInstance.get(
+        `/api/members/MyPurchase/${id_Item}`,
         config
       );
-      dispatch({ type: REVIEW, payload: data });
+      dispatch({ type: FETCH_MYPURCHASEID, payload: data });
+
+      dispatch({ type: SUCCESS_FETCH_MYFRIPS });
+
     } catch (error) {
-      console.log(error);
+      dispatch({ type: MYFRIPS_ERROR, payload: error.response.data });
+
+      dispatch({ type: MYFRIPS_ERROR_FETCH });
     }
   };
 

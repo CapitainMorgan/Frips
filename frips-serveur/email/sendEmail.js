@@ -9,6 +9,7 @@ const { emailOfferReceived } = require("./Template/emailOfferReceived");
 const { emailOfferAccepted } = require("./Template/emailOfferAccepted");
 const client = new postmark.ServerClient(config.get("postMark"));
 const log4js = require("log4js");
+const { sendPacket } = require("./Template/emailSendPacket");
 const logger = log4js.getLogger("mail");
 
 const typeOfEmail = (type, information, args) => {
@@ -78,6 +79,20 @@ const typeOfEmail = (type, information, args) => {
         HtmlBody: emailOfferAccepted(information,args),
         MessageStream: "outbound",
       };
+    case "SendPacket":
+      return {
+        From: "noreply@myfrips.ch",
+        To: information.findUserItem.Email,
+        Subject: "Notification d'envoi de colis sur MyFrips",
+        HtmlBody: sendPacket(
+          information.findUserItem,
+          information.Sender,
+          information?.itemForEmail
+          ),
+        MessageStream: "outbound",
+
+
+      }
 
     default:
       break;

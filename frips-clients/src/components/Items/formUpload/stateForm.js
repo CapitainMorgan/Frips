@@ -5,6 +5,7 @@ import {
   Checkbox,
   ClickAwayListener,
   Dialog,
+  Divider,
   IconButton,
   InputAdornment,
   makeStyles,
@@ -169,6 +170,7 @@ const StateForm = ({ field, form, mobile }) => {
                   </IconButton>
                 </Box>
               </Box>
+              <Divider/>
 
               <Box
                 style={{ backgroundColor: "white", overflowY: "auto" }}

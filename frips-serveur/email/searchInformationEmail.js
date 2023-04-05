@@ -16,85 +16,88 @@ const checkIfShouldSend = async (
           Date_Houre: {
             gte: new Date(new Date().getTime() - 24 * 60 * 60 * 2000),
           },
-          
-          OR:[
-            {Text:{
-              not:{
-                equals:null   
-              }
-            }},
-            {id_Item:{
-              not:{
-                equals:null
-              }
-            }}
-          ]
+
+          OR: [
+            {
+              Text: {
+                not: {
+                  equals: null,
+                },
+              },
+            },
+            {
+              id_Item: {
+                not: {
+                  equals: null,
+                },
+              },
+            },
+          ],
         },
       ],
     },
   });
 
 
-  if(didUserSendMessage > 1){
+  if (didUserSendMessage > 1) {
     return;
-  }   
-
-  if (id_Sender && id_Item) {
-    const findUserItem = await account.findUnique({
-      where: {
-        id: id_Receiver,
-      },
-      select: {
-        Pseudo: true,
-        image: {
-          select: {
-            image: true,
-          },
-        },
-        Firstname: true,
-        Email: true,
-        id: true,
-      },
-    });
-
-    const itemForEmail = await item.findUnique({
-      where: {
-        id: id_Item,
-      },
-      select: {
-        image: {
-          select: {
-            image: true,
-          },
-          take: 1,
-        },
-        Name: true,
-        Size: true,
-        id: true,
-      },
-    });
-
-
-    return { findUserItem, itemForEmail };
   } else {
-    const findUserItem = await account.findUnique({
-      where: {
-        id: id_Receiver,
-      },
-      select: {
-        Pseudo: true,
-        image: {
-          select: {
-            image: true,
-          },
+    if (id_Sender && id_Item) {
+      const findUserItem = await account.findUnique({
+        where: {
+          id: id_Receiver,
         },
-        Firstname: true,
-        Email: true,
-        id: true,
-      },
-    });
+        select: {
+          Pseudo: true,
+          image: {
+            select: {
+              image: true,
+            },
+          },
+          Firstname: true,
+          Email: true,
+          id: true,
+        },
+      });
 
-    return { findUserItem };
+      const itemForEmail = await item.findUnique({
+        where: {
+          id: id_Item,
+        },
+        select: {
+          image: {
+            select: {
+              image: true,
+            },
+            take: 1,
+          },
+          Name: true,
+          Size: true,
+          id: true,
+        },
+      });
+
+      return { findUserItem, itemForEmail };
+    } else {
+      const findUserItem = await account.findUnique({
+        where: {
+          id: id_Receiver,
+        },
+        select: {
+          Pseudo: true,
+          image: {
+            select: {
+              image: true,
+            },
+          },
+          Firstname: true,
+          Email: true,
+          id: true,
+        },
+      });
+
+      return { findUserItem };
+    }
   }
 };
 
@@ -148,7 +151,6 @@ const bill = async (id_Receiver, { id_Item, id_Buyer }) => {
             },
           },
 
-          
           DeliveryDetails: true,
         },
       },
@@ -191,24 +193,23 @@ const bill = async (id_Receiver, { id_Item, id_Buyer }) => {
   };
 };
 
-const sell  = async (id_Receiver, {id_Item}) =>{
-  const {account} = await item.findUnique({
-    where:{
-      id:id_Item
+const sell = async (id_Receiver, { id_Item }) => {
+  const { account } = await item.findUnique({
+    where: {
+      id: id_Item,
     },
-    select:{
-      account:{
-        select:{
-          Email:true,
-          Firstname:true
-        }
-      }
+    select: {
+      account: {
+        select: {
+          Email: true,
+          Firstname: true,
+        },
+      },
     },
-  })
-  
+  });
 
-  return account
-}
+  return account;
+};
 
 const offer = async (id_Receiver, { id_Sender, id_Item }) => {
   const ifAlreadyHaveSomeProposition = await pricepropose.count({
@@ -218,12 +219,9 @@ const offer = async (id_Receiver, { id_Sender, id_Item }) => {
         gte: new Date(new Date().getTime() - 24 * 60 * 60 * 1500),
       },
     },
-    
-  }
-  
-  );
+  });
 
-  if(ifAlreadyHaveSomeProposition > 1){
+  if (ifAlreadyHaveSomeProposition > 1) {
     return;
   }
 
@@ -264,6 +262,45 @@ const offer = async (id_Receiver, { id_Sender, id_Item }) => {
   return { findUserItem, itemForEmail };
 };
 
+
+const packet = async (id_Receiver,{ id_Sender,id_Item}) =>{
+  const findUserItem = await account.findUnique({
+    where: {
+      id: id_Receiver,
+    },
+    select: {
+      Pseudo: true,
+      image: {
+        select: {
+          image: true,
+        },
+      },
+      Firstname: true,
+      Email: true,
+      id: true,
+    },
+  });
+
+  const itemForEmail = await item.findUnique({
+    where: {
+      id: id_Item,
+    },
+    select: {
+      image: {
+        select: {
+          image: true,
+        },
+        take: 1,
+      },
+      Name: true,
+      Size: true,
+      id: true,
+    },
+  });
+
+  return {findUserItem,itemForEmail}
+}
+
 const typeOfEmail = async (type, id_Receiver, args) => {
   let infoReceiver;
   switch (type) {
@@ -291,7 +328,7 @@ const typeOfEmail = async (type, id_Receiver, args) => {
       return { SenderPseudo, ...infoReceiver };
 
     case "Sell":
-      return await sell(id_Receiver,args);
+      return await sell(id_Receiver, args);
 
     case "Bill":
       return await bill(id_Receiver, args);
@@ -317,6 +354,21 @@ const typeOfEmail = async (type, id_Receiver, args) => {
 
     case "AcceptedOffer":
       return await findUserNameEmail(id_Receiver);
+    case "SendPacket":
+      infoReceiver = await packet(id_Receiver, args);
+      const Sender = await account.findUnique({
+        where: { id: args?.id_Sender },
+        select: {
+          Pseudo: true,
+        },
+      });
+
+      if (!Boolean(infoReceiver)) {
+        return;
+      }
+
+      return { ...infoReceiver, Sender };
+
 
     default:
       break;

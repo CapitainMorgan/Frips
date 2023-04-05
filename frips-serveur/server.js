@@ -109,8 +109,6 @@ try {
       const user = getUser(id_Receiver);
       const rooms = io.sockets.adapter.rooms.get(id);
 
-      console.log(newMessage)
-
       try {
         if (!user && !rooms) {
           return;

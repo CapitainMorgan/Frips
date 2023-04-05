@@ -17,9 +17,9 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
     width: "100%",
     [theme.breakpoints.down("sm")]: {
-      gridAutoRows: "100px 100px",
+      gridAutoRows: "200px 200px",
 
-      gridTemplateColumns: "repeat(3, 1fr)",
+      gridTemplateColumns: "repeat(2, 1fr)",
     },
   },
   input: {
@@ -141,14 +141,12 @@ const ImageBox = ({
 }) => {
   const theme = useTheme();
 
-  const desktop = useMediaQuery(theme.breakpoints.up("lg"));
-  const mobile = useMediaQuery(theme.breakpoints.up("sm"));
-  const tablet = useMediaQuery(theme.breakpoints.up("md"));
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"),{noSsr:true});
 
   const pressDelay = () => {
-    if (desktop || tablet) {
+    if (!mobile) {
       return 0.6;
-    } else if (mobile) {
+    } else{
       return 200;
     }
   };
@@ -180,8 +178,8 @@ const ImageBox = ({
       <Grid
         items={field.value}
         edit={edit}
-        distance={pressDelay()}
-        pressDelay={pressDelay()}
+        pressDelay={mobile ? 100 : 1}
+        disableAutoscroll
         open={open}
         getInputProps={getInputProps}
         onRemove={(index) => {

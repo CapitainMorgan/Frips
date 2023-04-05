@@ -501,7 +501,6 @@ export const Catalogue = [
             upId: 73,
             sizeType: 1,
           },
-
           {
             id: 78,
             Name: "Sneakers & Basket",
@@ -656,12 +655,12 @@ export const Catalogue = [
                   Name:"Cabans",
                   sizeType: 0
                 },
-                {
-                  upId: 112,
-                  id:117,
-                  Name:"Parkas",
-                  sizeType: 0
-                },
+			    {
+				  upId: 112,
+				  sizeType: 0,
+				  Name: "Parkas",
+				  id: 5,
+			    },
                 {
                   upId: 112,
                   id:118,
@@ -675,25 +674,31 @@ export const Catalogue = [
 			  id:119,
 			  Name:"Vestes",
 			  type:"list",
-			  subitems:[
+			  subitems:[				
 				{
+				  id: 11,
+				  Name: "Vestes en jean",
 				  upId: 119,
-				  id:120,
-				  Name:"Vestes en jean",
-				  sizeType: 0
-				},
-				{
+				  sizeType: 0,
+			    },
+			    {
+				  id: 12,
+				  Name: "Vestes en cuir ",
 				  upId: 119,
-				  id:121,
-				  Name:"Vestes en cuir",
-				  sizeType: 0
-				},
-				{
+				  sizeType: 0,
+			    },
+			    {
+				  id: 13,
+				  Name: "Vestes légères",
 				  upId: 119,
-				  id:122,
-				  Name:"Vestes légères",
-				  sizeType: 0
-				},
+				  sizeType: 0,
+			    },
+			    {
+				  id: 14,
+				  Name: "Vestes polaires",
+				  upId: 119,
+				  sizeType: 0,
+			    },
 				{
 				  upId: 119,
 				  id:123,
@@ -704,12 +709,6 @@ export const Catalogue = [
 				  upId: 119,
 				  id:124,
 				  Name:"Vestes en duvet",
-				  sizeType: 0
-				},
-				{
-				  upId: 119,
-				  id:125,
-				  Name:"Vestes polaires",
 				  sizeType: 0
 				},
 				{
@@ -733,14 +732,52 @@ export const Catalogue = [
           id:128,
           type:"list",
           Name: "Sweats & Pulls",
-          subitems:[
-            {
-              upId: 128,
-              id:129,
-              Name:"Sweats",
-              sizeType: 0
-            },
-          ]
+          subitems: [
+              {
+                id: 17,
+                sizeType: 0,
+                Name: "Sweats à capuche",
+                upId: 128,
+              },
+              {
+                id: 18,
+                type: "list",
+                upId: 128,
+                Name: "Pulls",
+                subitems: [
+                  {
+                    id: 19,
+                    Name: "Pulls col V",
+                    upId: 18,
+                    sizeType: 0,
+                  },
+                  {
+                    id: 20,
+                    Name: "Pulls col roulé",
+                    upId: 18,
+                    sizeType: 0,
+                  },
+                  {
+                    id: 21,
+                    Name: "Sweats longs",
+                    upId: 18,
+                    sizeType: 0,
+                  },
+                  {
+                    id: 22,
+                    Name: "Pulls d'hiver",
+                    upId: 18,
+                    sizeType: 0,
+                  },
+                  {
+                    id: 23,
+                    Name: "Autres sweats",
+                    upId: 18,
+                    sizeType: 0,
+                  },
+                ],
+              },
+			],
         },              
         {
           upId: 105,
@@ -860,15 +897,13 @@ export const Catalogue = [
           type:"list",
           Name:"Chaussons et Tongs",
           sizeType: 1
-        },
-       
-        {
-          upId: 146,
-          id:149,
-          type:"list",
-          Name:"Sneakers et converses",
-          sizeType: 1
-        },
+        },       
+	    {
+		  id: 78,
+		  Name: "Sneakers & Basket",
+		  upId: 146,
+		  sizeType: 1,
+	    },
         {
           upId: 146,
           id:150,

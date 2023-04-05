@@ -19,10 +19,6 @@ const useStyles = makeStyles((theme) => ({
   boxShadow: {
     boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
     backgroundColor: "white",
-    padding:10,
-    [theme.breakpoints.down("sm")]: {
-        padding:0
-      },
   },
   Grid: {
     display: "grid",
@@ -74,14 +70,26 @@ const useStyles = makeStyles((theme) => ({
       marginTop: 8,
     },
   },
+  
   delivery: {
     display: "flex",
-
     [theme.breakpoints.down("sm")]: {
       display: "flex",
       flexDirection: "column",
+      width: "100%",
     },
   },
+  deliveryCategory: {
+    display: "flex",
+    flexDirection: "column",
+    width: "50%",
+    maxWidth: "50%",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+
+    },
+  },
+
   send: {
     display: "flex",
     alignItems: "center",
@@ -147,10 +155,9 @@ const MySellById = ({ loading, item }) => {
   id = parseInt(id);
 
   useEffect(() => {
-    if (!loading && !Boolean(item)) {
       dispatch(fetchMySellId(id));
-    }
-  }, [dispatch, loading]);
+    
+  }, [dispatch]);
 
   if (loading && !Boolean(item)) {
     return (
@@ -176,7 +183,7 @@ const MySellById = ({ loading, item }) => {
         justifyContent={"center"}
         alignItems="center"
       >
-        <Typography style={{ fontSize: 16 }}>aucune transaction</Typography>
+        <Typography style={{ fontSize: 16 }}>Article Introuvable</Typography>
       </Box>
     );
   }

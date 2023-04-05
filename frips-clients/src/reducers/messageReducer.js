@@ -5,11 +5,13 @@ import {
   GENERATE_CONV,
   GET_ALL_CONV,
   GET_CONV,
-  GET_MORE_MESSAGE, MESSAGE_FETCH_SUCCESS,
+  GET_MORE_MESSAGE,
+  MESSAGE_FETCH_SUCCESS,
   MESSAGE_LOADING,
   NEW_MESSAGE,
-  NO_MORE, SEND_DATE,
-  UPDATE_MESSAGE
+  NO_MORE,
+  SEND_DATE,
+  UPDATE_MESSAGE,
 } from "../actions/type";
 
 const initialState = {
@@ -28,7 +30,7 @@ const initialState = {
   itemForPropose: [],
   item: null,
   newMessage: false,
-  count:null,
+  count: null,
   hasmore: null,
 };
 
@@ -83,7 +85,7 @@ export default (state = initialState, action) => {
     case UPDATE_MESSAGE:
       return {
         ...state,
-        conversations:[...payload],
+        conversations: [...payload],
       };
     case MESSAGE_FETCH_SUCCESS:
       return {

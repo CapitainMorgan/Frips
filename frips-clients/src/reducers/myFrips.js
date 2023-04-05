@@ -22,6 +22,7 @@ import {
   MYFRIPS_ERROR,
   MYFRIPS_ERROR_FETCH,
   STATUS_PROPOSITION_ID,
+  FETCH_MYPURCHASEID,
 } from "../actions/type.js";
 
 const initialValues = {
@@ -71,6 +72,7 @@ export default (state = initialValues, action) => {
         },
       };
     case FETCH_MYSELLBYID:
+
       return {
         ...state,
         item: {
@@ -78,9 +80,25 @@ export default (state = initialValues, action) => {
           ...payload.item,
           DateSell: new Date(payload.DateSell),
           DateSend: payload.DateSend,
-
+          DeliveryPrice: payload.DeliveryPrice,
           Price: payload.Price,
-          Price_Fees: payload.item.Price - payload.Price,
+          Price_Fees: payload.TaxPrice,
+          review: payload.review,
+          buyerAccount: payload.account,
+          Status: payload.Status,
+        },
+      };
+    case FETCH_MYPURCHASEID:
+      return {
+        ...state,
+        purchaseId: {
+          id_transaction: payload.id,
+          ...payload.item,
+          DateSell: new Date(payload.DateSell),
+          DateSend: payload.DateSend,
+          DeliveryPrice: payload.DeliveryPrice,
+          Price: payload.Price,
+          Price_Fees: payload.TaxPrice,
           review: payload.review,
           buyerAccount: payload.account,
           Status: payload.Status,

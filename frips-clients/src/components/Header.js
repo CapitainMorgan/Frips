@@ -158,7 +158,7 @@ const Header = ({ onSearchSubmit }) => {
   const sellNotification = useSelector(
     (state) => state.myFrips.sellNotification
   );
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"));
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"),{noSsr:true});
 
   const isAuth = (handleClose) => {
     if (!state.loading && state.isAuthenticated) {

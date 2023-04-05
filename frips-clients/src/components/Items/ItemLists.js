@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardHeader,
   CircularProgress,
   Divider,
   IconButton,
@@ -12,7 +11,7 @@ import {
   Snackbar,
   Typography,
   useMediaQuery,
-  useTheme,
+  useTheme
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
@@ -26,8 +25,7 @@ import {
   addFavorite,
   fetchItems,
   fetchMoreItems,
-  idFavorite,
-  removeFavorite,
+  removeFavorite
 } from "../../actions";
 import { SUCCESS_CREATION_ITEM } from "../../actions/type";
 import API_ENDPOINT from "../../api/url";
@@ -299,23 +297,23 @@ const ItemList = ({
         ) : null}
         (
         <Box className={classes.floatContentArticle}>
-          <Box height={"5vh"} />
+          <Box height={mobile ? "3vh":"5vh"}  />
           {Image}
-          <Box height={"5vh"} />
+          <Box height={mobile ? "3vh":"5vh"}  />
           <TopBusiness
             favorite={favorite}
             loading={loading}
             mobile={mobile}
             accountTop={topBusiness}
           />
-          <Box height={"10vh"} />
+          <Box height={mobile ? "7vh":"10vh"} />
 
           <DisplayNewItems
             mobile={mobile}
             classes={classes}
             favorite={favorite}
           />
-          <Box height={"5vh"} />
+          <Box height={mobile ? "3vh":"5vh"} />
 
           <Box padding={1.5} display={"flex"} alignItems="center">
             <Typography style={{ fontSize: 18, fontWeight: 550 }}>

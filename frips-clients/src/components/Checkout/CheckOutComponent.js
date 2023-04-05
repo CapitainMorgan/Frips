@@ -116,6 +116,12 @@ const customRound = (price) => {
     : Math.round(price);
 };
 
+const custumFees = (item) => {
+  return customRound(item.Price * 1.07) - item.Price <= 1
+    ? customRound(item.Price + 1.5) - item.Price
+    : customRound(item.Price * 1.07) - item.Price;
+};
+
 const renderFees = (id) => {
   if (id === 1) {
     return 7;
@@ -353,21 +359,28 @@ const CheckOut = ({
                     Frais
                   </Typography>
 
-                  <Box onClick={()=>{
-                    navigate("/aide/paymentInfo")
-                  }} display={"flex"} alignItems="center" justifyContent={"center"} >
-                  <Typography style={{ marginLeft: 6 }} >
-                    en savoir plus
-                  </Typography>
-                  <HelpOutlineIcon
-                    style={{ height: "0.85em", width: "0.85em", marginLeft: 5 }}
-                  />
+                  <Box
+                    onClick={() => {
+                      navigate("/aide/paymentInfo");
+                    }}
+                    display={"flex"}
+                    alignItems="center"
+                    justifyContent={"center"}
+                  >
+                    <Typography style={{ marginLeft: 6 }}>
+                      en savoir plus
+                    </Typography>
+                    <HelpOutlineIcon
+                      style={{
+                        height: "0.85em",
+                        width: "0.85em",
+                        marginLeft: 5,
+                      }}
+                    />
                   </Box>
                 </Box>
                 <Box className={classes.ContentInformationItem}>
-                  {customRound(item.Price * 1.07) - item.Price <= 1
-                    ? customRound(item.Price + 1) - item.Price
-                    : customRound(item.Price * 1.07) - item.Price}
+                  {custumFees(item)}
                   CHF
                 </Box>
               </Box>
@@ -385,8 +398,9 @@ const CheckOut = ({
                     {Boolean(selectedDelivery) ? (
                       `${
                         renderFees(selectedDelivery) +
-                        customRound(item.Price * 0.07) +
-                        item.Price
+                         
+                          custumFees(item) +
+                            item.Price
                       } CHF`
                     ) : (
                       <Typography style={{ fontSize: 16, color: "#dc3545" }}>

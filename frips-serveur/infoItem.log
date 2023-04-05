@@ -1055,3 +1055,739 @@ of type List<Boolean> on prisma.findManycategory is not a List<enumTypes>.
 → Possible values: CategoryScalarFieldEnum.id, CategoryScalarFieldEnum.Name
 
 
+[2023-04-05T18:46:59.470] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_brand: {
+          some: {
+            id_Brand: {
+              in: [
+                1
+              ]
+            }
+          }
+        }
+      },
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    null
+                  ]
+                  ~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    null
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              null
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          null
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                null
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  null
+]
+on prisma.aggregateitem. Provided List<null>, expected List<Int>.
+Unknown arg `OR` in where.AND.1.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-04-05T18:47:12.753] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_brand: {
+          some: {
+            id_Brand: {
+              in: [
+                2
+              ]
+            }
+          }
+        }
+      },
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    null
+                  ]
+                  ~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    null
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              null
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          null
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                null
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  null
+]
+on prisma.aggregateitem. Provided List<null>, expected List<Int>.
+Unknown arg `OR` in where.AND.1.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-04-05T18:48:35.327] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_brand: {
+          some: {
+            id_Brand: {
+              in: [
+                2
+              ]
+            }
+          }
+        }
+      },
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    null
+                  ]
+                  ~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    null
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              null
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          null
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                null
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  null
+]
+on prisma.aggregateitem. Provided List<null>, expected List<Int>.
+Unknown arg `OR` in where.AND.1.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-04-05T18:49:15.200] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_brand: {
+          some: {
+            id_Brand: {
+              in: [
+                null
+              ]
+              ~~~~~~
+            }
+          }
+        }
+      },
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    null
+                  ]
+                  ~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    null
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              null
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          null
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                null
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  null
+]
+on prisma.aggregateitem. Provided List<null>, expected List<Int>.
+Argument in: Got invalid value 
+[
+  null
+]
+on prisma.aggregateitem. Provided List<null>, expected List<Int>.
+Unknown arg `OR` in where.AND.1.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-04-05T18:49:27.007] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_brand: {
+          some: {
+            id_Brand: {
+              in: [
+                2
+              ]
+            }
+          }
+        }
+      },
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    null
+                  ]
+                  ~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    null
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              null
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          null
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                null
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  null
+]
+on prisma.aggregateitem. Provided List<null>, expected List<Int>.
+Unknown arg `OR` in where.AND.1.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+

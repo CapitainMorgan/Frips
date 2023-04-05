@@ -950,27 +950,47 @@ export const addFilterFromSearch =
               count += 1;
             });
         } else {
-          console.log(string)
-          const pattern = `^(${array[0].map(brand => brand.Name).join("|")})\\s(.*)$`;
+          console.log(string);
+          const pattern = `^(${array[0]
+            .map((brand) => brand.Name)
+            .join("|")})\\s(.*)$`;
 
           let splitArray = string.match(new RegExp(pattern, "i"));
 
+          
+          if (Boolean(splitArray)) {
+            splitArray = [splitArray[1], splitArray[2]];
 
-          console.log(splitArray)
-          splitArray = [splitArray[1], splitArray[2]]
-          splitArray.forEach((element) => {
-            if (_.find(array[1], { Name: element })) {
+            splitArray.forEach((element) => {
+              if (_.some(array[1], { Name: element.trim() })) {
+                dispatch(
+                  addToFilter(
+                    _.find(array[1], { Name: element.trim() }),
+                    "Catalogue"
+                  )
+                );
+              }
+              if (_.some(array[0], { Name: element })) {
+                dispatch(
+                  addToFilter(_.find(array[0], { Name: element }), "Marque")
+                );
+              }
+            });
+          } else {
+            if (_.some(array[1], { Name: string.trim() })) {
               dispatch(
-                addToFilter(_.find(array[1], { Name: element }), "Catalogue")
+                addToFilter(
+                  _.find(array[1], { Name: string.trim() }),
+                  "Catalogue"
+                )
               );
             }
-            if (_.find(array[0], { Name: element.trim() })) {
-              console.log(element)
+            if (_.some(array[0], { Name: string })) {
               dispatch(
-                addToFilter(_.find(array[0], { Name: element }), "Marque")
+                addToFilter(_.find(array[0], { Name: string }), "Marque")
               );
             }
-          });
+          }
         }
 
         history(`/filter`);
@@ -1142,11 +1162,7 @@ export const updateAddress = (address) => async (dispatch, getState) => {
 
     const newAddress = { Street: Rue, NumStreet: Numero, City: Localite, NPA };
 
-    await axiosInstance.post(
-      "/api/members/updateAddress",
-      address,
-      config
-    );
+    await axiosInstance.post("/api/members/updateAddress", address, config);
 
     dispatch({
       type: CHANGE_ADDRESS,
@@ -1358,26 +1374,24 @@ export const fetchMyPropositionReceivedId =
     }
   };
 
-export const fetchMyPurchaseId =
-  (id_Item) => async (dispatch, getState) => {
-    try {
-      alert("here")
-      dispatch({ type: LOADING_MYFRIPS });
+export const fetchMyPurchaseId = (id_Item) => async (dispatch, getState) => {
+  try {
+    alert("here");
+    dispatch({ type: LOADING_MYFRIPS });
 
-      const { data } = await axiosInstance.get(
-        `/api/members/MyPurchase/${id_Item}`,
-        config
-      );
-      dispatch({ type: FETCH_MYPURCHASEID, payload: data });
+    const { data } = await axiosInstance.get(
+      `/api/members/MyPurchase/${id_Item}`,
+      config
+    );
+    dispatch({ type: FETCH_MYPURCHASEID, payload: data });
 
-      dispatch({ type: SUCCESS_FETCH_MYFRIPS });
+    dispatch({ type: SUCCESS_FETCH_MYFRIPS });
+  } catch (error) {
+    dispatch({ type: MYFRIPS_ERROR, payload: error.response.data });
 
-    } catch (error) {
-      dispatch({ type: MYFRIPS_ERROR, payload: error.response.data });
-
-      dispatch({ type: MYFRIPS_ERROR_FETCH });
-    }
-  };
+    dispatch({ type: MYFRIPS_ERROR_FETCH });
+  }
+};
 
 export const fetchForPayment =
   (note, id_transaction) => async (dispatch, getState) => {

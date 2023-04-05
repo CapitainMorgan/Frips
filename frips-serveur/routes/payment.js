@@ -4,12 +4,12 @@ const router = express.Router();
 const { PrismaClient } = require("@prisma/client");
 const Stripe = require("stripe");
 const auth = require("../middleware/auth");
-/*const stripe = Stripe(
+const stripe = Stripe(
   "sk_test_51JfniQEK6bYR8YbaJaNW71dylmEjFAiuARhTXWgLyL6CKJWvTttrt95fdt8qYVLreTQqiFafvdsohrHN5mf7kW4s00l0TIXVOy"
-); */
+); 
 
-const stripe = Stripe("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")
-
+/*const stripe = Stripe("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")
+*/
 const { item, account, image, message, transaction, pricepropose } =
   new PrismaClient();
 let taxe = 1.07;
@@ -24,6 +24,13 @@ const customRound = (price) => {
     ? Math.floor(price) + 0.5
     : Math.round(price);
 };
+
+const custumFees = (item) => {
+  return customRound(item.Price * 1.07) - item.Price <= 1
+    ? customRound(item.Price + 1.50) - item.Price
+    : customRound(item.Price * 1.07) - item.Price;
+};
+
 
 router.post("/createCheckoutPayment", auth, async (req, res) => {
   const { idItem, id_Fees } = req.body;
@@ -58,7 +65,8 @@ router.post("/createCheckoutPayment", auth, async (req, res) => {
       // Calculate the order total on the server to prevent
       // people from directly manipulating the amount on the client
       if (customRound(itemPrice * taxe) - itemPrice <= 1) {
-        return customRound(itemPrice + 1) + Price_Fees;
+        console.log(customRound(itemPrice + 1.5) + Price_Fees)
+        return customRound(itemPrice + 1.5) + Price_Fees;
       } else {
         return customRound(itemPrice * taxe) + Price_Fees;
       }
@@ -316,10 +324,7 @@ router.post("/succeed", auth, async (req, res) => {
           id_Account,
           Price: itemBought.Price,
           DeliveryPrice,
-          TaxPrice:
-            customRound(itemBought.Price * taxe) - itemBought.Price <= 1
-              ? customRound(itemBought.Price + 1) - itemBought.Price
-              : customRound(itemBought.Price * taxe) - itemBought.Price,
+          TaxPrice:custumFees(itemBought),
         },
       });
     } else {
@@ -361,10 +366,7 @@ router.post("/succeed", auth, async (req, res) => {
           id_Account,
           Price: Price,
           DeliveryPrice,
-          TaxPrice:
-            customRound(Price * taxe) - Price <= 1
-              ? customRound(Price + 1) - Price
-              : customRound(Price * taxe) - Price,
+          TaxPrice:custumFees({Price}),
         },
       });
     }

@@ -398,7 +398,6 @@ const CheckOut = ({
                     {Boolean(selectedDelivery) ? (
                       `${
                         renderFees(selectedDelivery) +
-                         
                           custumFees(item) +
                             item.Price
                       } CHF`

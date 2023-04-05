@@ -180,7 +180,7 @@ const DisplayNewItems = ({ classes, favorite, loading }) => {
       <Box style={{ display: "flex", flexDirection: "column" }}>
         <Box padding={1.5} display={"flex"} alignItems="center">
           <Typography style={{ fontSize: 18, fontWeight: 550 }}>
-            Nouveau articles
+            Nouveaux articles
           </Typography>
         </Box>
         <Box className={classes.GridSytem}>{renderedItems}</Box>

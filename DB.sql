@@ -101,6 +101,14 @@ CREATE TABLE account(
    FOREIGN KEY(id_Address) REFERENCES address(id)
 );
 
+CREATE TABLE reset_password(
+   id_Account INT,
+   token VARCHAR(60),
+   date_end DATETIME,
+   PRIMARY KEY(id_Account),
+   FOREIGN KEY(id_Account) REFERENCES account(id),
+);
+
 CREATE TABLE chat(
    id INT AUTO_INCREMENT,
    id_Account_1 INT NOT NULL,

@@ -6,7 +6,7 @@ const Stripe = require("stripe");
 const auth = require("../middleware/auth");
 /*const stripe = Stripe(
   "sk_test_51JfniQEK6bYR8YbaJaNW71dylmEjFAiuARhTXWgLyL6CKJWvTttrt95fdt8qYVLreTQqiFafvdsohrHN5mf7kW4s00l0TIXVOy"
-);*/ 
+); */
 const stripe = Stripe("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")
 
 const { item, account, image, message, transaction, pricepropose } =

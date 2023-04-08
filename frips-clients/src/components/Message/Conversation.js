@@ -21,9 +21,9 @@ import API_ENDPOINT from "../../api/url";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
-    boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
+    boxShadow: "rgb(197 197 197 / 50%)",
     backgroundColor: "white",
-    borderRadius: 10,
+    borderRadius: 15,
     marginTop: "1%",
   },
   Divider: {
@@ -31,6 +31,12 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       height: "10vh",
     },
+  },
+  Menu:{
+    boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
+    backgroundColor: "white",
+    borderRadius: 10,
+    marginTop: "1%",
   },
 
   formContainer: {
@@ -73,8 +79,7 @@ const renderPseudo = (
 const UserMessage = (messages, classes, history, idUser) => {
   return messages.map((item, index) => {
     return (
-      <Box className={classes.boxShadow} key={index}>
-        <MenuItem key={index} className={classes.MenuSetting}>
+        <MenuItem key={index} className={classes.boxShadow}>
           <Avatar
             onClick={(e) => {
               e.preventDefault();
@@ -96,6 +101,7 @@ const UserMessage = (messages, classes, history, idUser) => {
           >
             <Box
               width={"20%"}
+              minWidth={"20%"}
               display={"flex"}
               justifyContent="center"
               alignItems={"center"}
@@ -157,7 +163,6 @@ const UserMessage = (messages, classes, history, idUser) => {
             </Box>
           </Box>
         </MenuItem>
-      </Box>
     );
   });
 };

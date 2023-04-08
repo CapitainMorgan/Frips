@@ -106,7 +106,7 @@ CREATE TABLE reset_password(
    token VARCHAR(60),
    date_end DATETIME,
    PRIMARY KEY(id_Account),
-   FOREIGN KEY(id_Account) REFERENCES account(id),
+   FOREIGN KEY(id_Account) REFERENCES account(id)
 );
 
 CREATE TABLE chat(

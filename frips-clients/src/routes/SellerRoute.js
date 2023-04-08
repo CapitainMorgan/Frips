@@ -1,12 +1,12 @@
 import React from "react";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { connect, useSelector } from "react-redux";
+import { connect } from "react-redux";
+import { Navigate, useLocation } from "react-router-dom";
 import ItemCreate from "../components/Items/ItemCreate";
 
 const SellerRoute = ({ user }) => {
   const location = useLocation();
 
-  return Boolean(user?.IBAN) ? (
+  return !Boolean(user?.IBAN) ? (
     <ItemCreate />
   ) : (
     <Navigate to="/member/register/Seller" state={{ from: location }} replace />

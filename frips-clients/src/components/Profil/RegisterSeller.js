@@ -39,13 +39,11 @@ const initialValue = {
   IBAN: "",
 };
 
-const regExp = "w*[a-zA-Z]w*";
-
 const validationSchema = yup.object().shape({
   IBAN: yup
     .string()
     .matches(
-      /^CH\d{2}\s\d{4}\s\d{4}\s\d{4}\s\d{4}\s[\dA-Za-z]$/,
+      /^CH[0-9A-Za-z]{2}\s[0-9A-Za-z]{4}\s[0-9A-Za-z]{4}\s[0-9A-Za-z]{4}\s[0-9A-Za-z]{4}\s[0-9A-Za-z]$/,
 
       "Veuillez entrer un IBAN valide"
     )
@@ -70,9 +68,8 @@ export const RegisterSeller = () => {
   });
   const history = useNavigate();
 
-
   const handleChange = (event) => {
-    const input = event.target.value.replace(/\s/g, "");
+    const input = event.target.value.replace(/\s/g, "").toUpperCase();
     let formatted = input.match(/.{1,4}/g)?.join(" ");
 
     if (formatted && input.length > 4 && input.length % 4 === 0) {

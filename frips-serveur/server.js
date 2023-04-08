@@ -10,7 +10,7 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 const helmet = require("helmet");
 const path = require("path");
-const http = require("http");
+/*const http = require("http");*/
 const https = require("https");
 const cors = require("cors");
 const log4js = require("log4js");
@@ -41,8 +41,8 @@ log4js.configure({
     mail: { appenders: ["mail"], level: "info" },
   },
 });
-const server = https.createServer(sslOptions,app);
-//const server = http.createServer(app);
+/*const server = https.createServer(sslOptions,app);*/
+const server = http.createServer(app);
 const io = require("socket.io")(server, {
   cors: {
     origin: "*",

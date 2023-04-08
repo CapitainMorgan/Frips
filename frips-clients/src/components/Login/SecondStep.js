@@ -45,7 +45,7 @@ const SecondStep = ({ control, errors,setValue }) => {
             name="step2.Birthday"
             control={control}
             render={({ field }) => {
-              return <TextFieldLogin {...{ ...field, placeholder: "Date de naissance jour/mois/année, par exemple 04/02/2000" ,setValue}} />;
+              return <TextFieldLogin {...{ ...field, placeholder: "Date de naissance, par exemple 04/02/2000" ,setValue}} />;
             }}
           />
 

@@ -6,7 +6,7 @@ const Stripe = require("stripe");
 const auth = require("../middleware/auth");
 /*const stripe = Stripe(
   "sk_test_51JfniQEK6bYR8YbaJaNW71dylmEjFAiuARhTXWgLyL6CKJWvTttrt95fdt8qYVLreTQqiFafvdsohrHN5mf7kW4s00l0TIXVOy"
-); */
+);*/ 
 const stripe = Stripe("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")
 
 const { item, account, image, message, transaction, pricepropose } =
@@ -83,7 +83,7 @@ router.post("/createCheckoutPayment", auth, async (req, res) => {
         " item " +
         idItem
     );
-    res.send({ client_secret: paymentIntent.client_secret });
+    res.status(200).json({ client_secret: paymentIntent.client_secret });
   } catch (error) {
     logger.error("POST /payment/createCheckoutPayment", error);
     res.status(500).json("Serveur error");

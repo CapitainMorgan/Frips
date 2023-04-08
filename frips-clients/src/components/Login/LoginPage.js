@@ -136,19 +136,22 @@ export const LoginPage = () => {
 
   let from;
   if (
-    location &&
-    location.state &&
-    location.state.from &&
-    location.state.from.pathname
-  ) {
-    from = location.state.from.pathname;
-  } else if (
+   
     location &&
     location.state &&
     location.state.isFromSeller &&
     location.state.isFromSeller.pathname
   ) {
     from = location.state.isFromSeller.pathname;
+
+  } else if (
+    location &&
+    location.state &&
+    location.state.from &&
+    location.state.from.pathname
+  ) {
+    from = location.state.from.pathname;
+
   } else {
     from = "/";
   }

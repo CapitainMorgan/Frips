@@ -10,6 +10,7 @@ const path = require("path"); // path for cut the file extension
 const sharp = require("sharp");
 const log4js = require("log4js");
 const { sendEmail } = require("../email/sendEmail");
+const { sendPacket } = require("../email/Template/emailSendPacket");
 
 log4js.configure({
   appenders: { members: { type: "file", filename: "members.log" } },
@@ -461,7 +462,6 @@ router.post("/myFrips", auth, async (req, res) => {
       orderBy: constructFilter(filter, "myFrips"),
     });
 
-    console.log(MyFrips);
 
     if (count === 0 && filter.length === 0) {
       res.status(200).json({
@@ -676,7 +676,6 @@ router.get(
       console.log(account);
 
       if (id !== account.id) {
-        console.log("la");
         res.status(400).json({ msg: "Aucune correspondance" });
       } else {
         const MyProposition = await pricepropose.findUnique({
@@ -714,7 +713,6 @@ router.get(
             id_Account: true,
           },
         });
-        console.log(MyProposition);
         if (!Boolean(MyProposition)) {
           res.status(400).json({ msg: "Aucune correspondance" });
         } else {
@@ -823,7 +821,7 @@ router.post("/Delivery", auth, async (req, res) => {
   const { id_transaction } = req.body;
 
   try {
-    await transaction.update({
+    const {id_Account,id_Item} = await transaction.update({
       where: {
         id: id_transaction,
       },
@@ -831,9 +829,17 @@ router.post("/Delivery", auth, async (req, res) => {
       data: {
         DateSend: new Date(),
       },
+      select:{
+        id_Account:true,
+        id_Item:true
+      }
     });
 
-    res.sendStatus(200);
+
+
+
+    res.status(200);
+    await sendEmail(id_Account,"SendPacket",{id_Item,id_Sender:id})
   } catch (error) {
     logger.error("POST /Delivery", error);
     res.status(500).json("Servor Error");

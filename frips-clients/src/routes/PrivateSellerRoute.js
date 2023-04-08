@@ -13,9 +13,6 @@ const withAuth = (WrappedComponent) => (props) => {
   const user = useSelector((state) => state.auth.user);
   const loading = useSelector((state) => state.auth.loading);
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
-  const previousLocation = useSelector(
-    (state) => state.location.previousLocation
-  );
   const [userLoaded, setUserLoaded] = useState(false);
   const location = useLocation();
   const navigate = useNavigate();

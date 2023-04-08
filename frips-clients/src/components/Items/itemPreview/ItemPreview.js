@@ -1,18 +1,22 @@
 import {
+  Avatar,
   Box,
   CircularProgress,
+  IconButton,
   makeStyles,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import { isNumber } from "lodash";
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { fetchItem, idFavorite, itemViewed } from "../../../actions";
 import { RESET_ITEM } from "../../../actions/type";
 import ImageGalleryPreview from "./ImageGalleryPreview";
 import ItemProfil from "./ItemFromProfil";
 import ItemInformation from "./itemInformation";
+import { Rating } from "@material-ui/lab";
+import API_ENDPOINT from "../../../api/url";
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -102,6 +106,20 @@ const useStyles = makeStyles((theme) => ({
       right: "auto",
     },
   },
+  profile: {
+    marginLeft: "1vw",
+    margin: 2,
+    borderRadius: 10,
+    padding: 10,
+    marginBottom: "1vh",
+    alignItems: "center",
+    display: "flex",
+    backgroundColor: "rgba(205, 217, 231,1)",
+    width: "30%",
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+    },
+  },
 }));
 
 const ItemPreview = (props) => {
@@ -114,6 +132,7 @@ const ItemPreview = (props) => {
   const myAccount = useSelector((state) => state.auth.user);
   let favorite = useSelector((state) => state.favoriteReducers.favoritIds);
   const location = useLocation();
+  const history = useNavigate();
 
   useEffect(() => {
     if (isNumber(id)) {
@@ -128,8 +147,7 @@ const ItemPreview = (props) => {
       dispatch({ type: RESET_ITEM });
     };
   }, [dispatch, location, id]);
-
-  if (!singleItem && loading) {
+  if (Boolean(singleItem.length===0) && loading) {
     return (
       <Box
         width="100%"
@@ -172,7 +190,46 @@ const ItemPreview = (props) => {
               />
             </Box>
             <Box height={"15vh"} width={"100%"}></Box>
-
+            <Box className={classes.profile}>
+              <Box display={"flex"} alignItems="center" width={"100%"}>
+                <IconButton
+                  onClick={() => {
+                    history(`/member/${singleItem?.account?.Pseudo}`);
+                  }}
+                >
+                  <Avatar
+                    style={{
+                      boxShadow: "rgba(0, 0, 0, 0.16) 0px 1px 4px",
+                      cursor: "pointer",
+                    }}
+                    alt={`${singleItem?.account?.Pseudo}`}
+                    src={`${API_ENDPOINT}/imageProfile/${singleItem?.account?.id}/${singleItem.account?.image?.image}`}
+                  />
+                </IconButton>
+                <Typography
+                  style={{
+                    fontSize: 16,
+                    wordBreak: "break-all",
+                  }}
+                >
+                  {singleItem?.account?.Pseudo}
+                </Typography>
+                <Box
+                  display={"flex"}
+                  flexGrow={1}
+                  alignItems="center"
+                  justifyContent={"center"}
+                >
+                  <Rating
+                    size="large"
+                    value={singleItem?.review}
+                  
+                    precision={0.5}
+                    readOnly
+                  />
+                </Box>
+              </Box>
+            </Box>
             <Box className={classes.ArticleProfil}>
               <ItemProfil
                 items={singleItem.userItem}

@@ -43,14 +43,14 @@ const validationSchema = yup.object().shape({
   IBAN: yup
     .string()
     .matches(
-      /^CH\d{2}\s\d{4}\s\d{4}\s\d{4}\s\d{4}\s[\dA-Za-z]$/
-,
+      /^CH[0-9A-Za-z]{2}\s[0-9A-Za-z]{4}\s[0-9A-Za-z]{4}\s[0-9A-Za-z]{4}\s[0-9A-Za-z]{4}\s[0-9A-Za-z]$/,
+
       "Veuillez entrer un IBAN valide"
     )
     .required("Un IBAN est requis"),
 });
 
-export const ModalForIban = ({ open,classes,handleClose }) => {
+export const ModalForIban = ({ open, classes, handleClose }) => {
   const dispatch = useDispatch();
 
   const {
@@ -68,7 +68,7 @@ export const ModalForIban = ({ open,classes,handleClose }) => {
   let { from } = location.state || { from: { pathname: "/" } };
 
   const handleChange = (event) => {
-    const input = event.target.value.replace(/\s/g, "");
+    const input = event.target.value.replace(/\s/g, "").toUpperCase();
     let formatted = input.match(/.{1,4}/g)?.join(" ");
 
     if (formatted && input.length > 4 && input.length % 4 === 0) {
@@ -79,7 +79,7 @@ export const ModalForIban = ({ open,classes,handleClose }) => {
 
   const onSubmit = (values) => {
     dispatch(changeIban(values.IBAN, from));
-    handleClose()
+    handleClose();
   };
 
   return (
@@ -90,53 +90,48 @@ export const ModalForIban = ({ open,classes,handleClose }) => {
           style={{ backgroundColor: "#F5f5f3" }}
           height="100%"
         >
-          
-              <Typography variant="h6">
-                Veuillez entrer un IBAN valide
-              </Typography>
-              <form onSubmit={handleSubmit(onSubmit)}>
-                <Box width={"100%"} marginTop={2}>
-                  <Controller
-                    name="IBAN"
-                    control={control}
-                    render={({ field: { onChange, value } }) => {
-                      return (
-                        <TextFieldLogin
-                          placeholder="IBAN"
-                          value={value}
-                          onChange={(e) => {
-                            onChange(handleChange(e));
-                          }}
-                        />
-                      );
-                    }}
-                  />
-                  <StepTextError text={errors?.IBAN?.message} />
+          <Typography variant="h6">Veuillez entrer un IBAN valide</Typography>
+          <form onSubmit={handleSubmit(onSubmit)}>
+            <Box width={"100%"} marginTop={2}>
+              <Controller
+                name="IBAN"
+                control={control}
+                render={({ field: { onChange, value } }) => {
+                  return (
+                    <TextFieldLogin
+                      multiline={true}
+                      placeholder="par ex CH12 1245 124A 213A 123B 1"
+                      value={value}
+                      onChange={(e) => {
+                        onChange(handleChange(e));
+                      }}
+                    />
+                  );
+                }}
+              />
+              <StepTextError text={errors?.IBAN?.message} />
 
-                  <Button
-                    style={{ width: "100%", height: 50, marginTop: "5vh" }}
-                    variant="contained"
-                    color="primary"
-                    type="submit"
-                  >
-                    <Typography style={{ fontSize: 14, color: "white" }}>
-                      Valider
-                    </Typography>
-                  </Button>
-                  
-                </Box>
-              </form>
               <Button
-                    style={{ width: "100%", height: 50, marginTop: "2vh" }}
-                    variant="outlined"
-                    color="primary"
-                    type="submit"
-                    onClick={handleClose}
-                  >
-                    <Typography style={{ fontSize: 14}}>
-                      Retour
-                    </Typography>
-                  </Button>
+                style={{ width: "100%", height: 50, marginTop: "5vh" }}
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                <Typography style={{ fontSize: 14, color: "white" }}>
+                  Valider
+                </Typography>
+              </Button>
+            </Box>
+          </form>
+          <Button
+            style={{ width: "100%", height: 50, marginTop: "2vh" }}
+            variant="outlined"
+            color="primary"
+            type="submit"
+            onClick={handleClose}
+          >
+            <Typography style={{ fontSize: 14 }}>Retour</Typography>
+          </Button>
         </Box>
       </Box>
     </Dialog>

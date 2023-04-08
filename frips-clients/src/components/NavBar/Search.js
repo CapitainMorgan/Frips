@@ -4,7 +4,7 @@ import {
   ClickAwayListener,
   MenuItem,
   Popper,
-  Typography
+  Typography,
 } from "@material-ui/core";
 import InputBase from "@material-ui/core/InputBase";
 import { makeStyles } from "@material-ui/core/styles";
@@ -48,21 +48,17 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-
 const options = {
   includeScore: true,
   keys: ["Name"],
   threshold: 0.1,
-  location:2
+  location: 2,
 };
 const matchValueSearch = (array1, searchArray) => {
   const array = array1.map((subArray, index) => {
-    console.log(array1)
     const filterArray = new Fuse(subArray, options).search(
       { $or: searchArray },
-      { limit: 4 },
-      
+      { limit: 4 }
     );
 
     return filterArray;
@@ -73,7 +69,6 @@ const WOMAN_ID = { Name: "Femme", id: 1 };
 const MAN_ID = { Name: "Homme", id: 101 };
 
 const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
-
   const [arrayBrand, arrayCategory] = arrays;
   const suggestionArray = [];
 
@@ -110,8 +105,6 @@ const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
 
   suggestionArray.push(`rechercher "${currentText}"`);
 
-
-
   return suggestionArray;
 };
 
@@ -121,21 +114,24 @@ const transformSearchToArrayString = (string) => {
   });
 };
 
-const renderSuggestion = (suggestion,dispatch,history,handleMenuClose) => {
+const renderSuggestion = (suggestion, dispatch, history, handleMenuClose) => {
   return suggestion.map((item) => {
     return (
-      <MenuItem style={{ height: 40 }} key={item} onClick={()=>{
-        
-        dispatch(addFilterFromSearch(item,true,history))
-        handleMenuClose()
-      }}>
+      <MenuItem
+        style={{ height: 40 }}
+        key={item}
+        onClick={() => {
+          dispatch(addFilterFromSearch(item, true, history));
+          handleMenuClose();
+        }}
+      >
         <Typography style={{ fontSize: 16 }}>{item}</Typography>
       </MenuItem>
     );
   });
 };
 
-const Search = ({ SearchInfo, loading ,loadingFilter}) => {
+const Search = ({ SearchInfo, loading, loadingFilter }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const [term, setTerm] = useState("");
@@ -144,7 +140,6 @@ const Search = ({ SearchInfo, loading ,loadingFilter}) => {
   const [filterQuery, setFilterQuery] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useNavigate();
-
 
   const menuRef = useRef();
 
@@ -171,8 +166,6 @@ const Search = ({ SearchInfo, loading ,loadingFilter}) => {
   useEffect(() => {
     if (term !== "" && !anchorEl) {
       handleMenuDesktop();
-
-
     } else if (term !== "" && anchorEl) {
       setTimeout(() => {
         setFilterQuery(
@@ -183,73 +176,75 @@ const Search = ({ SearchInfo, loading ,loadingFilter}) => {
       handleMenuClose();
       setFilterQuery([]);
     }
-    
-    
   }, [term, anchorEl]);
 
   const onChange = (e) => {
     setTerm(e.target.value);
   };
 
-
   return (
-    <ClickAwayListener style={{backgroundColor:"red"}} onClickAway={handleMenuClose} >
-
-    <div className={classes.search}>
+    <div className={classes.search} >
       <div className={classes.searchIcon}>
         <SearchIcon />
       </div>
-        <InputBase
-          ref={menuRef}
-          spellCheck="false"
-          style={{ zIndex: 1400 }}
-          value={term}
-          fullWidth={true}
-          placeholder="Rechercher un article"
-          classes={{
-            root: classes.inputRoot,
-            input: classes.inputInput,
-          }}
-          onChange={onChange}
-          inputProps={{ "aria-label": "Rechercher un article" }}
-        />
-
-      <Popper
-        disableScrollLock={true}
-        open={Boolean(anchorEl)}
-        anchorEl={menuRef.current}
-        anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
-        transitionDuration={0}
-        disableAutoFocusItem
-        disablePortal={true}
-        style={{
-          width: menuRef?.current?.offsetWidth,
+      <InputBase
+        ref={menuRef}
+        spellCheck="false"
+        style={{ zIndex: 1400 }}
+        value={term}
+        fullWidth={true}
+        placeholder="Rechercher un article"
+        classes={{
+          root: classes.inputRoot,
+          input: classes.inputInput,
         }}
+        onChange={onChange}
+        inputProps={{ "aria-label": "Rechercher un article" }}
+      />
+      <ClickAwayListener
+        style={{ backgroundColor: "red" }}
+        onClickAway={handleMenuClose}
       >
-        <Box
+        <Popper
+          disableScrollLock={true}
+          open={Boolean(anchorEl)}
+          anchorEl={menuRef.current}
+          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+          transitionDuration={0}
+          disableAutoFocusItem
+          disablePortal={true}
           style={{
-            backgroundColor: "white",
-            boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
-            transform: "translateY(5px)",
-            maxHeight: "50vh",
-            overflow: "auto",
+            width: menuRef?.current?.offsetWidth,
           }}
         >
-          {term !== ""
-            ? renderSuggestion(makeCombination(filterQuery, arrayFilter, term),dispatch,history,handleMenuClose)
-            : null}
-        </Box>
-      </Popper>
+          <Box
+            style={{
+              backgroundColor: "white",
+              boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
+              transform: "translateY(5px)",
+              maxHeight: "50vh",
+              overflow: "auto",
+            }}
+          >
+            {term !== ""
+              ? renderSuggestion(
+                  makeCombination(filterQuery, arrayFilter, term),
+                  dispatch,
+                  history,
+                  handleMenuClose
+                )
+              : null}
+          </Box>
+        </Popper>
+      </ClickAwayListener>
     </div>
-    </ClickAwayListener>
-
   );
 };
 
 const mapStateToProps = (state) => ({
   SearchInfo: state.itemInfo.Search,
   loading: state.itemInfo.loading,
-  loadingFilter:state.filterCatalogue.loading
+  loadingFilter: state.filterCatalogue.loading,
 });
 
 export default connect(mapStateToProps)(Search);

@@ -125,7 +125,6 @@ router.post("/", auth, upload, async (req, res) => {
       },
     });
 
-    console.log(ancientItem.item_fees);
     const exist = await brand.upsert({
       where: {
         Name: Brand,

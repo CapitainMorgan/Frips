@@ -2,9 +2,9 @@ import { Box, IconButton, MenuItem, Typography } from "@material-ui/core";
 import FacebookIcon from "@material-ui/icons/Facebook";
 import InstagramIcon from "@material-ui/icons/Instagram";
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
-import { FaLeaf  } from "react-icons/fa";
 import { AiOutlineCopyrightCircle } from "react-icons/ai";
+import { FaLeaf } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 export const Footer = () => {
   const history = useNavigate();
   return (
@@ -26,7 +26,7 @@ export const Footer = () => {
           </MenuItem>
         </Box>
         <Box>
-          <MenuItem onClick={() => history("/aide")}>Assisstance</MenuItem>
+          <MenuItem onClick={() => history("/aide")}>Assistance</MenuItem>
         </Box>
 
         <Box>

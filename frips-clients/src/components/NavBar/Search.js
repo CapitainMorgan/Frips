@@ -190,6 +190,8 @@ const Search = ({ SearchInfo, loading, loadingFilter }) => {
       <InputBase
         ref={menuRef}
         spellCheck="false"
+
+      
         style={{ zIndex: 1400 }}
         value={term}
         fullWidth={true}

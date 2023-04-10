@@ -21,15 +21,14 @@ const createHTMLElement = (html) => {
 router.post("/", async (req, res) => {
   const test = "nike air force"
   try {
-    const tr = await transaction.aggregate({
-      _sum:{
-          TaxPrice:true
-      },
-      
-      
-  })
-
-    res.status(200).json(tr)
+   const items =  await item.findMany({
+      where:{
+        Description:{
+          contains:"matelot"
+        }
+      }
+    })
+    res.status(200).json(items)
   } catch (error) {
     console.log(error);
     res.status(500).json("Server error");
@@ -38,7 +37,7 @@ router.post("/", async (req, res) => {
 router.post("/s", async (req, res,next) => {
   const count = 0
   try {
-    sendEmail(2,"SendPacket",{id_Item:11,id_Sender:1})
+    await sendEmail(2,"ResetPassword",{token:"tg",Email:"stefanupeski@hotmail.com"})
 
     res.status(200).json("ok")
   } catch (error) {

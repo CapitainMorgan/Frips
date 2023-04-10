@@ -20,7 +20,7 @@ model account {
   TelNumber                            String?           @unique(map: "TelNumber") @db.VarChar(50)
   BirthDate                            DateTime          @db.DateTime(0)
   AccountStatus                        Int?              @default(0)
-  LastConnection                       DateTime          @db.Date
+  LastConnection                       DateTime?         @db.DateTime(0)
   id_Address                           Int
   id_PartnerShip                       Int?
   address                              address           @relation(fields: [id_Address], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "account_ibfk_2")
@@ -35,6 +35,7 @@ model account {
   message_accountTomessage_id_Sender   message[]         @relation("accountTomessage_id_Sender")
   nbview                               nbview[]
   pricepropose                         pricepropose[]
+  reset_password                       reset_password?
   review                               review[]
   transaction                          transaction[]
 
@@ -70,11 +71,11 @@ model brand {
 }
 
 model moderator {
-  id             Int      @id @default(autoincrement())
-  Email          String   @unique(map: "Email") @db.VarChar(255)
-  Password       String   @db.VarChar(60)
-  Pseudo         String   @unique(map: "Pseudo") @db.VarChar(50)
-  LastConnection DateTime @db.DateTime(0)
+  id             Int       @id @default(autoincrement())
+  Email          String    @unique(map: "Email") @db.VarChar(255)
+  Password       String    @db.VarChar(60)
+  Pseudo         String    @unique(map: "Pseudo") @db.VarChar(50)
+  LastConnection DateTime? @db.DateTime(0)
 }
 
 model review {
@@ -185,7 +186,7 @@ model item {
   Price            Float
   CurrentAuction   Boolean
   Disponibility    Boolean
-  IsReservedTime   DateTime?       @db.Date
+  IsReservedTime   DateTime?       @db.DateTime(0)
   Verified         Boolean
   id_Seller        Int
   id_ItemCondition Int
@@ -326,4 +327,11 @@ model partnership {
   id      Int       @id @default(autoincrement())
   Name    String    @db.VarChar(255)
   account account[]
+}
+
+model reset_password {
+  id_Account Int       @id
+  token      String?   @db.VarChar(60)
+  date_end   DateTime? @db.DateTime(0)
+  account    account   @relation(fields: [id_Account], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "reset_password_ibfk_1")
 }

@@ -1,6 +1,6 @@
 const { PrismaClient } = require("@prisma/client");
 
-const { account, item, chat, transaction, pricepropose, message } =
+const { account, item, chat, transaction, pricepropose, message,reset_password } =
   new PrismaClient();
 
 const checkIfShouldSend = async (
@@ -301,6 +301,8 @@ const packet = async (id_Receiver,{ id_Sender,id_Item}) =>{
   return {findUserItem,itemForEmail}
 }
 
+
+
 const typeOfEmail = async (type, id_Receiver, args) => {
   let infoReceiver;
   switch (type) {
@@ -369,7 +371,8 @@ const typeOfEmail = async (type, id_Receiver, args) => {
 
       return { ...infoReceiver, Sender };
 
-
+    case "ResetPassword":
+      return args
     default:
       break;
   }

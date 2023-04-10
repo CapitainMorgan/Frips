@@ -545,6 +545,7 @@ const filterCatalogue = (Catalogue) => {
 
 const findSearchQuery = (Search) => {
   const arraySearch = [];
+  console.log(Search)
   Search.map((item) => {
     arraySearch.push({
       Name: {
@@ -560,20 +561,7 @@ const findSearchQuery = (Search) => {
   return arraySearch;
 };
 
-const constructFilter = (filter) => {
-  const arrayFilter = [];
-  const { newCatalogue, newMarque } = filter;
 
-  if (newCatalogue.length !== 0 && newCatalogue.length !== 0) {
-    arrayFilter.push({
-      item_brand: {
-        some: {
-          id_Brand: { in: newMarque },
-        },
-      },
-    });
-  }
-};
 const isFilter = (filter) => {
   const {
     newCatalogue,
@@ -619,7 +607,7 @@ const isFilter = (filter) => {
   }
 
   if (Search.length !== 0) {
-    filters.push(...findSearchQuery(Search));
+    filters.push({OR:findSearchQuery(Search)});
   }
 
   if (filters.length !== 0) {

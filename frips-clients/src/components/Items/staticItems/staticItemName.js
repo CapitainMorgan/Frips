@@ -314,7 +314,7 @@ export const Catalogue = [
           },
           {
             upId: 2,
-            Name: "Haut & T-shirts",
+            Name: "Hauts & T-shirts",
             type: "list",
             id: 48,
             subitems: [

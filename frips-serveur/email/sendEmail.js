@@ -10,6 +10,7 @@ const { emailOfferAccepted } = require("./Template/emailOfferAccepted");
 const client = new postmark.ServerClient(config.get("postMark"));
 const log4js = require("log4js");
 const { sendPacket } = require("./Template/emailSendPacket");
+const { sendResetPassword } = require("./Template/emailResetPassword");
 const logger = log4js.getLogger("mail");
 
 const typeOfEmail = (type, information, args) => {
@@ -93,6 +94,15 @@ const typeOfEmail = (type, information, args) => {
 
 
       }
+    case "ResetPassword":
+      return {
+        From: "noreply@myfrips.ch",
+        To: information.Email,
+        Subject: "Demande de réinitialisation de mot de passe",
+        HtmlBody: sendResetPassword(args.token),
+        MessageStream: "outbound",
+
+      }
 
     default:
       break;
@@ -103,6 +113,8 @@ const sendEmail = async (id_Receiver, type, args) => {
   try {
     
     const information = await searchInformation(id_Receiver, type, args);
+
+    console.log(information)
     if (Boolean(information)) {
       client.sendEmail(
         typeOfEmail(type, information, args),

@@ -6,8 +6,7 @@ const TextFieldLogin = (props) => {
   const [lastKeyEvent, setLastKeyEvent] = useState(null);
 
   function handleKeyDown(event) {
-      setLastKeyEvent(event.keyCode);
-    
+    setLastKeyEvent(event.keyCode);
   }
 
   const handleClickShowPassword = () => {
@@ -27,7 +26,7 @@ const TextFieldLogin = (props) => {
           const { value } = event.target;
 
           let birthdate = value.replace(/[^\d]/g, "").slice(0, 8);
-          console.log(lastKeyEvent)
+          console.log(lastKeyEvent);
           if (lastKeyEvent !== 8) {
             // Add slashes between the day and month, and between month and year
             // Add slashes if they are missing
@@ -39,10 +38,10 @@ const TextFieldLogin = (props) => {
             }
           } else {
             birthdate = birthdate.slice(0, -1);
-            if (birthdate.length >= 2 ) {
+            if (birthdate.length >= 2) {
               birthdate = `${birthdate.slice(0, 2)}/${birthdate.slice(2)}`;
             }
-            if (birthdate.length >= 5 ) {
+            if (birthdate.length >= 5) {
               birthdate = `${birthdate.slice(0, 5)}/${birthdate.slice(5)}`;
             }
           }
@@ -66,7 +65,11 @@ const TextFieldLogin = (props) => {
       />
     );
   }
-  if (props.name === "step1.Password") {
+  if (
+    props.name === "step1.Password" ||
+    props.name === "password" ||
+    props.name === "ConfirmPassword"
+  ) {
     return (
       <TextField
         fullWidth

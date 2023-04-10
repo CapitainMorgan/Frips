@@ -24,7 +24,7 @@ import {
   loadUser,
   setSocket,
 } from "../actions";
-import { NOTIFICATION, SET_MOBILE_VERSION } from "../actions/type";
+import { NOTIFICATION } from "../actions/type";
 import Dashboard from "../admin/Dashboard";
 import API_ENDPOINT from "../api/url";
 import CheckUrl from "../routes/CheckUrl";
@@ -55,6 +55,8 @@ import MyPurchaseById from "./Profil/MyFrips/MyPurchase/MyPurchaseById";
 import MySellById from "./Profil/MyFrips/MySell/MySellById";
 import NotificationComponent from "./Profil/NotificationComponent";
 import RegisterSeller from "./Profil/RegisterSeller";
+import EmailResetPassword from "./Profil/Reset/EmailResetPassword";
+import ResetPasswordPage from "./Profil/Reset/ResetPasswordPage";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -199,6 +201,9 @@ const App = () => {
                   </Route>
                 </Route>
               </Route>
+              <Route path="/reset-password" element={<EmailResetPassword/>} />
+
+              <Route path="/reset-password/:token" element={<ResetPasswordPage/>} />
 
               <Route
                 path="/Condition-general-de-vente-et-politique"

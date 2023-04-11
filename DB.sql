@@ -88,10 +88,10 @@ CREATE TABLE account(
    Description VARCHAR(255),
    Firstname VARCHAR(255),
    TelNumber VARCHAR(50),
-   BirthDate DATETIME NOT NULL,
+   BirthDate DATETIME,
    AccountStatus INT DEFAULT 0,
    LastConnection DATETIME,
-   id_Address INT NOT NULL,
+   id_Address INT,
    id_PartnerShip INT,
    PRIMARY KEY(id),
    UNIQUE(Email),
@@ -101,9 +101,19 @@ CREATE TABLE account(
    FOREIGN KEY(id_Address) REFERENCES address(id)
 );
 
+CREATE TABLE withdraw(
+   id INT AUTO_INCREMENT,
+   id_Account INT,
+   date DATETIME,
+   isPaid BOOL,
+   PRIMARY KEY(id),
+   FOREIGN KEY(id_Account) REFERENCES account(id)
+);
+   
+
 CREATE TABLE reset_password(
    id_Account INT,
-   token VARCHAR(60),
+   token VARCHAR(300),
    date_end DATETIME,
    PRIMARY KEY(id_Account),
    FOREIGN KEY(id_Account) REFERENCES account(id)

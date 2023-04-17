@@ -95,9 +95,9 @@ router.post("/", auth, upload, async (req, res) => {
   if (!Array.isArray(Color)) {
     Color = Array.of(Color);
   }
-
+  let ancientItem
   try {
-    const ancientItem = await item.findUnique({
+     ancientItem = await item.findUnique({
       where: {
         id: parseInt(id_Item),
       },
@@ -221,8 +221,9 @@ router.post("/", auth, upload, async (req, res) => {
       fs.writeFileSync(
         path.join("./", pathDir, `${id}` + ".jpeg"),
         await sharp(req.files[index].buffer)
-          .resize({ width: 1000, height: 1000 })
-          .jpeg({ quality: 75 })
+          .rotate()
+          .resize({ width: 300, height: 300, fit: "cover" })
+          .jpeg({ quality: 100 })
           .toBuffer()
       );
 

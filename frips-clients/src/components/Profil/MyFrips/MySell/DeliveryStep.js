@@ -194,7 +194,6 @@ const DeliveryStep = ({ item, account, id, classesSell, buyerAccount }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [index, setindex] = useState(0);
 
-  console.log(item)
 
   const steps = getSteps();
   const dispatch = useDispatch();

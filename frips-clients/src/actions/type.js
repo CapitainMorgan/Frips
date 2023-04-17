@@ -14,7 +14,7 @@ export const CHANGE_PROFILE_IMAGE = "CHANGE_PROFILE_IMAGE";
 export const SOCKET = "SOCKET";
 export const LOGIN_SUCCES = "LOGIN_SUCCES";
 export const LOGIN_FAIL = "LOGIN_FAIL";
-
+export const PAYMENT_REQUEST = "PAYMENT_REQUEST"
 export const LOGOUT = "LOGOUT";
 
 //Items

@@ -318,7 +318,7 @@ const MySell = ({
   return (
     <Box minHeight={300} className={classes.items}>
       {renderedItem(classes, items, history)}
-      {Boolean(count) ? (
+      {Boolean(count) && Boolean(count!==0) && !loading ? (
         <MyPaginate
           pageCount={Math.ceil(count / 5)}
           onPageChange={handleChange}

@@ -1,7 +1,12 @@
-import { Box, makeStyles, Radio, Typography, useMediaQuery, useTheme } from "@material-ui/core";
-import _ from "lodash";
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import {
+  Box,
+  makeStyles,
+  Radio,
+  Typography,
+  useMediaQuery,
+  useTheme,
+} from "@material-ui/core";
+import React from "react";
 
 const useStyles = makeStyles((theme) => ({
   pointer: {
@@ -50,9 +55,8 @@ const DeliveryMethod = ({
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 
-
   const renderDeliveryMethods = (arrayDelivery) => {
-    return arrayDelivery?.map(({fees}) => {
+    return arrayDelivery?.map(({ fees }) => {
       return (
         <Box
           className={classes.BoxItem}
@@ -87,15 +91,17 @@ const DeliveryMethod = ({
               {Boolean(fees.Price) ? `${fees.Price} CHF` : "gratuit"}
             </Typography>
           </Box>
-          {!mobile ? <Radio
-            className={classes.checkBox}
-            style={{ backgroundColor: "transparent" }}
-            checked={selectedDelivery === fees.id}
-            color="primary"
-            disableFocusRipple
-            disableRipple
-            disableTouchRipple
-          />:null}
+          {!mobile ? (
+            <Radio
+              className={classes.checkBox}
+              style={{ backgroundColor: "transparent" }}
+              checked={selectedDelivery === fees.id}
+              color="primary"
+              disableFocusRipple
+              disableRipple
+              disableTouchRipple
+            />
+          ) : null}
         </Box>
       );
     });

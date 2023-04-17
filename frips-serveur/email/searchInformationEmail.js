@@ -108,6 +108,7 @@ const findUserNameEmail = async (id_Receiver) => {
     },
     select: {
       Firstname: true,
+      Pseudo:true,
       Email: true,
     },
   });
@@ -202,7 +203,7 @@ const sell = async (id_Receiver, { id_Item }) => {
       account: {
         select: {
           Email: true,
-          Firstname: true,
+          Pseudo:true
         },
       },
     },

@@ -38,8 +38,6 @@ const useStyles = makeStyles((theme) => ({
 const Adress = ({ addresse }) => {
   const [open, setOpen] = useState(false);
   const classes = useStyles();
-  const { Firstname, Lastname } = addresse;
-  const { City, NPA, Street, NumStreet } = addresse?.address;
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -51,50 +49,60 @@ const Adress = ({ addresse }) => {
 
   if (!addresse?.address) {
     return (
-      <MenuItem style={{ width: "100%", padding: 0, height: 50 }}>
-        <Box flexGrow={1}>Changer votre adresse de livraison</Box>
-        <Box>
-          <AddIcon style={{ fontSize: 30 }} />
-        </Box>
-      </MenuItem>
+      <React.Fragment>
+        <MenuItem
+          onClick={() => {
+            handleClickOpen();
+          }}
+          style={{ width: "100%", padding: 0, height: 50 }}
+        >
+          <Box flexGrow={1}>Ajouter votre adresse de livraison</Box>
+          <Box>
+            <AddIcon style={{ fontSize: 30 }} />
+          </Box>
+        </MenuItem>
+        <ModalAdress
+          open={open}
+          handleClose={handleClose}
+          address={addresse?.address}
+          Firstname={""}
+          Lastname={""}
+          classes={classes}
+        />
+      </React.Fragment>
+    );
+  } else {
+    const { Firstname, Lastname } = addresse;
+    const { City, NPA, Street, NumStreet } = addresse?.address;
+    return (
+      <Box display={"flex"} flexDirection="column" flexGrow={1}>
+        <Typography
+          style={{ fontSize: 16 }}
+        >{`${Firstname} ${Lastname}`}</Typography>
+        <Typography
+          style={{ fontSize: 16 }}
+        >{`${Street} ${NumStreet}`}</Typography>
+        <Typography style={{ fontSize: 16 }}>{`${City} ${NPA}`}</Typography>
+        <Divider />
+
+        <MenuItem
+          style={{ width: "100%", padding: 0, height: 50 }}
+          onClick={() => {
+            handleClickOpen();
+          }}
+        >
+          <Box flexGrow={1}>
+            <Typography style={{ fontSize: 16 }}>
+              Changer votre adresse de livraison ?
+            </Typography>
+          </Box>
+          <Box>
+            <AddIcon style={{ fontSize: 30 }} />
+          </Box>
+        </MenuItem>
+      </Box>
     );
   }
-  return (
-    <Box display={"flex"} flexDirection="column" flexGrow={1}>
-      <Typography
-        style={{ fontSize: 16 }}
-      >{`${Firstname} ${Lastname}`}</Typography>
-      <Typography
-        style={{ fontSize: 16 }}
-      >{`${Street} ${NumStreet}`}</Typography>
-      <Typography style={{ fontSize: 16 }}>{`${City} ${NPA}`}</Typography>
-      <Divider />
-
-      <MenuItem
-        style={{ width: "100%", padding: 0, height: 50 }}
-        onClick={() => {
-          handleClickOpen();
-        }}
-      >
-        <Box flexGrow={1}>
-          <Typography style={{ fontSize: 16 }}>
-            Changer votre adresse de livraison ?
-          </Typography>
-        </Box>
-        <Box>
-          <AddIcon style={{ fontSize: 30 }} />
-        </Box>
-      </MenuItem>
-      <ModalAdress
-        open={open}
-        handleClose={handleClose}
-        address={addresse?.address}
-        Firstname={Firstname}
-        Lastname={Lastname}
-        classes={classes}
-      />
-    </Box>
-  );
 };
 
 export default Adress;

@@ -96,11 +96,11 @@ const sendPacket = (profile,sender,item) => {
                                       color: #484848;
                                     "
                                   >
-                                    Bonjour, ${profile.Firstname}
+                                    Bonjour, ${profile.Pseudo}
                                   </p>
                                 
                                 <p style="font-size: 17px; line-height: 24px; margin: 16px 0; text-align: left;">
-                                Nous vous informons que vous venez de recevoir un colis sur MyFrips. ${sender.Pseudo} a envoyé le colis à votre adresse de livraison.
+                                Nous vous informons que  ${sender.Pseudo} a envoyé le colis à votre adresse de livraison.
                                 </p>
                                 
                                 

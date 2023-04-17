@@ -149,7 +149,6 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
   const PricePropose = req.body.Price;
   const { id_Receiver } = req.body;
 
-
   try {
     if (id_Item && PricePropose) {
       const { message: newMessage } = await chat.findUnique({
@@ -215,16 +214,16 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
             id_Receiver +
             ""
         );
-        res.status(200).json("message send");
         await sendEmail(id_Receiver, "NewMessage", {
           id_Sender: id,
           id_Item: id_Item,
           pricepropose: PricePropose,
           id_Chat,
         });
+        res.status(200).json("message send");
       }
     } else {
-      await message.create({
+      const msg = await message.create({
         data: {
           Unread: true,
           Text: text,
@@ -236,9 +235,15 @@ router.post("/myConversation/newMessage", auth, async (req, res) => {
         },
       });
 
-      logger.info("Message send between " + id + " and " + id_Receiver + "");
-      res.status(200).json("message send");
-      await sendEmail(id_Receiver, "NewMessage", { id_Sender: id, id_Chat });
+      if (Boolean(msg)) {
+        await sendEmail(id_Receiver, "NewMessage", { id_Sender: id, id_Chat });
+
+        logger.info("Message send between " + id + " and " + id_Receiver + "");
+        res.status(200).json("message send");
+      }
+      else{
+        res.sendStatus(401)
+      }
     }
   } catch (error) {
     logger.error("POST /conversation/myConversation/newMessage" + error);
@@ -278,9 +283,7 @@ router.get("/unReadNotification", auth, async (req, res) => {
         message: {
           some: {
             Unread: true,
-            account_accountTomessage_id_Receiver: {
-              id,
-            },
+            id_Receiver: id,
           },
         },
       },

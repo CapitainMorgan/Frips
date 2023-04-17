@@ -1,9 +1,9 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, makeStyles, Typography } from "@material-ui/core";
+import { Box, Button, Dialog, makeStyles, Typography } from "@material-ui/core";
 import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import * as yup from "yup";
 import { changeIban } from "../../actions";
 import StepTextError from "../Items/formUpload/errorText";
@@ -50,23 +50,21 @@ const validationSchema = yup.object().shape({
     .required("Un IBAN est requis"),
 });
 
-export const RegisterSeller = () => {
+export const ModalForPayment = ({ open, classes, handleClose }) => {
   const dispatch = useDispatch();
-  const classes = useStyles();
 
   const {
     control,
-    register,
-    getValues,
-    watch,
     handleSubmit,
-    trigger,
+
     formState: { errors },
   } = useForm({
     resolver: yupResolver(validationSchema),
     defaultValues: initialValue,
   });
-  const history = useNavigate();
+  let location = useLocation();
+
+  let { from } = location.state || { from: { pathname: "/" } };
 
   const handleChange = (event) => {
     const input = event.target.value.replace(/\s/g, "").toUpperCase();
@@ -79,32 +77,19 @@ export const RegisterSeller = () => {
   };
 
   const onSubmit = (values) => {
-    dispatch(changeIban(values.IBAN, "/settings/profile", history));
+    dispatch(changeIban(values.IBAN, from));
+    handleClose();
   };
 
   return (
-    <Box width={"100%"} style={{ backgroundColor: "#F5f5f3" }} height="100%">
-      <Box height={"5vh"} />
-      <Box
-        width={"100%"}
-        display="flex"
-        height={"100%"}
-        justifyContent="center"
-        flexDirection={"column"}
-        alignItems="center"
-      >
-        <Box height={"5vh"} />
-
+    <Dialog open={open}>
+      <Box className={classes.DialogIban}>
         <Box
-          className={classes.BoxShadow}
-          display="flex"
-          flexDirection="column"
-          marginBottom={10}
-          padding={3}
+          width={"100%"}
+          style={{ backgroundColor: "#F5f5f3" }}
+          height="100%"
         >
-          <Typography variant="h6">
-            Veuillez entrer un IBAN pour recevoir vos paiements
-          </Typography>
+          <Typography variant="h6">Veuillez entrer un IBAN valide</Typography>
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box width={"100%"} marginTop={2}>
               <Controller
@@ -113,7 +98,8 @@ export const RegisterSeller = () => {
                 render={({ field: { onChange, value } }) => {
                   return (
                     <TextFieldLogin
-                      placeholder="IBAN"
+                      multiline={true}
+                      placeholder="par ex CH12 1245 124A 213A 123B 1"
                       value={value}
                       onChange={(e) => {
                         onChange(handleChange(e));
@@ -136,10 +122,19 @@ export const RegisterSeller = () => {
               </Button>
             </Box>
           </form>
+          <Button
+            style={{ width: "100%", height: 50, marginTop: "2vh" }}
+            variant="outlined"
+            color="primary"
+            type="submit"
+            onClick={handleClose}
+          >
+            <Typography style={{ fontSize: 14 }}>Retour</Typography>
+          </Button>
         </Box>
       </Box>
-    </Box>
+    </Dialog>
   );
 };
 
-export default RegisterSeller;
+export default ModalForPayment;

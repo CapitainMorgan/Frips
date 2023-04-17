@@ -42,7 +42,7 @@ router.get("/search", async (req, res) => {
         id: true,
         Name: true,
       },
-      distinct:["Name"]
+      distinct:["id"]
     });
 
     const infoObject = [infoBrand, infoCategory];

@@ -17,6 +17,7 @@ import { connect, useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addFavorite, removeFavorite } from "../../../actions";
 import API_ENDPOINT from "../../../api/url";
+import { MdFavorite } from "react-icons/md";
 
 const renderedItem = (state, classes, favorite, dispatch, history, mobile) => {
   return (
@@ -180,8 +181,10 @@ const DisplayNewItems = ({ classes, favorite, loading }) => {
       <Box style={{ display: "flex", flexDirection: "column" }}>
         <Box padding={1.5} display={"flex"} alignItems="center">
           <Typography style={{ fontSize: 18, fontWeight: 550 }}>
-            Nouveaux articles
+            Articles les plus aimés
           </Typography>
+          <MdFavorite size={20} />
+
         </Box>
         <Box className={classes.GridSytem}>{renderedItems}</Box>
         {mobile ? <Box

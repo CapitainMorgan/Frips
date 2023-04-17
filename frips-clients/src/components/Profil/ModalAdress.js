@@ -64,14 +64,27 @@ const ModalAdress = ({
   Lastname,
 }) => {
   const dispatch = useDispatch();
-  const initialValue = {
-    Prenom: Firstname,
-    Nom: Lastname,
-    NPA: address.NPA,
-    Localite: address.City,
-    Rue: address.Street,
-    Numero: address.NumStreet,
-  };
+
+  let initialValue;
+  if (address) {
+    initialValue = {
+      Prenom: Firstname,
+      Nom: Lastname,
+      NPA: address.NPA,
+      Localite: address.City,
+      Rue: address.Street,
+      Numero: address.NumStreet,
+    };
+  } else {
+    initialValue = {
+      Prenom: "",
+      Nom: "",
+      NPA: "",
+      Localite: "",
+      Rue: "",
+      Numero: "",
+    };
+  }
 
   const {
     control,

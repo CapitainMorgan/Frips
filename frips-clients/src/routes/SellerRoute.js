@@ -15,7 +15,7 @@ const SellerRoute = ({ user }) => {
 
 const mapStateToProps = (state) => ({
   user: state.auth.user,
-  isLoading: state.auth.loading, // Pass loading state as a prop
+  isLoading: state.auth.loading, 
 });
 
 export default connect(mapStateToProps)(SellerRoute);

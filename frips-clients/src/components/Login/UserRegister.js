@@ -1,7 +1,14 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, makeStyles, Typography } from "@material-ui/core";
+import {
+  Box,
+  Button,
+  makeStyles,
+  Switch,
+  Typography,
+  withStyles,
+} from "@material-ui/core";
 import React, { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import * as yup from "yup";
@@ -11,6 +18,21 @@ import StepTextError from "../Items/formUpload/errorText";
 import CostumStepper from "./CostumStepper";
 import FirsStep from "./FirsStep";
 import SecondStep from "./SecondStep";
+
+const CustomSwitch = withStyles({
+  switchBase: {
+    color: "#bab8b8", // color when switch is off
+    "&$checked": {
+      color: "#82A0C2", // color when switch is on
+    },
+    "&$checked + $track": {
+      backgroundColor: "#82A0C2",
+    },
+  },
+  
+  checked: {},
+  track: {},
+})(Switch);
 
 const useStyles = makeStyles((theme) => ({
   formContainer: {
@@ -43,6 +65,7 @@ const initialValue = {
     Email: "",
     Pseudo: "",
     Password: "",
+    check: false,
   },
   step2: {
     firstName: "",
@@ -75,48 +98,17 @@ const validationSchema = yup.object().shape({
       .required("Veuillez entrer un Email valide"),
     Password: yup
       .string("Entrez un mot de passe ")
-      .min(8, "Le mot de passe  doit au moins avoir 8 charactères")
-      .required("Un mot de passe est requise"),
-  }),
-  step2: yup.object().shape({
-    firstName: yup
-      .string("Entrez un prénom")
-      .matches(/^[^\d]+$/, "Veuillez indiquer seulement votre prénom")
-      .required("Un prénom est requis"),
-    name: yup
-      .string("Entrez un nom")
-      .matches(/^[^\d]+$/, "Veuillez indiquer seulement votre nom de")
-      .required("Un nom de famille requis"),
-    Birthday: yup
-      .string()
-      .test("valid-date", "Date de naissance invalide", (value) => {
-        const [day, month, year] = value.split("/");
-
-        if (!Boolean(month) || !Boolean(day) || !Boolean(year)) return false;
-        const date = new Date(`${year}-${month}-${day}`);
-        return date instanceof Date && !isNaN(date);
-      })
-      .max(new Date(), "Date de naissance impossible")
-      .required("Une date de naissance est requise"),
-    NPA: yup.string("Entrez un NPA ").required("Un NPA est requis"),
-    Rue: yup
-      .string("Entrez une rue ")
-      .matches(
-        /^[^\d]+$/,
-        "Veuillez indiquer seulement le nom de la rue dans ce champs s'il vous plaît"
+      .min(8, "Le mot de passe  doit au moins avoir 8 caractères")
+      .required("Un mot de passe est requis"),
+    check: yup
+      .boolean()
+      .oneOf(
+        [true],
+        "Veuillez accepter les conditions générales et confirmer avoir au moins 18 ans"
       )
-      .required("Un rue est requise"),
-    Localite: yup
-      .string("Entrez une localitée ")
-      .matches(
-        /^[^\d]+$/,
-        "Veuillez indiquer seulement le nom de votre localité"
-      )
-      .required("Une localitée est requise"),
-    Numero: yup
-      .string("Entrez un  numéro")
-      .matches(/^[0-9]*$/, "Veuillez seulement utiliser des nombres")
-      .required("Un numéro est requis"),
+      .required(
+        "Veuillez accepter les conditions générales et confirmer avoir au moins 18 ans"
+      ),
   }),
 });
 
@@ -147,6 +139,7 @@ export const Register = () => {
   });
   const pseudo = watch("step1.Pseudo"); // you can also target specific fields by their names
 
+  console.log(errors);
   const renderStepper = (step) => {
     switch (step) {
       case 0:
@@ -193,19 +186,12 @@ export const Register = () => {
       "step1.Email",
       "step1.Pseudo",
       "step1.Password",
+      "step1.check",
     ]);
 
     if (activeStep === 0 && results) {
       dispatch(userIfExist(getValues().step1, setActiveStep, activeStep));
     }
-  };
-
-  const handleBack = () => {
-    setActiveStep((prevActiveStep) => prevActiveStep - 1);
-  };
-
-  const handleReset = () => {
-    setActiveStep(0);
   };
 
   let from;
@@ -232,7 +218,7 @@ export const Register = () => {
   };
 
   return (
-    <Box width={"100%"} style={{ backgroundColor: "#F5f5f3" }}>
+    <Box width={"100%"} style={{ backgroundColor: "#f0f1f2" }}>
       <Box height={"5vh"} />
       <Box
         width={"100%"}
@@ -250,8 +236,6 @@ export const Register = () => {
           marginBottom={10}
           padding={3}
         >
-          <CostumStepper activeStep={activeStep} steps={steps} />
-
           <Box display="flex" justifyContent="center" padding={2}>
             <Typography style={{ fontSize: 25, fontWeight: 500 }}>
               {getSteps()[activeStep]}
@@ -260,46 +244,42 @@ export const Register = () => {
 
           <form onSubmit={handleSubmit(onSubmit)}>
             {renderStepper(activeStep)}
+            <Box marginTop={5} display={"flex"} flexDirection={"column"}>
+              <Typography>
+                En t’inscrivant, tu confirmes que tu acceptes les Conditions
+                générales de MyFrips, la Politique de confidentialité, les
+                règles du catalogue, les règles de la communauté et avoir au
+                moins 18 ans.
+              </Typography>
+
+              <Controller
+                name="step1.check"
+                control={control}
+                render={({ field }) => {
+                  return <CustomSwitch size="large" {...field} />;
+                }}
+              />
+            </Box>
+
+            <StepTextError text={errors?.step1?.check?.message} />
 
             {error ? (
               <Box marginTop={3}>
                 <StepTextError text={error?.msg} />
               </Box>
             ) : null}
-            {activeStep === steps.length - 1 ? (
-              <Box marginTop={5} width={"100%"}>
-                <Button
-                  style={{ width: "100%", height: 50 }}
-                  variant="contained"
-                  color="primary"
-                  type="submit"
-                >
-                  <Typography hy style={{ fontSize: 14, color: "white" }}>
-                    S'inscrire
-                  </Typography>
-                </Button>
-              </Box>
-            ) : (
-              <Box display={"flex"} marginTop={3}>
-                <Button
-                  style={{ width: "50%", margin: 10 }}
-                  disabled={activeStep === 0}
-                  onClick={handleBack}
-                  className={classes.button}
-                >
-                  Retour
-                </Button>
-                <Button
-                  style={{ width: "50%", margin: 10 }}
-                  variant="contained"
-                  color="primary"
-                  onClick={handleNext}
-                  className={classes.button}
-                >
-                  {activeStep === steps.length ? "Retour" : "Suivant"}
-                </Button>
-              </Box>
-            )}
+            <Box marginTop={5} width={"100%"}>
+              <Button
+                style={{ width: "100%", height: 50 }}
+                variant="contained"
+                color="primary"
+                type="submit"
+              >
+                <Typography hy style={{ fontSize: 14, color: "white" }}>
+                  S'inscrire
+                </Typography>
+              </Button>
+            </Box>
 
             <Box marginTop={3} width={"100%"} display="flex">
               <Typography style={{ fontSize: 15 }}>Déjà un compte ?</Typography>
@@ -307,10 +287,10 @@ export const Register = () => {
                 style={{ fontSize: 15, paddingLeft: 5 }}
                 color="primary"
               >
-                <Link  to="/login" >Se connecter</Link>
+                <Link to="/login">Se connecter</Link>
               </Typography>
             </Box>
-          </form> 
+          </form>
         </Box>
       </Box>
     </Box>

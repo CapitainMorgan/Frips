@@ -28,7 +28,6 @@ import { NOTIFICATION } from "../actions/type";
 import Dashboard from "../admin/Dashboard";
 import API_ENDPOINT from "../api/url";
 import CheckUrl from "../routes/CheckUrl";
-import PrivateSellerRoute from "../routes/PrivateSellerRoute";
 import store from "../store/store";
 import setAuthToken from "../utils/setAuthToken";
 import "./App.css";
@@ -41,6 +40,7 @@ import ConditionGeneral from "./Footer/Help/ConditionGeneral";
 import PaymentInfo from "./Footer/Help/PaymentInfo";
 import SellInfo from "./Footer/Help/SellInfo";
 import DisplayCatalogue from "./Items/CatalogueDisplay/DisplayCatalogue";
+import ItemCreate from "./Items/ItemCreate";
 import ItemEdit from "./Items/ItemEdit";
 import Register from "./Login/UserRegister";
 import Conversation from "./Message/Conversation";
@@ -67,8 +67,7 @@ const socket = io(API_ENDPOINT, { reconnection: true, autoConnect: true });
 const App = () => {
   const [notification, setNotification] = useState(null);
   const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"),{noSsr:true});
-
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
 
   useEffect(() => {
     socket.on("connect", () => {
@@ -150,6 +149,7 @@ const App = () => {
                   path="/members/myFrips/mySell/:id"
                   element={<MySellById />}
                 />
+                <Route path="/items/new" element={<ItemCreate />} />
 
                 <Route
                   path="/members/myFrips/myProposition/:id"
@@ -183,8 +183,6 @@ const App = () => {
                 />
               </Route>
 
-              <Route path="/items/new" element={<PrivateSellerRoute />} />
-
               <Route path="/filter" element={<DisplayCatalogue />} />
 
               <Route path="/" key={"root-filter"}>
@@ -201,9 +199,12 @@ const App = () => {
                   </Route>
                 </Route>
               </Route>
-              <Route path="/reset-password" element={<EmailResetPassword/>} />
+              <Route path="/reset-password" element={<EmailResetPassword />} />
 
-              <Route path="/reset-password/:token" element={<ResetPasswordPage/>} />
+              <Route
+                path="/reset-password/:token"
+                element={<ResetPasswordPage />}
+              />
 
               <Route
                 path="/Condition-general-de-vente-et-politique"

@@ -10,7 +10,7 @@ const emailOfferAccepted = (profile,args) => {
   </head>
   <body>
     <h1>Votre offre a été acceptée !</h1>
-    <p>Bonjour ${profile.Firstname},</p>
+    <p>Bonjour ${profile.Pseudo},</p>
     <p>Nous avons le plaisir de vous informer que une de vos offres a été acceptée sur MyFrips. Félicitations ! Vous avez 24 heures pour effectuer le paiement autrement l'offre disparaîtra</p>
     <p>Pour voir les détails de la transaction et finaliser l'achat, veuillez cliquer sur le lien ci-dessous :</p>
     <a ref=https://myfrips.ch/members/myFrips/myProposition/${args.id}    >

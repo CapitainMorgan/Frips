@@ -1,9 +1,11 @@
 import {
-    AUTH_ERROR, LOGIN_FAIL,
-    LOGIN_SUCCES,
-    LOGOUT, REGISTER_FAILURE,
-    REGISTER_SUCCESS,
-    USER_LOADED
+  AUTH_ERROR,
+  LOGIN_FAIL,
+  LOGIN_SUCCES,
+  LOGOUT,
+  REGISTER_FAILURE,
+  REGISTER_SUCCESS,
+  USER_LOADED,
 } from "../actions/type";
 
 const initialState = {

@@ -1,13 +1,18 @@
 import {
-    ADD_FAVORITE, FETCH_FAVORITE, FETCH_FAVORITE_SUCCESS, FETCH_MYFAVORITE,
-    FETCH_MYFAVORITEIDs, NUMBER_COUNT, REMOVE_FAVORITE
+  ADD_FAVORITE,
+  FETCH_FAVORITE,
+  FETCH_FAVORITE_SUCCESS,
+  FETCH_MYFAVORITE,
+  FETCH_MYFAVORITEIDs,
+  NUMBER_COUNT,
+  REMOVE_FAVORITE,
 } from "../actions/type.js";
 
 const initialState = {
   favoritIds: [],
   favoritItem: [],
   loading: true,
-  count:0
+  count: 0,
 };
 
 // eslint-disable-next-line import/no-anonymous-default-export
@@ -37,26 +42,26 @@ export default (state = initialState, action) => {
       };
 
     case NUMBER_COUNT:
-      return{
+      return {
         ...state,
-        count:payload
-      }
+        count: payload,
+      };
 
     case FETCH_MYFAVORITE:
       return {
         ...state,
         favoritItem: [...payload],
       };
-      case FETCH_FAVORITE:
-        return {
-          ...state,
-          loading:true
-        }
-        case FETCH_FAVORITE_SUCCESS:
-        return {
-          ...state,
-          loading:false
-        }
+    case FETCH_FAVORITE:
+      return {
+        ...state,
+        loading: true,
+      };
+    case FETCH_FAVORITE_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+      };
     default:
       return state;
   }

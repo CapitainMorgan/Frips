@@ -1,7 +1,7 @@
 import {
-    MEMBERS_FETCH_SUCCESS,
-    MEMBERS_ITEMS,
-    MEMBERS_LOADING
+  MEMBERS_FETCH_SUCCESS,
+  MEMBERS_ITEMS,
+  MEMBERS_LOADING,
 } from "../actions/type.js";
 
 const initialValues = {
@@ -9,7 +9,7 @@ const initialValues = {
   items: [],
   pagination: 1,
   msg: "",
-  account:null,
+  account: null,
   count: null,
 };
 
@@ -32,7 +32,7 @@ export default (state = initialValues, action) => {
         ...state,
         items: [...payload.items],
         count: payload.count,
-        account:payload.userAccount
+        account: payload.userAccount,
       };
 
     default:

@@ -16,6 +16,8 @@ import { changeImageProfile } from "../../actions";
 import API_ENDPOINT from "../../api/url";
 import ModalAdress from "./ModalAdress";
 import ModalForIban from "./ModalForIban";
+import Money from "./MoneyComponents/Money";
+import ModalMoneyRequest from "./MoneyComponents/ModalMoneyRequest";
 
 const useStyles = makeStyles((theme) => ({
   FormLittleBox: {
@@ -29,10 +31,23 @@ const useStyles = makeStyles((theme) => ({
       flexDirection: "column",
     },
   },
-  SubFormLittleBox: {
+  SubFormLittleBoxLeft: {
     display: "flex",
     alignItems: "center",
-    width: "50%",
+    width: "75%",
+    flexWrap: "wrap",
+
+    [theme.breakpoints.down("sm")]: {
+      width: "100%",
+      justifyContent: "center",
+      fontSize: 16,
+      padding: 5,
+    },
+  },
+  SubFormLittleBoxRight: {
+    display: "flex",
+    alignItems: "center",
+    width: "25%",
     flexWrap: "wrap",
 
     [theme.breakpoints.down("sm")]: {
@@ -102,20 +117,14 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const transformIBAN = (string) => {
-  if (!string) return "";
-  let spacedString = "";
-  for (let i = 0; i < string.length; i += 4) {
-    spacedString += string.substr(i, 4) + " ";
-  }
-  return spacedString;
-};
-
 const UserProfile = () => {
   const editor = useRef(null);
   const classes = useStyles();
   const [open, setOpen] = useState(false);
   const [openModalIban, setOpenModalIban] = useState(false);
+  const [openModalPayment, setOpenModalPayment] = useState(false);
+  const [openModalAddress, setOpenModalAddress] = useState(false);
+
   const [openChange, setOpenChange] = useState(false);
   const state = useSelector((state) => state.auth.user);
 
@@ -158,6 +167,13 @@ const UserProfile = () => {
     setSelectedImage({ ...selectedImage, position: position });
   };
 
+  const handleClosePayment = () => {
+    setOpenModalPayment(false);
+  };
+
+  const handleOpenPayment = () => {
+    setOpenModalPayment(true);
+  };
 
   const handleCloseIban = () => {
     setOpenModalIban(false);
@@ -168,6 +184,9 @@ const UserProfile = () => {
   };
   const handleClose = () => {
     setOpen(false);
+  };
+  const handleOpen = () => {
+    setOpen(true);
   };
 
   const handleOpenChange = () => {
@@ -185,7 +204,7 @@ const UserProfile = () => {
   };
 
   return (
-    <Box style={{ backgroundColor: "#F5f5f3" }} height={"100%"} width={"100%"}>
+    <Box style={{ backgroundColor: "#F5f5f3" }} width={"100%"}>
       <Box className={classes.Spacer} />
       <Box className={classes.formContainer}>
         <Box width={"100%"} marginRight={2}>
@@ -200,13 +219,16 @@ const UserProfile = () => {
             </Typography>
           </Box>
           <Box padding={2} className={classes.FormLittleBox}>
-            <Box className={classes.SubFormLittleBox}>
+            <Box className={classes.SubFormLittleBoxLeft}>
               <Box padding={3}>
                 <Typography>Ta photo de profil</Typography>
               </Box>
             </Box>
 
-            <Box className={classes.SubFormLittleBox} justifyContent="flex-end">
+            <Box
+              className={classes.SubFormLittleBoxRight}
+              justifyContent="flex-end"
+            >
               <Avatar
                 style={{
                   marginRight: 10,
@@ -334,41 +356,89 @@ const UserProfile = () => {
           </Box>
           <Divider />
           <Box className={classes.FormLittleBox} padding={2}>
-            <Box className={classes.SubFormLittleBox}>
-              <Box padding={3}>
-                <Typography>Adresse E-mail</Typography>
+            <Box className={classes.SubFormLittleBoxLeft}>
+              <Box padding={3} width={"50%"}>
+                <Typography style={{ fontSize: 16 }}>Adresse E-mail</Typography>
               </Box>
-              <Box padding={3} display="flex">
-                <Typography>{state.Email}</Typography>
+              <Box padding={3} display="flex" width={"50%"}>
+                <Typography style={{ fontSize: 16 }}>{state.Email}</Typography>
               </Box>
             </Box>
-
-           
           </Box>
           <Divider />
 
           <Box className={classes.FormLittleBox} padding={2}>
-            <Box className={classes.SubFormLittleBox}>
-              <Box padding={3}>
-                <Typography>IBAN</Typography>
+            <Box className={classes.SubFormLittleBoxLeft}>
+              <Box padding={3} width={"50%"}>
+                <Typography style={{ fontSize: 16 }}>IBAN</Typography>
               </Box>
-              <Box padding={3} display="flex">
-                <Typography>{state?.IBAN}</Typography>
+              <Box padding={3} display="flex" width={"50%"}>
+                <Typography style={{ fontSize: 16 }}>{state?.IBAN}</Typography>
               </Box>
             </Box>
 
-            <Box className={classes.SubFormLittleBox} justifyContent="flex-end">
-              <Button onClick={handleOpenIban} variant="contained" color="primary">
+            <Box
+              className={classes.SubFormLittleBoxRight}
+              justifyContent="flex-end"
+            >
+              <Button
+                onClick={handleOpenIban}
+                variant="contained"
+                color="primary"
+              >
                 Changer
               </Button>
-              <ModalForIban open={openModalIban} handleClose={handleCloseIban} classes={classes} />
+              <ModalForIban
+                open={openModalIban}
+                handleClose={handleCloseIban}
+                classes={classes}
+              />
             </Box>
+          </Box>
+          <Divider />
+
+          <Box className={classes.FormLittleBox} padding={2}>
+            <Box className={classes.SubFormLittleBoxLeft}>
+              <Box padding={3} width={"50%"} flexDirection={"column"}>
+                <Typography style={{ fontSize: 16 }}>
+                  Mon porte-monnaie
+                </Typography>
+              </Box>
+              <Box padding={3} display="flex" width={"50%"}>
+                <Money
+                  sumUnpaidMoney={state?.sumUnpaidMoney}
+                  MoneyAvaible={state?.MoneyAvaible}
+                />
+              </Box>
+            </Box>
+
+            <Box
+              className={classes.SubFormLittleBoxRight}
+              justifyContent="flex-end"
+            >
+              <Button
+                onClick={handleOpenPayment}
+                variant="outlined"
+                color="primary"
+              >
+                Transférer sur mon compte
+              </Button>
+            </Box>
+            {openModalPayment ? <ModalMoneyRequest
+              open={openModalPayment}
+              handleClickAway={handleClosePayment}
+              IBAN={state?.IBAN}
+            />:null}
           </Box>
         </Box>
 
         <Box className={classes.Spacer} />
 
-        <Box display="block" className={classes.boxShadow}>
+        <Box
+          display="flex"
+          flexDirection={"column"}
+          className={classes.boxShadow}
+        >
           <Box
             display="flex"
             justifyContent="center"
@@ -381,30 +451,37 @@ const UserProfile = () => {
           </Box>
 
           <Box className={classes.FormLittleBox} padding={5}>
-            <Box className={classes.SubFormLittleBox}>
+            <Box className={classes.SubFormLittleBoxLeft}>
               <Box padding={3} display="flex" justifyContent={"center"}>
-                <Typography style={{ paddingRight: 5 }}>Adresse</Typography>
+                <Typography style={{ paddingRight: 5, fontSize: 16 }}>
+                  Adresse
+                </Typography>
               </Box>
-              <Box display={"flex"} flexDirection="column" flexGrow={1}>
-                <Typography
-                  style={{ fontSize: 16, fontWeight: 600 }}
-                >{`${state?.Firstname} ${state?.Lastname}`}</Typography>
-                <Typography
-                  style={{ fontSize: 16 }}
-                >{`${state?.address?.Street} ${state?.address?.NumStreet}`}</Typography>
-                <Typography
-                  style={{ fontSize: 16 }}
-                >{`${state?.address?.City} ${state?.address?.NPA}`}</Typography>
-              </Box>
+              {Boolean(state?.address) ? (
+                <Box
+                  display={"flex"}
+                  flexDirection="column"
+                  alignItems={"center"}
+                >
+                  <Typography
+                    style={{ fontSize: 16, fontWeight: 600 }}
+                  >{`${state?.Firstname} ${state?.Lastname}`}</Typography>
+                  <Typography
+                    style={{ fontSize: 16 }}
+                  >{`${state?.address?.Street} ${state?.address?.NumStreet}`}</Typography>
+                  <Typography
+                    style={{ fontSize: 16 }}
+                  >{`${state?.address?.City} ${state?.address?.NPA}`}</Typography>
+                </Box>
+              ) : null}
             </Box>
 
-            <Box className={classes.SubFormLittleBox} justifyContent="flex-end">
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={() => setOpen(!open)}
-              >
-                Changer
+            <Box
+              className={classes.SubFormLittleBoxRight}
+              justifyContent="flex-end"
+            >
+              <Button variant="contained" color="primary" onClick={handleOpen}>
+                {state?.address ? "changer" : "ajouter"}
               </Button>
             </Box>
           </Box>
@@ -417,7 +494,6 @@ const UserProfile = () => {
             handleClose={handleClose}
           />
         </Box>
-
         <Box className={classes.Spacer} />
       </Box>
     </Box>

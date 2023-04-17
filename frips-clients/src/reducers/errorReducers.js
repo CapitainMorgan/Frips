@@ -1,4 +1,3 @@
-
 const initialValues = {
   loading: true,
   typeOfError: {},

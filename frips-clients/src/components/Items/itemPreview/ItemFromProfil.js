@@ -3,7 +3,6 @@ import {
   Box,
   Card,
   CardActionArea,
-  CardHeader,
   Divider,
   IconButton,
   makeStyles,
@@ -49,7 +48,6 @@ const renderedItem = (state, classes, favorite, dispatch, navigate, number) => {
           <Box
             display={"flex"}
             alignItems="center"
-            
             marginBottom={2}
             width="100%"
           >
@@ -69,7 +67,7 @@ const renderedItem = (state, classes, favorite, dispatch, navigate, number) => {
             </IconButton>
             <Typography
               style={{
-                wordBreak:"break-all"
+                wordBreak: "break-all",
               }}
             >
               {item.account.Pseudo}

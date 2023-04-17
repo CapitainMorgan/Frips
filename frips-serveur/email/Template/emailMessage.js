@@ -78,7 +78,7 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
                       <tr>
                         <td>
                           <img
-                            alt="${profile.Firstname}"
+                            alt="${profile.Pseudo}"
                             src="https://api.myfrips.ch:5000//imageProfile/${profile.id}/${profile.image?.image}"
                             width="96"
                             height="96"
@@ -129,7 +129,7 @@ const emailMessage = (profile,sender,id_Chat, item,pricepropose) => {
                                     color: #484848;
                                   "
                                 >
-                                  Bonjour ${profile.Firstname}
+                                  Bonjour ${profile.Pseudo}
                                 </p>
                                
                                 ${content(pricepropose,sender)}

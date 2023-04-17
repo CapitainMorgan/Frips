@@ -87,6 +87,7 @@ const gridImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
+              alt={images[1].image}
               src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[1].image}`}
               style={{
                 width: "100%",
@@ -106,6 +107,7 @@ const gridImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
+            alt={images[2].image}
               src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[2].image}`}
               style={{
                 width: "100%",
@@ -125,6 +127,7 @@ const gridImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
+            alt={images[3].image}
               src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[3].image}`}
               style={{
                 width: "100%",
@@ -168,6 +171,7 @@ const MapReceivedImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
+            alt={images[index].image}
               src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
               className={classes.PointCursorPicture}
             ></img>
@@ -184,6 +188,7 @@ const MapReceivedImage = (images, handleClickOpen, setIndex, classes) => {
             }}
           >
             <img
+            alt={images[index].image}
               src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
               className={classes.PointCursorPicture}
             ></img>
@@ -233,6 +238,7 @@ const MapReceivedImage = (images, handleClickOpen, setIndex, classes) => {
               alignItems="center"
             >
               <img
+              alt={images[index].image}
                 src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
                 className={classes.PointCursorPicture}
                 style={{ opacity: 0.6 }}
@@ -301,6 +307,8 @@ const ImageGalleryPreview = () => {
             <img
               src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[0].image}`}
               className={classes.PointCursorPicture}
+              style={{objectFit:"cover"}}
+
             ></img>
           </Box>
         </Box>
@@ -318,6 +326,8 @@ const ImageGalleryPreview = () => {
             <img
               src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[0].image}`}
               className={classes.PointCursorPicture}
+              style={{objectFit:"cover"}}
+
             ></img>
           </Box>
         </Box>

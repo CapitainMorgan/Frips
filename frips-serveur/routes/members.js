@@ -18,7 +18,7 @@ log4js.configure({
 });
 var logger = log4js.getLogger("members");
 
-const { item, account, image, pricepropose, transaction, review } =
+const { item, account, image, pricepropose, transaction, review, address } =
   new PrismaClient();
 // @route   GET api/members/myFrips
 // @desc    get all your post
@@ -122,29 +122,38 @@ router.post("/updateAddress", auth, async (req, res) => {
   const { id } = req.user;
   const { Rue, Numero, Localite, NPA, Prenom, Nom } = req.body;
   try {
-    const { address } = await account.update({
+    const Addresse = await account.update({
       where: {
         id,
       },
       data: {
         address: {
-          update: {
-            City: Localite,
-            NPA: parseInt(NPA),
-            NumStreet: Numero,
-            Street: Rue,
+          upsert: {
+            create: {
+              City: Localite,
+              NPA: parseInt(NPA),
+              NumStreet: Numero,
+              Street: Rue,
+            },
+            update: {
+              City: Localite,
+              NPA: parseInt(NPA),
+              NumStreet: Numero,
+              Street: Rue,
+            },
           },
         },
-        Firstname: Prenom,
-        Lastname: Nom,
+        Firstname:Prenom,
+        Lastname:Nom
       },
       select: {
         address: true,
       },
     });
     logger.info("POST /updateAddress of" + id);
-    res.status(200).json(address);
+    res.status(200).json({ address: Addresse });
   } catch (error) {
+    console.log(error);
     logger.error("POST /updateAddress", error);
     res.status(500).json("Serveur error");
   }
@@ -368,8 +377,6 @@ router.get("/mySell/:id_Item", auth, async (req, res) => {
         id: true,
         DeliveryPrice: true,
         TaxPrice: true,
-        
-        
 
         Price: true,
         Status: true,
@@ -461,7 +468,6 @@ router.post("/myFrips", auth, async (req, res) => {
       skip: 5 * (number - 1),
       orderBy: constructFilter(filter, "myFrips"),
     });
-
 
     if (count === 0 && filter.length === 0) {
       res.status(200).json({
@@ -821,7 +827,7 @@ router.post("/Delivery", auth, async (req, res) => {
   const { id_transaction } = req.body;
 
   try {
-    const {id_Account,id_Item} = await transaction.update({
+    const { id_Account, id_Item } = await transaction.update({
       where: {
         id: id_transaction,
       },
@@ -829,17 +835,14 @@ router.post("/Delivery", auth, async (req, res) => {
       data: {
         DateSend: new Date(),
       },
-      select:{
-        id_Account:true,
-        id_Item:true
-      }
+      select: {
+        id_Account: true,
+        id_Item: true,
+      },
     });
 
-
-
-
-    res.status(200);
-    await sendEmail(id_Account,"SendPacket",{id_Item,id_Sender:id})
+    res.sendStatus(200);
+    await sendEmail(id_Account, "SendPacket", { id_Item, id_Sender: id });
   } catch (error) {
     logger.error("POST /Delivery", error);
     res.status(500).json("Servor Error");
@@ -1247,6 +1250,42 @@ router.post("/IBAN", auth, async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json("Serveur error");
+  }
+});
+
+router.post("/RequestPayment", auth, async (req, res) => {
+  const {id} = req.user
+  try {
+    
+    const tr =  await transaction.updateMany({
+      where:{
+        item:{
+          id_Seller:id
+        },
+         DatePaymentRequest:{
+          not:{
+            equals:null
+          }
+         },
+
+      },
+      data:{
+        DatePaymentRequest:new Date()
+      }
+    })
+    console.log(tr)
+    
+
+    if(tr.count ===0){
+      res.status(400).json("Vous avez déjà fait une requeête pour vos derniers paiements")
+    }
+    else{
+      res.sendStatus(200)
+    }
+  } catch (error) {
+    console.log(error);
+    logger.error("GET /auth " + error);
+    res.status(500).send("Serveur error");
   }
 });
 

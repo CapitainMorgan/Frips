@@ -20,7 +20,7 @@ const typeOfEmail = (type, information, args) => {
         From: "noreply@myfrips.ch",
         To: information.Email,
         Subject: "Confirmation d'inscription à MyFrips",
-        HtmlBody: emailUser(information.Firstname),
+        HtmlBody: emailUser(information.Pseudo),
         MessageStream: "outbound",
       };
     case "NewMessage":

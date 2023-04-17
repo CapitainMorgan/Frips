@@ -5,17 +5,14 @@ import {
   CardHeader,
   Divider,
   IconButton,
-  Popover,
   Typography,
 } from "@material-ui/core";
 import FavoriteIcon from "@material-ui/icons/Favorite";
 import FavoriteBorderIcon from "@material-ui/icons/FavoriteBorder";
-import NavigateNextIcon from "@material-ui/icons/NavigateNext";
-import VerifiedUserIcon from "@material-ui/icons/VerifiedUser";
 import Rating from "@material-ui/lab/Rating";
 import _ from "lodash";
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { addFavorite, newConv, removeFavorite } from "../../../actions";
 import API_ENDPOINT from "../../../api/url";

@@ -107,10 +107,6 @@ const similarProduct = async (id, category_id) => {
     await category.findMany({
       where: {
         id: category_id,
-        
-        
-
-
       },
       select: {
         category_category_categoryTocategory_category_id_Child: {
@@ -123,14 +119,19 @@ const similarProduct = async (id, category_id) => {
 
   const similarArrayItem = await item.findMany({
     where: {
-      AND:[filterCatalogue([
-        category_id,
-        category_category_categoryTocategory_category_id_Child
-          .category_category_categoryTocategory_category_id_Child[0].id_Parent,
-          
-      ]),{transaction: {
-        none: {},
-      }}]
+      AND: [
+        filterCatalogue([
+          category_id,
+          category_category_categoryTocategory_category_id_Child
+            .category_category_categoryTocategory_category_id_Child[0]
+            .id_Parent,
+        ]),
+        {
+          transaction: {
+            none: {},
+          },
+        },
+      ],
     },
 
     orderBy: [{ nbview: { _count: "desc" } }, { favorit: { _count: "desc" } }],

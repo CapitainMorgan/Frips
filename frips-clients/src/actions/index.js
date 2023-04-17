@@ -431,7 +431,9 @@ export const editItemSend =
       formData.append("id_Item", id);
 
       const response = await axiosInstance.post("/api/edit", formData);
+
       setIsLoading(false);
+      history("/members/myFrips/myItems")
     } catch (error) {
       dispatch({ type: ERROR_ITEM, payload: true });
       console.log(error);
@@ -449,7 +451,9 @@ export const getItemForPropse = (id) => async (dispatch, getState) => {
     });
 
     dispatch({ type: GET_ITEM_PROPOSE, payload: data });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error)
+  }
 };
 
 export const getItemForPropseFromId = () => async (dispatch, getState) => {
@@ -930,8 +934,12 @@ export const addFilterFromSearch =
 
     if (string === "Femme") {
       dispatch(addToFilter(WOMAN_ID, "Catalogue"));
+      history(`/filter`);
+
     } else if (string === "Homme") {
       dispatch(addToFilter(MAN_ID, "Catalogue"));
+      history(`/filter`);
+
     } else {
       try {
         if (string.includes("rechercher")) {
@@ -950,14 +958,14 @@ export const addFilterFromSearch =
               count += 1;
             });
         } else {
-          console.log(string);
           const pattern = `^(${array[0]
             .map((brand) => brand.Name)
             .join("|")})\\s(.*)$`;
 
           let splitArray = string.match(new RegExp(pattern, "i"));
 
-          
+          console.log(splitArray)
+
           if (Boolean(splitArray)) {
             splitArray = [splitArray[1], splitArray[2]];
 
@@ -1036,7 +1044,9 @@ export const getInfoSearch = () => async (dispatch, getState) => {
     const { data } = await axiosInstance.get("/api/infoItem/search");
     dispatch({ type: SEARCH, payload: data });
     dispatch({ type: "FETCH_INFO_ITEM_SUCCESS" });
-  } catch (error) {}
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 export const displayError = (error) => async (dispatch, getState) => {
@@ -1169,7 +1179,7 @@ export const updateAddress = (address) => async (dispatch, getState) => {
       payload: { newAddress, Firstname: Prenom, Lastname: Nom },
     });
   } catch (error) {
-    dispatch({ type: PAYMENT_FAILED });
+    console.log(error);
   }
 };
 
@@ -1184,7 +1194,7 @@ export const changeIban =
 
       dispatch({ type: CHANGE_IBAN, payload: data });
       if (history) {
-        history("/items/new");
+        history("/settings/profile");
       }
     } catch (error) {
       console.log(error);
@@ -1376,7 +1386,6 @@ export const fetchMyPropositionReceivedId =
 
 export const fetchMyPurchaseId = (id_Item) => async (dispatch, getState) => {
   try {
-    alert("here");
     dispatch({ type: LOADING_MYFRIPS });
 
     const { data } = await axiosInstance.get(

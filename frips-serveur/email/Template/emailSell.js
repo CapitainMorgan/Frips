@@ -10,7 +10,7 @@ const emailSell = (profile,id) => {
     <body style="font-family: Arial, sans-serif; background-color: #f9f9f9;">
       <div style="width: 80%; margin: 0 auto; padding: 20px; background-color: #fff;">
         <p style="font-size: 17px; line-height: 24px; margin: 16px 0; text-align: left;">
-          Bonjour ${profile.Firstname},<br>
+          Bonjour ${profile.Pseudo},<br>
           <br>
           Nous sommes heureux de vous informer qu'un de vos articles sur MyFrips a été vendu ! Félicitations !<br>
           <br>

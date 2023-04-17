@@ -170,26 +170,27 @@ const handleNavigation = (key, classes, setNavigation) => {
   }
 };
 
-const handleUrlCategory = (index) =>{
+const handleUrlCategory = (index) => {
   switch (index) {
+    case 0:
+      return "/members/myFrips/myItems";
     case 1:
       return "/members/myFrips/mySell";
     case 2:
-      return "/members/myFrips/myProposition"
+      return "/members/myFrips/myProposition";
     case 3:
       return "/members/myFrips/myPurchase";
 
-
     default:
-      return "/members/myFrips";
+      return "/members/myFrips/myItems";
   }
-}
+};
 
 const navigationArray = [
-  { Name: "Mes Items",url:"myItems" },
-  { Name: "Mes ventes",url:"mySell" },
-  { Name: "Mes propositions",url:"myProposition" },
-  { Name: "Mes achats",url:"myPurchase" },
+  { Name: "Mes Items", url: "myItems" },
+  { Name: "Mes ventes", url: "mySell" },
+  { Name: "Mes propositions", url: "myProposition" },
+  { Name: "Mes achats", url: "myPurchase" },
 ];
 
 const renderNavigationArray = (
@@ -215,9 +216,8 @@ const renderNavigationArray = (
             variant="outlined"
             color="primary"
             onClick={() => {
-              
               setNavigation(index);
-              history(handleUrlCategory(index))
+              history(handleUrlCategory(index));
             }}
           >
             {navigationItem.Name}
@@ -261,8 +261,7 @@ const renderNavigationArray = (
             color="primary"
             onClick={() => {
               setNavigation(index);
-              history(handleUrlCategory(index))
-
+              history(handleUrlCategory(index));
             }}
           >
             {navigationItem.Name}
@@ -298,8 +297,7 @@ const renderNavigationArray = (
             color="primary"
             onClick={() => {
               setNavigation(index);
-              history(handleUrlCategory(index))
-
+              history(handleUrlCategory(index));
             }}
           >
             {navigationItem.Name}
@@ -313,39 +311,27 @@ const renderNavigationArray = (
   });
 };
 
-
-
-
-const MyFrips = ({
-  filterMyFrips,
-  propositionNotif,
-  sellNotif,
-  hasId
-}) => {
+const MyFrips = ({ filterMyFrips, propositionNotif, sellNotif, hasId }) => {
   const dispatch = useDispatch();
   const classes = useStyles();
-  const params = useParams()
+  const params = useParams();
   const [navigationId, setNavigation] = useState(0);
   const theme = useTheme();
-  const location = useLocation()
-  const history = useNavigate()
-  
+  const location = useLocation();
+  const history = useNavigate();
 
-  useEffect(()=>{
-    if(Object.keys(params).length !== 0){
-      if(_.findIndex(navigationArray, {url:params.url })>=0){
-        setNavigation(_.findIndex(navigationArray, {url:params.url }))
+  useEffect(() => {
+    if (Object.keys(params).length !== 0) {
+      if (_.findIndex(navigationArray, { url: params.url }) >= 0) {
+        setNavigation(_.findIndex(navigationArray, { url: params.url }));
       }
-      
     }
-  },[location])
-  
+  }, [location]);
+
   useEffect(() => {
     dispatch(getNotificationsMyFrips());
     window.scrollTo(0, 0);
   }, []);
-
-
 
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
 

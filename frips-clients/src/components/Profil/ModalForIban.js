@@ -1,39 +1,13 @@
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Button, Dialog, makeStyles, Typography } from "@material-ui/core";
-import React, { useState } from "react";
+import { Box, Button, Dialog, Typography } from "@material-ui/core";
+import React from "react";
 import { Controller, useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import * as yup from "yup";
 import { changeIban } from "../../actions";
 import StepTextError from "../Items/formUpload/errorText";
 import TextFieldLogin from "../Login/TextFieldLogin";
-
-const useStyles = makeStyles((theme) => ({
-  formContainer: {
-    boxSizing: "border-box",
-    width: 300,
-    margin: "auto",
-    [theme.breakpoints.down("sm")]: {
-      width: "auto",
-
-      left: "auto",
-      right: "auto",
-      padding: 20,
-    },
-  },
-  BoxShadow: {
-    boxShadow: "0 1px 4px 0 rgb(197 197 197 / 50%)",
-    backgroundColor: "white",
-    width: 500,
-    [theme.breakpoints.down("sm")]: {
-      width: "auto",
-
-      left: "auto",
-      right: "auto",
-    },
-  },
-}));
 
 const initialValue = {
   IBAN: "",
@@ -62,7 +36,6 @@ export const ModalForIban = ({ open, classes, handleClose }) => {
     resolver: yupResolver(validationSchema),
     defaultValues: initialValue,
   });
-  const history = useNavigate();
   let location = useLocation();
 
   let { from } = location.state || { from: { pathname: "/" } };

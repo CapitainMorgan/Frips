@@ -106,17 +106,6 @@ router.post("/", async (req, res, next) => {
           Pseudo,
           Email,
           Password,
-          Lastname: name,
-          Firstname: firstName,
-          BirthDate: new Date(year,month,day),
-          address: {
-            create: {
-              City: Localite,
-              NPA: parseInt(NPA),
-              NumStreet: Numero,
-              Street: Rue,
-            },
-          },
           LastConnection:new Date()
           
         },

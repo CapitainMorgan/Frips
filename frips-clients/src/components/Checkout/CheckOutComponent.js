@@ -147,6 +147,7 @@ const CheckOut = ({
   const classes = useStyles();
   const [selectedDelivery, setSelectedDelivery] = useState(null);
   const [loadingPayment, setloadinPayment] = useState(false);
+  const [haveAdress, setHaveAdress] = useState(false);
   const hasProposition = useLocation();
   const isMounted = useRef(false);
   const [showInfo, setShowInfo] = useState(false);
@@ -155,6 +156,7 @@ const CheckOut = ({
   id = parseInt(id);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+
 
   const handleMouseEnter = () => {
     setShowInfo(true);
@@ -291,13 +293,18 @@ const CheckOut = ({
               </Box>
               <Box height={5} />
 
-              <Box display="flex" alignItems="center">
+              <Box display="flex" alignItems="center" flexDirection={!Boolean(myAddress.address) ? "column" :""}>
                 <Adress addresse={myAddress} />
+                {!Boolean(myAddress?.address) ? (
+                  <Typography style={{ fontSize: 16, color: "#dc3545" }}>
+                    veuillez choisir une addresse de livraison
+                  </Typography>
+                ) : null}
               </Box>
             </Box>
             <Box height={40} />
 
-            {Boolean(selectedDelivery) && Boolean(cs) ? (
+            {Boolean(selectedDelivery) && Boolean(cs) && Boolean(myAddress.address) ? (
               <StripeContainer
                 classes={classes}
                 loadingPayment={loadingPayment}
@@ -398,8 +405,8 @@ const CheckOut = ({
                     {Boolean(selectedDelivery) ? (
                       `${
                         renderFees(selectedDelivery) +
-                          custumFees(item) +
-                            item.Price
+                        custumFees(item) +
+                        item.Price
                       } CHF`
                     ) : (
                       <Typography style={{ fontSize: 16, color: "#dc3545" }}>

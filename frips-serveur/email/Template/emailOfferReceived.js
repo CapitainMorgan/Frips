@@ -80,7 +80,7 @@ const emailOfferReceived = (profile,sender, item,pricepropose) => {
                         <tr>
                           <td>
                             <img
-                              alt="${profile.Firstname}"
+                              alt="${profile.Pseudo}"
                               src="https://api.myfrips.ch:5000//imageProfile/${profile.id}/${profile.image?.image}"
                               width="96"
                               height="96"
@@ -131,7 +131,7 @@ const emailOfferReceived = (profile,sender, item,pricepropose) => {
                                       color: #484848;
                                     "
                                   >
-                                    Bonjour ${profile.Firstname}
+                                    Bonjour ${profile.Pseudo},
                                   </p>
                                  
                                   ${content(pricepropose,sender)}
@@ -304,7 +304,7 @@ const emailOfferReceived = (profile,sender, item,pricepropose) => {
     line-height: 24px;
     margin: 16px 0;
       text-align: left;
-  "> Pour examiner cette offre, il te suffit de te connecter te suffit de cliquer sur le lien ci-dessous. Tu pourras alors accepter, refuser. </p>
+  "> Pour examiner cette offre, il te suffit de cliquer sur le lien ci-dessous. Tu pourras alors accepter, refuser. </p>
   
   <p style="
   font-size: 17px;

@@ -32,6 +32,8 @@ import API_ENDPOINT from "../../api/url";
 import TopBusiness from "./FirstPage/TopBusiness";
 import DisplayMain from "./logicItems/displayImageMain";
 import DisplayNewItems from "./logicItems/displayNewItems";
+import {MdFavorite} from "react-icons/md"
+
 
 const useStyles = makeStyles((theme) => ({
   boxShadow: {
@@ -317,8 +319,9 @@ const ItemList = ({
 
           <Box padding={1.5} display={"flex"} alignItems="center">
             <Typography style={{ fontSize: 18, fontWeight: 550 }}>
-              Articles
+              Articles ajoutés récemment 
             </Typography>
+            
           </Box>
           <Box height={"1vh"} width={"100%"} />
 

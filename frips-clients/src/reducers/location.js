@@ -1,9 +1,4 @@
-import {
-  MEMBERS_FETCH_SUCCESS,
-  MEMBERS_ITEMS,
-  MEMBERS_LOADING,
-  SET_PREVIOUS_LOCATION,
-} from "../actions/type.js";
+import { SET_PREVIOUS_LOCATION } from "../actions/type.js";
 
 const initialValues = {
   previousLocation: "/signup",

@@ -50,9 +50,10 @@ const useStyles = makeStyles((theme) => ({
 
 const options = {
   includeScore: true,
+  ignoreLocation: true,
+
   keys: ["Name"],
-  threshold: 0.1,
-  location: 2,
+  threshold: 0.4,
 };
 const matchValueSearch = (array1, searchArray) => {
   const array = array1.map((subArray, index) => {

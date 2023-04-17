@@ -147,7 +147,6 @@ const useStyles = makeStyles((theme) => ({
 const Header = ({ onSearchSubmit }) => {
   const classes = useStyles();
   const history = useNavigate();
-
   const state = useSelector((state) => state.auth);
   const avatarRef = useRef(null);
   const theme = useTheme();
@@ -158,7 +157,7 @@ const Header = ({ onSearchSubmit }) => {
   const sellNotification = useSelector(
     (state) => state.myFrips.sellNotification
   );
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"),{noSsr:true});
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
 
   const isAuth = (handleClose) => {
     if (!state.loading && state.isAuthenticated) {
@@ -225,7 +224,7 @@ const Header = ({ onSearchSubmit }) => {
       PaperProps={{
         style: {
           boxShadow: "rgba(0, 0, 0, 0.15) 1.95px 1.95px 2.6px",
-          transform: "translateX(-90%) translateY(55px)",
+          transform: "translateX(-65%) translateY(55px)",
         },
       }}
       onClose={handleMenuDesktop}
@@ -242,11 +241,41 @@ const Header = ({ onSearchSubmit }) => {
       <MenuItem
         className={classes.BoxItem}
         onClick={() => {
-          history("/members/myFrips");
+          history("/settings/profile");
+          handleMenuDesktop();
+        }}
+      >
+        Mon porte-monnaie&nbsp;
+        {Boolean(state?.user?.MoneyAvaible) ? (
+          <Typography
+            className={classes.BoxItem}
+            style={{ fontWeight: 700, display: "flex", alignItems: "center" }}
+          >
+            {"  "}
+            {`  ${state.user?.MoneyAvaible} CHF`}
+          </Typography>
+        ) : (
+          "0.00 CHF"
+        )}
+        
+      </MenuItem>
+      <MenuItem
+        className={classes.BoxItem}
+        onClick={() => {
+          history("/members/myFrips/myItems");
           handleMenuDesktop();
         }}
       >
         Mes Annonces
+      </MenuItem>
+      <MenuItem
+        className={classes.BoxItem}
+        onClick={() => {
+          history("/members/myFrips/mySell");
+          handleMenuDesktop();
+        }}
+      >
+        Mes Ventes
       </MenuItem>
 
       {isAuth(handleMenuDesktop)}
@@ -351,11 +380,46 @@ const Header = ({ onSearchSubmit }) => {
             <MenuItem
               className={classes.BoxItem}
               onClick={() => {
-                history("/members/myFrips");
+                history("/settings/profile");
+                handleMenuDesktop();
+              }}
+            >
+              Mon porte-monnaie&nbsp;
+              {Boolean(state?.user?.MoneyAvaible) ? (
+                <Typography
+                  className={classes.BoxItem}
+                  style={{
+                    fontWeight: 600,
+                    display: "flex",
+                    alignItems: "center",
+                  }}
+                >
+                  {"  "}
+                  {`  ${state.user?.MoneyAvaible} CHF`}&nbsp;
+                </Typography>
+              ) : (
+                "0.00 CHF"
+              )}
+              
+            </MenuItem>
+            <MenuItem
+              className={classes.BoxItem}
+              onClick={() => {
+                history("/members/myFrips/myItems");
                 handleMobileMenuClose();
               }}
             >
               Mes Annonces
+            </MenuItem>
+
+            <MenuItem
+              className={classes.BoxItem}
+              onClick={() => {
+                history("/members/myFrips/mySell");
+                handleMobileMenuClose();
+              }}
+            >
+              Mes Ventes
             </MenuItem>
             {isAuth(handleMobileMenuClose)}
           </Box>
@@ -380,7 +444,7 @@ const Header = ({ onSearchSubmit }) => {
                 history("/aide");
               }}
             >
-              Assisstance
+              Assistance
             </MenuItem>
             <MenuItem
               className={classes.BoxItem}

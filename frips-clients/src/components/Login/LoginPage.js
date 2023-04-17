@@ -243,6 +243,10 @@ export const LoginPage = () => {
                         style={{ width: "100%", height: 50 }}
                         variant="outlined"
                         color="primary"
+                        type="button"
+                        onClick={()=>{
+                          history("/reset-password")
+                        }}
                       >
                         <Typography style={{ fontSize: 14 }}>
                           Mot de passe oublié ?

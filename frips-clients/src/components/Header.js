@@ -178,7 +178,7 @@ const Header = ({ onSearchSubmit }) => {
         <MenuItem
           className={classes.BoxItem}
           onClick={() => {
-            history("/signup");
+            history("/login");
             handleClose();
           }}
         >
@@ -257,7 +257,6 @@ const Header = ({ onSearchSubmit }) => {
         ) : (
           "0.00 CHF"
         )}
-        
       </MenuItem>
       <MenuItem
         className={classes.BoxItem}
@@ -304,7 +303,29 @@ const Header = ({ onSearchSubmit }) => {
             <CloseIcon />
           </IconButton>
         </Box>
-        <Box display="flex" justifyContent="center" padding={3}>
+        <Box
+          display="flex"
+          justifyContent="center"
+          padding={3}
+          flexDirection={"column"}
+        >
+          {!state.loading && !state.isAuthenticated ? (
+            <Button
+              onClick={() => {
+                history("/items/new");
+                handleMobileMenuClose();
+              }}
+              variant="outlined"
+              style={{
+                color: "#82A0C2",
+                fontSize: 14,
+                width: "100%",
+                marginBottom: 10,
+              }}
+            >
+              S'inscrire | se connecter
+            </Button>
+          ) : null}
           <Button
             onClick={() => {
               history("/items/new");
@@ -367,60 +388,63 @@ const Header = ({ onSearchSubmit }) => {
             </Typography>
           </Box>
           <Box>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                history("/settings/profile");
-
-                handleMobileMenuClose();
-              }}
-            >
-              Mon Profil
-            </MenuItem>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                history("/settings/profile");
-                handleMenuDesktop();
-              }}
-            >
-              Mon porte-monnaie&nbsp;
-              {Boolean(state?.user?.MoneyAvaible) ? (
-                <Typography
+            {!state.loading && state.isAuthenticated ? (
+              <React.Fragment>
+                {" "}
+                <MenuItem
                   className={classes.BoxItem}
-                  style={{
-                    fontWeight: 600,
-                    display: "flex",
-                    alignItems: "center",
+                  onClick={() => {
+                    history("/settings/profile");
+
+                    handleMobileMenuClose();
                   }}
                 >
-                  {"  "}
-                  {`  ${state.user?.MoneyAvaible} CHF`}&nbsp;
-                </Typography>
-              ) : (
-                "0.00 CHF"
-              )}
-              
-            </MenuItem>
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                history("/members/myFrips/myItems");
-                handleMobileMenuClose();
-              }}
-            >
-              Mes Annonces
-            </MenuItem>
-
-            <MenuItem
-              className={classes.BoxItem}
-              onClick={() => {
-                history("/members/myFrips/mySell");
-                handleMobileMenuClose();
-              }}
-            >
-              Mes Ventes
-            </MenuItem>
+                  Mon Profil
+                </MenuItem>
+                <MenuItem
+                  className={classes.BoxItem}
+                  onClick={() => {
+                    history("/settings/profile");
+                    handleMenuDesktop();
+                  }}
+                >
+                  Mon porte-monnaie&nbsp;
+                  {Boolean(state?.user?.MoneyAvaible) ? (
+                    <Typography
+                      className={classes.BoxItem}
+                      style={{
+                        fontWeight: 600,
+                        display: "flex",
+                        alignItems: "center",
+                      }}
+                    >
+                      {"  "}
+                      {`  ${state.user?.MoneyAvaible} CHF`}&nbsp;
+                    </Typography>
+                  ) : (
+                    "0.00 CHF"
+                  )}
+                </MenuItem>
+                <MenuItem
+                  className={classes.BoxItem}
+                  onClick={() => {
+                    history("/members/myFrips/myItems");
+                    handleMobileMenuClose();
+                  }}
+                >
+                  Mes Annonces
+                </MenuItem>
+                <MenuItem
+                  className={classes.BoxItem}
+                  onClick={() => {
+                    history("/members/myFrips/mySell");
+                    handleMobileMenuClose();
+                  }}
+                >
+                  Mes Ventes
+                </MenuItem>{" "}
+              </React.Fragment>
+            ) : null}
             {isAuth(handleMobileMenuClose)}
           </Box>
         </Box>
@@ -453,7 +477,7 @@ const Header = ({ onSearchSubmit }) => {
                 handleMobileMenuClose();
               }}
             >
-              Condition Générale
+              Conditions Générales
             </MenuItem>
           </Box>
         </Box>
@@ -500,7 +524,14 @@ const Header = ({ onSearchSubmit }) => {
           <Box display={"flex"} alignItems="center" marginTop={2}>
             <MdRecycling size={20} />
             <Typography style={{ fontSize: 16, marginLeft: 2 }}>
-              Powered by renewable energy
+              <a
+                rel="noreferrer"
+                target="_blank"
+                href={"https://www.infomaniak.com/en/ecology"}
+                style={{ color: "black" }}
+              >
+                Powered by renewable energy
+              </a>
             </Typography>
           </Box>
           <Box
@@ -572,7 +603,7 @@ const Header = ({ onSearchSubmit }) => {
                     {!state.isAuthenticated ? (
                       <Box marginLeft={2} alignItems="center">
                         <Button
-                          onClick={() => history("/signup")}
+                          onClick={() => history("/login")}
                           variant="outlined"
                           style={{ backgroundColor: "#F7F9FB" }}
                         >

@@ -1,5 +1,5 @@
 import { Box, makeStyles, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 
 const useStyles = makeStyles((theme) => ({
   DragItem: {
@@ -59,6 +59,10 @@ const useStyles = makeStyles((theme) => ({
 
 export const ConditionGeneral = () => {
   const classes = useStyles();
+
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[])
   return (
     <Box
       style={{ backgroundColor: "#F5f5f3" }}
@@ -69,8 +73,8 @@ export const ConditionGeneral = () => {
       marginTop={8}
       flexGrow={1}>
       <Box className={classes.Container}>
-        <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-          condition général de revente
+        <Typography variant="h5" sx={{ fontWeight: "bold" ,marginTop:5}} >
+          Conditions Générales de reventes
         </Typography>
         <Typography className={classes.typoBody}>
           Version : mars 2023

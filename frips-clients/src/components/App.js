@@ -70,6 +70,7 @@ const App = () => {
   const mobile = useMediaQuery(theme.breakpoints.down("sm"), { noSsr: true });
 
   useEffect(() => {
+
     socket.on("connect", () => {
       store.dispatch(setSocket(socket));
       store.dispatch(loadUser(socket));

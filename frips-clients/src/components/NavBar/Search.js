@@ -14,6 +14,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { connect, useDispatch } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
 import { addFilterFromSearch, getInfoSearch } from "../../actions";
+import _ from "lodash";
 const useStyles = makeStyles((theme) => ({
   search: {
     position: "relative",
@@ -50,26 +51,62 @@ const useStyles = makeStyles((theme) => ({
 
 const options = {
   includeScore: true,
-  ignoreLocation: true,
-
   keys: ["Name"],
-  threshold: 0.4,
+  threshold: 0.3,
 };
-const matchValueSearch = (array1, searchArray) => {
+
+const highestScoreArray = (arrays) => {
+  let highestScore = -Infinity;
+  let highestScoreIndex = -1;
+  for (let i = 0; i < arrays.length; i++) {
+    const currentScore = arrays[i].reduce((acc, curr) => acc + curr.score, 0);
+    if (currentScore > highestScore) {
+      highestScore = currentScore;
+      highestScoreIndex = i;
+    }
+  }
+  const result = arrays.map((array, index) => {
+    if (index === highestScoreIndex) {
+      return array;
+    } else {
+      return [];
+    }
+  });
+  return result;
+};
+
+const matchValueSearch = (array1, searchArray, arrayBrand, currentText) => {
+  const pattern = `^(${arrayBrand
+    .map((brand) => brand.Name)
+    .join("|")})\\s(.*)$`;
+
+  let splitArray = currentText.match(new RegExp(pattern, "i"));
+
   const array = array1.map((subArray, index) => {
     const filterArray = new Fuse(subArray, options).search(
       { $or: searchArray },
-      { limit: 4 }
+      { limit: 2 }
     );
-
     return filterArray;
   });
+
+  console.log([array[0][0], array[1][0]], "ok", highestScoreArray(array));
+  if (splitArray?.length === 2) {
+    return [array[0][0], array[1]];
+  } else {
+    highestScoreArray(array);
+  }
   return array;
 };
 const WOMAN_ID = { Name: "Femme", id: 1 };
-const MAN_ID = { Name: "Homme", id: 101 };
+const MAN_ID = { Name: "Homme", id: 104 };
 
-const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
+const makeCombination = (
+  arrays,
+  noFilterArrayCategory,
+  currentText,
+  noFilterArrayBrand
+) => {
   const [arrayBrand, arrayCategory] = arrays;
   const suggestionArray = [];
 
@@ -77,12 +114,50 @@ const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
     return suggestionArray;
   }
 
-  if (arrayBrand.length !== 0) {
+  if (arrayBrand.length !== 0 && arrayCategory?.length !== 0) {
     const { item } = arrayBrand[0];
+    let previous;
+    for (let index = 0; index < arrayCategory.length; index++) {
+      if (
+        arrayCategory[index].item.Name ===
+          arrayCategory[index + 1]?.item?.Name &&
+        !(
+          Boolean(_.find(arrayCategory, { item: { Name: "Homme" } })) ||
+          Boolean(_.find(arrayCategory, { item: { Name: "Femme" } }))
+        )
+      ) {
+        suggestionArray.push(
+          `${item.Name} ${arrayCategory[index].item.Name} Femme`
+        );
+        suggestionArray.push(
+          `${item.Name} ${arrayCategory[index].item.Name} Homme`
+        );
+        previous = arrayCategory[index].item.Name;
+      } else if (previous !== arrayCategory[index].item.Name) {
+        suggestionArray.push(`${item.Name} ${arrayCategory[index].item.Name}`);
+      }
+    }
+  } else if (arrayBrand.length !== 0 && arrayCategory.length === 0) {
+    const { item } = arrayBrand[0];
+
     suggestionArray.push(item.Name);
     if (arrayCategory?.length !== 0) {
       for (let index = 0; index < arrayCategory.length; index++) {
-        suggestionArray.push(`${item.Name} ${arrayCategory[index].item.Name}`);
+        if (
+          arrayCategory[index].item.Name ===
+            arrayCategory[index + 1]?.item?.Name &&
+          !(
+            Boolean(_.find(arrayCategory, { item: { Name: "Homme" } })) ||
+            Boolean(_.find(arrayCategory, { item: { Name: "Femme" } }))
+          )
+        ) {
+          suggestionArray.push(
+            `${item.Name} ${arrayCategory[index].item.Name} Femme`
+          );
+          suggestionArray.push(
+            `${item.Name} ${arrayCategory[index].item.Name} Homme`
+          );
+        }
       }
     } else {
       for (let index = 0; index < 5; index++) {
@@ -92,12 +167,29 @@ const makeCombination = (arrays, noFilterArrayCategory, currentText) => {
       }
     }
   } else if (arrayBrand.length === 0 && arrayCategory.length !== 0) {
-    const { item } = arrayCategory[0];
-    suggestionArray.push(item.Name);
-    for (let index = 0; index < 5; index++) {
-      suggestionArray.push(
-        `${noFilterArrayCategory[0][index]?.Name}   ${item?.Name}`
-      );
+    const checkIfBothExist = arrayCategory.filter((d) => d.score <= 0.2);
+    console.log(checkIfBothExist);
+    if (checkIfBothExist.length >= 2) {
+      const { item } = arrayCategory[0];
+      if (item.Name !== "Femme" || item.Name !== "Homme") {
+        suggestionArray.push(`${item.Name} Femme`);
+        suggestionArray.push(`${item.Name} Homme`);
+      }
+
+      for (let index = 0; index < 5; index++) {
+        suggestionArray.push(
+          `${noFilterArrayCategory[0][index]?.Name}   ${item?.Name}`
+        );
+      }
+    } else {
+      const { item } = arrayCategory[0];
+
+      suggestionArray.push(item.Name);
+      for (let index = 0; index < 5; index++) {
+        suggestionArray.push(
+          `${noFilterArrayCategory[0][index]?.Name}   ${item?.Name}`
+        );
+      }
     }
   } else {
     suggestionArray.push(WOMAN_ID.Name);
@@ -141,7 +233,6 @@ const Search = ({ SearchInfo, loading, loadingFilter }) => {
   const [filterQuery, setFilterQuery] = useState();
   const [anchorEl, setAnchorEl] = useState(null);
   const history = useNavigate();
-
   const menuRef = useRef();
 
   const handleMenuDesktop = (event) => {
@@ -170,7 +261,12 @@ const Search = ({ SearchInfo, loading, loadingFilter }) => {
     } else if (term !== "" && anchorEl) {
       setTimeout(() => {
         setFilterQuery(
-          matchValueSearch(arrayFilter, transformSearchToArrayString(term))
+          matchValueSearch(
+            arrayFilter,
+            transformSearchToArrayString(term),
+            arrayFilter[0],
+            term
+          )
         );
       }, 100);
     } else {
@@ -184,15 +280,13 @@ const Search = ({ SearchInfo, loading, loadingFilter }) => {
   };
 
   return (
-    <div className={classes.search} >
+    <div className={classes.search}>
       <div className={classes.searchIcon}>
         <SearchIcon />
       </div>
       <InputBase
         ref={menuRef}
         spellCheck="false"
-
-      
         style={{ zIndex: 1400 }}
         value={term}
         fullWidth={true}

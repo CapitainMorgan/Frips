@@ -37,12 +37,11 @@ router.get("/search", async (req, res) => {
     });
 
     const infoCategory = await category.findMany({
-     
       select: {
         id: true,
         Name: true,
       },
-      distinct:["id"]
+      distinct: ["id"],
     });
 
     const infoObject = [infoBrand, infoCategory];
@@ -92,10 +91,9 @@ router.get("/info", async (req, res) => {
     const infoCategory = await category.findMany({
       select: {
         id: true,
-
         Name: true,
         _count: true,
-      },
+      }
     });
 
     const infoObject = {

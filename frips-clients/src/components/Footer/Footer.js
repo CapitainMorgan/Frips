@@ -22,7 +22,7 @@ export const Footer = () => {
           <MenuItem
             onClick={() => history("/Condition-general-de-vente-et-politique")}
           >
-            Condition Général
+            Conditions Générales
           </MenuItem>
         </Box>
         <Box>
@@ -30,7 +30,7 @@ export const Footer = () => {
         </Box>
 
         <Box>
-        <a
+          <a
             rel="noreferrer"
             target="_blank"
             href={"https://instagram.com/my_frips?igshid=ZDdkNTZiNTM="}
@@ -55,7 +55,14 @@ export const Footer = () => {
       <Box display={"flex"} alignItems="center">
         <FaLeaf size={20} />
         <Typography style={{ fontSize: 16, marginLeft: 2 }}>
-          Powered by renewable energy
+          <a
+            rel="noreferrer"
+            target="_blank"
+            href={"https://www.infomaniak.com/en/ecology"}
+            style={{color:"black"}}
+          >
+            Powered by renewable energy
+          </a>
         </Typography>
       </Box>
       <Box display={"flex"} alignItems="center">

@@ -2053,3 +2053,826 @@ type itemWhereInput {
 [2023-04-16T10:54:54.533] [ERROR] auth - Authentification denied no token
 [2023-04-16T10:54:54.535] [ERROR] auth - Authentification denied no token
 [2023-04-16T10:54:54.538] [ERROR] auth - Authentification denied no token
+[2023-04-22T11:49:49.082] [ERROR] auth - Authentification denied no token
+[2023-04-22T11:49:49.095] [ERROR] auth - Authentification denied no token
+[2023-04-22T11:49:49.100] [ERROR] auth - Authentification denied no token
+[2023-04-22T11:56:12.531] [ERROR] auth - Authentification denied no token
+[2023-04-22T12:54:13.040] [ERROR] auth - Authentification denied no token
+[2023-04-22T12:54:13.050] [ERROR] auth - Authentification denied no token
+[2023-04-22T12:54:13.053] [ERROR] auth - Authentification denied no token
+[2023-04-22T12:55:03.709] [ERROR] auth - Authentification denied no token
+[2023-04-22T12:55:03.714] [ERROR] auth - Authentification denied no token
+[2023-04-22T12:55:03.718] [ERROR] auth - Authentification denied no token
+[2023-04-22T13:28:03.382] [ERROR] auth - Authentification denied no token
+[2023-04-22T14:48:47.747] [ERROR] auth - GET /auth ReferenceError: sumUnpaidMoney is not defined
+[2023-04-22T14:48:48.127] [ERROR] auth - GET /auth ReferenceError: sumUnpaidMoney is not defined
+[2023-04-22T14:48:52.936] [ERROR] auth - GET /auth ReferenceError: sumUnpaidMoney is not defined
+[2023-04-23T13:08:50.436] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_brand: {
+          some: {
+            id_Brand: {
+              in: [
+                13
+              ]
+            }
+          }
+        }
+      },
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    {
+                      Name: 'Femme',
+                      id: 1
+                    }
+                  ]
+                  ~~~~~~~~~~~~~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    {
+                                      Name: 'Femme',
+                                      id: 1
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              {
+                                Name: 'Femme',
+                                id: 1
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          {
+                                            Name: 'Femme',
+                                            id: 1
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                {
+                                                  Name: 'Femme',
+                                                  id: 1
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  {
+    Name: 'Femme',
+    id: 1
+  }
+]
+on prisma.aggregateitem. Provided List<Json>, expected List<Int>.
+Unknown arg `OR` in where.AND.1.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-04-23T13:08:58.290] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_brand: {
+          some: {
+            id_Brand: {
+              in: [
+                13
+              ]
+            }
+          }
+        }
+      },
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    {
+                      Name: 'Femme',
+                      id: 1
+                    }
+                  ]
+                  ~~~~~~~~~~~~~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    {
+                                      Name: 'Femme',
+                                      id: 1
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              {
+                                Name: 'Femme',
+                                id: 1
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          {
+                                            Name: 'Femme',
+                                            id: 1
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                {
+                                                  Name: 'Femme',
+                                                  id: 1
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  {
+    Name: 'Femme',
+    id: 1
+  }
+]
+on prisma.aggregateitem. Provided List<Json>, expected List<Int>.
+Unknown arg `OR` in where.AND.1.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-04-23T13:09:07.103] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    {
+                      Name: 'Femme',
+                      id: 1
+                    }
+                  ]
+                  ~~~~~~~~~~~~~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    {
+                                      Name: 'Femme',
+                                      id: 1
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              {
+                                Name: 'Femme',
+                                id: 1
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          {
+                                            Name: 'Femme',
+                                            id: 1
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                {
+                                                  Name: 'Femme',
+                                                  id: 1
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  {
+    Name: 'Femme',
+    id: 1
+  }
+]
+on prisma.aggregateitem. Provided List<Json>, expected List<Int>.
+Unknown arg `OR` in where.AND.0.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-04-23T13:09:09.833] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_brand: {
+          some: {
+            id_Brand: {
+              in: [
+                48
+              ]
+            }
+          }
+        }
+      },
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    {
+                      Name: 'Femme',
+                      id: 1
+                    }
+                  ]
+                  ~~~~~~~~~~~~~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    {
+                                      Name: 'Femme',
+                                      id: 1
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              {
+                                Name: 'Femme',
+                                id: 1
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          {
+                                            Name: 'Femme',
+                                            id: 1
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                {
+                                                  Name: 'Femme',
+                                                  id: 1
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  {
+    Name: 'Femme',
+    id: 1
+  }
+]
+on prisma.aggregateitem. Provided List<Json>, expected List<Int>.
+Unknown arg `OR` in where.AND.1.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+
+[2023-04-23T13:10:04.329] [ERROR] items - POST /api/item/paginationError: 
+Invalid `prisma.item.count()` invocation:
+
+{
+  select: {
+    _count: {
+      select: {
+        _all: true
+      }
+    }
+  },
+  where: {
+    AND: [
+      {
+        item_brand: {
+          some: {
+            id_Brand: {
+              in: [
+                6
+              ]
+            }
+          }
+        }
+      },
+      {
+        item_category: {
+          some: {
+            OR: [
+              {
+                id_Category: {
+                  in: [
+                    {
+                      Name: 'Femme',
+                      id: 1
+                    }
+                  ]
+                  ~~~~~~~~~~~~~~~~~~
+                }
+              },
+              {
+                category: {
+                  OR: [
+                  ~~
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                id_Parent: {
+                                  in: [
+                                    {
+                                      Name: 'Femme',
+                                      id: 1
+                                    }
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          id_Parent: {
+                            in: [
+                              {
+                                Name: 'Femme',
+                                id: 1
+                              }
+                            ]
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      id_Parent: {
+                                        in: [
+                                          {
+                                            Name: 'Femme',
+                                            id: 1
+                                          }
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    },
+                    {
+                      category_category_categoryTocategory_category_id_Child: {
+                        some: {
+                          category_categoryTocategory_category_id_Parent: {
+                            category_category_categoryTocategory_category_id_Child: {
+                              some: {
+                                category_categoryTocategory_category_id_Parent: {
+                                  category_category_categoryTocategory_category_id_Child: {
+                                    some: {
+                                      category_categoryTocategory_category_id_Parent: {
+                                        category_category_categoryTocategory_category_id_Child: {
+                                          some: {
+                                            id_Parent: {
+                                              in: [
+                                                {
+                                                  Name: 'Femme',
+                                                  id: 1
+                                                }
+                                              ]
+                                            }
+                                          }
+                                        }
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    ],
+    transaction: {
+      none: {}
+    }
+  }
+}
+
+Argument in: Got invalid value 
+[
+  {
+    Name: 'Femme',
+    id: 1
+  }
+]
+on prisma.aggregateitem. Provided List<Json>, expected List<Int>.
+Unknown arg `OR` in where.AND.1.item_category.some.OR.1.category.OR for type CategoryRelationFilter. Did you mean `is`? Available args:
+type CategoryRelationFilter {
+  is?: categoryWhereInput
+  isNot?: categoryWhereInput
+}
+
+

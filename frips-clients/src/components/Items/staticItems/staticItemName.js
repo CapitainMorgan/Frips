@@ -56,6 +56,12 @@ export const Catalogue = [
 
                     id: 7,
                   },
+                  {
+                    upId: 4,
+                    sizeType: 0,
+                    Name: "Imperméables",
+                    id: 8,
+                  },
                 ],
               },
               {
@@ -99,8 +105,7 @@ export const Catalogue = [
               },
               {
                 upId: 3,
-                Name: "Manteaux & vestes",
-
+                Name: "Manteaux",
                 id: 15,
                 sizeType: 0,
               },
@@ -115,17 +120,43 @@ export const Catalogue = [
             id: 16,
             subitems: [
               {
-                id: 17,
-                sizeType: 0,
-                Name: "Sweats à capuche",
+                id: 18,
+                type: "list",
                 upId: 16,
+                Name: "Sweats",
+                subitems: [
+                  {
+                    id: 17,
+                    sizeType: 0,
+                    Name: "Sweats à capuche",
+                    upId: 18,
+                  },
+                  {
+                    id: 21,
+                    Name: "Sweats longs",
+                    upId: 18,
+                    sizeType: 0,
+                  },
+                  {
+                    id: 23,
+                    Name: "Autres sweats",
+                    upId: 18,
+                    sizeType: 0,
+                  },
+                ],
               },
               {
-                id: 18,
+                id: 14,
                 type: "list",
                 upId: 16,
                 Name: "Pulls",
                 subitems: [
+                  {
+                    id: 22,
+                    Name: "Pulls d'hiver",
+                    upId: 18,
+                    sizeType: 0,
+                  },
                   {
                     id: 19,
                     Name: "Pulls col V",
@@ -135,24 +166,6 @@ export const Catalogue = [
                   {
                     id: 20,
                     Name: "Pulls col roulé",
-                    upId: 18,
-                    sizeType: 0,
-                  },
-                  {
-                    id: 21,
-                    Name: "Sweats longs",
-                    upId: 18,
-                    sizeType: 0,
-                  },
-                  {
-                    id: 22,
-                    Name: "Pulls d'hiver",
-                    upId: 18,
-                    sizeType: 0,
-                  },
-                  {
-                    id: 23,
-                    Name: "Autres sweats",
                     upId: 18,
                     sizeType: 0,
                   },
@@ -186,7 +199,7 @@ export const Catalogue = [
               },
               {
                 upId: 26,
-                Name: "Blazers & tailleurs",
+                Name: "Autres ensembles & tailleurs",
                 id: 29,
                 sizeType: 0,
               },
@@ -307,14 +320,14 @@ export const Catalogue = [
               {
                 upId: 40,
                 id: 47,
-                Name: "Jupes patineuses",
+                Name: "Autres jupes",
                 sizeType: 0,
               },
             ],
           },
           {
             upId: 2,
-            Name: "Haut & T-shirts",
+            Name: "Hauts & T-shirts",
             type: "list",
             id: 48,
             subitems: [
@@ -351,7 +364,7 @@ export const Catalogue = [
               {
                 upId: 48,
                 Name: "Tops courts",
-                id: 53,
+                id: 54,
                 sizeType: 0,
               },
             ],
@@ -384,12 +397,6 @@ export const Catalogue = [
               {
                 upId: 56,
                 Name: "Leggings",
-                id: 60,
-                sizeType: 0,
-              },
-              {
-                upId: 56,
-                Name: "Pantalons skinny",
                 id: 60,
                 sizeType: 0,
               },
@@ -730,15 +737,68 @@ export const Catalogue = [
           },
           {
             upId: 105,
-            id: 128,
+
             type: "list",
             Name: "Sweats & Pulls",
+
+            id: 128,
             subitems: [
               {
+                id: 200,
+                type: "list",
                 upId: 128,
-                id: 129,
                 Name: "Sweats",
-                sizeType: 0,
+                subitems: [
+                  {
+                    id: 203,
+                    sizeType: 0,
+                    Name: "Sweats à capuche",
+                    upId: 200,
+                  },
+                  {
+                    id: 204,
+                    Name: "Sweats longs",
+                    upId: 200,
+                    sizeType: 0,
+                  },
+                  {
+                    id: 205,
+                    Name: "Autres sweats",
+                    upId: 200,
+                    sizeType: 0,
+                  },
+                ],
+              },
+              {
+                id: 201,
+                type: "list",
+                upId: 128,
+                Name: "Pulls",
+                subitems: [
+                  {
+                    id: 206,
+                    Name: "Pulls d'hiver",
+                    upId: 201,
+                    sizeType: 0,
+                  },
+                  {
+                    id: 207,
+                    Name: "Pulls col V",
+                    upId: 201,
+                    sizeType: 0,
+                  },
+                  {
+                    id: 208,
+                    Name: "Pulls col roulé",
+                    upId: 201,
+                    sizeType: 0,
+                  },
+                ],
+              },
+              {
+                id: 202,
+                upId: 128,
+                Name: "Autres Sweats & pull-overs",
               },
             ],
           },
@@ -895,6 +955,38 @@ export const Catalogue = [
             Name: "Autres chaussures",
             sizeType: 1,
             selectId: 2,
+          },
+        ],
+      },
+      {
+        upId: 104,
+        Name: "Sacs et sacoches",
+        id: 168,
+        selectId: 2,
+        subitems: [
+          {
+            id: 170,
+            upId: 168,
+            Name: "Sacs en bandoulière",
+            sizeType: 2,
+          },
+          {
+            id: 171,
+            upId: 168,
+            Name: "Sacs à dos",
+            sizeType: 2,
+          },
+          {
+            id: 172,
+            upId: 168,
+            Name: "Sacs banane",
+            sizeType: 2,
+          },
+          {
+            id: 173,
+            upId: 168,
+            Name: "Autres",
+            sizeType: 2,
           },
         ],
       },

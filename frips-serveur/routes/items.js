@@ -502,7 +502,6 @@ const filterCatalogue = (Catalogue) => {
 
 const findSearchQuery = (Search) => {
   const arraySearch = [];
-  console.log(Search);
   Search.map((item) => {
     arraySearch.push({
       Name: {

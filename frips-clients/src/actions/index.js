@@ -267,7 +267,6 @@ export const createItem =
       dispatch({ type: CREATE_ITEM, payload: response.data });
       setIsLoading(false);
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: true });
-      history("/");
     } catch (error) {
       dispatch({ type: ERROR_ITEM, payload: true });
 
@@ -433,7 +432,7 @@ export const editItemSend =
       const response = await axiosInstance.post("/api/edit", formData);
 
       setIsLoading(false);
-      history("/members/myFrips/myItems")
+      history("/members/myFrips/myItems");
     } catch (error) {
       dispatch({ type: ERROR_ITEM, payload: true });
       console.log(error);
@@ -452,7 +451,7 @@ export const getItemForPropse = (id) => async (dispatch, getState) => {
 
     dispatch({ type: GET_ITEM_PROPOSE, payload: data });
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
 };
 
@@ -926,7 +925,7 @@ export const paginationForFilter = () => async (dispatch, getState) => {
 };
 
 const WOMAN_ID = { Name: "Femme", id: 1 };
-const MAN_ID = { Name: "Homme", id: 101 };
+const MAN_ID = { Name: "Homme", id: 104 };
 
 export const addFilterFromSearch =
   (string, findElement, history) => async (dispatch, getState) => {
@@ -935,11 +934,156 @@ export const addFilterFromSearch =
     if (string === "Femme") {
       dispatch(addToFilter(WOMAN_ID, "Catalogue"));
       history(`/filter`);
-
     } else if (string === "Homme") {
       dispatch(addToFilter(MAN_ID, "Catalogue"));
       history(`/filter`);
+    } else if (string.includes("Homme") || string.includes("Femme")) {
+      const pattern = `^(${array[0]
+        .map((brand) => brand.Name)
+        .join("|")})\\s(.*)$`;
 
+      if (string.includes("Homme")) {
+        const myString = string.substring(0, string.indexOf("Homme"));
+        let splitArray = myString.match(new RegExp(pattern, "i"));
+
+        if (!Boolean(splitArray)) {
+          for (let index = 0; index < array[1].length; index++) {
+            const item = array[1][index];
+            if (item.id >= 104 && item.Name === myString.trim()) {
+              dispatch(
+                addToFilter({ Name: myString.trim(), id: item.id }, "Catalogue")
+              );
+              history(`/filter`);
+
+              break;
+            }
+          }
+        } else {
+          splitArray = [splitArray[1], splitArray[2]];
+
+          if (Boolean(splitArray[2])) {
+            for (let index = 0; index < array[1].length; index++) {
+              const item = array[1][index];
+              if (item.id >= 104 && item.Name === splitArray[1].trim()) {
+                dispatch(
+                  addToFilter(
+                    { Name: splitArray[1].trim(), id: item.id },
+                    "Catalogue"
+                  )
+                );
+
+                break;
+              }
+            }
+            for (let index = 0; index < array[0].length; index++) {
+              const item = array[0][index];
+              if (item.Name === splitArray[0].trim()) {
+                dispatch(
+                  addToFilter(
+                    { Name: splitArray[0].trim(), id: item.id },
+                    "Marque"
+                  )
+                );
+
+                break;
+              }
+            }
+
+            history(`/filter`);
+          } else {
+            dispatch(addToFilter({ Name: "Homme", id: 104 }, "Catalogue"));
+
+            for (let index = 0; index < array[0].length; index++) {
+              const item = array[0][index];
+              if (item.Name === splitArray[0].trim()) {
+                dispatch(
+                  addToFilter(
+                    { Name: splitArray[0].trim(), id: item.id },
+                    "Marque"
+                  )
+                );
+
+                break;
+              }
+            }
+          }
+          history(`/filter`);
+
+        }
+      } else {
+        const myString = string.substring(0, string.indexOf("Femme"));
+
+        let splitArray = myString.match(new RegExp(pattern, "i"));
+
+        if (!Boolean(splitArray)) {
+          for (let index = 0; index < array[1].length; index++) {
+            const item = array[1][index];
+
+            if (item.id < 104 && item.Name === myString.trim()) {
+              dispatch(
+                addToFilter({ Name: myString.trim(), id: item.id }, "Catalogue")
+              );
+
+
+              break;
+            }
+          }
+          history(`/filter`);
+
+        } else {
+          splitArray = [splitArray[1], splitArray[2]];
+
+          if(Boolean(splitArray[1])){
+            for (let index = 0; index < array[1].length; index++) {
+              const item = array[1][index];
+              if (item.id < 104 && item.Name === splitArray[1].trim()) {
+                dispatch(
+                  addToFilter(
+                    { Name: splitArray[1].trim(), id: item.id },
+                    "Catalogue"
+                  )
+                );
+  
+                break;
+              }
+            }
+            for (let index = 0; index < array[0].length; index++) {
+              const item = array[0][index];
+              if (item.Name === splitArray[0].trim()) {
+                dispatch(
+                  addToFilter(
+                    { Name: splitArray[0].trim(), id: item.id },
+                    "Marque"
+                  )
+                );
+  
+                break;
+              }
+            }
+  
+            history(`/filter`);
+          }
+          else{
+            dispatch(addToFilter({ Name: "Femme", id: WOMAN_ID.id }, "Catalogue"));
+
+            for (let index = 0; index < array[0].length; index++) {
+              const item = array[0][index];
+              if (item.Name === splitArray[0].trim()) {
+                dispatch(
+                  addToFilter(
+                    { Name: splitArray[0].trim(), id: item.id },
+                    "Marque"
+                  )
+                );
+  
+                break;
+              }
+            }
+          }
+          history(`/filter`);
+
+        }
+      }
     } else {
       try {
         if (string.includes("rechercher")) {
@@ -964,7 +1108,7 @@ export const addFilterFromSearch =
 
           let splitArray = string.match(new RegExp(pattern, "i"));
 
-          console.log(splitArray)
+          console.log(splitArray);
 
           if (Boolean(splitArray)) {
             splitArray = [splitArray[1], splitArray[2]];

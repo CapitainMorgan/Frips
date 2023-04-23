@@ -71,14 +71,14 @@ router.get("/", auth, async (req, res) => {
       },
     });
 
-
+    console.log(UnpaidMoney)
     logger.info("user " + req.user.id + " GET /auth");
     res
       .status(200)
       .json({
         ...user,
-        sumUnpaidMoney: UnpaidMoney._sum.Price,
-        MoneyAvaible: MoneyAvaible._sum.Price,
+        sumUnpaidMoney: UnpaidMoney?._sum?.Price,
+        MoneyAvaible: MoneyAvaible?._sum?.Price,
       });
   } catch (error) {
     console.log(error);

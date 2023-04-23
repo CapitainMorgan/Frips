@@ -796,7 +796,7 @@ const MyItems = ({
     dispatch(fetchMyfrips(`/api/members/myFrips`, FETCH_MYFRIPS));
   }, [filterMyFrips, pagination]);
 
-  if (loading && items.length === 0 && !Boolean(count)) {
+  if (loading && items.length === 0) {
     return (
       <Box
         style={{ backgroundColor: "#F5f5f3" }}
@@ -811,7 +811,7 @@ const MyItems = ({
     );
   }
 
-  if (!loading && items.length === 0 && count === 0) {
+  if (!loading && items.length === 0) {
     return (
       <Box
         minHeight={200}

@@ -32,7 +32,6 @@ import API_ENDPOINT from "../../api/url";
 import TopBusiness from "./FirstPage/TopBusiness";
 import DisplayMain from "./logicItems/displayImageMain";
 import DisplayNewItems from "./logicItems/displayNewItems";
-import {MdFavorite} from "react-icons/md"
 
 
 const useStyles = makeStyles((theme) => ({
@@ -281,7 +280,7 @@ const ItemList = ({
       display="flex"
       justifyContent="center"
     >
-      <Box width={"100%"}>
+      <Box width={"100%"} height={"100%"}>
         {success && !mobile ? (
           <Snackbar
             anchorOrigin={{ vertical: "top", horizontal: "right" }}

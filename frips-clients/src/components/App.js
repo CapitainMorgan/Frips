@@ -57,6 +57,7 @@ import NotificationComponent from "./Profil/NotificationComponent";
 import RegisterSeller from "./Profil/RegisterSeller";
 import EmailResetPassword from "./Profil/Reset/EmailResetPassword";
 import ResetPasswordPage from "./Profil/Reset/ResetPasswordPage";
+import Div100vh from "react-div-100vh";
 
 if (localStorage.token) {
   setAuthToken(localStorage.token);
@@ -104,11 +105,8 @@ const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={Theme}>
-        <Box
-          display={"flex"}
-          flexDirection="column"
-          height={"100vh"}
-          style={{ backgroundColor: "#F5f5f3" }}
+        <Div100vh
+          style={{ backgroundColor: "#F5f5f3" ,display:"flex",flexDirection:"column"}}
         >
           <Router>
             <Header />
@@ -226,7 +224,7 @@ const App = () => {
             </Routes>
             {!mobile ? <Footer /> : null}
           </Router>
-        </Box>
+        </Div100vh>
       </ThemeProvider>
     </Provider>
   );

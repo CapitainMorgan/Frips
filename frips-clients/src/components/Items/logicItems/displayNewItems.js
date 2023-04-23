@@ -24,7 +24,7 @@ const renderedItem = (state, classes, favorite, dispatch, history, mobile) => {
     <React.Fragment>
       {state.map((item, index) => {
         return (
-          <Box width={"100%"} height={"100%"} padding={1}>
+          <Box width={"100%"} height={"100%"} maxHeight={540} padding={1}>
             <Card className={classes.BoxOneItem}>
               <Box
                 display={"flex"}
@@ -114,6 +114,7 @@ const renderedItem = (state, classes, favorite, dispatch, history, mobile) => {
           width={"100%"}
           height={"100%"}
           padding={1}
+          maxHeight={540}
           display="flex"
           alignItems="center"
           justifyContent="center"

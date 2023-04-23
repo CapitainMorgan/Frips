@@ -2876,3 +2876,48 @@ type CategoryRelationFilter {
 }
 
 
+[2023-04-23T14:15:17.679] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:15:17.683] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:15:17.684] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:16:53.466] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:16:53.468] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:16:53.471] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:17:29.035] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:17:31.457] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:20:11.111] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:20:11.111] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:20:11.114] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:20:18.082] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:20:51.833] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:20:51.834] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:20:51.834] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:21:05.140] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:21:05.140] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:21:05.141] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:21:35.524] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:21:35.533] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:21:35.534] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:22:45.485] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:22:47.289] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:23:13.990] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:23:13.992] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:23:13.993] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:24:25.475] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:24:25.476] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:24:25.477] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:24:32.746] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:24:32.747] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:24:32.748] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:26:05.874] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:26:05.877] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:26:05.879] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:29:01.029] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:30:53.399] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:30:55.045] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:31:49.953] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:31:49.957] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:31:49.958] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:31:52.141] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:31:52.142] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:31:52.143] [ERROR] auth - Authentification denied token invalide
+[2023-04-23T14:32:14.581] [ERROR] auth - POST /authError: Illegal arguments: string, undefined

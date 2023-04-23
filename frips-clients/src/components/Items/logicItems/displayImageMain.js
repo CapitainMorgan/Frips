@@ -8,7 +8,7 @@ const DisplayMain = ({ classes, loaded }) => {
   return (
     <Box className={classes.floatImage}>
       {true ? (
-        <Box width={"100%"} height={"100%"} position="relative">
+        <Box width={"100%"} height={"100%"}  position="relative">
           <img
           key={image}
           alt={image}

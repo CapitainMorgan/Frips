@@ -515,7 +515,7 @@ INSERT INTO `category` (`id`, `Name`) VALUES
 	(203, 'Sweats à capuche'),
 	(204, 'Sweats longs'),
 	(205, 'Autres sweats'),
-	(206, 'Pulls d'hiver'),	
+	(206, 'Pulls d\'hiver'),	
 	(207, 'Pulls col V'),
 	(208, 'Pulls col roulé'),
 	(130, 'Pantalons'),

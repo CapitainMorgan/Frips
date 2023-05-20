@@ -1,9 +1,8 @@
 import { Box, Button, CircularProgress, Typography } from "@material-ui/core";
-import React from "react";
-import { connect } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const TaskSuccess = ({ error, isLoading, edit,added }) => {
   const navigate = useNavigate();

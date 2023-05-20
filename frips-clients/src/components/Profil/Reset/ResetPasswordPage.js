@@ -85,7 +85,6 @@ const ResetPasswordPage = () => {
       } catch (error) {
         setLoading(false);
         setError("Page introuvable");
-        console.error(error);
       }
     };
     fetchData();

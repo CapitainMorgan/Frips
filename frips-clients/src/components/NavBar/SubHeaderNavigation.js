@@ -8,10 +8,17 @@ import {
 } from "@material-ui/core";
 import React, { useState } from "react";
 import { BsHandbagFill } from "react-icons/bs";
-import { GiConverseShoe, GiLargeDress, GiRunningShoe,GiBackpack} from "react-icons/gi";
+import {
+  GiBackpack,
+  GiConverseShoe,
+  GiLargeDress,
+  GiRunningShoe,
+} from "react-icons/gi";
 import { IoShirtSharp } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
 import { Catalogue } from "../Items/staticItems/staticItemName";
+import { MdSelectAll } from "react-icons/md";
+
 const useStyles = makeStyles((theme) => ({
   fakeBox: {
     cursor: "pointer",
@@ -42,11 +49,9 @@ const changeIcon = (index, category) => {
   } else {
     if (index === 0) {
       return <IoShirtSharp color="#82A0C2" size={20} />;
-    } 
-    else if (index===1){
-      return <GiRunningShoe color="#82A0C2" size={20} />
-    }
-    else {
+    } else if (index === 1) {
+      return <GiRunningShoe color="#82A0C2" size={20} />;
+    } else {
       return <GiBackpack color="#82A0C2" size={20} />;
     }
   }
@@ -103,27 +108,53 @@ const SubHeaderNavigation = ({ category, transformStringToUrl, name }) => {
               <Box width={"30%"} display="flex" flexDirection="column">
                 {Catalogue[category].subitems.map((item, index) => {
                   return (
-                    <MenuItem
-                      key={index}
-                      style={{ height: 50, fontSize: 16, display: "flex" }}
-                      onClick={() => {
-                        secondQuery = "/" + item.label;
-                        setIndex(index);
-                      }}
-                    >
-                      {changeIcon(index, category)}
-                      <Typography
-                        style={{
-                          marginleft: 10,
-                          fontSize: 16,
-                          flexGrow: 1,
-                          justifyContent: "center",
-                          display: "flex",
+                    <React.Fragment>
+                      {index === 0 ? (
+                        <MenuItem
+                          key={index}
+                          style={{ height: 50, fontSize: 16, display: "flex" }}
+                          onClick={(e) => {
+                            handleClickAway(e);
+
+                            history(`/${name}`);
+                          }}
+                        >
+                          <MdSelectAll color="#82A0C2" size={30} />
+                          <Typography
+                            style={{
+                              marginleft: 10,
+                              fontSize: 16,
+                              flexGrow: 1,
+                              justifyContent: "center",
+                              display: "flex",
+                            }}
+                          >
+                            Voir tout
+                          </Typography>
+                        </MenuItem>
+                      ) : null}
+                      <MenuItem
+                        key={index}
+                        style={{ height: 50, fontSize: 16, display: "flex" }}
+                        onClick={() => {
+                          secondQuery = "/" + item.label;
+                          setIndex(index);
                         }}
                       >
-                        {item.Name}
-                      </Typography>
-                    </MenuItem>
+                        {changeIcon(index, category)}
+                        <Typography
+                          style={{
+                            marginleft: 10,
+                            fontSize: 16,
+                            flexGrow: 1,
+                            justifyContent: "center",
+                            display: "flex",
+                          }}
+                        >
+                          {item.Name}
+                        </Typography>
+                      </MenuItem>
+                    </React.Fragment>
                   );
                 })}
               </Box>
@@ -132,20 +163,44 @@ const SubHeaderNavigation = ({ category, transformStringToUrl, name }) => {
                   {Catalogue[category].subitems[indexItem].subitems.map(
                     (item, index) => {
                       return (
-                        <MenuItem
-                          key={index}
-                          disableTouchRipple
-                          disableGutters
-                          style={{ height: 50, fontSize: 16, color: "black" }}
-                          onClick={(e) => {
-                            thirdQuery = "/" + transformStringToUrl(item.Name);
-                            handleClickAway(e);
+                        <React.Fragment>
+                          {index === 0 ? (
+                            <MenuItem
+                              key={index}
+                              disableTouchRipple
+                              disableGutters
+                              style={{
+                                height: 50,
+                                fontSize: 16,
+                                color: "black",
+                              }}
+                              onClick={(e) => {
+                                thirdQuery =
+                                  "/" + transformStringToUrl(item.Name);
+                                handleClickAway(e);
 
-                            history(`/${name}` + secondQuery + thirdQuery);
-                          }}
-                        >
-                          {item.Name}
-                        </MenuItem>
+                                history(`/${name}` + secondQuery);
+                              }}
+                            >
+                              Voir tout
+                            </MenuItem>
+                          ) : null}
+                          <MenuItem
+                            key={index}
+                            disableTouchRipple
+                            disableGutters
+                            style={{ height: 50, fontSize: 16, color: "black" }}
+                            onClick={(e) => {
+                              thirdQuery =
+                                "/" + transformStringToUrl(item.Name);
+                              handleClickAway(e);
+
+                              history(`/${name}` + secondQuery + thirdQuery);
+                            }}
+                          >
+                            {item.Name}
+                          </MenuItem>
+                        </React.Fragment>
                       );
                     }
                   )}

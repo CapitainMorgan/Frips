@@ -91,9 +91,9 @@ const removeUser = (socketId) => {
 const getUser = (userId) => {
   return onlineUsers.find((user) => user.userId === userId);
 };
-
 try {
   io.on("connection", (socket) => {
+
     console.log("A User connected to socket io");
 
     socket.on("join", (socket) => {
@@ -108,7 +108,7 @@ try {
       const { id, id_Receiver, chat_id, item, Price,Pseudo } = newMessage;
       const user = getUser(id_Receiver);
       const rooms = io.sockets.adapter.rooms.get(id);
-
+      console.log(io.sockets.adapter.rooms)
       try {
         if (!user && !rooms) {
           return;
@@ -139,7 +139,6 @@ try {
             newMessage: true,
           });
         } else {
-          console.log("ici")
           socket.to(user?.socketId).emit("message notification", {
             id_Sender: newMessage.id_Sender,
             imageSender: newMessage.imageSender,
@@ -166,7 +165,7 @@ try {
     });
     socket.on("disconnect", () => {
       console.log("User disconnect");
-
+      console.log(io.sockets.adapter.rooms,"ici")
       removeUser(socket.id);
     });
  

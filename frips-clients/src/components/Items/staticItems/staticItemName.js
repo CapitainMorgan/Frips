@@ -25,7 +25,7 @@ export const Catalogue = [
 
             type: "list",
 
-            Name: "Manteaux & vestes",
+            Name: "Manteaux & Vestes",
             id: 3,
             subitems: [
               {
@@ -887,7 +887,7 @@ export const Catalogue = [
               {
                 upId: 140,
                 id: 143,
-                Name: "Hauts et tee-shirts",
+                Name: "Hauts & T-shirts",
                 sizeType: 0,
               },
             ],
@@ -1140,24 +1140,24 @@ export const arraySize = [
         id: 1,
         subitems: [
           {
-            Name: "XS",
-            id: "XS",
+            Name: "XS / 34",
+            id: "XS / 34",
           },
           {
-            Name: "S",
-            id: "S",
+            Name: "S / 36",
+            id: "S / 36",
           },
           {
-            Name: "M",
-            id: "M",
+            Name: "M / 38",
+            id: "M / 38",
           },
           {
-            Name: "L",
-            id: "L",
+            Name: "L / 40",
+            id: "L / 40",
           },
           {
-            Name: "Xl",
-            id: "XL",
+            Name: "XL / 42",
+            id: "XL / 42",
           },
           {
             Name: "XXL",

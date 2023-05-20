@@ -5,24 +5,10 @@ import { Link, useNavigate } from "react-router-dom";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
 import ErrorIcon from "@material-ui/icons/Error";
 
-const TaskSuccess = ({ error, isLoading,edit }) => {
+const TaskSuccess = ({ error, isLoading, edit,added }) => {
   const navigate = useNavigate();
 
-  if (isLoading) {
-    return (
-      <Box
-        style={{ backgroundColor: "#F5f5f3" }}
-        height="100vh"
-        width="100%"
-        display="flex"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <CircularProgress size={100} />
-      </Box>
-    );
-  }
-  if (!error && !isLoading) {
+  if (!isLoading && !Boolean(error) && added) {
     return (
       <Box
         display={"flex"}
@@ -34,7 +20,8 @@ const TaskSuccess = ({ error, isLoading,edit }) => {
         alignItems={"center"}
       >
         <CheckCircleIcon style={{ color: "#4AA05F", fontSize: 80 }} />
-        <Typography style={{ fontSize: 16 }}>
+        <Typography style={{ fontSize: 18
+         }}>
           {edit ? "Article changé avec succès" : "Article ajouté avec succès"}
         </Typography>
         <Button
@@ -45,6 +32,19 @@ const TaskSuccess = ({ error, isLoading,edit }) => {
         >
           Retour au Menu
         </Button>
+      </Box>
+    );
+  } else if (isLoading) {
+    return (
+      <Box
+        style={{ backgroundColor: "#F5f5f3" }}
+        height="100vh"
+        width="100%"
+        display="flex"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <CircularProgress size={100} />
       </Box>
     );
   } else {

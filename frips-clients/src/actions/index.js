@@ -243,7 +243,7 @@ export const logout = (history) => (dispatch) => {
 ////ITEM/////
 
 export const createItem =
-  (formValues, images, history, setIsLoading) => async (dispatch, getState) => {
+  (formValues, images, history, setIsLoading,setAdded,mobile) => async (dispatch, getState) => {
     try {
       setIsLoading(true);
       let formData = new FormData();
@@ -267,6 +267,10 @@ export const createItem =
       dispatch({ type: CREATE_ITEM, payload: response.data });
       setIsLoading(false);
       dispatch({ type: SUCCESS_CREATION_ITEM, payload: true });
+      setAdded(true)
+      if(!mobile){
+        history("/")
+      }
     } catch (error) {
       dispatch({ type: ERROR_ITEM, payload: true });
 
@@ -408,7 +412,7 @@ export const editItem = (id, formValues) => async (dispatch) => {
 };
 
 export const editItemSend =
-  (formValues, images, history, id, setIsLoading) => async (dispatch) => {
+  (formValues, images, history, id, setIsLoading,setAdded,mobile) => async (dispatch) => {
     try {
       setIsLoading(true);
       let formData = new FormData();
@@ -432,7 +436,10 @@ export const editItemSend =
       const response = await axiosInstance.post("/api/edit", formData);
 
       setIsLoading(false);
-      history("/members/myFrips/myItems");
+      setAdded(true)
+      if(!mobile){
+        history("/members/myFrips/myItems");
+      }
     } catch (error) {
       dispatch({ type: ERROR_ITEM, payload: true });
       console.log(error);

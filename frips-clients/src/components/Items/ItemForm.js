@@ -139,13 +139,13 @@ const validationSchema = yup.object({
     .required("Un Titre est requis"),
   Description: yup
     .string("Enter your password")
-    .min(15, "La description doit au moins avoir 15 charactères")
+    .min(15, "La description doit au moins avoir 15 caractères")
     .required("Une Description est requise"),
   Size: yup.string("Enter your password").required("Une taille est requise"),
 
   Catalogue: yup
     .string("Mettez au moins une photo")
-    .required("Choississez une catégorie"),
+    .required("Choississez une Catégorie"),
   Brand: yup
     .string("Mettez au moins une photo")
     .required("Choississez une Marque"),
@@ -154,8 +154,8 @@ const validationSchema = yup.object({
     .required(`Choissisez l'état de votre produit`),
   Price: yup
     .number("Doit être un nombre")
-    .min(1, "Mettez un prix plus grand ou égale à 1")
-    .required("Mettez un prix plus grand ou égale à 1"),
+    .min(1, "Mettez un prix plus grand ou égale à 1 CHF")
+    .required("Mettez un prix plus grand ou égale à 1 CHF"),
   Color: yup
     .array()
     .min(1, "Mettez aux moins une couleur")
@@ -178,15 +178,19 @@ const ItemForm = ({
 }) => {
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(false);
+  const [added,setAdded] = useState(false)
   const [size, setSize] = useState([]);
   const [picture, setPicture] = useState(!edit ? [] : [...editItem]);
   const history = useNavigate();
+  const classes = useStyles();
+  const theme = useTheme();
+  const mobile = useMediaQuery(theme.breakpoints.down("sm"),{noSsr:true});
 
   const onSubmit = (values) => {
     if (!edit) {
-      dispatch(createItem(values, picture, history, setIsLoading));
+      dispatch(createItem(values, picture, history, setIsLoading,setAdded,mobile));
     } else {
-      dispatch(editItemSend(values, picture, history, id, setIsLoading));
+      dispatch(editItemSend(values, picture, history, id, setIsLoading,setAdded,mobile));
     }
   };
 
@@ -213,9 +217,7 @@ const ItemForm = ({
     }
   }, [Object.keys(editInitialValues).length !== 0]);
 
-  const classes = useStyles();
-  const theme = useTheme();
-  const mobile = useMediaQuery(theme.breakpoints.down("sm"),{noSsr:true});
+ 
 
 
   const typeOfInput = () => {
@@ -226,8 +228,9 @@ const ItemForm = ({
     }
   };
 
-  if (isLoading && mobile) {
-    return <TaskSuccess edit={edit} error={error} isLoading={isLoading} />;
+
+  if ((mobile && added) || isLoading) {
+    return <TaskSuccess edit={edit} error={error} isLoading={isLoading} added={added} />;
   }
   if (
     (Object.keys(initialValues)?.length === 0 && loading) ||
@@ -244,7 +247,7 @@ const ItemForm = ({
         <CircularProgress size={100} />
       </Box>
     );
-  } else {
+  } else if(!isLoading ) {
     return (
       <Box style={{ backgroundColor: "#F5f5f3" }}>
         <Box width={"100%"} height={30} />

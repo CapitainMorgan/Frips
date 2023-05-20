@@ -14,6 +14,7 @@ import {
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import "moment/locale/fr";
 import React, { useEffect, useState } from "react";
+import { AiOutlineSend } from "react-icons/ai";
 import { connect, useDispatch } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import {
@@ -27,10 +28,8 @@ import {
 import { ERROR_MESSAGE } from "../../actions/type";
 import API_ENDPOINT from "../../api/url";
 import PricePropose from "../Checkout/PricePropose";
-import MessageComponent from "./renderMessageComponent";
-import { AiOutlineSend } from "react-icons/ai";
-import { Alert } from "@material-ui/lab";
 import ErrorModalMessage from "./ErrorModalMessage";
+import MessageComponent from "./renderMessageComponent";
 
 const useStyles = makeStyles((theme) => ({
   MenuSetting: {
@@ -88,7 +87,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.down("sm")]: {
       flexGrow: 1,
       marginBottom: 0,
-      height: "calc(100vh - 98px)",
+      height: "calc(100vh - 164px)",
     },
   },
   Divider: {
@@ -97,7 +96,9 @@ const useStyles = makeStyles((theme) => ({
       height: 0,
     },
   },
-  page: {},
+  page: {
+    
+  },
 }));
 
 const renderProfileName = (Profile, userId) => {
@@ -210,6 +211,13 @@ const Conversation = ({
   const fromItem = useLocation().state;
   const theme = useTheme();
   const mobile = useMediaQuery(theme.breakpoints.down("sm"));
+
+
+  if (mobile) {
+    document.body.style.overflow = "hidden";
+  } else {
+    document.body.style.overflow = "unset";
+  }
 
   useEffect(() => {
     window.scrollTo(0, document.body.scrollHeight);

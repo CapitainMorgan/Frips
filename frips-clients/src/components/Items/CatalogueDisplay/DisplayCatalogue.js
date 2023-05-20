@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import {
   Avatar,
   Box,
+  Button,
   Card,
   CardActionArea,
   CircularProgress,
@@ -259,6 +260,9 @@ const DisplayCatalogue = ({
   const allFilterProps = useSelector(
     (state) => state.filterCatalogue.AllFilter
   );
+  const chips = useSelector(
+    (state) => state.filterCatalogue.Chips
+  );
 
   const [typeOfFilter, setTypeOfFilter] = useState([]);
 
@@ -277,7 +281,10 @@ const DisplayCatalogue = ({
   }, [dispatch, allFilterProps, pagination, filterLoading]);
 
   const renderedItems = useMemo(() => {
-    return renderedItem(filterItem, classes, favorite, dispatch, history);
+    if (count === 0 && !loading) {
+    } else {
+      return renderedItem(filterItem, classes, favorite, dispatch, history);
+    }
   }, [filterItem, items, allFilterProps]);
 
   if (loading && itemInfo?.length === 0) {
@@ -321,21 +328,37 @@ const DisplayCatalogue = ({
             justifyContent="center"
             width="100%"
             alignItems="center"
+            flexDirection={"column"}
+            marginBottom={10}
           >
             <Typography
               style={{
                 fontSize: "1.3rem",
                 color: "#82A0C2",
                 paddingLeft: "1.3rem",
+                marginBottom:10
               }}
             >
               Oups il semblerait qu'il n'y ait aucun résultat correspondant à
               votre recherche
             </Typography>
+            <Button
+              variant="outlined"
+              color="primary"
+              onClick={() => {
+                history("/items/allNewItems")
+                dispatch({ type: "RESTORE" });
+              }}
+              style={{ marginLeft: "1rem" }}
+            >
+              {chips.length === 1
+                ? "Effacer le filtre"
+                : "Effacer les filtres"}
+            </Button>
           </Box>
-        ) : null}
-
-        <Box className={classes.GridSytem}>{renderedItems}</Box>
+        ) : (
+          <Box className={classes.GridSytem}>{renderedItems}</Box>
+        )}
 
         <Box className={classes.PaginationBox}>
           <MyPaginate

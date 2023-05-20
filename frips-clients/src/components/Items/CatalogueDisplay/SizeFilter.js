@@ -73,6 +73,7 @@ const renderArraySize = (
   dispatch
 ) => {
   return handleArray(navigationId).map((item, index) => {
+    console.log(item);
     return (
       <MenuItem
         className={classes.ItemBox}
@@ -80,6 +81,21 @@ const renderArraySize = (
           if ((item.type && index === 0) || (item.type && index === 1)) {
             setNavigation(index);
           } else {
+            if (Boolean(navigationId === 0)) {
+              if (_.find(filter["Catalogue"], { Name: "Homme", id: 104 })) {
+                dispatch(removeToFilter({ Name: "Homme", id: 104 }));
+                dispatch(addToFilter({ Name: "Femme", id: 1 }, "Catalogue"));
+              } else if(!_.find(filter["Catalogue"], { Name: "Femme", id: 1 })) {
+                dispatch(addToFilter({ Name: "Femme", id: 1 }, "Catalogue"));
+              }
+            } else if (Boolean(navigationId === 1)) {
+              if (_.find(filter["Catalogue"], { Name: "Femme", id: 1 })) {
+                dispatch(removeToFilter({ Name: "Femme", id: 1 }));
+                dispatch(addToFilter({ Name: "Homme", id: 104 }, "Catalogue"));
+              } else if(!_.find(filter["Catalogue"], { Name: "Homme", id: 104})) {
+                dispatch(addToFilter({ Name: "Homme", id: 104}, "Catalogue"));
+              }
+            }
             if (_.includes(filter[label], item)) {
               dispatch(removeToFilter(item));
             } else {

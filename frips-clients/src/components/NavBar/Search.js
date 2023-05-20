@@ -90,7 +90,6 @@ const matchValueSearch = (array1, searchArray, arrayBrand, currentText) => {
     return filterArray;
   });
 
-  console.log([array[0][0], array[1][0]], "ok", highestScoreArray(array));
   if (splitArray?.length === 2) {
     return [array[0][0], array[1]];
   } else {
@@ -160,7 +159,7 @@ const makeCombination = (
         }
       }
     } else {
-      for (let index = 0; index < 5; index++) {
+      for (let index = 0; index < 3; index++) {
         suggestionArray.push(
           `${item.Name} ${noFilterArrayCategory[1][index].Name}`
         );
@@ -168,7 +167,6 @@ const makeCombination = (
     }
   } else if (arrayBrand.length === 0 && arrayCategory.length !== 0) {
     const checkIfBothExist = arrayCategory.filter((d) => d.score <= 0.2);
-    console.log(checkIfBothExist);
     if (checkIfBothExist.length >= 2) {
       const { item } = arrayCategory[0];
       if (item.Name !== "Femme" || item.Name !== "Homme") {
@@ -176,7 +174,7 @@ const makeCombination = (
         suggestionArray.push(`${item.Name} Homme`);
       }
 
-      for (let index = 0; index < 5; index++) {
+      for (let index = 0; index < 3; index++) {
         suggestionArray.push(
           `${noFilterArrayCategory[0][index]?.Name}   ${item?.Name}`
         );

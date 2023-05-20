@@ -312,7 +312,7 @@ const Header = ({ onSearchSubmit }) => {
           {!state.loading && !state.isAuthenticated ? (
             <Button
               onClick={() => {
-                history("/items/new");
+                history("/login");
                 handleMobileMenuClose();
               }}
               variant="outlined"

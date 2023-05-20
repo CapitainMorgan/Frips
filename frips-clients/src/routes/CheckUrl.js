@@ -7,9 +7,7 @@ import { addToFilter, getItemCreationInfo } from "../actions";
 
 const transformStringToUrl = (string) => {
   if (string.includes("T-shirts")) {
-    
-      return string.replace("Hauts-and-T-shirts", "Hauts & T-shirts");
-
+    return string.replace("Hauts-and-T-shirts", "Hauts & T-shirts");
   } else {
     return string
       .replaceAll("-", " ")
@@ -20,8 +18,6 @@ const transformStringToUrl = (string) => {
 
 const checkUrl = (url, infoItem) => {
   const arrayUrl = Object.values(url);
-
-
   for (let index = 0; index < arrayUrl.length; index++) {
     const findCategory = _.find(infoItem, {
       Name: transformStringToUrl(arrayUrl[index]),
@@ -35,9 +31,24 @@ const checkUrl = (url, infoItem) => {
 
 const setLastOne = (url, infoItem) => {
   const arrayUrl = Object.values(url);
-  const findCategory = _.find(infoItem, {
-    Name: transformStringToUrl(arrayUrl[arrayUrl.length - 1]),
-  });
+  let findCategory;
+
+  if (_.includes(arrayUrl, "Femme")) {
+    findCategory = _.find(infoItem, (item) => {
+      return (
+        item.Name === transformStringToUrl(arrayUrl[arrayUrl.length - 1]) &&
+        item.id < 104
+      );
+    });
+  } else if (_.includes(arrayUrl, "Homme")) {
+    findCategory = _.find(infoItem, (item) => {
+      return (
+        item.Name === transformStringToUrl(arrayUrl[arrayUrl.length - 1]) &&
+        item.id >= 104
+      );
+    });
+  }
+
 
   return findCategory;
 };
@@ -55,8 +66,6 @@ const CheckUrl = ({ itemInfo, loading, loadingFilter, chips }) => {
       );
     }
   }, [location, loading]);
-
-
 
   if (!itemInfo || loadingFilter) {
     return (

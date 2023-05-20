@@ -12,8 +12,19 @@ const useStyles = makeStyles((theme) => ({
     width: 350,
     height: 500,
     [theme.breakpoints.down("sm")]: {
-      height: 500,
-      width: "auto",
+      height: "auto",
+      width: "100%",
+    },
+  },
+  image: {
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",
+    [theme.breakpoints.down("sm")]: {
+      height:"70vh",
+      width:"80vw",
+      objectFit: "inside",
+
     },
   },
 }));
@@ -93,7 +104,8 @@ const DialogPreviewProduct = ({
           <img
             alt={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
             src={`${API_ENDPOINT}/images/${images[0].id_Item}/${images[index].image}`}
-            style={{ width: "100%", height: "100%", objectFit: "cover" }}
+            className={classes.image}
+
           ></img>
         </Box>
       </Dialog>

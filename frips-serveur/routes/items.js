@@ -118,8 +118,8 @@ router.post("/", auth, upload, async (req, res) => {
         path.join("./", pathDir, `${id}` + ".jpeg"),
         await sharp(req.files[index].buffer)
           .rotate()
-          .resize({ width: 300, height: 300, fit: "cover" })
-          .jpeg({ quality: 100 })
+          .resize({ width: 800, height: 800, fit: "inside" })
+          .jpeg({ quality: 95 })
           .toBuffer()
       );
 
